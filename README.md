@@ -26,6 +26,17 @@ You could also market it as a browser, that truely respects your privacy
 -talk with anything that is not a gopher server
 -open http and mailto links in a browser/mail client
 
+##How to build/install?
+This program uses gsettings and beacause of that requires a gschema to be installed which can be found in the data folder.
+if you trust me simply run the install.sh script with sudo
+if not you have to install them manually
+
+Plese contact me if you know how to install them local to the home diectory if that's possible.
+
+to build it either run the build.sh script, which will automatically setup the build folder run ninja and put the output in the projects root directory
+
+to make development easy, the run script calls the build.sh script and then runs whatever is at the output
+
 ## TODO:
 -Implement a resource store, that can route requests to other protocol specific stores
 -Implement a way to download things
