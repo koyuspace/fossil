@@ -30,7 +30,7 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		
 		//add some dummy tabs
 		var tab1 = new Dragonstone.Tab(new Dragonstone.GopherResourceStore(),"gopher://gopher.floodgap.com");
-		var tab2 = new Dragonstone.Tab(new Dragonstone.GopherResourceStore(),"gopher://gopher.khzae.net");
+		var tab2 = new Dragonstone.Tab(new Dragonstone.GopherResourceStore(),"gopher://khzae.net");
 		
 		tabs.add_titled(tab1,"tab-1","TAB 1 (primary)");
 		tabs.add_titled(tab2,"tab-2","TAB 2 (secondary)");
