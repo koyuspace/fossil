@@ -1,4 +1,4 @@
-public class Dragonstone.GopherResourceStore : Object, ResourceStore {
+public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 	
 	public void reload(string uri,Dragonstone.SessionInformation? session = null) {} //only relevent when caching is implemented
 	

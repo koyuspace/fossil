@@ -1,4 +1,4 @@
-public class Dragonstone.TestResourceStore : Object, ResourceStore {
+public class Dragonstone.Store.Test : Object, Dragonstone.ResourceStore {
 
 	public void reload(string uri,Dragonstone.SessionInformation? session = null) {} //does nothing in this test implementation
 	

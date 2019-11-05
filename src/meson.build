@@ -10,6 +10,7 @@ executable(
 	'resources/text.vala',
 	'stores/test.vala',
 	'stores/gopher.vala',
+	'stores/switch.vala',
 	'widgets/window.vala',
 	'widgets/headerBar.vala',
 	'widgets/view.vala',
