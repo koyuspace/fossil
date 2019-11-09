@@ -1,7 +1,7 @@
 #!/bin/bash
-builddir=build
+builddir=meson_build
 output="src/com.gitlab.baschdel.dragonstone"
-dest="gtkGopher"
+dest="dragonstone"
 
 if [ ! -d "$builddir" ]
 then

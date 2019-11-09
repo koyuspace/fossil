@@ -1,5 +1,5 @@
 #!/bin/bash
-builddir=build
+builddir=meson_build
 
 if [ ! -d "$builddir" ]
 then
