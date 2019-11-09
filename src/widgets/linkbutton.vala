@@ -7,7 +7,18 @@ public class Dragonstone.Widget.LinkButton : Gtk.Button {
 		halign = Gtk.Align.START;
 		this.uri = uri;
 		clicked.connect((s) => {
-			tab.goToUri(this.uri);
+			//temporary
+			//open http(s) and mailto links with xdg to make dragonstone a bit more useable
+			if (uri.has_prefix("http://") || uri.has_prefix("https://") || uri.has_prefix("mailto:")){
+				try {
+					Pid child_pid;
+					GLib.Process.spawn_async (null, {"xdg-open",uri}, null, GLib.SpawnFlags.SEARCH_PATH, null, out child_pid);
+				} catch (Error e){
+					print(@"Error while spawing xdg-open: $(e.message)\n");
+				}
+			}else{
+				tab.goToUri(this.uri);
+			}
 		});
 		if(icon_name_ == null){
 			icon_name_ = guessIconNameByUri(uri);

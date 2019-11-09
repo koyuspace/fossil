@@ -11,7 +11,8 @@ Hello. Welcome to the internet of Gopherholes and Geminisites*!
 Thank you for using the dragonstone browser to explore it, please note, that dragonstone is
 in no way finished, has problems that need fixing and is missing essential feataures.
 
-You can find the sourcecode over at https://gitlab.com/baschdel/dragonstone
+You can find the sourcecode over at
+=> https://gitlab.com/baschdel/dragonstone
 
 Warning:
 Gemini is supposed to be more secure than gopher but beacause of the implementation,
