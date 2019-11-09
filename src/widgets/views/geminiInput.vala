@@ -57,9 +57,10 @@ private class Dragonstone.View.GeminiInputInput : Gtk.Bin {
 			base_uri = uri.substring(0,indexofqm);
 		}
 		halign = Gtk.Align.CENTER;
-		var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL,4);
-		box.homogeneous = false;
-		box.margin_start = 4;
+		//var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL,4);
+		//box.homogeneous = false;
+		//box.margin_start = 4;
+		var grid = new Gtk.Grid();
 		entry = new Gtk.Entry();
 		entry.placeholder_text = htext;
 		entry.halign = Gtk.Align.FILL;
@@ -72,10 +73,16 @@ private class Dragonstone.View.GeminiInputInput : Gtk.Bin {
 		button.clicked.connect(submit);
 		button.halign = Gtk.Align.START;
 		//box.pack_start(icon);
-		box.set_center_widget(entry);
+		/*box.set_center_widget(entry);
 		box.pack_end(button);
 		box.halign = Gtk.Align.FILL;
-		add(box);
+		add(box);*/
+		grid.attach(entry,0,0,15,1);
+		grid.attach_next_to(button,entry,Gtk.PositionType.RIGHT,1,1);
+		grid.set_column_homogeneous(true);
+		grid.halign = Gtk.Align.CENTER;
+		grid.set_column_spacing(4);
+		add(grid);
 	}
 	
 	private void submit(){
