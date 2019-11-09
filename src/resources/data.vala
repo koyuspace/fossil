@@ -18,7 +18,9 @@ public interface Dragonstone.IResourceData : Object {
 		string output = "";
 		foreach(unowned Bytes bytes in list){
 			if (bytes != null){
-				output = output+(string) (bytes.get_data());
+				output = output+((string) (bytes.get_data())).substring(0,bytes.length);
+				//somethimes the buffers become a bit too long, until i have a proper
+				//fix a substring should do the job
 			}
 		}
 		return output;

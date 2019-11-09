@@ -21,17 +21,38 @@ public class Dragonstone.Tab : Gtk.Bin {
 	}
 	
 	public void goToUri(string uri){
-		print(@"Going to uri: $uri\n");
+		print(@"raw uri: $uri\n");
+		if (uri == null){
+			print("Potential ERROR: tab.goToUri called with a null uri!\n");
+			return;
+		}
+		var uritogo = Dragonstone.Util.Uri.join(_uri,uri);
+		if (uritogo == null){uritogo = uri;}
+		print(@"Going to uri: $uritogo\n");
 		//add to history
 		history.push(_uri);
 		forward.clear();
-		loadUri(uri);
+		loadUri(uritogo);
+		print(@"$uri\n");
+	}
+	
+	//this will overwrite the last uri in the tab history
+	//handle with care!
+	public void redirect(string uri){
+		var joined_uri = Dragonstone.Util.Uri.join(_uri,uri);
+		if (joined_uri == null){joined_uri = uri;}
+		loadUri(joined_uri);
 	}
 	
 	private void loadUri(string uri){
 		_uri = uri;
 		if (resource != null){ resource.notify["resourcetype"].disconnect(checkViewTimeoutHack); }
-		resource = store.request(this.uri,session);
+		var rquri = this.uri;
+		var startoffragment = rquri.index_of_char('#');
+		if(startoffragment > 0){
+			rquri = rquri.substring(0,startoffragment);
+		}
+		resource = store.request(rquri,session);
 		if (resource != null){ resource.notify["resourcetype"].connect(checkViewTimeoutHack); }
 		updateView();
 		uriChanged(this.uri);
@@ -65,6 +86,8 @@ public class Dragonstone.Tab : Gtk.Bin {
 			print(@"STATIC/DYNAMIC $(resource.subtype)\n");
 			if (resource.subtype.has_prefix("text/gopher")){
 				view = new Dragonstone.View.Gophertext();
+			} else if (resource.subtype.has_prefix("text/gemini")){
+				view = new Dragonstone.View.Geminitext();
 			} else if (resource.subtype.has_prefix("text/")){ //TODO: Mimetype view registry
 				view = new Dragonstone.View.Plaintext();
 			}	else if (resource.subtype.has_prefix("image/")){
@@ -81,7 +104,12 @@ public class Dragonstone.Tab : Gtk.Bin {
 			} 
 			
 		}else if(resource.resourcetype == Dragonstone.ResourceType.REDIRECT){
-		
+			bool autoredirect = false;
+			if (autoredirect){
+				redirect(resource.subtype);
+			} else {
+				view = new Dragonstone.View.Redirect();
+			}
 		}else if(resource.resourcetype == Dragonstone.ResourceType.ERROR){
 			//generic error ppage +registry for specific errors (indexed by subtype)
 			//known subtypes: gopher

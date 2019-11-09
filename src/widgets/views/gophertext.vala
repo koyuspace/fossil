@@ -8,7 +8,7 @@ public class Dragonstone.View.Gophertext : Gtk.ScrolledWindow, Dragonstone.IView
 		content.homogeneous = false;
 		content.halign = Gtk.Align.START;
 		content.valign = Gtk.Align.START;
-		content.get_style_context().add_class("textview.view");
+		//content.get_style_context().add_class("textview.view");
 		//content.editable = false;
 		//content.wrap_mode = Gtk.WrapMode.WORD;
 		//content.set_monospace(true);
@@ -77,7 +77,7 @@ public class Dragonstone.View.Gophertext : Gtk.ScrolledWindow, Dragonstone.IView
 							}
 						}
 						//print(@"URI:$uri\n");
-						var icon_name = "go-jump-symbolic";
+						/*var icon_name = "go-jump-symbolic";
 						if (gophertype == '0'){ //file
 							icon_name = "text-x-generic-symbolic";
 						} else if (gophertype == '1'){ //directory
@@ -98,7 +98,7 @@ public class Dragonstone.View.Gophertext : Gtk.ScrolledWindow, Dragonstone.IView
 						}
 						//make link and add it
 						//TODO: right click menu with a copy to clipvoaed option
-						var linkwidget = new Dragonstone.View.GophertextLinkDisplay(htext,uri,icon_name);
+						/*var linkwidget = new Dragonstone.View.GophertextLinkDisplay(htext,uri,icon_name);
 						var button = new Gtk.Button();//.with_label(@"$htext [$uri]");
 						button.halign = Gtk.Align.START;
 						button.clicked.connect((s) => {
@@ -106,7 +106,8 @@ public class Dragonstone.View.Gophertext : Gtk.ScrolledWindow, Dragonstone.IView
 						});
 						button.add(linkwidget);
 						button.set_relief(Gtk.ReliefStyle.NONE);
-						this.content.pack_start(button);
+						this.content.pack_start(button);*/
+						this.content.pack_start(new Dragonstone.Widget.LinkButton(tab,htext,uri));
 					} else if (gophertype == '7'){ //Search
 						string? uri = null;
 						if( port != "70" ){
@@ -115,7 +116,7 @@ public class Dragonstone.View.Gophertext : Gtk.ScrolledWindow, Dragonstone.IView
 							uri = @"gopher://$host/$gophertype$query";
 						}
 						var searchfield = new Dragonstone.View.GophertextInlineSearch(htext,uri);
-						searchfield.go.connect(tab.goToUri);
+						searchfield.go.connect((s,uri) => {tab.goToUri(uri);});
 						this.content.pack_start(searchfield);
 					} else if (gophertype == '3'){ //Error
 						this.content.pack_start(
@@ -154,6 +155,7 @@ public class Dragonstone.View.Gophertext : Gtk.ScrolledWindow, Dragonstone.IView
 	
 }
 
+/*
 private class Dragonstone.View.GophertextLinkDisplay : Gtk.Bin {
 	public GophertextLinkDisplay(string name,string uri,string icon_name){
 		var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL,4);
@@ -172,6 +174,7 @@ private class Dragonstone.View.GophertextLinkDisplay : Gtk.Bin {
 		add(box);
 	}
 }
+*/
 
 private class Dragonstone.View.GophertextInlineSearch : Gtk.Bin {
 

@@ -11,6 +11,7 @@ class Dragonstone.Store.Switch : Object, Dragonstone.ResourceStore {
 		this.default_resource = new Dragonstone.ResourceUriSchemeError("");
 		this.add_resource_store("test://",new Dragonstone.Store.Test());
 		this.add_resource_store("gopher://",new Dragonstone.Store.Gopher());
+		this.add_resource_store("gemini://",new Dragonstone.Store.Gemini());
 	}
 	
 	public void add_resource_store(string prefix,Dragonstone.ResourceStore store){
