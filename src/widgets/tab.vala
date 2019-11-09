@@ -88,6 +88,8 @@ public class Dragonstone.Tab : Gtk.Bin {
 				view = new Dragonstone.View.Gophertext();
 			} else if (resource.subtype.has_prefix("text/gemini")){
 				view = new Dragonstone.View.Geminitext();
+			} else if (resource.subtype == "gemini/input"){
+				view = new Dragonstone.View.GeminiInput();
 			} else if (resource.subtype.has_prefix("text/")){ //TODO: Mimetype view registry
 				view = new Dragonstone.View.Plaintext();
 			}	else if (resource.subtype.has_prefix("image/")){
@@ -98,10 +100,6 @@ public class Dragonstone.Tab : Gtk.Bin {
 		}else if(resource.resourcetype == Dragonstone.ResourceType.LOADING){
 			view = new Dragonstone.View.Loading();
 		}else if(resource.resourcetype == Dragonstone.ResourceType.INTERACTIVE){
-			//TODO: interactive view registry
-			if(resource.subtype == "gopher.search"){
-				print("INTERACTIVE: gopher.search // TODO\n");
-			} 
 			
 		}else if(resource.resourcetype == Dragonstone.ResourceType.REDIRECT){
 			bool autoredirect = false;

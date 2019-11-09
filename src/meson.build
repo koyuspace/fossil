@@ -23,6 +23,7 @@ executable(
 	'widgets/views/plaintext.vala',
 	'widgets/views/gophertext.vala',
 	'widgets/views/geminitext.vala',
+	'widgets/views/geminiInput.vala',
 	'widgets/views/loading.vala',
 	'widgets/views/label.vala',
 	'widgets/views/connectionRefused.vala',

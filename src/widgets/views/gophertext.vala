@@ -155,27 +155,6 @@ public class Dragonstone.View.Gophertext : Gtk.ScrolledWindow, Dragonstone.IView
 	
 }
 
-/*
-private class Dragonstone.View.GophertextLinkDisplay : Gtk.Bin {
-	public GophertextLinkDisplay(string name,string uri,string icon_name){
-		var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL,4);
-		box.homogeneous = false;
-		var label = new Gtk.Label(@"$name [$uri]");
-		label.selectable = true;
-		label.halign = Gtk.Align.START;
-		var labelAttrList = new Pango.AttrList();
-		labelAttrList.insert(new Pango.AttrSize(12000));
-		label.attributes = labelAttrList;
-		var icon = new Gtk.Image.from_icon_name(icon_name,Gtk.IconSize.LARGE_TOOLBAR);
-		icon.halign = Gtk.Align.START;
-		box.pack_start(icon);
-		box.pack_start(label);
-		box.halign = Gtk.Align.START;
-		add(box);
-	}
-}
-*/
-
 private class Dragonstone.View.GophertextInlineSearch : Gtk.Bin {
 
 	public signal void go(string uri);

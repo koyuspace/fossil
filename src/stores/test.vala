@@ -36,8 +36,10 @@ If you want to contribute just submit a pull request
 			");
 		} else if (uri == "test://contact") {
 				return new Dragonstone.SimpeleStaticTextResource("text/gemini","Contact","
-Write an e-mail to baschdel@disroot.org\n
-or contact me over the fediverse https://fedi.absturztau.be/baschdel\n
+Write an e-mail to baschdel@disroot.org
+=> mailto:baschdel@disroot.org
+or contact me over the fediverse
+=> https://fedi.absturztau.be/baschdel
 				");
 		} else if (uri == "test://lipsum") {
 			return new Dragonstone.SimpeleStaticTextResource("text/plain","Hello World","Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\nhttps://lipsum.com/
