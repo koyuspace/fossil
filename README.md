@@ -42,3 +42,4 @@ to make development easy, the run script calls the build.sh script and then runs
 - Implement bookmarks
 - Find another way of making the font in the labels monospaced
 - Implement poroper gemini support (at the Tls layer)
+- Implement proper handling of http and mailto links
