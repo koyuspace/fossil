@@ -5,6 +5,40 @@ public class Dragonstone.Store.Test : Object, Dragonstone.ResourceStore {
 	public Dragonstone.Resource request(string uri,Dragonstone.SessionInformation? session = null){
 		print(@"request: $uri\n");
 		if (uri == "test://") {
+			return new Dragonstone.SimpeleStaticTextResource("text/gemini","Hello","
+Hello. Welcome to the internet of Gopherholes and Geminisites*!
+
+Thank you for using the dragonstone browser to explore it, please note, that dragonstone is
+in no way finished, has problems that need fixing and is missing essential feataures.
+
+You can find the sourcecode over at https://gitlab.com/baschdel/dragonstone
+
+Warning:
+Gemini is supposed to be more secure than gopher but beacause of the implementation,
+it cannot vertify a servers identity yet and therefore is as secure as gopher.
+
+To get started here are some links:
+=> gopher://gopher.floodgap.com/1/v2 The Veronica-2 Gopher search engine
+=> gemini://gemini.conman.org/ The first ever gemini server (Also has links to other gemini servers)
+=> gopher://khzae.net khzae has some gopher based services, that definitely deserve more attention
+
+=> gopher://gopher.floodgap.com/1/gopher What is Gopher and why is it still relevant?
+=> gopher://khzae.net/0/rfc1436.txt RFC1436 - The gopher specification
+=> gopher://zaibatsu.circumlunar.space/1/~solderpunk/gemini The gemini specification
+
+Contributers:
+	Baschdel
+
+If you want to contribute just submit a pull request
+
+*If you know of an official name please let me know!
+			");
+		} else if (uri == "test://contact") {
+				return new Dragonstone.SimpeleStaticTextResource("text/gemini","Contact","
+Write an e-mail to baschdel@disroot.org\n
+or contact me over the fediverse https://fedi.absturztau.be/baschdel\n
+				");
+		} else if (uri == "test://lipsum") {
 			return new Dragonstone.SimpeleStaticTextResource("text/plain","Hello World","Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\nhttps://lipsum.com/
 \n------------------------------------------------------\n
 Fusce iaculis a urna vitae hendrerit. Fusce at risus quis neque consectetur accumsan. Aenean tristique bibendum consectetur. Nullam eleifend eros elit. Morbi ut odio sollicitudin, iaculis tortor congue, pellentesque massa. Nunc nec pulvinar eros, in bibendum urna. Nunc at porta mauris, eu commodo magna. Duis augue ante, ornare id tincidunt eget, congue sed urna. Maecenas tempor arcu ac venenatis viverra. Vivamus in magna ac mi cursus egestas at in nibh.

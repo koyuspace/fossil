@@ -31,13 +31,11 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		//add some dummy tabs
 		var store = new Dragonstone.Store.Switch.default_configuration();
 		
-		var tab0 = new Dragonstone.Tab(store,"gemini://gemini.conman.org/");
-		var tab1 = new Dragonstone.Tab(store,"gopher://gopher.floodgap.com");
-		var tab2 = new Dragonstone.Tab(store,"gopher://khzae.net");
+		var tab0 = new Dragonstone.Tab(store,"test://");
+		var tab1 = new Dragonstone.Tab(store,"test://");
 		
 		tabs.add_titled(tab0,"tab-0","TAB 0");
 		tabs.add_titled(tab1,"tab-1","TAB 1");
-		tabs.add_titled(tab2,"tab-2","TAB 2");
 		
 		add(tabs);
 		

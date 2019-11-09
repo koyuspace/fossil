@@ -60,6 +60,7 @@ public class Dragonstone.View.Geminitext : Gtk.ScrolledWindow, Dragonstone.IView
 					lastlabel.valign = Gtk.Align.START;
 					lastlabel.halign = Gtk.Align.START;
 					lastlabel.selectable = true;
+					//lastlabel.wrap_mode = Pango.WrapMode.WORD;
 					var fontdesc = new Pango.FontDescription();
 					fontdesc.set_family("monospace");
 					lastlabel.override_font(fontdesc);
