@@ -26,6 +26,11 @@ Note: This is not only my first gtk but also my first vala project
 - save bookmarks
 
 ##How to build/install?
+Note: to build dragonstone you need the following dependedencys:
+- valac - the vala compiler
+- meson - the buildsystem
+- python 3.x
+
 This program uses gsettings and beacause of that requires a gschema to be installed which can be found in the data folder.
 if you trust me simply run the install.sh script with sudo
 if not you have to install them manually
