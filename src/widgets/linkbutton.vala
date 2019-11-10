@@ -50,13 +50,13 @@ public class Dragonstone.Widget.LinkButton : Gtk.Button {
 		} else if (uri.has_suffix(".gemini")){
 			return "folder-symbolic";
 		} else if (uri.has_suffix(".tar")){
-			return "folder-download-symbolic";
+			return "document-save-symbolic";
 		} else if (uri.has_suffix(".gz")){
-			return "folder-download-symbolic";
+			return "document-save-symbolic";
 		} else if (uri.has_suffix(".xz")){
-			return "folder-download-symbolic";
+			return "document-save-symbolic";
 		} else if (uri.has_suffix(".zip")){
-			return "folder-download-symbolic";
+			return "document-save-symbolic";
 		} else if (uri.has_prefix("gopher://")){
 			var slashindex = uri.index_of_char('/',10);
 			if (slashindex < 0 || slashindex+1 >= uri.length){
@@ -70,7 +70,7 @@ public class Dragonstone.Widget.LinkButton : Gtk.Button {
 			} else if (gophertype == '7'){ //search
 				return "system-search-symbolic";
 			} else if (gophertype == '9'){ //binary
-				return "folder-download-symbolic";
+				return "document-save-symbolic";
 			} else if (gophertype == 'g'){ //gif
 				return "image-x-generic-symbolic";
 			} else if (gophertype == 'I'){ //image

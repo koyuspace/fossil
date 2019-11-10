@@ -10,6 +10,8 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 	private bool loadButtonReloadMode = false;
 	private Gtk.Image reloadIcon = new Gtk.Image.from_icon_name("view-refresh-symbolic",Gtk.IconSize.BUTTON);
 	private Gtk.Image goIcon = new Gtk.Image.from_icon_name("go-jump-symbolic",Gtk.IconSize.BUTTON);
+	private Gtk.Button menubutton = new Gtk.Button.from_icon_name("open-menu-symbolic");
+	private Gtk.Popover mainmenu;
 	
 	public HeaderBar (Gtk.Stack tabs) {
 		Object (
@@ -33,10 +35,42 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		addressfield = new Gtk.Entry();
 		addressfield.expand = true;
 		pack_start(addressfield);
-		//mainmenu
-		var menubutton = new Gtk.Button.from_icon_name("open-menu-symbolic");
 		backbutton.valign = Gtk.Align.CENTER;
+		//menubutton
 		pack_end(menubutton);
+		//mainmenu
+		mainmenu = new Gtk.Popover(menubutton);
+		var mainmenubox = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
+		//top row
+		var mainmenuhbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL,0);
+		mainmenubox.margin = 8;
+		mainmenuhbox.get_style_context().add_class("linked");
+		mainmenuhbox.homogeneous = true;
+		mainmenubox.pack_start(mainmenuhbox);
+		var downloadbutton = new Gtk.Button.from_icon_name("document-save-symbolic",Gtk.IconSize.LARGE_TOOLBAR );
+		//downloadbutton.relief = Gtk.ReliefStyle.NONE;
+		mainmenuhbox.pack_start(downloadbutton);
+		var savetodiskbutton = new Gtk.ToggleButton();
+		var diskicon = new Gtk.Image.from_icon_name("drive-harddisk-symbolic",Gtk.IconSize.LARGE_TOOLBAR );
+		savetodiskbutton.add(diskicon);
+		//savetodiskbutton.relief = Gtk.ReliefStyle.NONE;
+		mainmenuhbox.pack_start(savetodiskbutton);
+		//Cache
+		var cachebutton = new Gtk.Button.with_label("Cache"); //TOTRANSLATE
+		cachebutton.relief = Gtk.ReliefStyle.NONE;
+		cachebutton.halign = Gtk.Align.FILL;
+		mainmenubox.pack_start(cachebutton);
+		//Settings
+		var settingsbutton = new Gtk.Button.with_label("Settings"); //TOTRANSLATE
+		settingsbutton.relief = Gtk.ReliefStyle.NONE;
+		settingsbutton.halign = Gtk.Align.FILL;
+		mainmenubox.pack_start(settingsbutton);
+		//About
+		var aboutbutton = new Gtk.Button.with_label("About"); //TOTRANSLATE
+		aboutbutton.relief = Gtk.ReliefStyle.NONE;
+		aboutbutton.halign = Gtk.Align.FILL;
+		mainmenubox.pack_start(aboutbutton);
+		mainmenu.add(mainmenubox);
 		//loadbutton
 		loadbutton = new Gtk.Button.from_icon_name("dialog-error-symbolic");
 		backbutton.valign = Gtk.Align.CENTER;
@@ -84,6 +118,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		});
 		menubutton.clicked.connect(e => {
 			print("OPEN main menu!\n");
+			mainmenu.show_all();
 		});
 		backbutton.clicked.connect(e => {
 			//print("GO back!\n");
