@@ -12,11 +12,13 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public signal void uriChanged(string uri);
 	public Dragonstone.Util.Stack<string> history = new Dragonstone.Util.Stack<string>();
 	public Dragonstone.Util.Stack<string> forward = new Dragonstone.Util.Stack<string>();
+	private Gtk.Window parentWindow;
 	
-	public Tab(Dragonstone.ResourceStore store, string uri){
+	public Tab(Dragonstone.ResourceStore store, string uri, Gtk.Window parentWindow){
 		Object(
 			store: store
 		);
+		this.parentWindow = parentWindow;
 		loadUri(uri);
 	}
 	
@@ -177,4 +179,16 @@ public class Dragonstone.Tab : Gtk.Bin {
 		print("URI:"+uri+"\n");
 		loadUri(uri);
 	}
+	
+	public void download(){
+		var filechooser = new Gtk.FileChooserNative(@"Download - $uri",parentWindow,Gtk.FileChooserAction.SAVE,"Download","_Cancel"); //TOTRANSLATE
+		filechooser.set_select_multiple(false);
+		filechooser.run();
+		if (filechooser.get_filename() != null) {
+			var filepath = filechooser.get_filename();
+			print(@"Download: $uri -> $filepath\n");
+			Dragonstone.Downloader.save_resource.begin(this.resource,filepath,(obj, res) => {;});
+		}
+	}
+	
 }

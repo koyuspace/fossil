@@ -4,6 +4,7 @@ executable(
 	'main.vala',
 	'dragonstoneApp.vala',
 	'resources.vala',
+	'downloader.vala',
 	'util/stack.vala',
 	'util/uri.vala',
 	'resources/loading.vala',

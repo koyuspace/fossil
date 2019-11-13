@@ -128,6 +128,9 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 			//print("GO forward!\n");
 			current_tab.goForward();
 		});
+		downloadbutton.clicked.connect(e => {
+			current_tab.download();
+		});
 		//connect stack signal
 		tabs.notify["visible-child"].connect((s,t) => {onVisibleTabChanged();});
 		//fire events

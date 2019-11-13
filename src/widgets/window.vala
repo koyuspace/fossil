@@ -31,8 +31,8 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		//add some dummy tabs
 		var store = new Dragonstone.Store.Switch.default_configuration();
 		
-		var tab0 = new Dragonstone.Tab(store,"test://");
-		var tab1 = new Dragonstone.Tab(store,"test://");
+		var tab0 = new Dragonstone.Tab(store,"test://",this);
+		var tab1 = new Dragonstone.Tab(store,"test://",this);
 		
 		tabs.add_titled(tab0,"tab-0","TAB 0");
 		tabs.add_titled(tab1,"tab-1","TAB 1");
