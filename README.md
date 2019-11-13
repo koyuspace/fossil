@@ -18,11 +18,11 @@ Note: This is not only my first gtk but also my first vala project
 - display text files
 - display unscaled images
 - some basic error handling
-- Temporary per tab history (no I will not make it persistant)
+- remember a temporary per tab history (no I will not make it persistant)
+- save files to disk
 
 ### What can it NOT do?
-- save files to disk
-- display any menues (not my #1 priority right now, but I'll add them soon)
+- display a menu when right clicking on a link
 - save bookmarks
 
 ##How to build/install?
@@ -42,7 +42,6 @@ to build it either run the build.sh script, which will automatically setup the b
 to make development easy, the run script calls the build.sh script and then runs whatever is at the output
 
 ## TODO:
-- Implement a way to download things
 - Implement dynamic tabs (basically what you know from your web browser)
 - Implement bookmarks
 - Find another way of making the font in the labels monospaced
