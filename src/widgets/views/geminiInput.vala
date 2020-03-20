@@ -1,6 +1,6 @@
 public class Dragonstone.View.GeminiInput : Gtk.Bin, Dragonstone.IView {
 	
-	private Dragonstone.Resource resource = null;
+	private Dragonstone.Request request = null;
 	private Gtk.Box centerBox;
 	
 	construct {
@@ -22,10 +22,10 @@ public class Dragonstone.View.GeminiInput : Gtk.Bin, Dragonstone.IView {
 		add(outerBox);
 	}
 	
-	public bool displayResource(Dragonstone.Resource resource,Dragonstone.Tab tab){
-		if (!(resource.resourcetype == Dragonstone.ResourceType.DYNAMIC && resource.subtype == "gemini/input")) {return false;}
-		this.resource = resource;
-		centerBox.pack_start(new Gtk.Label(resource.name));
+	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
+		if (!(request.status == "success" && request.resource.mimetype == "gemini/input")) {return false;}
+		this.request = request;
+		centerBox.pack_start(new Gtk.Label(request.resource.name));
 		var input = new Dragonstone.View.GeminiInputInput("",tab.uri);
 		input.go.connect((s,uri) => {tab.goToUri(uri);});
 		centerBox.pack_start(input);
@@ -33,11 +33,10 @@ public class Dragonstone.View.GeminiInput : Gtk.Bin, Dragonstone.IView {
 	}
 	
 	public bool canHandleCurrentResource(){
-		if (resource == null){
+		if (request == null){
 			return false;
 		}else{
-			return (resource.resourcetype == Dragonstone.ResourceType.DYNAMIC 
-				&& resource.subtype == "gemini/input");
+			return (request.status == "success" && request.resource.mimetype == "gemini/input");
 		}
 	}
 	

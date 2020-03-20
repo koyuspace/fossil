@@ -1,6 +1,6 @@
 public class Dragonstone.View.Error.Generic : Gtk.Bin, Dragonstone.IView {
 	
-	private Dragonstone.Resource resource = null;
+	private Dragonstone.Request request = null;
 	private Gtk.Label nameLabel = new Gtk.Label("");
 	private Gtk.Label sublabel; 
 	
@@ -32,19 +32,19 @@ public class Dragonstone.View.Error.Generic : Gtk.Bin, Dragonstone.IView {
 		add(outerBox);
 	}
 	
-	public bool displayResource(Dragonstone.Resource resource,Dragonstone.Tab tab){
-		if (!(resource.resourcetype == Dragonstone.ResourceType.ERROR)) {return false;}
-		this.resource = resource;
-		sublabel.label = @"... with $(resource.subtype)\n$(resource.name)";
-		//nameLabel.label = resource.name;
+	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
+		if (!(request.status.has_prefix("error/"))) {return false;}
+		this.request = request;
+		sublabel.label = request.status+"\n"+request.substatus;
+		//nameLabel.label = request.name;
 		return true;
 	}
 	
 	public bool canHandleCurrentResource(){
-		if (resource == null){
+		if (request == null){
 			return false;
 		}else{
-			return resource.resourcetype == Dragonstone.ResourceType.ERROR;
+			return request.status.has_prefix("error/");
 		}
 	}
 	

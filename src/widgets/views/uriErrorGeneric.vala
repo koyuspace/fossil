@@ -1,6 +1,6 @@
 public class Dragonstone.View.UriError.Generic : Gtk.Bin, Dragonstone.IView {
 	
-	private Dragonstone.Resource resource = null;
+	private Dragonstone.Request request = null;
 	private Gtk.Label nameLabel = new Gtk.Label("");
 	private Gtk.Label sublabel; 
 	
@@ -32,19 +32,19 @@ public class Dragonstone.View.UriError.Generic : Gtk.Bin, Dragonstone.IView {
 		add(outerBox);
 	}
 	
-	public bool displayResource(Dragonstone.Resource resource,Dragonstone.Tab tab){
-		if (!(resource.resourcetype == Dragonstone.ResourceType.ERROR_URI_SCHEME_NOT_SUPPORTED)) {return false;}
-		this.resource = resource;
-		sublabel.label = @"Something went wrong parsing this\nas a $(resource.subtype) uri/url scheme.";
-		//nameLabel.label = resource.name;
+	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
+		if (!(request.status.has_prefix("error/uri"))) {return false;}
+		this.request = request;
+		sublabel.label = @"Something went wrong parsing this uri...\nPlease speak loud and clear\ndon't makes grammar mistakes and\nno speling errors.";
+		//nameLabel.label = request.name;
 		return true;
 	}
 	
 	public bool canHandleCurrentResource(){
-		if (resource == null){
+		if (request == null){
 			return false;
 		}else{
-			return resource.resourcetype == Dragonstone.ResourceType.ERROR_URI_SCHEME_NOT_SUPPORTED;
+			return request.status.has_prefix("error/uri");
 		}
 	}
 	

@@ -12,6 +12,10 @@ public class Dragonstone.Application : Gtk.Application {
 		build_window();
 	}
 	
+	protected override void open(GLib.File[] files, string hint) {
+		build_window();
+	}
+	
 	private void build_window() {
 		var window = new Dragonstone.Window(this);
 		add_window(window);

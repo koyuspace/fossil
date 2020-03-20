@@ -1,6 +1,6 @@
 public class Dragonstone.View.Loading : Gtk.Bin, Dragonstone.IView {
 	
-	private Dragonstone.Resource resource = null;
+	private Dragonstone.Request request = null;
 	private Gtk.ProgressBar progressbar = new Gtk.ProgressBar();
 	private Gtk.Spinner spinner = new Gtk.Spinner();
 	
@@ -22,17 +22,17 @@ public class Dragonstone.View.Loading : Gtk.Bin, Dragonstone.IView {
 		add(outerBox);
 	}
 	
-	public bool displayResource(Dragonstone.Resource resource,Dragonstone.Tab tab){
-		if (!(resource.resourcetype == Dragonstone.ResourceType.LOADING)) {return false;}
-		this.resource = resource;
+	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
+		if (!(request.status == "loading" || request.status == "connecting")) {return false;}
+		this.request = request;
 		return true;
 	}
 	
 	public bool canHandleCurrentResource(){
-		if (resource == null){
+		if (request == null){
 			return false;
 		}else{
-			return resource.resourcetype == Dragonstone.ResourceType.LOADING;
+			return request.status == "loading" || request.status == "connecting";
 		}
 	}
 	

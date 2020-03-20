@@ -1,6 +1,6 @@
 public class Dragonstone.View.Plaintext : Gtk.ScrolledWindow, Dragonstone.IView {
 	
-	private Dragonstone.Resource resource = null;
+	private Dragonstone.Request request = null;
 	private Gtk.TextView textview;
 	
 	construct {
@@ -12,38 +12,39 @@ public class Dragonstone.View.Plaintext : Gtk.ScrolledWindow, Dragonstone.IView 
 		add(textview);
 	}
 	
-	public bool displayResource(Dragonstone.Resource resource,Dragonstone.Tab tab){
-		if (
-			(resource.resourcetype == Dragonstone.ResourceType.STATIC ||
-			resource.resourcetype == Dragonstone.ResourceType.DYNAMIC) &&
-			resource.subtype.has_prefix("text/")
-				){
-			string? text = null;
-			if (resource is Dragonstone.IResourceText){
-				text = (resource as Dragonstone.IResourceText).getText();
-			} else if (resource is Dragonstone.IResourceData){
-				text = (resource as Dragonstone.IResourceData).getDataAsString();
+	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
+		if ((request.status == "success") && request.resource.mimetype.has_prefix("text/")){
+			string text = "";
+			var file = File.new_for_path (request.resource.filepath);
+			if (!file.query_exists ()) {
+				text = "ERROR: Cache file does not exist!\nReloading should help,\nif it doesn't please contact the developer!";
 			}
-			if( text == null ){return false;}
+			try {
+				// Open file for reading and wrap returned FileInputStream into a
+				// DataInputStream, so we can read line by line
+				var dis = new DataInputStream (file.read ());
+				string line;
+				// Read lines until end of file (null) is reached
+				while ((line = dis.read_line (null)) != null) {
+					text = text+line+"\n";
+				}
+			} catch (GLib.Error e) {
+			    text = "ERROR WHILE READING FILE:\n"+e.message;
+			}
 			textview.buffer.text = text;
 			
 		} else {
 			return false;
 		}
-		this.resource = resource;
+		this.request = request;
 		return true;
 	}
 	
 	public bool canHandleCurrentResource(){
-		if (resource == null){
+		if (request == null){
 			return false;
 		}else{
-			return 
-				(resource.resourcetype == Dragonstone.ResourceType.STATIC ||
-				resource.resourcetype == Dragonstone.ResourceType.DYNAMIC) &&
-				resource.subtype.has_prefix("text/") &&
-				(resource is Dragonstone.IResourceData ||
-				resource is Dragonstone.IResourceText);
+			return (request.status == "success") && request.resource.mimetype.has_prefix("text/");
 		}
 	}
 	

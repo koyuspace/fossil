@@ -1,6 +1,6 @@
 public class Dragonstone.View.Redirect : Gtk.Bin, Dragonstone.IView {
 	
-	private Dragonstone.Resource resource = null;
+	private Dragonstone.Request request = null;
 	private Gtk.Label nameLabel = new Gtk.Label("");
 	private Gtk.Button redirbutton = new Gtk.Button.with_label("");
 	
@@ -25,21 +25,21 @@ public class Dragonstone.View.Redirect : Gtk.Bin, Dragonstone.IView {
 		add(outerBox);
 	}
 	
-	public bool displayResource(Dragonstone.Resource resource,Dragonstone.Tab tab){
-		if (!(resource.resourcetype == Dragonstone.ResourceType.REDIRECT)) {return false;}
-		this.resource = resource;
-		redirbutton.label = resource.subtype;
+	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
+		if (!(request.status.has_prefix("redirect"))) {return false;}
+		this.request = request;
+		redirbutton.label = request.substatus;
 		redirbutton.clicked.connect(() => {
-			tab.redirect(this.resource.subtype);
+			tab.redirect(this.request.substatus);
 		});
 		return true;
 	}
 	
 	public bool canHandleCurrentResource(){
-		if (resource == null){
+		if (request == null){
 			return false;
 		}else{
-			return resource.resourcetype == Dragonstone.ResourceType.REDIRECT;
+			return request.status.has_prefix("redirect");
 		}
 	}
 	

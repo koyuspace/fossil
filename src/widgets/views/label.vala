@@ -4,7 +4,7 @@ public class Dragonstone.View.Label : Gtk.Bin, Dragonstone.IView {
 		add(new Gtk.Label(message));
 	}
 
-	public bool displayResource(Dragonstone.Resource resource,Dragonstone.Tab tab){
+	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
 		return true;
 	}
 	

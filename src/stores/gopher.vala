@@ -1,16 +1,18 @@
 public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 	
-	public void reload(string uri,Dragonstone.SessionInformation? session = null) {} //only relevent when caching is implemented
 	
-	public Dragonstone.Resource request(string uri,Dragonstone.SessionInformation? session = null){
-	
+	public void request(Dragonstone.Request request,string? filepath = null){
+		if (filepath == null){
+			request.setStatus("error/internal","Filepath required!");
+			return;
+		}
 		// parse uri
-		if(!uri.has_prefix("gopher://")){
-			return new Dragonstone.ResourceUriSchemeError("gopher");
+		if(!request.uri.has_prefix("gopher://")){
+			request.setStatus("error/uri/unknownScheme","Gopher only knows gopher://");
 		}
 		var startoffset = 9;
-		var indexofslash = uri.index_of_char('/',startoffset);
-		var indexofcolon = uri.index_of_char(':',startoffset);
+		var indexofslash = request.uri.index_of_char('/',startoffset);
+		var indexofcolon = request.uri.index_of_char(':',startoffset);
 		
 		if (indexofslash < indexofcolon && indexofslash > 1){
 			indexofcolon = -1;
@@ -26,7 +28,7 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 			uint i = indexofcolon+1;
 			while(true){
 				num = num*10;
-				var c = uri.get_char(i);
+				var c = request.uri.get_char(i);
 				if (c == '0') {
 					num += 0;
 				} else if (c == '1') {
@@ -50,7 +52,7 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 				} else if (c == '/' || c == '\0') {
 					break;
 				} else {
-					return new Dragonstone.ResourceUriSchemeError("gopher");
+					request.setStatus("error/uri/invalid","Port has to be a number");
 				}
 				i++;
 			}
@@ -59,33 +61,31 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 		}
 		
 		if (indexofcolon > 0){
-			host = uri.substring(startoffset,indexofcolon-startoffset);
+			host = request.uri.substring(startoffset,indexofcolon-startoffset);
 		}else if (indexofslash > 0){
-			host = uri.substring(startoffset,indexofslash-startoffset);
+			host = request.uri.substring(startoffset,indexofslash-startoffset);
 		}else{
-			host = uri.substring(startoffset);
+			host = request.uri.substring(startoffset);
 		}
 	
 		if (indexofslash > 0){
-			if (uri.length > indexofslash+1){
-				gophertype = uri.get_char(indexofslash+1);
+			if (request.uri.length > indexofslash+1){
+				gophertype = request.uri.get_char(indexofslash+1);
 			}
-			if (uri.length > indexofslash+2){
-				query = uri.substring(indexofslash+2);
+			if (request.uri.length > indexofslash+2){
+				query = request.uri.substring(indexofslash+2);
 			}
 		}
 		
 		//debugging information
 		print(@"Gopher Request:\n  Host:  $host\n  Port:  $port\n  Type:  $gophertype\n  Query: $query\n");
-		var resource = new Dragonstone.GopherResource();
-		var fetcher = new Dragonstone.GopherResourceFetcher(resource,host,port,query,gophertype);
+		var resource = new Dragonstone.Resource(request.uri,filepath,true);
+		var fetcher = new Dragonstone.GopherResourceFetcher(resource,request,host,port,query,gophertype);
 		new Thread<int>(@"Gopher resource fetcher $host:$port [$gophertype|$query]",() => {
 			fetcher.fetchResource();
 			return 0;
 		});
-		return resource;
 	}
-	
 }
 
 private class Dragonstone.GopherResourceFetcher : Object {
@@ -94,11 +94,13 @@ private class Dragonstone.GopherResourceFetcher : Object {
 	public uint16 port { get; construct; }
 	public string query { get; construct; }
 	public unichar gophertype { get; construct; }
-	public Dragonstone.GopherResource resource { get; construct; }
+	public Dragonstone.Resource resource { get; construct; }
+	public Dragonstone.Request request { get; construct; }
 	
-	public GopherResourceFetcher(Dragonstone.GopherResource resource,string host,uint16 port,string query,unichar gophertype){
+	public GopherResourceFetcher(Dragonstone.Resource resource,Dragonstone.Request request,string host,uint16 port,string query,unichar gophertype){
 		Object(
 			resource: resource,
+			request: request,
 			host: host,
 			port: port,
 			query: query,
@@ -108,6 +110,7 @@ private class Dragonstone.GopherResourceFetcher : Object {
 	
 	public void fetchResource(){
 			
+		request.setStatus("connecting");
 		//make request
 		InetAddress address;
 		try {
@@ -115,9 +118,9 @@ private class Dragonstone.GopherResourceFetcher : Object {
 			var resolver = Resolver.get_default ();
 			var addresses = resolver.lookup_by_name (host, null);
 			address = addresses.nth_data (0);
-			print (@"Resolved $host to $address\n");
+			print (@"[gopher] Resolved $host to $address\n");
 		} catch (Error e) {
-			resource.networkErrorNoHost();
+			request.setStatus("error/noHost");
 			return;
 		}
 		
@@ -125,23 +128,24 @@ private class Dragonstone.GopherResourceFetcher : Object {
 		try {
 			// Connect
 			var client = new SocketClient ();
-			print (@"Connecting to $host...\n");
+			print (@"[gopher] Connecting to $host...\n");
 			conn = client.connect (new InetSocketAddress (address, port));
-			print (@"Connected to $host\n");
+			print (@"[gopher] Connected to $host\n");
 		} catch (Error e) {
-			print("ERROR while connecting: "+e.message+"\n");
-			resource.networkErrorConnectionRefused();
+			print("[gopher] ERROR while connecting: "+e.message+"\n");
+			request.setStatus("error/connecionRefused");
 			return;
 		}
-		
+		request.setStatus("loading");
 		try {
 			//send gopher request
 			var message = @"$query\r\n";
 			conn.output_stream.write (message.data);
-			print ("Wrote request\n");
+			print ("[gopher] Wrote request\n");
 			
 			// Receive response
 			var input_stream = new DataInputStream (conn.input_stream);
+			var helper = new Dragonstone.Util.ResourceFileWriteHelper(request,resource.filepath,0);
 			
 			if (gophertype == '0' || gophertype == '1' || gophertype == '7'){
 				// Receive text
@@ -151,17 +155,14 @@ private class Dragonstone.GopherResourceFetcher : Object {
 					if (gophertype == '0'){
 						mimetype = "text/plain";
 					}
-					resource.setText(str,mimetype);
-					print(@"SUCCESS $(str.length)B\n");
+					helper.appendString(str);
+					resource.add_metadata(mimetype,@"[gopher] $host:$port | $query");
 				}else{
-					resource.networkErrorGibberish();
+					request.setStatus("error/gibberish");
 				}
-			} else if(gophertype == '9' || gophertype == 'I' || gophertype == 'g'){ 
-			//gopher://g.feuerfuchs.dev/1/commissions/
-			// /\ good for testing images
+			} else if(gophertype == '9' || gophertype == 'I' || gophertype == 'g'){
 				try{
-					var list = readBytes(input_stream);
-					print(@"GOPHER BINARY $(list.length())KB\n");
+					readBytes(input_stream,helper);
 					var mimetype = "application/octet-stream";
 					if (gophertype == 'I'){
 						mimetype = "image/";
@@ -175,20 +176,21 @@ private class Dragonstone.GopherResourceFetcher : Object {
 					} else if (query.has_suffix(".bmp")){
 						mimetype = "image/bmp";
 					}
-					resource.startAppendingData(mimetype);
-					foreach(var bytes in list){
-						resource.appendData(bytes.get_data());
-					}
-					resource.finishAppendingData();
+					resource.add_metadata(mimetype,@"[gopher] $host:$port | $query");
 				}catch(Error e){
-					resource.internalError("Something with binary gopher:\n"+e.message);
+					request.setStatus("error/internal",e.message);
+					return;
 				}
 			} else {
-				resource.gophertypeNotSupported(gophertype);
+				request.setStatus("error",@"Gophertype $gophertype not supported!");
+				return;
 			}
-
+			if (helper.error){return;}
+			helper.close();
+			request.setResource(resource,"gopher");
+			return;
 		} catch (Error e) {
-				resource.networkErrorGibberish();
+				request.setStatus("error/gibberish");
 		}
 		return;
 	}
@@ -222,119 +224,23 @@ private class Dragonstone.GopherResourceFetcher : Object {
 		return str;
 	}
 	
-	public List<Bytes> readBytes(DataInputStream input_stream) throws Error{
-			List<Bytes> list = new List<Bytes>();
-			uint32 counter = 0;
+	public void readBytes(DataInputStream input_stream,Dragonstone.Util.ResourceFileWriteHelper helper) throws Error{
+			uint64 counter = 0;
 			while (true){
 				var bytes = input_stream.read_bytes(1024);
+				counter += bytes.length;
 				if (bytes.length == 0){
 					break;
 				} else {
-					list.append(bytes);
+					helper.append(Bytes.unref_to_data(bytes));
 				}
-				counter++;
 				print(@"$counter: length: $(bytes.length)\n");
 				//teerminate early if file gets too big
-				//will be replaced by special handling of big files with on-disk buffers 
-				//if this becomes too much of an issue
-				if(counter > 1024*1024*2){
-					print("GOPHER terminating file read early, beacause file is too big (>2GB)");
-					return list;
+				if(counter > 1024*1024*1024*3){
+					print("GOPHER terminating file read early, beacause file is too big (>3GB)\n");
+					return;
 				}
 			}
-			return list;
-	}
-	
-}
-
-public class Dragonstone.GopherResource : Dragonstone.Resource, Dragonstone.IResourceData, Dragonstone.IResourceText{
-	
-	public List<Bytes>? data = null;
-	private string? text = null;
-	private unichar not_supported_gopher_type = '\0';
-	
-	public GopherResource (){
-		Object(
-			resourcetype: Dragonstone.ResourceType.LOADING,
-			subtype: "",
-			name: "Loading ..." //TOTRANSLATE
-		);
-	}
-	
-	public void setText(string text,string mimetype){
-		this.text = text;
-		this.data = new List<Bytes>();
-		this.data.append(new Bytes(text.data));
-		this.subtype = mimetype;
-		this.resourcetype = Dragonstone.ResourceType.STATIC;
-	}
-	
-	public void startAppendingData(string mimetype){
-		if (this.resourcetype != Dragonstone.ResourceType.LOADING){ return; }
-		this.subtype = mimetype;
-		this.data = new List<Bytes>();
-	}
-	
-	public void appendData(uint8[] data){
-		if (this.resourcetype != Dragonstone.ResourceType.LOADING){ return; }
-		this.data.append(new Bytes(data));
-	}
-	
-	public void finishAppendingData(){	
-		if (this.resourcetype != Dragonstone.ResourceType.LOADING){ return; }
-		this.resourcetype = Dragonstone.ResourceType.STATIC;
-	}
-	
-	public void networkErrorNoHost(){
-		if (this.resourcetype == Dragonstone.ResourceType.STATIC){ return; }
-		this.subtype = "";
-		this.name = "Error (Can not reach host)"; //TOTRANSLATE
-		this.resourcetype = Dragonstone.ResourceType.ERROR_NO_HOST;
-	}
-	
-	public void networkErrorConnectionRefused(){
-		if (this.resourcetype == Dragonstone.ResourceType.STATIC){ return; }
-		this.subtype = "";
-		this.name = "Error (Connection Refused)"; //TOTRANSLATE
-		this.resourcetype = Dragonstone.ResourceType.ERROR_CONNECTION_REFUSED;
-	}
-	
-	public void networkErrorGibberish(){
-		if (this.resourcetype == Dragonstone.ResourceType.STATIC){ return; }
-		this.subtype = "";
-		this.name = "Error (This is very gibberish)"; //TOTRANSLATE
-		this.resourcetype = Dragonstone.ResourceType.ERROR_GIBBERISH;
-	}
-	
-	public void internalError(string info){
-		if (this.resourcetype == Dragonstone.ResourceType.ERROR_INTERNAL){ return; }
-		this.subtype = info;
-		this.name = "Internal Error"; //TOTRANSLATE
-		this.resourcetype = Dragonstone.ResourceType.ERROR_GIBBERISH;
-	}
-	
-	public void gophertypeNotSupported(unichar gophertype){
-		this.subtype = "gopher";
-		this.not_supported_gopher_type = gophertype;
-		this.name = @"Gophertype $gophertype not supported"; //TOTRANSLATE
-		this.resourcetype = Dragonstone.ResourceType.ERROR;
-	}
-	
-	/*
-	public void setIsSearch(){
-		this.subtype = "gopher.search";
-		this.name = "";
-		this.resourcetype = Dragonstone.ResourceType.INTERACTIVE;
-	}
-	*/
-	
-	
-	public unowned List<Bytes>? getData(){
-		return data;
-	}
-	
-	public string? getText(){
-		return text;
 	}
 	
 }

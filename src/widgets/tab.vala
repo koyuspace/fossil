@@ -6,9 +6,8 @@ public class Dragonstone.Tab : Gtk.Bin {
 			goToUri(value);
 		}}
 	public Dragonstone.IView view;
-	public Dragonstone.Resource resource;
+	public Dragonstone.Request request;
 	public Dragonstone.ResourceStore store { get; set; }
-	private Dragonstone.SessionInformation? session = null;
 	public signal void uriChanged(string uri);
 	public Dragonstone.Util.Stack<string> history = new Dragonstone.Util.Stack<string>();
 	public Dragonstone.Util.Stack<string> forward = new Dragonstone.Util.Stack<string>();
@@ -46,16 +45,17 @@ public class Dragonstone.Tab : Gtk.Bin {
 		loadUri(joined_uri);
 	}
 	
-	private void loadUri(string uri){
+	private void loadUri(string uri,bool reload = false){
 		_uri = uri;
-		if (resource != null){ resource.notify["resourcetype"].disconnect(checkViewTimeoutHack); }
+		if (request != null){ request.notify["status"].disconnect(checkViewTimeoutHack); }
+		request = new Dragonstone.Request(uri,"",reload);
 		var rquri = this.uri;
 		var startoffragment = rquri.index_of_char('#');
 		if(startoffragment > 0){
 			rquri = rquri.substring(0,startoffragment);
 		}
-		resource = store.request(rquri,session);
-		if (resource != null){ resource.notify["resourcetype"].connect(checkViewTimeoutHack); }
+		store.request(request);
+		if (request != null){ request.notify["status"].connect(checkViewTimeoutHack); }
 		updateView();
 		uriChanged(this.uri);
 	}
@@ -83,63 +83,54 @@ public class Dragonstone.Tab : Gtk.Bin {
 		}
 		view = null;
 		//choose a new one
-		if (resource.resourcetype == Dragonstone.ResourceType.STATIC ||
-			resource.resourcetype == Dragonstone.ResourceType.DYNAMIC){
-			print(@"STATIC/DYNAMIC $(resource.subtype)\n");
-			if (resource.subtype.has_prefix("text/gopher")){
+		if (request.status == "success"){
+			print(@"STATIC/DYNAMIC $(request.resource.mimetype)\n");
+			if (request.resource.mimetype.has_prefix("text/gopher")){
 				view = new Dragonstone.View.Gophertext();
-			} else if (resource.subtype.has_prefix("text/gemini")){
+			} else if (request.resource.mimetype.has_prefix("text/gemini")){
 				view = new Dragonstone.View.Geminitext();
-			} else if (resource.subtype == "gemini/input"){
+			} else if (request.resource.mimetype == "gemini/input"){
 				view = new Dragonstone.View.GeminiInput();
-			} else if (resource.subtype.has_prefix("text/")){ //TODO: Mimetype view registry
+			} else if (request.resource.mimetype.has_prefix("text/")){ //TODO: Mimetype view registry
 				view = new Dragonstone.View.Plaintext();
-			}	else if (resource.subtype.has_prefix("image/")){
+			}	else if (request.resource.mimetype.has_prefix("image/")){
 				view = new Dragonstone.View.Image();
 			}	else {
 				//show download view
 			}
-		}else if(resource.resourcetype == Dragonstone.ResourceType.LOADING){
+		}else if(request.status == "loading" || request.status == "connecting"){
 			view = new Dragonstone.View.Loading();
-		}else if(resource.resourcetype == Dragonstone.ResourceType.INTERACTIVE){
-			
-		}else if(resource.resourcetype == Dragonstone.ResourceType.REDIRECT){
+		}else if(request.status.has_prefix("redirect")){
 			bool autoredirect = false;
 			if (autoredirect){
-				redirect(resource.subtype);
+				redirect(request.substatus);
 			} else {
 				view = new Dragonstone.View.Redirect();
 			}
-		}else if(resource.resourcetype == Dragonstone.ResourceType.ERROR){
-			//generic error ppage +registry for specific errors (indexed by subtype)
-			//known subtypes: gopher
-			view = new Dragonstone.View.Error.Generic();
-		}else if(resource.resourcetype == Dragonstone.ResourceType.ERROR_INTERNAL){
+		}else if(request.status == "error/internal"){
 			view = new Dragonstone.View.InternalError();
-		}else if(resource.resourcetype == Dragonstone.ResourceType.ERROR_GIBBERISH){
+		}else if(request.status == "error/gibberish"){
 			view = new Dragonstone.View.Gibberish();
-		}else if(resource.resourcetype == Dragonstone.ResourceType.ERROR_CONNECTION_REFUSED){
+		}else if(request.status == "error/connectionRefused"){
 			view = new Dragonstone.View.ConnectionRefused();
-		}else if(resource.resourcetype == Dragonstone.ResourceType.ERROR_NO_HOST){
+		}else if(request.status == "error/noHost"){
 			view = new Dragonstone.View.HostUnreachable();
-		}else if(resource.resourcetype == Dragonstone.ResourceType.ERROR_TEMPORARILY_UNAVAIABLE){
+		}else if(request.status == "error/resourceUnavaiable"){
 			view = new Dragonstone.View.Unavaiable();
-		}else if(resource.resourcetype == Dragonstone.ResourceType.ERROR_UNAVAIABLE){
-			view = new Dragonstone.View.Unavaiable();
-		}else if(resource.resourcetype == Dragonstone.ResourceType.ERROR_OFFLINE){
-			view = new Dragonstone.View.Offline();
-		}else if(resource.resourcetype == Dragonstone.ResourceType.ERROR_URI_SCHEME_NOT_SUPPORTED){
-			view = new Dragonstone.View.UriError.Generic();
+		//}else if(request.status.has_prefix("error/uri")){
+		//	view = new Dragonstone.View.UriError.Generic();
+		}else if(request.status.has_prefix("error")){
+			view = new Dragonstone.View.Error.Generic();
 		}
 		if (view != null){
-			if(view.displayResource(resource,this)){
+			if(view.displayResource(request,this)){
 				add(view);
 			} else {
 				view = new Dragonstone.View.Label("I think i chose the wrong view ...\nPlease report this to the developer!"); //TOTRANSLATE
 				add(view);
 			}
 		} else {
-			view = new Dragonstone.View.Label(@"I'm sorry, but I don't know how to show that to you\nPlease report this to the developer if this is a release version (or you think this really shouldn't have happened)!\n$(resource.name)\n$(resource.subtype)"); //TOTRANSLATE
+			view = new Dragonstone.View.Label(@"I'm sorry, but I don't know how to show that to you\nPlease report this to the developer if this is a release version (or you think this really shouldn't have happened)!\n$(request.status)\n$(request.substatus)"); //TOTRANSLATE
 			add(view);
 		}
 		show_all();
@@ -174,20 +165,24 @@ public class Dragonstone.Tab : Gtk.Bin {
 	
 	//reloads the resource
 	public void reload(){
+		string urix = uri; //setting a variable to itself the complicatd way
 		print("reloading!\n");
-		store.reload(uri,session);
-		print("URI:"+uri+"\n");
-		loadUri(uri);
+		print("URI: '"+urix+"'\n");
+		loadUri(urix);
 	}
 	
 	public void download(){
+		if (this.request.resource == null){
+			print("Can't download an non existant resource!");
+			return;
+		}
 		var filechooser = new Gtk.FileChooserNative(@"Download - $uri",parentWindow,Gtk.FileChooserAction.SAVE,"Download","_Cancel"); //TOTRANSLATE
 		filechooser.set_select_multiple(false);
 		filechooser.run();
 		if (filechooser.get_filename() != null) {
 			var filepath = filechooser.get_filename();
-			print(@"Download: $uri -> $filepath\n");
-			Dragonstone.Downloader.save_resource.begin(this.resource,filepath,(obj, res) => {;});
+			print(@"Download: $uri -> $filepath [Currently disabled]\n");
+			Dragonstone.Downloader.save_resource.begin(this.request.resource,filepath,(obj, res) => {;});
 		}
 	}
 	

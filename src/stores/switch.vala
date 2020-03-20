@@ -1,14 +1,17 @@
 class Dragonstone.Store.Switch : Object, Dragonstone.ResourceStore {
 
 	private List<Dragonstone.Store.SwitchEntry> stores = new List<Dragonstone.Store.SwitchEntry>();
-	public Dragonstone.Resource default_resource;
+	private string cacheDirectory = "/tmp";
 	
-	public Switch(Dragonstone.Resource default_resource){
-		this.default_resource = default_resource;
+	public Switch(string cacheDirectory){
+		this.cacheDirectory = cacheDirectory;
+		GLib.DirUtils.create_with_parents(this.cacheDirectory,16877);
 	}
 	
 	public Switch.default_configuration(){
-		this.default_resource = new Dragonstone.ResourceUriSchemeError("");
+		string cachedir = GLib.Environment.get_user_cache_dir();
+		this.cacheDirectory = cachedir+"/dragonstone";
+		GLib.DirUtils.create_with_parents(this.cacheDirectory,16877);
 		this.add_resource_store("test://",new Dragonstone.Store.Test());
 		this.add_resource_store("gopher://",new Dragonstone.Store.Gopher());
 		this.add_resource_store("gemini://",new Dragonstone.Store.Gemini());
@@ -30,21 +33,17 @@ class Dragonstone.Store.Switch : Object, Dragonstone.ResourceStore {
 		return bestMatch;
 	}
 	
-	public void preload(string uri,Dragonstone.SessionInformation? session = null) {
-		var store = get_closest_match(uri);
-		if (store != null){store.preload(uri);}
+	public void request(Dragonstone.Request request,string? filepath = null){
+		print(@"[switch] Loading uri: '$(request.uri)'\n");
+		string filepathx = filepath;
+		var store = get_closest_match(request.uri);
+		if (filepathx == null){filepathx=this.cacheDirectory+"/"+GLib.Uuid.string_random();}
+		if (store != null){store.request(request,filepathx);}
+		else {
+			request.setStatus("error/uri/unknownScheme");
+		}
 	}
 	
-	public void reload(string uri,Dragonstone.SessionInformation? session = null){
-		var store = get_closest_match(uri);
-		if (store != null){store.reload(uri);}
-	}
-	
-	public Dragonstone.Resource request(string uri,Dragonstone.SessionInformation? session = null){
-		var store = get_closest_match(uri);
-		if (store != null){return store.request(uri);}
-		else {return default_resource;}
-	}
 }
 
 private class Dragonstone.Store.SwitchEntry {

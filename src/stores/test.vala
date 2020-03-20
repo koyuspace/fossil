@@ -1,11 +1,13 @@
 public class Dragonstone.Store.Test : Object, Dragonstone.ResourceStore {
 
-	public void reload(string uri,Dragonstone.SessionInformation? session = null) {} //does nothing in this test implementation
-	
-	public Dragonstone.Resource request(string uri,Dragonstone.SessionInformation? session = null){
-		print(@"request: $uri\n");
-		if (uri == "test://") {
-			return new Dragonstone.SimpeleStaticTextResource("text/gemini","Hello","
+	public void request(Dragonstone.Request request,string? filepath = null){
+		if (filepath == null){
+			request.setStatus("error/internal","Filepath required!");
+			return;
+		}
+		if (request.uri == "test://") {
+			var helper = new Dragonstone.Util.ResourceFileWriteHelper(request,filepath,0);
+			helper.appendString("
 Hello. Welcome to the internet of Gopherholes and Geminisites*!
 
 Thank you for using the dragonstone browser to explore it, please note, that dragonstone is
@@ -27,22 +29,33 @@ To get started here are some links:
 => gopher://khzae.net/0/rfc1436.txt RFC1436 - The gopher specification
 => gopher://zaibatsu.circumlunar.space/1/~solderpunk/gemini The gemini specification
 
-Contributers:
+Contributors:
 	Baschdel
 
 If you want to contribute just submit a pull request
 
 *If you know of an official name please let me know!
 			");
-		} else if (uri == "test://contact") {
-				return new Dragonstone.SimpeleStaticTextResource("text/gemini","Contact","
+			if (helper.error){return;}
+			helper.close();
+			var resource = new Dragonstone.Resource(request.uri,filepath,true);
+			resource.add_metadata("text/gemini","Hello!");
+			request.setResource(resource,"test");
+		} else if (request.uri == "test://contact") {
+				var helper = new Dragonstone.Util.ResourceFileWriteHelper(request,filepath,0);
+				helper.appendString("
 Write an e-mail to baschdel@disroot.org
 => mailto:baschdel@disroot.org
 or contact me over the fediverse
-=> https://fedi.absturztau.be/baschdel
-				");
-		} else if (uri == "test://lipsum") {
-			return new Dragonstone.SimpeleStaticTextResource("text/plain","Hello World","Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\nhttps://lipsum.com/
+=> https://fedi.absturztau.be/baschdel");
+			if (helper.error){return;}
+			helper.close();
+			var resource = new Dragonstone.Resource(request.uri,filepath,true);
+			resource.add_metadata("text/gemini","Contact");
+			request.setResource(resource,"test");
+		} else if (request.uri == "test://lipsum") {
+			var helper = new Dragonstone.Util.ResourceFileWriteHelper(request,filepath,0);
+			helper.appendString("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\nhttps://lipsum.com/
 \n------------------------------------------------------\n
 Fusce iaculis a urna vitae hendrerit. Fusce at risus quis neque consectetur accumsan. Aenean tristique bibendum consectetur. Nullam eleifend eros elit. Morbi ut odio sollicitudin, iaculis tortor congue, pellentesque massa. Nunc nec pulvinar eros, in bibendum urna. Nunc at porta mauris, eu commodo magna. Duis augue ante, ornare id tincidunt eget, congue sed urna. Maecenas tempor arcu ac venenatis viverra. Vivamus in magna ac mi cursus egestas at in nibh.
 
@@ -53,20 +66,23 @@ Curabitur mollis turpis quis gravida luctus. Nunc euismod augue est, ultricies p
 Ut consequat semper diam, in imperdiet lectus aliquet vitae. Cras augue neque, sollicitudin quis felis sit amet, suscipit rhoncus velit. Mauris pharetra mauris nec nisi lacinia tempus. Aliquam vestibulum a enim non tempus. Proin in diam pulvinar, sodales dolor sed, semper enim. Donec convallis leo non velit iaculis, ut pretium purus aliquam. Mauris interdum rhoncus quam, at laoreet est sodales eget.
 
 Praesent metus quam, accumsan eget nunc a, pellentesque sodales velit. Aliquam ut justo urna. Nullam commodo condimentum enim vitae malesuada. Nam convallis dictum nisi, eget consequat odio tempor nec. Praesent suscipit ante nec felis malesuada tristique ac ut sem. Nunc pulvinar nulla at tellus ultricies, a aliquam augue commodo. Sed ex metus, auctor eget dolor eget, pretium posuere augue.");
-		} else if (uri == "test://uri_error") {
-			return new Dragonstone.ResourceUriSchemeError("test");
-		} else if (uri == "test://loading") {
-			return new Dragonstone.SimpeleResource(Dragonstone.ResourceType.LOADING,"","Loading ... (forever)");
-		} else if (uri == "test://offline") {
-			return new Dragonstone.SimpeleResource(Dragonstone.ResourceType.ERROR_OFFLINE,"","Maybe, Maybe not ...");
-		} else if (uri == "test://error") {
-			return new Dragonstone.SimpeleResource(Dragonstone.ResourceType.ERROR,"test","Maybe, Maybe not ...");
-		} else if (uri == "test://gibberish") {
-			return new Dragonstone.SimpeleResource(Dragonstone.ResourceType.ERROR_GIBBERISH,"","Maybe, Maybe not ...");
-		} else if (uri == "test://temp_unavaiable") {
-			return new Dragonstone.SimpeleResource(Dragonstone.ResourceType.ERROR_TEMPORARILY_UNAVAIABLE,"","'It's been fun. Don't come back'");
+			if (helper.error){return;}
+			helper.close();
+			var resource = new Dragonstone.Resource(request.uri,filepath,true);
+			resource.add_metadata("text/plain","Hello World");
+			request.setResource(resource,"test");
+		} else if (request.uri == "test://uri_error") {
+			request.setStatus("error/uri/unknownScheme");
+		} else if (request.uri == "test://loading") {
+			request.setStatus("loading");
+		} else if (request.uri == "test://offline") {
+			request.setStatus("error/noHost");
+		} else if (request.uri == "test://error") {
+			request.setStatus("error");
+		} else if (request.uri == "test://gibberish") {
+			request.setStatus("error/gibberish");
 		} else {
-			return new Dragonstone.SimpeleResource(Dragonstone.ResourceType.ERROR_UNAVAIABLE,"","404");
+			request.setStatus("error/resourceUnavaiable");
 		}
 	}
 }

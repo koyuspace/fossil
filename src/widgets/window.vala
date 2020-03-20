@@ -10,7 +10,7 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 	}
 	
 	construct {
-		title = "Gopher";
+		title = "Project Dragonstone";
 		window_position = Gtk.WindowPosition.CENTER;
 		set_default_size(600,400);
 		

@@ -1,6 +1,6 @@
 public class Dragonstone.View.Unavaiable : Gtk.Bin, Dragonstone.IView {
 	
-	private Dragonstone.Resource resource = null;
+	private Dragonstone.Request request = null;
 	private Gtk.Label sublabel = new Gtk.Label("...");
 	
 	construct {
@@ -29,25 +29,25 @@ public class Dragonstone.View.Unavaiable : Gtk.Bin, Dragonstone.IView {
 		add(outerBox);
 	}
 	
-	public bool displayResource(Dragonstone.Resource resource,Dragonstone.Tab tab){
-		if (resource.resourcetype == Dragonstone.ResourceType.ERROR_UNAVAIABLE) {
-			sublabel.label = "No idea if or when it will be back"; //TOTRANSLATE
-		} else if (resource.resourcetype == Dragonstone.ResourceType.ERROR_TEMPORARILY_UNAVAIABLE) {
-			sublabel.label = "Should come back soon™"; //TOTRANSLATE
+	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
+		if (request.status == "error/resourceUnavaiable") {
+			sublabel.label = "No idea if or when it will be back\nThe server says:\n"+request.substatus; //TOTRANSLATE
+		} else if (request.status == "error/resourceUnavaiable/temporary") {
+			sublabel.label = "Should come back soon™\nThe server says:\n"+request.substatus; //TOTRANSLATE
 		} else {
 			return false;
 		}
-		this.resource = resource;
+		this.request = request;
 		return true;
 	}
 	
 	public bool canHandleCurrentResource(){
-		if (resource == null){
+		if (request == null){
 			return false;
 		}else{
 			return 
-				resource.resourcetype == Dragonstone.ResourceType.ERROR_UNAVAIABLE || 
-				resource.resourcetype == Dragonstone.ResourceType.ERROR_TEMPORARILY_UNAVAIABLE;
+				request.status == "error/resourceUnavaiable" || 
+				request.status == "error/resourceUnavaiable/temporary";
 		}
 	}
 	
