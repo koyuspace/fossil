@@ -1,34 +1,34 @@
 public class Dragonstone.View.Geminitext : Gtk.ScrolledWindow, Dragonstone.IView {
 	
 	private Dragonstone.Request request = null;
-	private Gtk.Box content;
+	private Gtk.TextView textview = null;
 	
 	construct {
-		content = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
-		content.homogeneous = false;
-		content.halign = Gtk.Align.START;
-		content.valign = Gtk.Align.START;
-		//content.get_style_context().add_class("textview.view");
-		//content.editable = false;
-		//content.wrap_mode = Gtk.WrapMode.WORD;
-		//content.set_monospace(true);
-		add(content);
+		textview = new Gtk.TextView();
+		textview.editable = false;
+		textview.wrap_mode = Gtk.WrapMode.WORD;
+		textview.set_monospace(true);
+		textview.set_left_margin(4);
+		add(textview);
 	}
 	
 	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
 		if (request.status == "success" && request.resource.mimetype.has_prefix("text/gemini")){
 			var file = File.new_for_path(request.resource.filepath);
 			if (!file.query_exists ()) {
-        this.content.pack_start(new Gtk.Label("The cache file for this resource does not exist!\nReloading the page should help,\nif not please contact the developer!"));
+        this.textview.buffer.text ="The cache file for this resource does not exist!\nReloading the page should help,\nif not please contact the developer!";
     	}
     	try{
 				//parse text
-				Gtk.Label lastlabel = null;
+				var buffer = textview.buffer;
+				
 				var dis = new DataInputStream (file.read ());
         string line;
 				while ((line = dis.read_line (null)) != null) {
 					//parse geminis simple markup
 					bool isText = true;
+					Gtk.TextIter end_iter;
+					buffer.get_end_iter(out end_iter);
 					if (line.has_prefix("=>")){
 						var uri = "";
 						var htext = "";
@@ -45,29 +45,19 @@ public class Dragonstone.View.Geminitext : Gtk.ScrolledWindow, Dragonstone.IView
 							uri = uri_and_text.substring(0,spaceindex);
 							htext = uri_and_text.substring(spaceindex).strip();
 						}
-						this.content.pack_start(new Dragonstone.Widget.LinkButton(tab,htext,uri));
+						var anchor = buffer.create_child_anchor(end_iter);
+						textview.add_child_at_anchor(new Dragonstone.Widget.LinkButton(tab,htext,uri),anchor);
 						isText = false;
 					}
-					if (isText && lastlabel == null){
-						lastlabel = new Gtk.Label("");
-						lastlabel.valign = Gtk.Align.START;
-						lastlabel.halign = Gtk.Align.START;
-						lastlabel.selectable = true;
-						//lastlabel.wrap_mode = Pango.WrapMode.WORD;
-						var fontdesc = new Pango.FontDescription();
-						fontdesc.set_family("monospace");
-						lastlabel.override_font(fontdesc);
-						this.content.pack_start(lastlabel);
-						lastlabel.margin_start = 4;
-						lastlabel.label = lastlabel.label+line;
-					} else if (isText){
-						lastlabel.label = lastlabel.label+"\n"+line;
-					} else {
-						lastlabel = null;
+					if (isText){
+						buffer.insert(ref end_iter,line+"\n",line.length+1);
 					}
 				}
 			}catch (GLib.Error e) {
-				this.content.pack_start(new Gtk.Label("ERROR reading cache file:\n"+e.message));
+				print("Error while rendering gemini content:\n"+e.message);
+				/*Gtk.TextIter end_iter;
+				textview.buffer.get_end_iter(out end_iter);;
+				textview.buffer.insert(end_iter,e.message,e.message.length);*/
 			}
 		} else {
 			return false;
