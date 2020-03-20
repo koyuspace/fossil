@@ -3,11 +3,13 @@ public class Dragonstone.Widget.TabHead : Gtk.Bin {
 	private Gtk.Button closeButton;
 	private Gtk.Label title = new Gtk.Label("💫️ New Tab");
 	private Dragonstone.Tab tab;
+	private Gtk.Spinner spinner = new Gtk.Spinner();
 	
 	public TabHead(Dragonstone.Tab tab) {
 		closeButton = new Gtk.Button.from_icon_name("window-close-symbolic");
 		closeButton.relief = Gtk.ReliefStyle.NONE;
 		var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL,1);
+		box.pack_start(spinner);
 		box.pack_start(title);
 		box.pack_end(closeButton);
 		add(box);
@@ -20,6 +22,8 @@ public class Dragonstone.Widget.TabHead : Gtk.Bin {
 	}
 	
 	public void refreshTitle(){
+		spinner.active = tab.loading;
+		spinner.visible = tab.loading;
 		string title = tab.title;
 		if (title.char_count() > 40){
 			var startcut = title.index_of_nth_char(20);

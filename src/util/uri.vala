@@ -160,6 +160,7 @@ public class Dragonstone.Util.Uri {
 	public static string get_scheme(string uri){
 		var index = strip_querys(uri).index_of_char(':');
 		if (index<0) { return ""; }
+		if ("." in uri[0:index]) { return ""; }
 		return uri[0:index];
 	}
 	

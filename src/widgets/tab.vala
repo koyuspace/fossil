@@ -67,7 +67,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 			}
 			request.notify["status"].disconnect(checkViewTimeoutHack);
 		}
-		setTitle("🔵 "+uri,true);
+		setTitle(uri,true);
 		request = new Dragonstone.Request(uri,"",reload);
 		var rquri = this.uri;
 		var startoffragment = rquri.index_of_char('#');
@@ -129,7 +129,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 				//show download view
 			}
 		}else if(request.status == "loading" || request.status == "connecting"){
-			setTitle("🔵 "+uri,true);
+			setTitle(uri,true);
 			view = new Dragonstone.View.Loading();
 		}else if(request.status.has_prefix("redirect")){
 			setTitle(uri);

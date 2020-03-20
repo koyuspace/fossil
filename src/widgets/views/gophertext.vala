@@ -104,6 +104,9 @@ private class Dragonstone.View.GophertextInlineSearch : Gtk.Bin {
 		//entry.halign = Gtk.Align.FILL;
 		entry.activate.connect(submit);
 		entry.expand = true;
+		var width = 50;
+		if (htext.char_count() > width) { width = htext.char_count()+1;}
+		entry.set_width_chars(width);
 		//var icon = new Gtk.Image.from_icon_name("system-search-symbolic",Gtk.IconSize.LARGE_TOOLBAR);
 		//icon.halign = Gtk.Align.START;
 		var button = new Gtk.Button.from_icon_name("go-next-symbolic");
