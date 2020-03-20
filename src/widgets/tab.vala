@@ -242,6 +242,8 @@ public class Dragonstone.Tab : Gtk.Bin {
 			return;
 		}
 		var filechooser = new Gtk.FileChooserNative(@"Download - $uri",parentWindow,Gtk.FileChooserAction.SAVE,"Download","_Cancel"); //TOTRANSLATE
+		filechooser.set_current_name(Dragonstone.Util.Uri.get_filename(uri));
+		filechooser.set_current_folder(Environment.get_user_special_dir(UserDirectory.DOWNLOAD));
 		filechooser.set_select_multiple(false);
 		filechooser.run();
 		if (filechooser.get_filename() != null) {

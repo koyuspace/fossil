@@ -7,12 +7,12 @@ public class Dragonstone.View.Geminitext : Dragonstone.Widget.TextContent, Drago
 			var file = File.new_for_path(request.resource.filepath);
 			if (!file.query_exists ()) {
         this.textview.buffer.text ="The cache file for this resource does not exist!\nReloading the page should help,\nif not please contact the developer!";
-    	}
-    	try{
+			}
+			try{
 				//parse text
 				
 				var dis = new DataInputStream (file.read ());
-        string line;
+				string line;
 				while ((line = dis.read_line (null)) != null) {
 					//parse geminis simple markup
 					bool isText = true;
