@@ -21,6 +21,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 
 	construct {
 		//show_close_button = false;
+		has_subtitle = false;
 		//backbutton
 		backbutton = new Gtk.Button.from_icon_name("go-previous-symbolic");
 		backbutton.relief = Gtk.ReliefStyle.NONE;
@@ -29,13 +30,15 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		//forwardbutton
 		forwardbutton = new Gtk.Button.from_icon_name("go-next-symbolic");
 		forwardbutton.relief = Gtk.ReliefStyle.NONE;
-		backbutton.valign = Gtk.Align.CENTER;
+		forwardbutton.valign = Gtk.Align.CENTER;
 		pack_start(forwardbutton);
 		//addressfield
 		addressfield = new Gtk.Entry();
 		addressfield.expand = true;
-		pack_start(addressfield);
-		backbutton.valign = Gtk.Align.CENTER;
+		addressfield.input_purpose = Gtk.InputPurpose.URL;
+		addressfield.valign = Gtk.Align.CENTER;
+		custom_title=addressfield;
+		//pack_start(addressfield);
 		//menubutton
 		pack_end(menubutton);
 		//mainmenu
@@ -73,9 +76,9 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		mainmenu.add(mainmenubox);
 		//loadbutton
 		loadbutton = new Gtk.Button.from_icon_name("dialog-error-symbolic");
-		backbutton.valign = Gtk.Align.CENTER;
+		loadbutton.valign = Gtk.Align.CENTER;
 		loadbutton.get_style_context().add_class("suggested-action");
-		pack_start(loadbutton);
+		pack_end(loadbutton);
 		
 		//bookmarksbutton [user-bookmark]
 		

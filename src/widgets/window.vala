@@ -39,7 +39,7 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		//add some dummy tabs
 		store = new Dragonstone.Store.Switch.default_configuration();
 		
-		add_tab("test://");
+		add_new_tab();
 		
 		add(tabs);
 		
