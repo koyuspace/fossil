@@ -160,7 +160,7 @@ private class Dragonstone.GopherResourceFetcher : Object {
 				}else{
 					request.setStatus("error/gibberish");
 				}
-			} else if(gophertype == '9' || gophertype == 'I' || gophertype == 'g'){
+			} else if(gophertype == '9' || gophertype == 'I' || gophertype == 'g' || gophertype == 'p'){
 				try{
 					readBytes(input_stream,helper);
 					var mimetype = "application/octet-stream";
@@ -169,7 +169,7 @@ private class Dragonstone.GopherResourceFetcher : Object {
 					}
 					if (query.has_suffix(".jpg") || query.has_suffix(".jpeg")){
 						mimetype = "image/jpg";
-					} else if (query.has_suffix(".png")){
+					} else if (query.has_suffix(".png") || gophertype == 'p'){
 						mimetype = "image/png";
 					} else if (query.has_suffix(".gif") || gophertype == 'g'){
 						mimetype = "image/gif";

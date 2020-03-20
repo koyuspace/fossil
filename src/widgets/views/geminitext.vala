@@ -1,16 +1,6 @@
-public class Dragonstone.View.Geminitext : Gtk.ScrolledWindow, Dragonstone.IView {
+public class Dragonstone.View.Geminitext : Dragonstone.Widget.TextContent, Dragonstone.IView {
 	
 	private Dragonstone.Request request = null;
-	private Gtk.TextView textview = null;
-	
-	construct {
-		textview = new Gtk.TextView();
-		textview.editable = false;
-		textview.wrap_mode = Gtk.WrapMode.WORD;
-		textview.set_monospace(true);
-		textview.set_left_margin(4);
-		add(textview);
-	}
 	
 	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
 		if (request.status == "success" && request.resource.mimetype.has_prefix("text/gemini")){
@@ -20,15 +10,12 @@ public class Dragonstone.View.Geminitext : Gtk.ScrolledWindow, Dragonstone.IView
     	}
     	try{
 				//parse text
-				var buffer = textview.buffer;
 				
 				var dis = new DataInputStream (file.read ());
         string line;
 				while ((line = dis.read_line (null)) != null) {
 					//parse geminis simple markup
 					bool isText = true;
-					Gtk.TextIter end_iter;
-					buffer.get_end_iter(out end_iter);
 					if (line.has_prefix("=>")){
 						var uri = "";
 						var htext = "";
@@ -45,19 +32,15 @@ public class Dragonstone.View.Geminitext : Gtk.ScrolledWindow, Dragonstone.IView
 							uri = uri_and_text.substring(0,spaceindex);
 							htext = uri_and_text.substring(spaceindex).strip();
 						}
-						var anchor = buffer.create_child_anchor(end_iter);
-						textview.add_child_at_anchor(new Dragonstone.Widget.LinkButton(tab,htext,uri),anchor);
+						this.appendWidget(new Dragonstone.Widget.LinkButton(tab,htext,uri));
 						isText = false;
 					}
 					if (isText){
-						buffer.insert(ref end_iter,line+"\n",line.length+1);
+						this.appendText(line+"\n");
 					}
 				}
 			}catch (GLib.Error e) {
-				print("Error while rendering gemini content:\n"+e.message);
-				/*Gtk.TextIter end_iter;
-				textview.buffer.get_end_iter(out end_iter);;
-				textview.buffer.insert(end_iter,e.message,e.message.length);*/
+				this.appendWidget(new Gtk.Label("Error while rendering gemini content:\n"+e.message));
 			}
 		} else {
 			return false;

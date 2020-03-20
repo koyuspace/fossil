@@ -75,6 +75,8 @@ public class Dragonstone.Widget.LinkButton : Gtk.Button {
 				return "image-x-generic-symbolic";
 			} else if (gophertype == 'I'){ //image
 				return "image-x-generic-symbolic";
+			} else if (gophertype == 'p'){ //image
+				return "image-x-generic-symbolic";
 			}
 		}
 		return "go-jump-symbolic";

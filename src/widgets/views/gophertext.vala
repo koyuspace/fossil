@@ -1,30 +1,16 @@
-public class Dragonstone.View.Gophertext : Gtk.ScrolledWindow, Dragonstone.IView {
+public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Dragonstone.IView {
 	
 	private Dragonstone.Request request = null;
-	private Gtk.Box content;
-	
-	construct {
-		content = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
-		content.homogeneous = false;
-		content.halign = Gtk.Align.START;
-		content.valign = Gtk.Align.START;
-		//content.get_style_context().add_class("textview.view");
-		//content.editable = false;
-		//content.wrap_mode = Gtk.WrapMode.WORD;
-		//content.set_monospace(true);
-		add(content);
-	}
 	
 	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
 		if (request.status == "success" && request.resource.mimetype.has_prefix("text/gopher")){
 			var file = File.new_for_path(request.resource.filepath);
 			if (!file.query_exists ()) {
-        this.content.pack_start(new Gtk.Label("The cache file for this resource does not exist!\nReloading the page should help,\nif not please contact the developer!"));
+        this.textview.buffer.text ="The cache file for this resource does not exist!\nReloading the page should help,\nif not please contact the developer!";
     	}
     	try{
 				//parse text
 				char lasttype = '\0';
-				Gtk.Label lastlabel = null;
 				var dis = new DataInputStream (file.read ());
         string line;
 				while ((line = dis.read_line (null)) != null) {
@@ -41,26 +27,12 @@ public class Dragonstone.View.Gophertext : Gtk.ScrolledWindow, Dragonstone.IView
 						var port = tokens[3].strip();
 						
 						//
-						if(gophertype == '+' && (gophertype == '0' || gophertype == '1' || gophertype == '9' || gophertype == '7')){
+						if(gophertype == '+' && (lasttype == '0' || lasttype == '1' || lasttype == '9' || lasttype == '7')){
 							gophertype = lasttype;
 						}
 						if (gophertype == 'i'){ //text
-							if (lastlabel == null || lasttype != gophertype){
-								lastlabel = new Gtk.Label("");
-								lastlabel.valign = Gtk.Align.START;
-								lastlabel.halign = Gtk.Align.START;
-								lastlabel.selectable = true;
-								var fontdesc = new Pango.FontDescription();
-								fontdesc.set_family("monospace");
-								lastlabel.override_font(fontdesc);
-								this.content.pack_start(lastlabel);
-								lastlabel.margin_start = 4;
-								lastlabel.label = lastlabel.label+htext;
-							}else{
-								lastlabel.label = lastlabel.label+"\n"+htext;
-							}
-							
-						}else if (gophertype == '0' || gophertype == '1' || gophertype == '9' || gophertype == 'g' || gophertype == 'I' || query.has_prefix("URL:")){
+							appendText(htext+"\n");
+						}else if (gophertype == '0' || gophertype == '1' || gophertype == '9' || gophertype == 'g' || gophertype == 'I' || gophertype == 'p' || query.has_prefix("URL:")){
 							string? uri = null;
 							if (query.has_prefix("URL:")) {
 								uri = query.substring(4);
@@ -71,38 +43,7 @@ public class Dragonstone.View.Gophertext : Gtk.ScrolledWindow, Dragonstone.IView
 									uri = @"gopher://$host/$gophertype$query";
 								}
 							}
-							//print(@"URI:$uri\n");
-							/*var icon_name = "go-jump-symbolic";
-							if (gophertype == '0'){ //file
-								icon_name = "text-x-generic-symbolic";
-							} else if (gophertype == '1'){ //directory
-								icon_name = "folder-symbolic";
-							} else if (gophertype == '7'){ //search
-								icon_name = "system-search-symbolic";
-							} else if (gophertype == '9'){ //binary
-								icon_name = "folder-download-symbolic";
-							} else if (gophertype == 'g'){ //gif
-								icon_name = "image-x-generic-symbolic";
-							} else if (gophertype == 'I'){ //image
-								icon_name = "image-x-generic-symbolic";
-							}
-							if (uri.has_prefix("http")){
-								icon_name = "text-html-symbolic";
-							} else if (uri.has_prefix("mailto:")){
-								icon_name = "mail-message-new-symbolic";
-							}
-							//make link and add it
-							//TODO: right click menu with a copy to clipvoaed option
-							/*var linkwidget = new Dragonstone.View.GophertextLinkDisplay(htext,uri,icon_name);
-							var button = new Gtk.Button();//.with_label(@"$htext [$uri]");
-							button.halign = Gtk.Align.START;
-							button.clicked.connect((s) => {
-								tab.goToUri(uri);
-							});
-							button.add(linkwidget);
-							button.set_relief(Gtk.ReliefStyle.NONE);
-							this.content.pack_start(button);*/
-							this.content.pack_start(new Dragonstone.Widget.LinkButton(tab,htext,uri));
+							appendWidget(new Dragonstone.Widget.LinkButton(tab,htext,uri));
 						} else if (gophertype == '7'){ //Search
 							string? uri = null;
 							if( port != "70" ){
@@ -111,16 +52,11 @@ public class Dragonstone.View.Gophertext : Gtk.ScrolledWindow, Dragonstone.IView
 								uri = @"gopher://$host/$gophertype$query";
 							}
 							var searchfield = new Dragonstone.View.GophertextInlineSearch(htext,uri);
-							searchfield.go.connect((s,uri) => {tab.goToUri(uri);});
-							this.content.pack_start(searchfield);
+							appendWidget(searchfield);
 						} else if (gophertype == '3'){ //Error
-							this.content.pack_start(
-								new Dragonstone.View.GophertextIconLabel(htext,"dialog-error-symbolic")
-							);
+							appendWidget(new Dragonstone.View.GophertextIconLabel(htext,"dialog-error-symbolic"));
 						} else {
-							this.content.pack_start(
-								new Dragonstone.View.GophertextUnknownItem(gophertype,htext,query,host,port)
-							);
+							appendWidget(new Dragonstone.View.GophertextUnknownItem(gophertype,htext,query,host,port));
 						}
 						lasttype = gophertype;
 					}else if(tokens.length == 0){ //empty line, ignore
@@ -129,7 +65,10 @@ public class Dragonstone.View.Gophertext : Gtk.ScrolledWindow, Dragonstone.IView
 					}
 				}
 			}catch (GLib.Error e) {
-				this.content.pack_start(new Gtk.Label("ERROR reading cache file:\n"+e.message));
+				Gtk.TextIter end_iter;
+				textview.buffer.get_end_iter(out end_iter);
+				var anchor = textview.buffer.create_child_anchor(end_iter);
+				textview.add_child_at_anchor(new Gtk.Label("Error while rendering gopher content:\n"+e.message),anchor);
 			}
 		} else {
 			return false;
@@ -189,7 +128,7 @@ private class Dragonstone.View.GophertextUnknownItem : Gtk.Bin {
 		var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL,4);
 		box.homogeneous = false;
 		box.margin_start = 4;
-		var label = new Gtk.Label(@"Unknown Item Type: '$gophertype' -> $host:$port/$query\n$htext");
+		var label = new Gtk.Label(@"Unknown Item Type: '$gophertype' -> $host:$port/$gophertype$query\n$htext");
 		label.selectable = true;
 		label.halign = Gtk.Align.START;
 		//var labelAttrList = new Pango.AttrList();
