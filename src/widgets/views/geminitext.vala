@@ -33,7 +33,6 @@ public class Dragonstone.View.Geminitext : Gtk.ScrolledWindow, Dragonstone.IView
 						var uri = "";
 						var htext = "";
 						var uri_and_text = line.substring(2).strip();
-						print("=> "+uri_and_text);
 						var spaceindex = uri_and_text.index_of_char(' ');
 						var tabindex = uri_and_text.index_of_char('\t');
 						if (spaceindex < 0 && tabindex < 0){
