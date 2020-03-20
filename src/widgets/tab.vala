@@ -27,14 +27,19 @@ public class Dragonstone.Tab : Gtk.Bin {
 		loadUri(uri);
 	}
 	
-	public void goToUri(string uri){
+	public void goToUri(string uri, bool is_absolute = false){
 		if(locked){ return; }
-		print(@"raw uri: $uri\n");
+		print(@"raw uri: $uri absolute: $is_absolute\n");
 		if (uri == null){
 			print("Potential ERROR: tab.goToUri called with a null uri!\n");
 			return;
 		}
-		var uritogo = Dragonstone.Util.Uri.join(_uri,uri);
+		string uritogo;
+		if (is_absolute) {
+			uritogo = uri;
+		} else {
+			uritogo = Dragonstone.Util.Uri.join(_uri,uri);
+		}
 		if (uritogo == null){uritogo = uri;}
 		print(@"Going to uri: $uritogo\n");
 		//add to history

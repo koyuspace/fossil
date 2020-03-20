@@ -20,7 +20,13 @@ public class Dragonstone.Widget.TabHead : Gtk.Bin {
 	}
 	
 	public void refreshTitle(){
-		this.title.label = tab.title;
+		string title = tab.title;
+		if (title.char_count() > 40){
+			var startcut = title.index_of_nth_char(20);
+			var endcut = title.index_of_nth_char(title.char_count()-20);
+			title = title[0:startcut]+"…"+title.slice(endcut,title.length);
+		}
+		this.title.label = title;
 	}
 	
 	public void detach(){

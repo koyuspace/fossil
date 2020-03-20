@@ -52,6 +52,7 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
 								uri = @"gopher://$host/$gophertype$query";
 							}
 							var searchfield = new Dragonstone.View.GophertextInlineSearch(htext,uri);
+							searchfield.go.connect((s,uri) => {tab.goToUri(uri);});
 							appendWidget(searchfield);
 						} else if (gophertype == '3'){ //Error
 							appendWidget(new Dragonstone.View.GophertextIconLabel(htext,"dialog-error-symbolic"));

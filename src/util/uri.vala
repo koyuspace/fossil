@@ -136,6 +136,31 @@ public class Dragonstone.Util.Uri {
 	public static bool is_absulute(string uri){
 		var slashindex = uri.index_of_char('/');
 		var colonindex = uri.index_of_char(':');
-		return colonindex > 0 && colonindex < slashindex;
+		if (slashindex > 0 && slashindex+1 < uri.length){
+			return colonindex > 0 && colonindex+1==slashindex && uri[slashindex+1] == '/';
+		}
+		return false;
 	}
+	
+	public static string strip_querys(string uri){
+		unichar[] pathends = {'?','#','\t'};
+		var pathend = uri.length;
+		foreach(unichar end in pathends){
+			var index = uri.index_of_char(end);
+			if (index < pathend && index >= 0){pathend = index;}
+		}
+		return uri[0:pathend];
+	}
+	
+	public static string get_filename(string uri){
+		var tokens = strip_querys(uri).split("/");
+		return tokens[tokens.length-1];
+	}
+	
+	public static string get_scheme(string uri){
+		var index = strip_querys(uri).index_of_char(':');
+		if (index<0) { return ""; }
+		return uri[0:index];
+	}
+	
 }
