@@ -30,25 +30,24 @@ public class Dragonstone.View.Geminitext : Gtk.ScrolledWindow, Dragonstone.IView
 					//parse geminis simple markup
 					bool isText = true;
 					if (line.has_prefix("=>")){
-						if (line.get(2) == ' ' || line.get(2) == '\t'){
-							var uri = "";
-							var htext = "";
-							var uri_and_text = line.substring(3).strip();
-							var spaceindex = uri_and_text.index_of_char(' ');
-							var tabindex = uri_and_text.index_of_char('\t');
-							if (spaceindex < 0 && tabindex < 0){
-								uri = uri_and_text;
-								htext = uri_and_text;
-							} else if ((tabindex > 0 && tabindex < spaceindex) || spaceindex < 0){
-								uri = uri_and_text.substring(0,tabindex);
-								htext = uri_and_text.substring(tabindex).strip();
-							} else if ((spaceindex > 0 && spaceindex < tabindex) || tabindex < 0){
-								uri = uri_and_text.substring(0,spaceindex);
-								htext = uri_and_text.substring(spaceindex).strip();
-							}
-							this.content.pack_start(new Dragonstone.Widget.LinkButton(tab,htext,uri));
-							isText = false;
+						var uri = "";
+						var htext = "";
+						var uri_and_text = line.substring(2).strip();
+						print("=> "+uri_and_text);
+						var spaceindex = uri_and_text.index_of_char(' ');
+						var tabindex = uri_and_text.index_of_char('\t');
+						if (spaceindex < 0 && tabindex < 0){
+							uri = uri_and_text;
+							htext = uri_and_text;
+						} else if ((tabindex > 0 && tabindex < spaceindex) || spaceindex < 0){
+							uri = uri_and_text.substring(0,tabindex);
+							htext = uri_and_text.substring(tabindex).strip();
+						} else if ((spaceindex > 0 && spaceindex < tabindex) || tabindex < 0){
+							uri = uri_and_text.substring(0,spaceindex);
+							htext = uri_and_text.substring(spaceindex).strip();
 						}
+						this.content.pack_start(new Dragonstone.Widget.LinkButton(tab,htext,uri));
+						isText = false;
 					}
 					if (isText && lastlabel == null){
 						lastlabel = new Gtk.Label("");
