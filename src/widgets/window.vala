@@ -4,6 +4,7 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 	public Gtk.Notebook tabs;
 	public Dragonstone.ResourceStore store;	
 	
+	
 	public Window(Gtk.Application application) {
 		Object(
 			application: application
@@ -29,6 +30,12 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		tabs = new Gtk.Notebook();
 		tabs.expand = true;
 		
+		var addButton = new Gtk.Button.from_icon_name("tab-new-symbolic");
+		addButton.relief = Gtk.ReliefStyle.NONE;
+		addButton.clicked.connect(add_new_tab);
+		addButton.show_all();
+		tabs.set_action_widget(addButton,Gtk.PackType.END);
+		
 		//add some dummy tabs
 		store = new Dragonstone.Store.Switch.default_configuration();
 		
@@ -50,10 +57,16 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		show_all();
 	}
 	
+	//fills out the destination with the default address
+	public void add_new_tab(){
+		add_tab("test://");
+	}
+	
 	public void add_tab(string uri){
 		var tab = new Dragonstone.Tab(store,uri,this);
 		tabs.append_page(tab,new Dragonstone.Widget.TabHead(tab));
 		tabs.set_tab_reorderable(tab,true);
+		tabs.set_current_page(-1);
 	}
 	
 	public void close_tab(Gtk.Widget tab){
@@ -62,7 +75,7 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 			(tab as Dragonstone.Tab).cleanup();
 		}
 		if (tabs.get_n_pages() == 0) {
-			add_tab("test://");
+			add_new_tab();
 		}
 	}
 	
