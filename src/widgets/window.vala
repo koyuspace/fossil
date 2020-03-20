@@ -28,7 +28,7 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		
 		//"content"
 		tabs = new Gtk.Notebook();
-		tabs.expand = true;
+		tabs.scrollable = true;
 		
 		var addButton = new Gtk.Button.from_icon_name("tab-new-symbolic");
 		addButton.relief = Gtk.ReliefStyle.NONE;
