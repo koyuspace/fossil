@@ -41,14 +41,22 @@ public class Dragonstone.Resource : Object {
 	}
 	
 	public void increment_users(){
+		print(@"[res] Users increment: URI:$(this.uri) FILEPATH:$(this.filepath)\n");
 		this.users++;
 	}
 	
 	public void decrement_users(){
+		print(@"[res] Users decrement: URI:$(this.uri) FILEPATH:$(this.filepath)\n");
 		this.users--;
-		if (this.users == 0 && this.isTemporary){
-			//TODO: delete file
-			print(@"Resource free: URI:$(this.uri) FILEPATH:$(this.filepath)");
+		if (this.users <= 0 && this.isTemporary){
+			var file = File.new_for_path(this.filepath);
+			try{
+				file.delete();
+			}catch( Error e ){
+				;
+			}
+			
+			print(@"[res] Resource free: URI:$(this.uri) FILEPATH:$(this.filepath)\n");
 		}
 	}
 	

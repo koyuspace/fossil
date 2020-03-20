@@ -47,7 +47,12 @@ public class Dragonstone.Tab : Gtk.Bin {
 	
 	private void loadUri(string uri,bool reload = false){
 		_uri = uri;
-		if (request != null){ request.notify["status"].disconnect(checkViewTimeoutHack); }
+		if (request != null){
+			if (request.resource != null){
+				request.resource.decrement_users();
+			}
+			request.notify["status"].disconnect(checkViewTimeoutHack);
+		}
 		request = new Dragonstone.Request(uri,"",reload);
 		var rquri = this.uri;
 		var startoffragment = rquri.index_of_char('#');
@@ -55,7 +60,12 @@ public class Dragonstone.Tab : Gtk.Bin {
 			rquri = rquri.substring(0,startoffragment);
 		}
 		store.request(request);
-		if (request != null){ request.notify["status"].connect(checkViewTimeoutHack); }
+		if (request != null){
+			if (request.resource != null){
+				request.resource.increment_users();
+			}
+			request.notify["status"].connect(checkViewTimeoutHack);
+		}
 		updateView();
 		uriChanged(this.uri);
 	}
