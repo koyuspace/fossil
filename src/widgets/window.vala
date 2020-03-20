@@ -52,7 +52,7 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 	
 	public void add_tab(string uri){
 		var tab = new Dragonstone.Tab(store,uri,this);
-		tabs.append_page(tab,tab.tabLabel);
+		tabs.append_page(tab,new Dragonstone.Widget.TabHead(tab));
 		tabs.set_tab_reorderable(tab,true);
 	}
 	
@@ -60,6 +60,9 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		tabs.remove_page(tabs.page_num(tab));
 		if (tab is Dragonstone.Tab && tab != null) {
 			(tab as Dragonstone.Tab).cleanup();
+		}
+		if (tabs.get_n_pages() == 0) {
+			add_tab("test://");
 		}
 	}
 	

@@ -14,7 +14,10 @@ public class Dragonstone.Tab : Gtk.Bin {
 	private Gtk.Window parentWindow;
 	private bool locked = false;
 	//a label widget for adding to tabs in a notebook
-	public Gtk.Label tabLabel = new Gtk.Label("Tab");
+	public string title = "New Tab";
+	public bool loading = false; //changeing this counts as a title change
+	public signal void on_cleanup();
+	public signal void on_title_change();
 	
 	public Tab(Dragonstone.ResourceStore store, string uri, Gtk.Window parentWindow){
 		Object(
@@ -59,7 +62,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 			}
 			request.notify["status"].disconnect(checkViewTimeoutHack);
 		}
-		tabLabel.label = "🔵 "+uri;
+		setTitle("🔵 "+uri,true);
 		request = new Dragonstone.Request(uri,"",reload);
 		var rquri = this.uri;
 		var startoffragment = rquri.index_of_char('#');
@@ -93,23 +96,6 @@ public class Dragonstone.Tab : Gtk.Bin {
 		}
 	}
 	
-	public void cleanup(){
-		if(locked){ return; }
-		locked = true;
-		if (view != null){
-			view.cleanup();
-			remove(view);
-			view = null;
-		}
-		view = null;
-		if (request != null){
-			if (request.resource != null){
-				request.resource.decrement_users();
-			}
-			request.notify["status"].disconnect(checkViewTimeoutHack);
-		}
-	}
-	
 	//update the view either beacause of a new Resource or beacause of a change of the current reource
 	public void updateView(){ //TODO
 		if(locked){ return; }
@@ -123,7 +109,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		//choose a new one
 		if (request.status == "success"){
 			print(@"STATIC/DYNAMIC $(request.resource.mimetype)\n");
-			tabLabel.label = uri;
+			setTitle(uri);
 			if (request.resource.mimetype.has_prefix("text/gopher")){
 				view = new Dragonstone.View.Gophertext();
 			} else if (request.resource.mimetype.has_prefix("text/gemini")){
@@ -138,9 +124,10 @@ public class Dragonstone.Tab : Gtk.Bin {
 				//show download view
 			}
 		}else if(request.status == "loading" || request.status == "connecting"){
-			tabLabel.label = "🔵 "+uri;
+			setTitle("🔵 "+uri,true);
 			view = new Dragonstone.View.Loading();
 		}else if(request.status.has_prefix("redirect")){
+			setTitle(uri);
 			bool autoredirect = false;
 			if (autoredirect){
 				redirect(request.substatus);
@@ -163,22 +150,48 @@ public class Dragonstone.Tab : Gtk.Bin {
 			view = new Dragonstone.View.Error.Generic();
 		}
 		if(request.status.has_prefix("error")){
-			tabLabel.label = "🔴 "+uri;
+			setTitle("🔴 "+uri);
 		}
 		if (view != null){
 			if(view.displayResource(request,this)){
 				add(view);
 			} else {
+				setTitle("🔴 "+uri);
 				view = new Dragonstone.View.Label("I think i chose the wrong view ...\nPlease report this to the developer!"); //TOTRANSLATE
 				add(view);
 			}
 		} else {
+			setTitle("🔴 "+uri);
 			view = new Dragonstone.View.Label(@"I'm sorry, but I don't know how to show that to you\nPlease report this to the developer if this is a release version (or you think this really shouldn't have happened)!\n$(request.status)\n$(request.substatus)"); //TOTRANSLATE
 			add(view);
 		}
 		show_all();
 	}
-
+	
+	public void close(){
+		cleanup();
+		if (parentWindow is Dragonstone.Window){
+			(parentWindow as Dragonstone.Window).close_tab(this);
+		}
+	}
+	
+	public void cleanup(){
+		if(locked){ return; }
+		locked = true;
+		if (view != null){
+			view.cleanup();
+			remove(view);
+			view = null;
+		}
+		view = null;
+		if (request != null){
+			if (request.resource != null){
+				request.resource.decrement_users();
+			}
+			request.notify["status"].disconnect(checkViewTimeoutHack);
+		}
+		on_cleanup();
+	}
 
 	//backbutton handler
 	public void goBack(){
@@ -231,6 +244,12 @@ public class Dragonstone.Tab : Gtk.Bin {
 			print(@"Download: $uri -> $filepath [Currently disabled]\n");
 			Dragonstone.Downloader.save_resource.begin(this.request.resource,filepath,(obj, res) => {;});
 		}
+	}
+	
+	public void setTitle(string title,bool loading = false){
+		this.title = title;
+		this.loading = loading;
+		this.on_title_change();
 	}
 	
 }

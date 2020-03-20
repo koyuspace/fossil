@@ -17,6 +17,7 @@ executable(
 	'widgets/headerBar.vala',
 	'widgets/view.vala',
 	'widgets/tab.vala',
+	'widgets/tabHead.vala',
 	'widgets/textContent.vala',
 	'widgets/linkbutton.vala',
 	'widgets/views/offline.vala',
