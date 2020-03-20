@@ -12,6 +12,9 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public Dragonstone.Util.Stack<string> history = new Dragonstone.Util.Stack<string>();
 	public Dragonstone.Util.Stack<string> forward = new Dragonstone.Util.Stack<string>();
 	private Gtk.Window parentWindow;
+	private bool locked = false;
+	//a label widget for adding to tabs in a notebook
+	public Gtk.Label tabLabel = new Gtk.Label("Tab");
 	
 	public Tab(Dragonstone.ResourceStore store, string uri, Gtk.Window parentWindow){
 		Object(
@@ -22,6 +25,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	}
 	
 	public void goToUri(string uri){
+		if(locked){ return; }
 		print(@"raw uri: $uri\n");
 		if (uri == null){
 			print("Potential ERROR: tab.goToUri called with a null uri!\n");
@@ -40,12 +44,14 @@ public class Dragonstone.Tab : Gtk.Bin {
 	//this will overwrite the last uri in the tab history
 	//handle with care!
 	public void redirect(string uri){
+		if(locked){ return; }
 		var joined_uri = Dragonstone.Util.Uri.join(_uri,uri);
 		if (joined_uri == null){joined_uri = uri;}
 		loadUri(joined_uri);
 	}
 	
 	private void loadUri(string uri,bool reload = false){
+		if(locked){ return; }
 		_uri = uri;
 		if (request != null){
 			if (request.resource != null){
@@ -53,6 +59,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 			}
 			request.notify["status"].disconnect(checkViewTimeoutHack);
 		}
+		tabLabel.label = "🔵 "+uri;
 		request = new Dragonstone.Request(uri,"",reload);
 		var rquri = this.uri;
 		var startoffragment = rquri.index_of_char('#');
@@ -71,6 +78,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	}
 	
 	private void checkViewTimeoutHack(){
+		if(locked){ return; }
 		Timeout.add(0,() => {
 			checkView();
 			return false;
@@ -79,22 +87,43 @@ public class Dragonstone.Tab : Gtk.Bin {
 	
 	//check if the current view is still appropriate, and if not change it
 	public void checkView(){
+		if(locked){ return; }
 		if (!view.canHandleCurrentResource()) {
 			updateView();
 		}
-	}	
+	}
+	
+	public void cleanup(){
+		if(locked){ return; }
+		locked = true;
+		if (view != null){
+			view.cleanup();
+			remove(view);
+			view = null;
+		}
+		view = null;
+		if (request != null){
+			if (request.resource != null){
+				request.resource.decrement_users();
+			}
+			request.notify["status"].disconnect(checkViewTimeoutHack);
+		}
+	}
 	
 	//update the view either beacause of a new Resource or beacause of a change of the current reource
 	public void updateView(){ //TODO
+		if(locked){ return; }
 		print("UPDATING view!\n");
 		//remove the old view
 		if (view != null){
+			view.cleanup();
 			remove(view);
 		}
 		view = null;
 		//choose a new one
 		if (request.status == "success"){
 			print(@"STATIC/DYNAMIC $(request.resource.mimetype)\n");
+			tabLabel.label = uri;
 			if (request.resource.mimetype.has_prefix("text/gopher")){
 				view = new Dragonstone.View.Gophertext();
 			} else if (request.resource.mimetype.has_prefix("text/gemini")){
@@ -109,6 +138,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 				//show download view
 			}
 		}else if(request.status == "loading" || request.status == "connecting"){
+			tabLabel.label = "🔵 "+uri;
 			view = new Dragonstone.View.Loading();
 		}else if(request.status.has_prefix("redirect")){
 			bool autoredirect = false;
@@ -132,6 +162,9 @@ public class Dragonstone.Tab : Gtk.Bin {
 		}else if(request.status.has_prefix("error")){
 			view = new Dragonstone.View.Error.Generic();
 		}
+		if(request.status.has_prefix("error")){
+			tabLabel.label = "🔴 "+uri;
+		}
 		if (view != null){
 			if(view.displayResource(request,this)){
 				add(view);
@@ -149,6 +182,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 
 	//backbutton handler
 	public void goBack(){
+		if(locked){ return; }
 		if(!canGoBack()) return;
 		var uri = history.pop();
 		if (uri == null) { return; }
@@ -158,6 +192,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	
 	//forwardbuttonhandler
 	public void goForward(){
+		if(locked){ return; }
 		if(!canGoForward()) return;
 		var uri = forward.pop();
 		if (uri == null) { return; }
@@ -175,6 +210,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	
 	//reloads the resource
 	public void reload(){
+		if(locked){ return; }
 		string urix = uri; //setting a variable to itself the complicatd way
 		print("reloading!\n");
 		print("URI: '"+urix+"'\n");
@@ -182,6 +218,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	}
 	
 	public void download(){
+		if(locked){ return; }
 		if (this.request.resource == null){
 			print("Can't download an non existant resource!");
 			return;

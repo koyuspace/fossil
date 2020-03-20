@@ -1,6 +1,6 @@
 public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 	
-	public Gtk.Stack tabs { get; construct; }
+	public Gtk.Notebook tabs { get; construct; }
 	private Dragonstone.Tab current_tab;
 	
 	private Gtk.Entry addressfield;
@@ -13,14 +13,14 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 	private Gtk.Button menubutton = new Gtk.Button.from_icon_name("open-menu-symbolic");
 	private Gtk.Popover mainmenu;
 	
-	public HeaderBar (Gtk.Stack tabs) {
+	public HeaderBar (Gtk.Notebook tabs) {
 		Object (
 			tabs: tabs
 		);
 	}
 
 	construct {
-		show_close_button = true;
+		//show_close_button = false;
 		//backbutton
 		backbutton = new Gtk.Button.from_icon_name("go-previous-symbolic");
 		backbutton.relief = Gtk.ReliefStyle.NONE;
@@ -78,11 +78,11 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		pack_start(loadbutton);
 		//tabsbutton
 		//TEMPORARY
-		var stackswitcher = new Gtk.StackSwitcher();
+		/*var stackswitcher = new Gtk.StackSwitcher();
 		
 		stackswitcher.stack = tabs;
 		
-		pack_end(stackswitcher);
+		pack_end(stackswitcher);*/
 		
 		//bookmarksbutton [user-bookmark]
 		
@@ -132,19 +132,21 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 			current_tab.download();
 		});
 		//connect stack signal
-		tabs.notify["visible-child"].connect((s,t) => {onVisibleTabChanged();});
+		tabs.switch_page.connect((widget,num) => {
+			onVisibleTabChanged(widget);
+		});
 		//fire events
-		onVisibleTabChanged();
+		onVisibleTabChanged(tabs.get_nth_page(tabs.get_current_page()));
 	}
 	
-	private void onVisibleTabChanged(){
+	private void onVisibleTabChanged(Gtk.Widget tab){
 		//disconnect old signals
 		if (current_tab != null){
 			current_tab.uriChanged.disconnect(onUriChanged);
 		}
 		//set new tab
-		if (!(tabs.visible_child is Dragonstone.Tab)) { return; }
-		current_tab = tabs.visible_child as Dragonstone.Tab;
+		if (!(tab is Dragonstone.Tab)) { return; }
+		current_tab = tab as Dragonstone.Tab;
 		//connect new signa
 		current_tab.uriChanged.connect(onUriChanged);
 		//everything else
