@@ -40,6 +40,13 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		tabs.scrollable = true;
 		tabs.set_group_name("dragonstone.tabs");
 		
+		tabs.page_added.connect((widget, pagenum) => {
+			if (widget is Dragonstone.Tab){
+				var tab = (widget as Dragonstone.Tab);
+				tab.set_parent_window(this);
+			}
+		});
+		
 		//new tab button
 		var addButton = new Gtk.Button.from_icon_name("tab-new-symbolic");
 		addButton.relief = Gtk.ReliefStyle.NONE;
@@ -76,7 +83,9 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 	}
 	
 	public void close_tab(Gtk.Widget tab){
-		tabs.remove_page(tabs.page_num(tab));
+		var page_num = tabs.page_num(tab);
+		if(page_num < 0) { return; }
+		tabs.remove_page(page_num);
 		if (tab is Dragonstone.Tab && tab != null) {
 			(tab as Dragonstone.Tab).cleanup();
 		}

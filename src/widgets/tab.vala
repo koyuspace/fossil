@@ -171,6 +171,10 @@ public class Dragonstone.Tab : Gtk.Bin {
 		show_all();
 	}
 	
+	public void set_parent_window(Dragonstone.Window window){
+		parentWindow = window;
+	}
+	
 	public void close(){
 		cleanup();
 		if (parentWindow is Dragonstone.Window){
