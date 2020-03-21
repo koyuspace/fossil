@@ -10,6 +10,7 @@ executable(
 	'util/stack.vala',
 	'util/uri.vala',
 	'stores/about.vala',
+	'stores/file.vala',
 	'stores/gemini.vala',
 	'stores/gopher.vala',
 	'stores/switch.vala',

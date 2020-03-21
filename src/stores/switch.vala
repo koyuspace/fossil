@@ -16,6 +16,9 @@ class Dragonstone.Store.Switch : Object, Dragonstone.ResourceStore {
 		this.add_resource_store("gopher://",new Dragonstone.Store.Gopher());
 		this.add_resource_store("gemini://",new Dragonstone.Store.Gemini());
 		this.add_resource_store("about:",new Dragonstone.Store.About());
+		var filestore = new Dragonstone.Store.File();
+		this.add_resource_store("file://",filestore);
+		this.add_resource_store("/",filestore);
 	}
 	
 	public void add_resource_store(string prefix,Dragonstone.ResourceStore store){
