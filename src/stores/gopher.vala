@@ -133,7 +133,7 @@ private class Dragonstone.GopherResourceFetcher : Object {
 			print (@"[gopher] Connected to $host\n");
 		} catch (Error e) {
 			print("[gopher] ERROR while connecting: "+e.message+"\n");
-			request.setStatus("error/connecionRefused");
+			request.setStatus("error/connectionRefused");
 			return;
 		}
 		request.setStatus("loading");
