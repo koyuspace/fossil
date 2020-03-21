@@ -8,6 +8,7 @@ public class Dragonstone.Store.Gemini : Object, Dragonstone.ResourceStore {
 		// parse uri
 		if(!request.uri.has_prefix("gemini://")){
 			request.setStatus("error/uri/unknownScheme","Gemini only knows gemini://");
+			return;
 		}
 		var startoffset = 9;
 		var indexofslash = request.uri.index_of_char('/',startoffset);

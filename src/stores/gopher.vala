@@ -9,6 +9,7 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 		// parse uri
 		if(!request.uri.has_prefix("gopher://")){
 			request.setStatus("error/uri/unknownScheme","Gopher only knows gopher://");
+			return;
 		}
 		var startoffset = 9;
 		var indexofslash = request.uri.index_of_char('/',startoffset);
