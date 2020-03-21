@@ -18,7 +18,6 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public bool loading = false; //changeing this counts as a title change
 	public signal void on_cleanup();
 	public signal void on_title_change();
-	private string startupuri = null;
 	
 	public Tab(Dragonstone.ResourceStore store, string uri, Gtk.Window parentWindow){
 		Object(
@@ -94,8 +93,8 @@ public class Dragonstone.Tab : Gtk.Bin {
 	//check if the current view is still appropriate, and if not change it
 	public void checkView(){
 		if(locked){ return; }
-		print(@"check view -- $(request.status) -- $(request.substatus) --\n");
-		if (!view.canHandleCurrentResource() || request.status == "success") {
+		//print(@"check view -- $(request.status) -- $(request.substatus) --\n");
+		if (!view.canHandleCurrentResource() ) {
 			updateView();
 		}
 	}
@@ -127,7 +126,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 			}	else {
 				view = new Dragonstone.View.Download();
 			}
-		}else if(request.status == "loading" || request.status == "connecting"){
+		}else if(request.status == "loading" || request.status == "connecting" || request.status == "reouting"){
 			setTitle(uri,true);
 			view = new Dragonstone.View.Loading();
 		}else if(request.status.has_prefix("redirect")){

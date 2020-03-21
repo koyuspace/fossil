@@ -9,6 +9,6 @@ public class Dragonstone.View.Label : Gtk.Bin, Dragonstone.IView {
 	}
 	
 	public bool canHandleCurrentResource(){
-		return true;
+		return false;
 	}
 }

@@ -19,7 +19,6 @@ public class Dragonstone.Request : Object {
 	}
 	
 	public void setStatus(string status, string substatus = ""){
-		print(@"STATUS -- $status -- $substatus --\n");
 		this.status = status;
 		this.substatus = substatus;
 	}
