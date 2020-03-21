@@ -18,6 +18,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public bool loading = false; //changeing this counts as a title change
 	public signal void on_cleanup();
 	public signal void on_title_change();
+	private string startupuri = null;
 	
 	public Tab(Dragonstone.ResourceStore store, string uri, Gtk.Window parentWindow){
 		Object(
@@ -93,7 +94,8 @@ public class Dragonstone.Tab : Gtk.Bin {
 	//check if the current view is still appropriate, and if not change it
 	public void checkView(){
 		if(locked){ return; }
-		if (!view.canHandleCurrentResource()) {
+		print(@"check view -- $(request.status) -- $(request.substatus) --\n");
+		if (!view.canHandleCurrentResource() || request.status == "success") {
 			updateView();
 		}
 	}

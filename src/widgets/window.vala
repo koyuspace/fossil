@@ -61,7 +61,7 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 	
 	//fills out the destination with the default address
 	public void add_new_tab(){
-		add_tab("test://");
+		add_tab("gopher://gopher.floodgap.com/");
 	}
 	
 	public void add_tab(string uri){
