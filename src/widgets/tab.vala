@@ -126,7 +126,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 			}	else if (request.resource.mimetype.has_prefix("image/")){
 				view = new Dragonstone.View.Image();
 			}	else {
-				//show download view
+				view = new Dragonstone.View.Download();
 			}
 		}else if(request.status == "loading" || request.status == "connecting"){
 			setTitle(uri,true);
@@ -190,6 +190,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		}
 		view = null;
 		if (request != null){
+			request.cancel();
 			if (request.resource != null){
 				request.resource.decrement_users();
 			}

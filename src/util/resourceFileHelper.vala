@@ -4,6 +4,7 @@ public class Dragonstone.Util.ResourceFileWriteHelper : Object {
 	private File file = null;
 	private FileOutputStream outstream = null;
 	public bool error = false;
+	public bool cancelled = false;
 	public bool closed = false;
 	public int64 size = 0;
 	public int64 progress = 0;
@@ -41,6 +42,19 @@ public class Dragonstone.Util.ResourceFileWriteHelper : Object {
 	
 	public void appendString(string buffer){
 		this.append(buffer.data);
+	}
+	
+	public void cancel(){
+		if (this.closed) {return;}
+		close();
+		cancelled = true;
+		request.setStatus("cancelled");
+		try{
+			file.delete();
+		}catch(Error e){
+			error = true;
+			request.setStatus("error/internalError","Something went wrong wile deleting "+filepath+":\n"+e.message);
+		}
 	}
 	
 	public void close(){

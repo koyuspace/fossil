@@ -185,7 +185,7 @@ private class Dragonstone.GopherResourceFetcher : Object {
 				request.setStatus("error",@"Gophertype $gophertype not supported!");
 				return;
 			}
-			if (helper.error){return;}
+			if (helper.closed){return;} //error or cancelled
 			helper.close();
 			request.setResource(resource,"gopher");
 			return;
@@ -227,6 +227,10 @@ private class Dragonstone.GopherResourceFetcher : Object {
 	public void readBytes(DataInputStream input_stream,Dragonstone.Util.ResourceFileWriteHelper helper) throws Error{
 			uint64 counter = 0;
 			while (true){
+				if(request.cancelled){
+					helper.cancel();
+					return;
+				}
 				var bytes = input_stream.read_bytes(1024);
 				counter += bytes.length;
 				if (bytes.length == 0){
@@ -238,6 +242,7 @@ private class Dragonstone.GopherResourceFetcher : Object {
 				//teerminate early if file gets too big
 				if(counter > 1024*1024*1024*3){
 					print("GOPHER terminating file read early, beacause file is too big (>3GB)\n");
+					helper.cancel();
 					return;
 				}
 			}

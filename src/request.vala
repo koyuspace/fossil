@@ -10,6 +10,8 @@ public class Dragonstone.Request : Object {
 	public string store { get; protected set; default = null;} //who processed the request?
 	public Dragonstone.Resource resource { get; protected set; default = null;} //what was the result?
 	
+	public bool cancelled = false; //set to true to cancel download (no effect if resource was alredy fetched)
+	
 	public Request(string uri, string queryMetadata="", bool reload = false){
 		this.uri = uri;
 		this.queryMetadata = queryMetadata;
@@ -26,6 +28,11 @@ public class Dragonstone.Request : Object {
 		this.store = store;
 		this.setStatus(status,substatus);
 	}
+	
+	public void cancel(){
+		cancelled = true;
+	}
+	
 }
 
 /*
@@ -39,6 +46,7 @@ public class Dragonstone.Request : Object {
 	            Example: 1FB/0 ; 78/2F0 ; 0/0 ; 0/28F
 	            Parsers should stop at a " " to leave space for future expansion
 	"success" - request completed, resource is not null and contains requested data
+	"cancelled" - request was cancelled before the download finished
 	"redirect/permanent" - permanent redirect, site moved, may ask user to update bookmarks etc.
 	                        substatus contains new uri
 	"redirect/temporary" - temporary redirect

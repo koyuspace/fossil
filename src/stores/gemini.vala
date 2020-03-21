@@ -163,7 +163,7 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 					var helper = new Dragonstone.Util.ResourceFileWriteHelper(request,resource.filepath,0);
 					helper.appendString(metaline); //input prompt
 					resource.add_metadata("gemini/input",metaline);
-					if (helper.error){return;}
+					if (helper.closed){return;} //error or cancelled
 					helper.close();
 					request.setResource(resource,"gemini");
 				} else if (statuscode/10==2){
@@ -203,17 +203,22 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 	public void readBytes(DataInputStream input_stream,Dragonstone.Util.ResourceFileWriteHelper helper) throws Error{
 			uint64 counter = 0;
 			while (true){
-				var bytes = input_stream.read_bytes(1024);
+				if(request.cancelled){
+					helper.cancel();
+					return;
+				}
+				var bytes = input_stream.read_bytes(1024*10);
 				counter += bytes.length;
 				if (bytes.length == 0){
 					break;
 				} else {
 					helper.append(Bytes.unref_to_data(bytes));
 				}
-				print(@"$counter: length: $(bytes.length)\n");
+				//print(@"$counter: length: $(bytes.length)\n");
 				//teerminate early if file gets too big
 				if(counter > 1024*1024*1024*3){
 					print("GEMINI terminating file read early, beacause file is too big (>3GB)\n");
+					helper.cancel();
 					return;
 				}
 			}

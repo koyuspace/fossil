@@ -21,6 +21,7 @@ executable(
 	'widgets/tabHead.vala',
 	'widgets/textContent.vala',
 	'widgets/linkbutton.vala',
+	'widgets/views/download.vala',
 	'widgets/views/offline.vala',
 	'widgets/views/unavaiable.vala',
 	'widgets/views/plaintext.vala',
