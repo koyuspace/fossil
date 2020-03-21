@@ -1,6 +1,7 @@
 public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 	
 	public Gtk.Notebook tabs { get; construct; }
+	public Dragonstone.Window parent_window { get; construct; }
 	private Dragonstone.Tab current_tab;
 	
 	private Gtk.Entry addressfield;
@@ -13,9 +14,10 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 	private Gtk.Button menubutton = new Gtk.Button.from_icon_name("open-menu-symbolic");
 	private Gtk.Popover mainmenu;
 	
-	public HeaderBar (Gtk.Notebook tabs) {
+	public HeaderBar (Dragonstone.Window parent_window) {
 		Object (
-			tabs: tabs
+			tabs: parent_window.tabs,
+			parent_window: parent_window
 		);
 	}
 
@@ -85,18 +87,17 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		
 		//connect ui signals
 		addressfield.activate.connect(() =>{
+			addressfield.text = tryUriCorrection(addressfield.text);
 			if (current_tab != null){
-				addressfield.text = tryUriCorrection(addressfield.text);
 				if (current_tab.uri != addressfield.text){
-					print(@"Going to uri: $(addressfield.text)\n");
 					current_tab.goToUri(addressfield.text,true);
 				}
 			} else {
-				print(@"No current_tab!\nWould have gone to $(addressfield.text)\n");
+				parent_window.add_tab(addressfield.text);
 			}
 		});
 		addressfield.focus_out_event.connect(() => {
-			if (addressfield.text == ""){
+			if (addressfield.text == "" && current_tab != null) {
 				addressfield.text = current_tab.uri;
 			}
 			return false;
@@ -105,7 +106,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 			relabelLoadButton();
 		});
 		loadbutton.clicked.connect(e => {
-			if (loadButtonReloadMode){
+			if (loadButtonReloadMode && current_tab != null) {
 				print("RELOAD!\n");
 				current_tab.reload();
 			} else {
@@ -119,54 +120,77 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		});
 		backbutton.clicked.connect(e => {
 			//print("GO back!\n");
-			current_tab.goBack();
+			if (current_tab != null) {
+				current_tab.goBack();
+			}
 		});
 		forwardbutton.clicked.connect(e => {
 			//print("GO forward!\n");
-			current_tab.goForward();
+			if (current_tab != null) {
+				current_tab.goForward();
+			}
 		});
 		downloadbutton.clicked.connect(e => {
-			current_tab.download();
+			if (current_tab != null) {
+				current_tab.download();
+			}
 		});
 		//connect stack signal
 		tabs.switch_page.connect((widget,num) => {
+			print("Page switch!\n");
 			onVisibleTabChanged(widget);
+		});
+		tabs.page_removed.connect((widget,num) => {
+			if (tabs.get_n_pages() == 0){
+				onVisibleTabChanged(null);
+			}
 		});
 		//fire events
 		onVisibleTabChanged(tabs.get_nth_page(tabs.get_current_page()));
 	}
 	
-	private void onVisibleTabChanged(Gtk.Widget tab){
+	private void onVisibleTabChanged(Gtk.Widget? tab){
 		//disconnect old signals
-		if (current_tab != null){
+		if (current_tab != null) {
 			current_tab.uriChanged.disconnect(onUriChanged);
 		}
 		//set new tab
-		if (!(tab is Dragonstone.Tab)) { return; }
+		if (!(tab is Dragonstone.Tab || tab == null)) { return; }
 		current_tab = tab as Dragonstone.Tab;
-		//connect new signa
-		current_tab.uriChanged.connect(onUriChanged);
-		//everything else
-		onUriChanged(current_tab.uri);
+		if (current_tab != null) {
+			//connect new signal
+			current_tab.uriChanged.connect(onUriChanged);
+			//everything else
+			onUriChanged(current_tab.uri);
+		} else {
+			onUriChanged("");
+		}
 	}
 	
 	private void onUriChanged(string uri){
 		addressfield.text = uri;
-		backbutton.set_sensitive(current_tab.canGoBack());
-		forwardbutton.set_sensitive(current_tab.canGoForward());
+		if (current_tab != null) {
+			backbutton.set_sensitive(current_tab.canGoBack());
+			forwardbutton.set_sensitive(current_tab.canGoForward());
+		} else {
+			backbutton.set_sensitive(false);
+			forwardbutton.set_sensitive(false);
+		}
 		relabelLoadButton();
 	}
 	
 	private void relabelLoadButton(){
-		if (addressfield.text == "" || addressfield.text == current_tab.uri){
-			loadButtonReloadMode = true;
-			//loadbutton.label = "Reload!"; //TOTRANSLATE
-			loadbutton.image = reloadIcon;
-		} else {
-			loadButtonReloadMode = false;
-			//loadbutton.label = "Go!"; //TOTRANSLATE
-			loadbutton.image = goIcon;
+		if (current_tab != null) {
+			if (addressfield.text == "" || addressfield.text == current_tab.uri){
+				loadButtonReloadMode = true;
+				//loadbutton.label = "Reload!"; //TOTRANSLATE
+				loadbutton.image = reloadIcon;
+				return;
+			}
 		}
+		loadButtonReloadMode = false;
+		//loadbutton.label = "Go!"; //TOTRANSLATE
+		loadbutton.image = goIcon;
 	}
 	
 	public string tryUriCorrection(string uri){

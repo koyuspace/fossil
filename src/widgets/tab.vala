@@ -34,10 +34,8 @@ public class Dragonstone.Tab : Gtk.Bin {
 			print("Potential ERROR: tab.goToUri called with a null uri!\n");
 			return;
 		}
-		string uritogo;
-		if (is_absolute) {
-			uritogo = uri;
-		} else {
+		string uritogo = null;
+		if (!is_absolute) {
 			uritogo = Dragonstone.Util.Uri.join(_uri,uri);
 		}
 		if (uritogo == null){uritogo = uri;}
@@ -46,7 +44,6 @@ public class Dragonstone.Tab : Gtk.Bin {
 		history.push(_uri);
 		forward.clear();
 		loadUri(uritogo);
-		print(@"$uri\n");
 	}
 	
 	//this will overwrite the last uri in the tab history
@@ -104,7 +101,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	//update the view either beacause of a new Resource or beacause of a change of the current reource
 	public void updateView(){ //TODO
 		if(locked){ return; }
-		print("UPDATING view!\n");
+		print(@"UPDATING view! [$(request.status)]\n");
 		//remove the old view
 		if (view != null){
 			view.cleanup();
