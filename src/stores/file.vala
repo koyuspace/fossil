@@ -1,5 +1,16 @@
 public class Dragonstone.Store.File : Object, Dragonstone.ResourceStore {
 	
+	public Dragonstone.Util.MimetypeGuesser mimeguesser = null;
+	
+	
+	public File(){
+		mimeguesser = new Dragonstone.Util.MimetypeGuesser.default_configuration();
+	}
+	
+	public File.with_mimeguesser(Dragonstone.Util.MimetypeGuesser mimeguesser){
+		this.mimeguesser = mimeguesser;
+	}
+	
 	public void request(Dragonstone.Request request,string? filepath = null){
 		
 		string path = null;
@@ -66,7 +77,7 @@ public class Dragonstone.Store.File : Object, Dragonstone.ResourceStore {
 		}
 		
 		var resource = new Dragonstone.Resource(request.uri,path,false);
-		resource.add_metadata("text/plain",basename);
+		resource.add_metadata(mimeguesser.get_closest_match(basename,"text/plain"),basename);
 		request.setResource(resource,"file");
 		return;
 	}

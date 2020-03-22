@@ -6,6 +6,7 @@ executable(
 	'main.vala',
 	'request.vala',
 	'resource.vala',
+	'util/mimeguesser.vala',
 	'util/resourceFileHelper.vala',
 	'util/stack.vala',
 	'util/uri.vala',

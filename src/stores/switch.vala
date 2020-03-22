@@ -26,15 +26,15 @@ class Dragonstone.Store.Switch : Object, Dragonstone.ResourceStore {
 	}
 	
 	public Dragonstone.ResourceStore? get_closest_match(string uri){
-		Dragonstone.ResourceStore bestMatch = null;
+		Dragonstone.ResourceStore best_match = null;
 		uint closest_match_length = 0;
 		foreach(Dragonstone.Store.SwitchEntry entry in stores){
 			if (uri.has_prefix(entry.prefix) && entry.prefix.length > closest_match_length){
-				bestMatch = entry.store;
+				best_match = entry.store;
 				closest_match_length = entry.prefix.length;
 			}
 		}
-		return bestMatch;
+		return best_match;
 	}
 	
 	public void request(Dragonstone.Request request,string? filepath = null){
