@@ -4,6 +4,7 @@ executable(
 	'downloader.vala',
 	'dragonstoneApp.vala',
 	'main.vala',
+	'module.vala',
 	'request.vala',
 	'resource.vala',
 	'util/gopher.vala',
