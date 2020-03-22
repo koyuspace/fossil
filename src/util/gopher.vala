@@ -22,6 +22,7 @@ public class Dragonstone.Util.GopherTypeRegistry {
 		//conventions
 		add(new GopherTypeRegistryEntry('h',"text/html"));
 		add(new GopherTypeRegistryEntry('p',"image/png"));
+		add(new GopherTypeRegistryEntry('P',"application/pdf"));
 	}
 	
 	public Dragonstone.Util.GopherTypeRegistryEntry? get_entry_by_gophertype(unichar gophertype){
@@ -43,10 +44,12 @@ public class Dragonstone.Util.GopherTypeRegistryEntry {
 	public unichar gophertype { get; protected set; }
 	public string? mimetype { get; protected set; }
 	public string uri_template { get; protected set; }
+	public GopherTypeRegistryContentHint hint { get; protected set; }
 	
 	public GopherTypeRegistryEntry(unichar gophertype, string? mimetype = null, string? uri_template = null, GopherTypeRegistryContentHint hint = GopherTypeRegistryContentHint.LINK){
 		this.gophertype = gophertype;
 		this.mimetype = mimetype;
+		this.hint = hint;
 		if (uri_template != null){
 			this.uri_template = uri_template;
 		} else {
