@@ -1,19 +1,19 @@
 public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 	
-	private Dragonstone.Util.MimetypeGuesser mimeguesser;
-	private Dragonstone.Util.GopherTypeRegistry type_registry;
+	private Dragonstone.Registry.MimetypeGuesser mimeguesser;
+	private Dragonstone.Registry.GopherTypeRegistry type_registry;
 	
 	public Gopher(){
-		mimeguesser = new Dragonstone.Util.MimetypeGuesser.default_configuration();
-		type_registry = new Dragonstone.Util.GopherTypeRegistry.default_configuration();
+		mimeguesser = new Dragonstone.Registry.MimetypeGuesser.default_configuration();
+		type_registry = new Dragonstone.Registry.GopherTypeRegistry.default_configuration();
 	}
 	
-	public Gopher.with_mimeguesser(Dragonstone.Util.MimetypeGuesser mimeguesser,Dragonstone.Util.GopherTypeRegistry? type_registry = null){
+	public Gopher.with_mimeguesser(Dragonstone.Registry.MimetypeGuesser mimeguesser,Dragonstone.Registry.GopherTypeRegistry? type_registry = null){
 		this.mimeguesser = mimeguesser;
 		if (type_registry != null) {
 			this.type_registry = type_registry;
 		} else {
-			this.type_registry = new Dragonstone.Util.GopherTypeRegistry.default_configuration();
+			this.type_registry = new Dragonstone.Registry.GopherTypeRegistry.default_configuration();
 		}
 	}
 	

@@ -3,7 +3,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 	public Gtk.Notebook tabs { get; construct; }
 	public Dragonstone.Window parent_window { get; construct; }
 	private Dragonstone.Tab current_tab;
-	public Dragonstone.Util.UriAutoprefix uriAutoprefixer;
+	public Dragonstone.Registry.UriAutoprefix uriAutoprefixer;
 	
 	private Gtk.Entry addressfield;
 	private Gtk.Button backbutton;
@@ -20,7 +20,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 			tabs: parent_window.tabs,
 			parent_window: parent_window
 		);
-		uriAutoprefixer = new Dragonstone.Util.UriAutoprefix.default_configuration();
+		uriAutoprefixer = new Dragonstone.Registry.UriAutoprefix.default_configuration();
 	}
 
 	construct {
@@ -139,7 +139,6 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		});
 		//connect stack signal
 		tabs.switch_page.connect((widget,num) => {
-			print("Page switch!\n");
 			onVisibleTabChanged(widget);
 		});
 		tabs.page_removed.connect((widget,num) => {

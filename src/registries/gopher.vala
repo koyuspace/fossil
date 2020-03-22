@@ -1,6 +1,6 @@
-public class Dragonstone.Util.GopherTypeRegistry {
+public class Dragonstone.Registry.GopherTypeRegistry {
 	
-	public List<Dragonstone.Util.GopherTypeRegistryEntry> entrys = new List<Dragonstone.Util.GopherTypeRegistryEntry>();
+	public List<Dragonstone.Registry.GopherTypeRegistryEntry> entrys = new List<Dragonstone.Registry.GopherTypeRegistryEntry>();
 	
 	public GopherTypeRegistry.default_configuration(){
 		//fast
@@ -25,8 +25,8 @@ public class Dragonstone.Util.GopherTypeRegistry {
 		add(new GopherTypeRegistryEntry('P',"application/pdf"));
 	}
 	
-	public Dragonstone.Util.GopherTypeRegistryEntry? get_entry_by_gophertype(unichar gophertype){
-		foreach(Dragonstone.Util.GopherTypeRegistryEntry entry in entrys){
+	public Dragonstone.Registry.GopherTypeRegistryEntry? get_entry_by_gophertype(unichar gophertype){
+		foreach(Dragonstone.Registry.GopherTypeRegistryEntry entry in entrys){
 			if (entry.gophertype == gophertype){
 				return entry;
 			}
@@ -34,13 +34,13 @@ public class Dragonstone.Util.GopherTypeRegistry {
 		return null;
 	}
 	
-	public void add(Dragonstone.Util.GopherTypeRegistryEntry entry){
+	public void add(Dragonstone.Registry.GopherTypeRegistryEntry entry){
 		entrys.append(entry);
 	}
 	
 }
 
-public class Dragonstone.Util.GopherTypeRegistryEntry {
+public class Dragonstone.Registry.GopherTypeRegistryEntry {
 	public unichar gophertype { get; protected set; }
 	public string? mimetype { get; protected set; }
 	public string uri_template { get; protected set; }
@@ -73,7 +73,7 @@ public class Dragonstone.Util.GopherTypeRegistryEntry {
 	}
 }
 
-public enum Dragonstone.Util.GopherTypeRegistryContentHint {
+public enum Dragonstone.Registry.GopherTypeRegistryContentHint {
 	TEXT,
 	ERROR,
 	LINK,

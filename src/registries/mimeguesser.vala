@@ -1,4 +1,4 @@
-public class Dragonstone.Util.MimetypeGuesser : Object {
+public class Dragonstone.Registry.MimetypeGuesser : Object {
 	
 	public List<Dragonstone.Util.MimetypeGuesserEntry> mimetypes = new List<Dragonstone.Util.MimetypeGuesserEntry>();
 	

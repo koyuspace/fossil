@@ -1,4 +1,4 @@
-public class Dragonstone.Util.UriAutoprefix : Object {
+public class Dragonstone.Registry.UriAutoprefix : Object {
 
 	public List<Dragonstone.Util.UriAutoprefixEntry> entrys = new List<Dragonstone.Util.UriAutoprefixEntry>();
 	
