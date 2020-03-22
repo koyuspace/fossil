@@ -12,6 +12,7 @@ executable(
 	'util/uri.vala',
 	'registries/gopher.vala',
 	'registries/mimeguesser.vala',
+	'registries/storeRegistry.vala',
 	'registries/uriAutocorrect.vala',
 	'stores/about.vala',
 	'stores/file.vala',
