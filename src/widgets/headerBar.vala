@@ -3,6 +3,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 	public Gtk.Notebook tabs { get; construct; }
 	public Dragonstone.Window parent_window { get; construct; }
 	private Dragonstone.Tab current_tab;
+	public Dragonstone.Util.UriAutoprefix uriAutoprefixer;
 	
 	private Gtk.Entry addressfield;
 	private Gtk.Button backbutton;
@@ -19,6 +20,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 			tabs: parent_window.tabs,
 			parent_window: parent_window
 		);
+		uriAutoprefixer = new Dragonstone.Util.UriAutoprefix.default_configuration();
 	}
 
 	construct {
@@ -194,28 +196,8 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 	}
 	
 	public string tryUriCorrection(string uri){
-		var scheme = Dragonstone.Util.Uri.get_scheme(uri);
-		if (scheme == "") {
-			//automatically add scheme based on lowestlevel domain
-			var pfx = "";
-			if (! ("/" in uri)){pfx = "/";}
-			if (uri.has_prefix("gopher.")) {return "gopher://"+uri+pfx;}
-			if (uri.has_prefix("gemini.")) {return "gemini://"+uri+pfx;}
-			if (uri.has_prefix("www.")) {return "https://"+uri+pfx;}
-			return uri;
-		}	else if (scheme == "about"){
-			return uri;
-		} else {
-			if (uri.length < scheme.length+3) {return uri;}
-			if (uri[scheme.length:scheme.length+3] == "://"){ return uri; }
-			if (uri[scheme.length:scheme.length+2] == ":/"){
-				return scheme+"://"+uri.slice(scheme.length+2,uri.length);
-			}
-			if (uri[scheme.length:scheme.length+1] == ":"){
-				return scheme+"://"+uri.slice(scheme.length+1,uri.length);
-			}
-		}
-		return uri;
+		if(uri == "") { return "about:blank"; }
+		return uriAutoprefixer.try_autoprefix(uri);
 	}
 	
 }

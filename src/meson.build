@@ -11,6 +11,7 @@ executable(
 	'util/resourceFileHelper.vala',
 	'util/stack.vala',
 	'util/uri.vala',
+	'util/uriAutocorrect.vala',
 	'stores/about.vala',
 	'stores/file.vala',
 	'stores/gemini.vala',
