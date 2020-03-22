@@ -2,6 +2,24 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
 	
 	private Dragonstone.Request request = null;
 	
+	private Dragonstone.Util.MimetypeGuesser mimeguesser;
+	private Dragonstone.Util.GopherTypeRegistry type_registry;
+	
+	public Gophertext(){
+		mimeguesser = new Dragonstone.Util.MimetypeGuesser.default_configuration();
+		type_registry = new Dragonstone.Util.GopherTypeRegistry.default_configuration();
+	}
+	
+	public Gophertext.with_mimeguesser(Dragonstone.Util.MimetypeGuesser mimeguesser,Dragonstone.Util.GopherTypeRegistry? type_registry = null){
+		this.mimeguesser = mimeguesser;
+		if (type_registry != null) {
+			this.type_registry = type_registry;
+		} else {
+			this.type_registry = new Dragonstone.Util.GopherTypeRegistry.default_configuration();
+		}
+	}
+	
+	
 	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
 		if (request.status == "success" && request.resource.mimetype.has_prefix("text/gopher")){
 			var file = File.new_for_path(request.resource.filepath);
@@ -10,13 +28,13 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
     	}
     	try{
 				//parse text
-				char lasttype = '\0';
+				unichar lasttype = '\0';
 				var dis = new DataInputStream (file.read ());
         string line;
 				while ((line = dis.read_line (null)) != null) {
 					var tokens = line.split("\t");
 					if(tokens.length == 4){//valid line
-						char gophertype = 'i';
+						unichar gophertype = 'i';
 						string htext = "";
 						if (tokens[0].length != 0){
 							gophertype = tokens[0].get(0);
@@ -27,12 +45,15 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
 						var port = tokens[3].strip();
 						
 						//
-						if(gophertype == '+' && (lasttype == '0' || lasttype == '1' || lasttype == '9' || lasttype == '7')){
+						if(gophertype == '+' && (type_registry.get_entry_by_gophertype(lasttype) != null)){
 							gophertype = lasttype;
 						}
-						if (gophertype == 'i'){ //text
+						var typeinfo = type_registry.get_entry_by_gophertype(gophertype);
+						if (typeinfo == null) {
+							appendWidget(new Dragonstone.View.GophertextUnknownItem(gophertype,htext,query,host,port));
+						} else if (typeinfo.hint == Dragonstone.Util.GopherTypeRegistryContentHint.TEXT){
 							appendText(htext+"\n");
-						}else if (gophertype == '0' || gophertype == '1' || gophertype == '9' || gophertype == 'g' || gophertype == 'I' || gophertype == 'p' || query.has_prefix("URL:")){
+						}else if (typeinfo.hint == Dragonstone.Util.GopherTypeRegistryContentHint.LINK || query.has_prefix("URL:")){
 							string? uri = null;
 							if (query.has_prefix("URL:")) {
 								uri = query.substring(4);
@@ -44,7 +65,7 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
 								}
 							}
 							appendWidget(new Dragonstone.Widget.LinkButton(tab,htext,uri));
-						} else if (gophertype == '7'){ //Search
+						} else if (typeinfo.hint == Dragonstone.Util.GopherTypeRegistryContentHint.SEARCH){ //Search
 							string? uri = null;
 							if( port != "70" ){
 								uri = @"gopher://$host:$port/$gophertype$query";
@@ -54,10 +75,8 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
 							var searchfield = new Dragonstone.View.GophertextInlineSearch(htext,uri);
 							searchfield.go.connect((s,uri) => {tab.goToUri(uri);});
 							appendWidget(searchfield);
-						} else if (gophertype == '3'){ //Error
+						} else if (typeinfo.hint == Dragonstone.Util.GopherTypeRegistryContentHint.ERROR){ //Error
 							appendWidget(new Dragonstone.View.GophertextIconLabel(htext,"dialog-error-symbolic"));
-						} else {
-							appendWidget(new Dragonstone.View.GophertextUnknownItem(gophertype,htext,query,host,port));
 						}
 						lasttype = gophertype;
 					}else if(tokens.length == 0){ //empty line, ignore
@@ -128,7 +147,7 @@ private class Dragonstone.View.GophertextInlineSearch : Gtk.Bin {
 }
 
 private class Dragonstone.View.GophertextUnknownItem : Gtk.Bin {
-	public GophertextUnknownItem(char gophertype,string htext,string query,string host,string port){
+	public GophertextUnknownItem(unichar gophertype,string htext,string query,string host,string port){
 		var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL,4);
 		box.homogeneous = false;
 		box.margin_start = 4;
