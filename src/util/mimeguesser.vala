@@ -6,7 +6,7 @@ public class Dragonstone.Util.MimetypeGuesser {
 		add_type(".txt","text/plain");
 		add_type(".gmi","text/gemini");
 		add_type(".gemini","text/gemini");
-		add_type(".gph","text/gemini");
+		//add_type(".gph","text/gopher");
 		add_type(".gopher","text/gopher");
 		add_type(".html","text/html");
 		add_type(".png","image/png");
