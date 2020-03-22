@@ -1,6 +1,6 @@
 public class Dragonstone.ModuleRegistry : Object {
-	private List<Dragonstone.IModule> modules	= new List<Dragonstone.IModule>();
-	private List<Dragonstone.IModuleFactory> module_factories = new List<Dragonstone.IModuleFactory>();
+	private List<Dragonstone.Module> modules	= new List<Dragonstone.Module>();
+	private List<Dragonstone.ModuleFactory> module_factories = new List<Dragonstone.ModuleFactory>();
 	private List<string> loading_modules = new List<string>();
 	
 	//Signals
@@ -9,7 +9,7 @@ public class Dragonstone.ModuleRegistry : Object {
 	public signal void module_loaded(string module_type);
 	public signal void module_shutdown(string module_type);
 	
-	public bool add_factory(Dragonstone.IModuleFactory factory){
+	public bool add_factory(Dragonstone.ModuleFactory factory){
 		if (has_factory(factory.module_type)) { return false; }
 		module_factories.append(factory);
 		factory_added(factory.module_type);
@@ -17,7 +17,7 @@ public class Dragonstone.ModuleRegistry : Object {
 	}
 	
 	public bool has_factory(string module_type){
-		foreach (Dragonstone.IModuleFactory factory in module_factories){
+		foreach (Dragonstone.ModuleFactory factory in module_factories){
 			if (factory.module_type == module_type){
 				return true;
 			}
@@ -25,8 +25,8 @@ public class Dragonstone.ModuleRegistry : Object {
 		return false;
 	}
 	
-	public Dragonstone.IModuleFactory? get_factory(string module_type){
-		foreach (Dragonstone.IModuleFactory factory in module_factories){
+	public Dragonstone.ModuleFactory? get_factory(string module_type){
+		foreach (Dragonstone.ModuleFactory factory in module_factories){
 			if (factory.module_type == module_type){
 				return factory;
 			}
@@ -35,7 +35,7 @@ public class Dragonstone.ModuleRegistry : Object {
 	}
 	
 	public bool is_module_loaded(string module_type){
-		foreach (Dragonstone.IModule module in modules){
+		foreach (Dragonstone.Module module in modules){
 			if (module.module_type == module_type){
 				return true;
 			}
@@ -43,8 +43,8 @@ public class Dragonstone.ModuleRegistry : Object {
 		return false;
 	}
 	
-	public Dragonstone.IModule? get_module(string module_type){
-		foreach (Dragonstone.IModule module in modules){
+	public Dragonstone.Module? get_module(string module_type){
+		foreach (Dragonstone.Module module in modules){
 			if (module.module_type == module_type){
 				return module;
 			}
@@ -140,7 +140,7 @@ public class Dragonstone.ModuleLoadError : Object{
 }
 
 //the actual module, that does the work
-public abstract class Dragonstone.IModule : Object {
+public abstract class Dragonstone.Module : Object {
 	public string module_type { get; construct; }
 	public signal void on_shutdown(); //hook on dependencies to perform self shutdown
 	public abstract bool initalize(Dragonstone.ModuleRegistry registry); //initalizes the module, returns true on success
@@ -148,8 +148,8 @@ public abstract class Dragonstone.IModule : Object {
 }
 
 // the module factory
-public abstract class Dragonstone.IModuleFactory : Object {
+public abstract class Dragonstone.ModuleFactory : Object {
 	public string module_type { get; construct; }
 	public abstract string[] module_dependencies { get; construct; }
-	public abstract Dragonstone.IModule makeModule(); //makes a new module
+	public abstract Dragonstone.Module makeModule(); //makes a new module
 }
