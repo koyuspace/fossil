@@ -1,4 +1,4 @@
-public class Dragonstone.Util.MimetypeGuesser {
+public class Dragonstone.Util.MimetypeGuesser : Object {
 	
 	public List<Dragonstone.Util.MimetypeGuesserEntry> mimetypes = new List<Dragonstone.Util.MimetypeGuesserEntry>();
 	
@@ -38,7 +38,7 @@ public class Dragonstone.Util.MimetypeGuesser {
 			has_suffix_star = default_mimetype.has_suffix("*");
 		}
 		foreach(Dragonstone.Util.MimetypeGuesserEntry entry in mimetypes){
-			if (uri.has_suffix(entry.suffix) && entry.suffix.length > closest_match_length){
+			if (uri.ascii_down().has_suffix(entry.suffix) && entry.suffix.length > closest_match_length){
 				if (has_suffix_star){
 					add = entry.mimetype.has_prefix(default_mimetype[0:-1]);
 				} else {
