@@ -52,6 +52,14 @@ public class Dragonstone.ModuleRegistry : Object {
 		return null;
 	}
 	
+	public bool insert_and_initalize_module(Dragonstone.Module module){
+		if (module.initalize(this)) {
+			modules.append(module);
+			return true;
+		}
+		return false;
+	}
+	
 	public Dragonstone.ModuleLoadError? load_module(string module_type){
 		var factory = get_factory(module_type);
 		if (factory == null) { return new Dragonstone.ModuleLoadError.no_factory(module_type);}
@@ -59,26 +67,21 @@ public class Dragonstone.ModuleRegistry : Object {
 			return new Dragonstone.ModuleLoadError.recursive_dependancy(module_type);
 		}
 		loading_modules.append(module_type);
-		var success = true;
 		Dragonstone.ModuleLoadError? error = null;
 		foreach(string m_type in factory.module_dependencies){
 			error = load_module(m_type);
 			if (error != null){
-				success = false;
 				break;
 			}
 		}
-		if (success) {
+		if (error == null) {
 			var module = factory.makeModule();
-			success = module.initalize(this);
-			if (success) {
-				modules.append(module);
-			} else {
+			if (!insert_and_initalize_module(module)) {
 				error = new Dragonstone.ModuleLoadError.initalization_failed(module_type);
 			}
 		}
 		loading_modules.remove(module_type);
-		if(error != null){
+		if(error == null){
 			module_loaded(module_type);
 		}
 		return error;

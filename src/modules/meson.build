@@ -1,1 +1,0 @@
-subdir('dragonstone.uri.autocorrect')
