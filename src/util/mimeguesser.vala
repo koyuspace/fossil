@@ -32,10 +32,22 @@ public class Dragonstone.Util.MimetypeGuesser {
 	public string? get_closest_match(string uri,string? default_mimetype = null){
 		string best_match = default_mimetype;
 		uint closest_match_length = 0;
+		bool add = false;
+		bool has_suffix_star = false;
+		if(default_mimetype != null){
+			has_suffix_star = default_mimetype.has_suffix("*");
+		}
 		foreach(Dragonstone.Util.MimetypeGuesserEntry entry in mimetypes){
 			if (uri.has_suffix(entry.suffix) && entry.suffix.length > closest_match_length){
-				best_match = entry.mimetype;
-				closest_match_length = entry.suffix.length;
+				if (has_suffix_star){
+					add = entry.mimetype.has_prefix(default_mimetype[0:-1]);
+				} else {
+					add = true;
+				}
+				if (add){
+					best_match = entry.mimetype;
+					closest_match_length = entry.suffix.length;
+				}
 			}
 		}
 		return best_match;

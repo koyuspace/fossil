@@ -1,5 +1,22 @@
 public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 	
+	private Dragonstone.Util.MimetypeGuesser mimeguesser;
+	private Dragonstone.Util.GopherTypeRegistry type_registry;
+	
+	public Gopher(){
+		mimeguesser = new Dragonstone.Util.MimetypeGuesser.default_configuration();
+		type_registry = new Dragonstone.Util.GopherTypeRegistry.default_configuration();
+	}
+	
+	public Gopher.with_mimeguesser(Dragonstone.Util.MimetypeGuesser mimeguesser,Dragonstone.Util.GopherTypeRegistry? type_registry = null){
+		this.mimeguesser = mimeguesser;
+		if (type_registry != null) {
+			this.type_registry = type_registry;
+		} else {
+			this.type_registry = new Dragonstone.Util.GopherTypeRegistry.default_configuration();
+		}
+	}
+	
 	
 	public void request(Dragonstone.Request request,string? filepath = null){
 		if (filepath == null){
@@ -78,10 +95,17 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 			}
 		}
 		
+		var typeinfo = type_registry.get_entry_by_gophertype(gophertype);
+		if (typeinfo == null) {
+			request.setStatus("error/gopher",@"Gophertype $gophertype not supported!");
+		}
+		var stripped_uri = Dragonstone.Util.Uri.strip_querys(request.uri);
+		string mimetype = mimeguesser.get_closest_match(stripped_uri,typeinfo.mimetype);
+		
 		//debugging information
 		print(@"Gopher Request:\n  Host:  $host\n  Port:  $port\n  Type:  $gophertype\n  Query: $query\n");
 		var resource = new Dragonstone.Resource(request.uri,filepath,true);
-		var fetcher = new Dragonstone.GopherResourceFetcher(resource,request,host,port,query,gophertype);
+		var fetcher = new Dragonstone.GopherResourceFetcher(resource,request,host,port,query,mimetype);
 		new Thread<int>(@"Gopher resource fetcher $host:$port [$gophertype|$query]",() => {
 			fetcher.fetchResource();
 			return 0;
@@ -94,18 +118,18 @@ private class Dragonstone.GopherResourceFetcher : Object {
 	public string host { get; construct; }
 	public uint16 port { get; construct; }
 	public string query { get; construct; }
-	public unichar gophertype { get; construct; }
+	public string mimetype { get; construct; }
 	public Dragonstone.Resource resource { get; construct; }
 	public Dragonstone.Request request { get; construct; }
 	
-	public GopherResourceFetcher(Dragonstone.Resource resource,Dragonstone.Request request,string host,uint16 port,string query,unichar gophertype){
+	public GopherResourceFetcher(Dragonstone.Resource resource,Dragonstone.Request request,string host,uint16 port,string query,string mimetype){
 		Object(
 			resource: resource,
 			request: request,
 			host: host,
 			port: port,
 			query: query,
-			gophertype: gophertype
+			mimetype: mimetype
 		);
 	}
 	
@@ -148,43 +172,23 @@ private class Dragonstone.GopherResourceFetcher : Object {
 			var input_stream = new DataInputStream (conn.input_stream);
 			var helper = new Dragonstone.Util.ResourceFileWriteHelper(request,resource.filepath,0);
 			
-			if (gophertype == '0' || gophertype == '1' || gophertype == '7'){
+			if (mimetype.has_prefix("text/")){
 				// Receive text
 				var str = readText(input_stream);
 				if (str.validate()){
-					var mimetype = "text/gopher";
-					if (gophertype == '0'){
-						mimetype = "text/plain";
-					}
 					helper.appendString(str);
 					resource.add_metadata(mimetype,@"[gopher] $host:$port | $query");
 				}else{
 					request.setStatus("error/gibberish");
 				}
-			} else if(gophertype == '9' || gophertype == 'I' || gophertype == 'g' || gophertype == 'p'){
+			} else {
 				try{
 					readBytes(input_stream,helper);
-					var mimetype = "application/octet-stream";
-					if (gophertype == 'I'){
-						mimetype = "image/";
-					}
-					if (query.has_suffix(".jpg") || query.has_suffix(".jpeg")){
-						mimetype = "image/jpg";
-					} else if (query.has_suffix(".png") || gophertype == 'p'){
-						mimetype = "image/png";
-					} else if (query.has_suffix(".gif") || gophertype == 'g'){
-						mimetype = "image/gif";
-					} else if (query.has_suffix(".bmp")){
-						mimetype = "image/bmp";
-					}
 					resource.add_metadata(mimetype,@"[gopher] $host:$port | $query");
 				}catch(Error e){
 					request.setStatus("error/internal",e.message);
 					return;
 				}
-			} else {
-				request.setStatus("error",@"Gophertype $gophertype not supported!");
-				return;
 			}
 			if (helper.closed){return;} //error or cancelled
 			helper.close();
