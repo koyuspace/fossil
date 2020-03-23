@@ -5,9 +5,12 @@ public class Dragonstone.Registry.UriAutoprefix : Object {
 	public UriAutoprefix.default_configuration(){
 		add("gopher.","gopher://gopher.");
 		add("gopher:","gopher://");
+		add("gopher://","gopher://");
 		add("gemini.","gemini://gemini.");
 		add("gemini:","gemini://");
+		add("gemini://","gemini://");
 		add("file:","file://");
+		add("file://","file://");
 		add("/","file:///");
 		add("~/","file://"+GLib.Environment.get_home_dir()+"/");
 	}
