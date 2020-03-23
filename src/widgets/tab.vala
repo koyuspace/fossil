@@ -12,7 +12,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public Dragonstone.Util.Stack<string> history = new Dragonstone.Util.Stack<string>();
 	public Dragonstone.Util.Stack<string> forward = new Dragonstone.Util.Stack<string>();
 	private Gtk.Window parentWindow;
-	private bool locked = false;
+	private int locked = 0;
 	//a label widget for adding to tabs in a notebook
 	public string title = "New Tab";
 	public bool loading = false; //changeing this counts as a title change
@@ -28,7 +28,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	}
 	
 	public void goToUri(string uri, bool is_absolute = false){
-		if(locked){ return; }
+		if(locked>0){ return; }
 		print(@"raw uri: $uri absolute: $is_absolute\n");
 		if (uri == null){
 			print("Potential ERROR: tab.goToUri called with a null uri!\n");
@@ -49,14 +49,14 @@ public class Dragonstone.Tab : Gtk.Bin {
 	//this will overwrite the last uri in the tab history
 	//handle with care!
 	public void redirect(string uri){
-		if(locked){ return; }
+		if(locked>0){ return; }
 		var joined_uri = Dragonstone.Util.Uri.join(_uri,uri);
 		if (joined_uri == null){joined_uri = uri;}
 		loadUri(joined_uri);
 	}
 	
 	private void loadUri(string uri,bool reload = false){
-		if(locked){ return; }
+		if(locked>0){ return; }
 		_uri = uri;
 		if (request != null){
 			if (request.resource != null){
@@ -83,7 +83,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	}
 	
 	private void checkViewTimeoutHack(){
-		if(locked){ return; }
+		if(locked>0){ return; }
 		Timeout.add(0,() => {
 			checkView();
 			return false;
@@ -92,7 +92,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	
 	//check if the current view is still appropriate, and if not change it
 	public void checkView(){
-		if(locked){ return; }
+		if(locked>0){ return; }
 		//print(@"check view -- $(request.status) -- $(request.substatus) --\n");
 		if (!view.canHandleCurrentResource() ) {
 			updateView();
@@ -101,7 +101,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	
 	//update the view either beacause of a new Resource or beacause of a change of the current reource
 	public void updateView(){ //TODO
-		if(locked){ return; }
+		if(locked>0){ return; }
 		print(@"UPDATING view! [$(request.status)]\n");
 		//remove the old view
 		if (view != null){
@@ -183,8 +183,8 @@ public class Dragonstone.Tab : Gtk.Bin {
 	}
 	
 	public void cleanup(){
-		if(locked){ return; }
-		locked = true;
+		if(locked>0){ return; }
+		locked++;
 		if (view != null){
 			view.cleanup();
 			remove(view);
@@ -203,7 +203,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 
 	//backbutton handler
 	public void goBack(){
-		if(locked){ return; }
+		if(locked>0){ return; }
 		if(!canGoBack()) return;
 		var uri = history.pop();
 		if (uri == null) { return; }
@@ -213,7 +213,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	
 	//forwardbuttonhandler
 	public void goForward(){
-		if(locked){ return; }
+		if(locked>0){ return; }
 		if(!canGoForward()) return;
 		var uri = forward.pop();
 		if (uri == null) { return; }
@@ -231,7 +231,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	
 	//reloads the resource
 	public void reload(){
-		if(locked){ return; }
+		if(locked>0){ return; }
 		string urix = uri; //setting a variable to itself the complicatd way
 		print("reloading!\n");
 		print("URI: '"+urix+"'\n");
@@ -239,7 +239,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	}
 	
 	public void download(){
-		if(locked){ return; }
+		if(locked>0){ return; }
 		if (this.request.resource == null){
 			print("Can't download an non existant resource!");
 			return;
