@@ -56,7 +56,9 @@ public class Dragonstone.View.Geminitext : Dragonstone.Widget.TextContent, Drago
 						uri = uri_and_text.substring(0,spaceindex);
 						htext = uri_and_text.substring(spaceindex).strip();
 					}
-					this.appendWidget(new Dragonstone.Widget.LinkButton(tab,htext,uri));
+					var widget = new Dragonstone.Widget.LinkButton(tab,htext,uri);
+					this.appendWidget(widget);
+					widget.show_all();
 					isText = false;
 				}
 				if (isText){
@@ -64,14 +66,12 @@ public class Dragonstone.View.Geminitext : Dragonstone.Widget.TextContent, Drago
 				}
 				linecounter++;
 				if (linecounter >= lines){
-					show_all();
 					return false;
 				}
 			}
 		}catch (GLib.Error e) {
 			this.appendWidget(new Gtk.Label("Error while rendering gemini content:\n"+e.message));
 		}
-		show_all();
 		return true;
 	}
 	

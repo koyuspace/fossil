@@ -23,8 +23,18 @@ public class Dragonstone.Widget.LinkButton : Gtk.Button {
 		if(icon_name_ == null){
 			icon_name_ = guessIconNameByUri(uri);
 		}
-		var linkwidget = new Dragonstone.Widget.LinkButtonDisplay(name,uri,icon_name_);
-		add(linkwidget);
+		always_show_image = true;
+		image = new Gtk.Image.from_icon_name(icon_name_,Gtk.IconSize.LARGE_TOOLBAR);
+		image_position = Gtk.PositionType.LEFT;
+		if (name == uri){
+			label = @"$uri";
+		} else if (uri.has_prefix("file://")) {
+			label = @"$name";
+		} else {		
+			label = @"$name [$uri]";
+		}
+		//var linkwidget = new Dragonstone.Widget.LinkButtonDisplay(name,uri,icon_name_);
+		//add(linkwidget);
 		set_relief(Gtk.ReliefStyle.NONE);
 	}
 	
@@ -88,8 +98,8 @@ private class Dragonstone.Widget.LinkButtonDisplay : Gtk.Bin {
 		var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL,4);
 		box.homogeneous = false;
 		var labeltext = @"$name [$uri]";
-		if (name == uri){
-			labeltext = @"[$uri]";
+		if (name == uri || uri.has_prefix("file://")){
+			labeltext = @"$uri";
 		}
 		var label = new Gtk.Label(labeltext);
 		label.selectable = true;
