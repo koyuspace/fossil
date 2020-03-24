@@ -26,13 +26,12 @@ public class Dragonstone.Widget.LinkButton : Gtk.Button {
 		always_show_image = true;
 		image = new Gtk.Image.from_icon_name(icon_name_,Gtk.IconSize.LARGE_TOOLBAR);
 		image_position = Gtk.PositionType.LEFT;
-		if (name == uri){
+		if (name == uri || name == ""){
 			label = @"$uri";
-		} else if (uri.has_prefix("file://")) {
+		} else {
 			label = @"$name";
-		} else {		
-			label = @"$name [$uri]";
 		}
+		set_tooltip_text(uri);
 		//var linkwidget = new Dragonstone.Widget.LinkButtonDisplay(name,uri,icon_name_);
 		//add(linkwidget);
 		set_relief(Gtk.ReliefStyle.NONE);
