@@ -16,6 +16,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	//a label widget for adding to tabs in a notebook
 	public string title = "New Tab";
 	public bool loading = false; //changeing this counts as a title change
+	public bool prefer_source_view = false;
 	public signal void on_cleanup();
 	public signal void on_title_change();
 	
@@ -25,6 +26,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		);
 		this.parentWindow = parentWindow;
 		loadUri(uri);
+		notify["prefer_source_view"].connect(updateView);
 	}
 	
 	public void goToUri(string uri, bool is_absolute = false){
@@ -113,9 +115,9 @@ public class Dragonstone.Tab : Gtk.Bin {
 		if (request.status == "success"){
 			print(@"STATIC/DYNAMIC $(request.resource.mimetype)\n");
 			setTitle(uri);
-			if (request.resource.mimetype.has_prefix("text/gopher")){
+			if (request.resource.mimetype.has_prefix("text/gopher") && !prefer_source_view){
 				view = new Dragonstone.View.Gophertext();
-			} else if (request.resource.mimetype.has_prefix("text/gemini")){
+			} else if (request.resource.mimetype.has_prefix("text/gemini") && !prefer_source_view){
 				view = new Dragonstone.View.Geminitext();
 			} else if (request.resource.mimetype == "gemini/input"){
 				view = new Dragonstone.View.GeminiInput();
