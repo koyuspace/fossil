@@ -1,4 +1,4 @@
-public class Dragonstone.Registry.GopherTypeRegistry {
+public class Dragonstone.Registry.GopherTypeRegistry : Object {
 	
 	public List<Dragonstone.Registry.GopherTypeRegistryEntry> entrys = new List<Dragonstone.Registry.GopherTypeRegistryEntry>();
 	

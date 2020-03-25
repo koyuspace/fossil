@@ -11,7 +11,8 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public signal void uriChanged(string uri);
 	public Dragonstone.Util.Stack<string> history = new Dragonstone.Util.Stack<string>();
 	public Dragonstone.Util.Stack<string> forward = new Dragonstone.Util.Stack<string>();
-	private Gtk.Window parentWindow;
+	public Dragonstone.Registry.SuperRegistry super_registry { get; construct; }
+	private Gtk.Window parent_window;
 	private int locked = 0;
 	//a label widget for adding to tabs in a notebook
 	public string title = "New Tab";
@@ -20,14 +21,18 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public signal void on_cleanup();
 	public signal void on_title_change();
 	
-	private Dragonstone.Registry.ViewRegistry view_registry = new Dragonstone.Registry.ViewRegistry.default_configuration();
-	private Dragonstone.Registry.ViewRegistry source_view_registry = new Dragonstone.Registry.ViewRegistry.source_view_configuration();
+	private Dragonstone.Registry.ViewRegistry view_registry;
+	private Dragonstone.Registry.ViewRegistry source_view_registry;
 	
-	public Tab(Dragonstone.ResourceStore store, string uri, Gtk.Window parentWindow){
+	public Tab(Dragonstone.ResourceStore store, string uri, Gtk.Window parent_window, Dragonstone.Registry.SuperRegistry super_registry){
 		Object(
-			store: store
+			store: store,
+			super_registry: super_registry
 		);
-		this.parentWindow = parentWindow;
+		this.view_registry = (super_registry.retrieve("gtk.views") as Dragonstone.Registry.ViewRegistry);
+		this.source_view_registry = (super_registry.retrieve("gtk.source_views") as Dragonstone.Registry.ViewRegistry);
+		if (this.view_registry == null){ throw new Dragonstone.SuperRegistryError.MISSING_ENTRY("[tab] missing super registry entry: gtk.views"); }
+		this.parent_window = parent_window;
 		loadUri(uri);
 	}
 	
@@ -104,7 +109,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	}
 	
 	//update the view either beacause of a new Resource or beacause of a change of the current reource
-	public void updateView(){ //TODO
+	public void updateView(){
 		if(locked>0){ return; }
 		print(@"UPDATING view! [$(request.status)]\n");
 		//remove the old view
@@ -117,7 +122,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		if (request.status == "success"){
 			print(@"STATIC/DYNAMIC $(request.resource.mimetype)\n");
 			setTitle(uri);
-			if (prefer_source_view){
+			if (prefer_source_view && source_view_registry != null){
 				view = source_view_registry.get_view(request.status,request.resource.mimetype);
 			}
 			if (view == null){
@@ -152,14 +157,14 @@ public class Dragonstone.Tab : Gtk.Bin {
 		show_all();
 	}
 	
-	public void set_parent_window(Dragonstone.Window window){
-		parentWindow = window;
+	public void set_tab_parent_window(Dragonstone.Window window){
+		parent_window = window;
 	}
 	
 	public void close(){
 		cleanup();
-		if (parentWindow is Dragonstone.Window){
-			(parentWindow as Dragonstone.Window).close_tab(this);
+		if (parent_window is Dragonstone.Window){
+			(parent_window as Dragonstone.Window).close_tab(this);
 		}
 	}
 	
@@ -225,7 +230,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 			print("Can't download an non existant resource!");
 			return;
 		}
-		var filechooser = new Gtk.FileChooserNative(@"Download - $uri",parentWindow,Gtk.FileChooserAction.SAVE,"Download","_Cancel"); //TOTRANSLATE
+		var filechooser = new Gtk.FileChooserNative(@"Download - $uri",parent_window,Gtk.FileChooserAction.SAVE,"Download","_Cancel"); //TOTRANSLATE
 		filechooser.set_current_name(Dragonstone.Util.Uri.get_filename(uri));
 		filechooser.set_current_folder(Environment.get_user_special_dir(UserDirectory.DOWNLOAD));
 		filechooser.set_select_multiple(false);

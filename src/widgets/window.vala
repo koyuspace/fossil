@@ -3,18 +3,20 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 	public GLib.Settings settings;
 	public Gtk.Notebook tabs;
 	public Dragonstone.ResourceStore store;	
+	public Dragonstone.Registry.SuperRegistry super_registry { get; construct; }
 	
-	
-	public Window(Gtk.Application application) {
+	public Window(Dragonstone.Application application) {
 		Object(
-			application: application
+			application: application,
+			super_registry: application.super_registry
 		);
 		add_new_tab();
 	}
 	
-	public Window.from_dropped_Tab(Gtk.Application application,Dragonstone.Tab tab,int x,int y) {
+	public Window.from_dropped_Tab(Dragonstone.Application application,Dragonstone.Tab tab,int x,int y) {
 		Object(
-			application: application
+			application: application,
+			super_registry: application.super_registry
 		);
 		move(x,y);
 		add_tab_object(tab);
@@ -43,7 +45,7 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		tabs.page_added.connect((widget, pagenum) => {
 			if (widget is Dragonstone.Tab){
 				var tab = (widget as Dragonstone.Tab);
-				tab.set_parent_window(this);
+				tab.set_tab_parent_window(this);
 			}
 		});
 		
@@ -103,7 +105,7 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 	}
 	
 	public void add_tab(string uri){
-		add_tab_object(new Dragonstone.Tab(store,uri,this));
+		add_tab_object(new Dragonstone.Tab(store,uri,this,super_registry));
 	}
 	
 	public void add_tab_object(Dragonstone.Tab tab){

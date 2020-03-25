@@ -13,6 +13,7 @@ executable(
 	'registries/gopher.vala',
 	'registries/mimeguesser.vala',
 	'registries/storeRegistry.vala',
+	'registries/superRegistry.vala',
 	'registries/uriAutocorrect.vala',
 	'registries/viewRegistry.vala',
 	'stores/about.vala',
@@ -48,7 +49,8 @@ executable(
 	'widgets/views/redirect.vala',
 	
 	dependencies: [
-		dependency('gtk+-3.0')
+		dependency('gtk+-3.0'),
+		dependency('gee-0.8')
 	],
 	install: true
 )
