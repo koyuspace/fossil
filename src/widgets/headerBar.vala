@@ -5,15 +5,17 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 	private Dragonstone.Tab current_tab;
 	public Dragonstone.Registry.UriAutoprefix uriAutoprefixer;
 	
-	private Gtk.Entry addressfield;
-	private Gtk.Button backbutton;
-	private Gtk.Button forwardbutton;
-	private Gtk.Button loadbutton;
+	public Gtk.Entry addressfield;
+	public Gtk.Button backbutton;
+	public Gtk.Button forwardbutton;
+	public Gtk.Button loadbutton;
 	private bool loadButtonReloadMode = false;
 	private Gtk.Image reloadIcon = new Gtk.Image.from_icon_name("view-refresh-symbolic",Gtk.IconSize.BUTTON);
 	private Gtk.Image goIcon = new Gtk.Image.from_icon_name("go-jump-symbolic",Gtk.IconSize.BUTTON);
-	private Gtk.Button menubutton = new Gtk.Button.from_icon_name("open-menu-symbolic");
-	private Gtk.Popover mainmenu;
+	public Gtk.Button menubutton = new Gtk.Button.from_icon_name("open-menu-symbolic");
+	public Gtk.Popover mainmenu;
+	
+	public Gtk.Button close_tab_button;
 	
 	public HeaderBar (Dragonstone.Window parent_window) {
 		Object (
@@ -77,6 +79,12 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		aboutbutton.relief = Gtk.ReliefStyle.NONE;
 		aboutbutton.halign = Gtk.Align.FILL;
 		mainmenubox.pack_start(aboutbutton);
+		//close tabs button
+		close_tab_button = new Gtk.Button.with_label("Close Tab"); //TOSTRANSLATE
+		close_tab_button.halign = Gtk.Align.FILL;
+		close_tab_button.relief = Gtk.ReliefStyle.NONE;
+		mainmenubox.pack_start(close_tab_button);
+		//main menu end
 		mainmenu.add(mainmenubox);
 		//loadbutton
 		loadbutton = new Gtk.Button.from_icon_name("dialog-error-symbolic");
@@ -135,6 +143,11 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		downloadbutton.clicked.connect(e => {
 			if (current_tab != null) {
 				current_tab.download();
+			}
+		});
+		close_tab_button.clicked.connect(e => {
+			if (current_tab != null) {
+				current_tab.close();
 			}
 		});
 		//connect stack signal

@@ -48,11 +48,11 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		});
 		
 		//new tab button
-		var addButton = new Gtk.Button.from_icon_name("tab-new-symbolic");
-		addButton.relief = Gtk.ReliefStyle.NONE;
-		addButton.clicked.connect(add_new_tab);
-		addButton.show_all();
-		tabs.set_action_widget(addButton,Gtk.PackType.END);
+		var add_button = new Gtk.Button.from_icon_name("tab-new-symbolic");
+		add_button.relief = Gtk.ReliefStyle.NONE;
+		add_button.clicked.connect(add_new_tab);
+		add_button.show_all();
+		tabs.set_action_widget(add_button,Gtk.PackType.END);
 		
 		add(tabs);
 		
@@ -63,6 +63,25 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		var headerbar = new Dragonstone.HeaderBar(this);
 		set_titlebar (headerbar);
 		
+		//keyboard shortcuts
+		var accelerator_group = new Gtk.AccelGroup();
+		add_accel_group(accelerator_group);
+		uint key;
+		Gdk.ModifierType modifiers;
+		Gtk.accelerator_parse("<alt>b",out key,out modifiers);
+		headerbar.backbutton.add_accelerator("clicked",accelerator_group,key,modifiers,Gtk.AccelFlags.VISIBLE);
+		Gtk.accelerator_parse("<alt>f",out key,out modifiers);
+		headerbar.forwardbutton.add_accelerator("clicked",accelerator_group,key,modifiers,Gtk.AccelFlags.VISIBLE);
+		Gtk.accelerator_parse("<control>l",out key,out modifiers);
+		headerbar.addressfield.add_accelerator("grab_focus",accelerator_group,key,modifiers,Gtk.AccelFlags.VISIBLE);
+		Gtk.accelerator_parse("<control>m",out key,out modifiers);
+		headerbar.menubutton.add_accelerator("clicked",accelerator_group,key,modifiers,Gtk.AccelFlags.VISIBLE);
+		Gtk.accelerator_parse("<control>t",out key,out modifiers);
+		add_button.add_accelerator("clicked",accelerator_group,key,modifiers,Gtk.AccelFlags.VISIBLE);
+		Gtk.accelerator_parse("<control>w",out key,out modifiers);
+		accelerator_group.connect(key,modifiers,Gtk.AccelFlags.VISIBLE,() => {
+			close_tab(null);
+		});
 		show_all();
 	}
 	
@@ -82,12 +101,20 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		tabs.set_current_page(-1);
 	}
 	
-	public void close_tab(Gtk.Widget tab){
-		var page_num = tabs.page_num(tab);
+	public void close_tab(Gtk.Widget? tab){
+		int page_num = -1;
+		var tabx = tab;
+		if (tabx != null){
+			page_num = tabs.page_num(tab);
+		} else {
+			page_num = tabs.get_current_page();
+			tabx = tabs.get_nth_page(page_num);
+		}
 		if(page_num < 0) { return; }
 		tabs.remove_page(page_num);
-		if (tab is Dragonstone.Tab && tab != null) {
-			(tab as Dragonstone.Tab).cleanup();
+		Dragonstone.Tab dt = (tabx as Dragonstone.Tab);
+		if (dt is Dragonstone.Tab && dt != null) {
+			dt.cleanup();
 		}
 		//if (tabs.get_n_pages() == 0) { add_new_tab(); }
 	}
@@ -96,8 +123,9 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		while(tabs.get_n_pages()>0){
 			var widget = tabs.get_nth_page(0);
 			tabs.remove_page(0);
-			if (widget is Dragonstone.Tab && widget != null) {
-				(widget as Dragonstone.Tab).cleanup();
+			Dragonstone.Tab dt = (widget as Dragonstone.Tab);
+			if (dt is Dragonstone.Tab && dt != null) {
+				dt.cleanup();
 			}
 		}
 	}
