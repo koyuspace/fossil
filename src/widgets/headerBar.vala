@@ -15,6 +15,8 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 	public Gtk.Button menubutton = new Gtk.Button.from_icon_name("open-menu-symbolic");
 	public Gtk.Popover mainmenu;
 	
+	private Gtk.Switch prefer_source_view_switch;
+	
 	public Gtk.Button close_tab_button;
 	
 	public HeaderBar (Dragonstone.Window parent_window) {
@@ -64,25 +66,21 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		savetodiskbutton.add(diskicon);
 		//savetodiskbutton.relief = Gtk.ReliefStyle.NONE;
 		mainmenuhbox.pack_start(savetodiskbutton);
+		//prefer_source_view
+		var prefer_source_view_widget = new Dragonstone.Widget.MenuSwitch("View source");
+		prefer_source_view_switch = prefer_source_view_widget.switch_widget;
+		mainmenubox.pack_start(prefer_source_view_widget);
 		//Cache
-		var cachebutton = new Gtk.Button.with_label("Cache"); //TOTRANSLATE
-		cachebutton.relief = Gtk.ReliefStyle.NONE;
-		cachebutton.halign = Gtk.Align.FILL;
+		var cachebutton = new Dragonstone.Widget.MenuButton("Cache"); //TOTRANSLATE
 		mainmenubox.pack_start(cachebutton);
 		//Settings
-		var settingsbutton = new Gtk.Button.with_label("Settings"); //TOTRANSLATE
-		settingsbutton.relief = Gtk.ReliefStyle.NONE;
-		settingsbutton.halign = Gtk.Align.FILL;
+		var settingsbutton = new Dragonstone.Widget.MenuButton("Settings"); //TOTRANSLATE
 		mainmenubox.pack_start(settingsbutton);
 		//About
-		var aboutbutton = new Gtk.Button.with_label("About"); //TOTRANSLATE
-		aboutbutton.relief = Gtk.ReliefStyle.NONE;
-		aboutbutton.halign = Gtk.Align.FILL;
+		var aboutbutton = new Dragonstone.Widget.MenuButton("About"); //TOTRANSLATE
 		mainmenubox.pack_start(aboutbutton);
 		//close tabs button
-		close_tab_button = new Gtk.Button.with_label("Close Tab"); //TOSTRANSLATE
-		close_tab_button.halign = Gtk.Align.FILL;
-		close_tab_button.relief = Gtk.ReliefStyle.NONE;
+		close_tab_button = new Dragonstone.Widget.MenuButton("Close Tab"); //TOSTRANSLATE
 		mainmenubox.pack_start(close_tab_button);
 		//main menu end
 		mainmenu.add(mainmenubox);
@@ -150,6 +148,13 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 				current_tab.close();
 			}
 		});
+		prefer_source_view_switch.state_set.connect(e => {
+			if (current_tab != null) {
+				current_tab.prefer_source_view = !prefer_source_view_switch.state;
+				current_tab.updateView();
+				return false;
+			}
+		});
 		//connect stack signal
 		tabs.switch_page.connect((widget,num) => {
 			onVisibleTabChanged(widget);
@@ -176,6 +181,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 			current_tab.uriChanged.connect(onUriChanged);
 			//everything else
 			onUriChanged(current_tab.uri);
+			prefer_source_view_switch.state = current_tab.prefer_source_view;
 		} else {
 			onUriChanged("");
 		}

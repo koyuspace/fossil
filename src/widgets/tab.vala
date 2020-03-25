@@ -20,13 +20,15 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public signal void on_cleanup();
 	public signal void on_title_change();
 	
+	private Dragonstone.Registry.ViewRegistry view_registry = new Dragonstone.Registry.ViewRegistry.default_configuration();
+	private Dragonstone.Registry.ViewRegistry source_view_registry = new Dragonstone.Registry.ViewRegistry.source_view_configuration();
+	
 	public Tab(Dragonstone.ResourceStore store, string uri, Gtk.Window parentWindow){
 		Object(
 			store: store
 		);
 		this.parentWindow = parentWindow;
 		loadUri(uri);
-		notify["prefer_source_view"].connect(updateView);
 	}
 	
 	public void goToUri(string uri, bool is_absolute = false){
@@ -110,49 +112,26 @@ public class Dragonstone.Tab : Gtk.Bin {
 			view.cleanup();
 			remove(view);
 		}
-		view = null;
+		view = view_registry.get_view(request.status);
 		//choose a new one
 		if (request.status == "success"){
 			print(@"STATIC/DYNAMIC $(request.resource.mimetype)\n");
 			setTitle(uri);
-			if (request.resource.mimetype.has_prefix("text/gopher") && !prefer_source_view){
-				view = new Dragonstone.View.Gophertext();
-			} else if (request.resource.mimetype.has_prefix("text/gemini") && !prefer_source_view){
-				view = new Dragonstone.View.Geminitext();
-			} else if (request.resource.mimetype == "gemini/input"){
-				view = new Dragonstone.View.GeminiInput();
-			} else if (request.resource.mimetype.has_prefix("text/")){ //TODO: Mimetype view registry
-				view = new Dragonstone.View.Plaintext();
-			}	else if (request.resource.mimetype.has_prefix("image/")){
-				view = new Dragonstone.View.Image();
-			}	else {
-				view = new Dragonstone.View.Download();
+			if (prefer_source_view){
+				view = source_view_registry.get_view(request.status,request.resource.mimetype);
 			}
-		}else if(request.status == "loading" || request.status == "connecting" || request.status == "reouting"){
+			if (view == null){
+				view = view_registry.get_view(request.status,request.resource.mimetype);
+			}
+		}else if(request.status == "loading" || request.status == "connecting" || request.status == "routing"){
 			setTitle(uri,true);
-			view = new Dragonstone.View.Loading();
+			//view = new Dragonstone.View.Loading();
 		}else if(request.status.has_prefix("redirect")){
 			setTitle(uri);
 			bool autoredirect = false;
 			if (autoredirect){
 				redirect(request.substatus);
-			} else {
-				view = new Dragonstone.View.Redirect();
 			}
-		}else if(request.status == "error/internal"){
-			view = new Dragonstone.View.InternalError();
-		}else if(request.status == "error/gibberish"){
-			view = new Dragonstone.View.Gibberish();
-		}else if(request.status == "error/connectionRefused"){
-			view = new Dragonstone.View.ConnectionRefused();
-		}else if(request.status == "error/noHost"){
-			view = new Dragonstone.View.HostUnreachable();
-		}else if(request.status == "error/resourceUnavaiable"){
-			view = new Dragonstone.View.Unavaiable();
-		//}else if(request.status.has_prefix("error/uri")){
-		//	view = new Dragonstone.View.UriError.Generic();
-		}else if(request.status.has_prefix("error")){
-			view = new Dragonstone.View.Error.Generic();
 		}
 		if(request.status.has_prefix("error")){
 			setTitle("🔴 "+uri);
