@@ -82,6 +82,18 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		accelerator_group.connect(key,modifiers,Gtk.AccelFlags.VISIBLE,() => {
 			close_tab(null);
 		});
+		Gtk.accelerator_parse("<control>p",out key,out modifiers);
+		accelerator_group.connect(key,modifiers,Gtk.AccelFlags.VISIBLE,() => {
+			tabs.prev_page();
+		});
+		Gtk.accelerator_parse("<control>n",out key,out modifiers);
+		accelerator_group.connect(key,modifiers,Gtk.AccelFlags.VISIBLE,() => {
+			tabs.next_page();
+		});
+		Gtk.accelerator_parse("F5",out key,out modifiers);
+		accelerator_group.connect(key,modifiers,Gtk.AccelFlags.VISIBLE,() => {
+			headerbar.current_tab.reload();
+		});
 		show_all();
 	}
 	

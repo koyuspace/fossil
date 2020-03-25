@@ -2,7 +2,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 	
 	public Gtk.Notebook tabs { get; construct; }
 	public Dragonstone.Window parent_window { get; construct; }
-	private Dragonstone.Tab current_tab;
+	public Dragonstone.Tab current_tab { get; protected set; }
 	public Dragonstone.Registry.UriAutoprefix uriAutoprefixer;
 	
 	public Gtk.Entry addressfield;
