@@ -11,7 +11,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public signal void uriChanged(string uri);
 	public Dragonstone.Util.Stack<string> history = new Dragonstone.Util.Stack<string>();
 	public Dragonstone.Util.Stack<string> forward = new Dragonstone.Util.Stack<string>();
-	public Dragonstone.Registry.SuperRegistry super_registry { get; construct; }
+	public Dragonstone.SuperRegistry super_registry { get; construct; }
 	private Gtk.Window parent_window;
 	private int locked = 0;
 	//a label widget for adding to tabs in a notebook
@@ -24,7 +24,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	private Dragonstone.Registry.ViewRegistry view_registry;
 	private Dragonstone.Registry.ViewRegistry source_view_registry;
 	
-	public Tab(Dragonstone.ResourceStore store, string uri, Gtk.Window parent_window, Dragonstone.Registry.SuperRegistry super_registry){
+	public Tab(Dragonstone.ResourceStore store, string uri, Gtk.Window parent_window, Dragonstone.SuperRegistry super_registry){
 		Object(
 			store: store,
 			super_registry: super_registry

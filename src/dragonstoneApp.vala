@@ -1,14 +1,14 @@
 
 public class Dragonstone.Application : Gtk.Application {
 	
-	public Dragonstone.Registry.SuperRegistry super_registry { get; protected set; }
+	public Dragonstone.SuperRegistry super_registry { get; protected set; }
 	
 	public Application() {
 		Object (
 			application_id: "com.gitlab.baschdel.Dragonstone",
 			flags: ApplicationFlags.FLAGS_NONE
 		);
-		super_registry = new Dragonstone.Registry.SuperRegistry();
+		super_registry = new Dragonstone.SuperRegistry();
 		super_registry.store("gopher.types",new Dragonstone.Registry.GopherTypeRegistry.default_configuration());
 		super_registry.store("core.mimeguesser",new Dragonstone.Registry.MimetypeGuesser.default_configuration());
 		super_registry.store("core.stores",new Dragonstone.Registry.StoreRegistry.default_configuration());

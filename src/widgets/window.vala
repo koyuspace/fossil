@@ -3,7 +3,7 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 	public GLib.Settings settings;
 	public Gtk.Notebook tabs;
 	public Dragonstone.ResourceStore store;	
-	public Dragonstone.Registry.SuperRegistry super_registry { get; construct; }
+	public Dragonstone.SuperRegistry super_registry { get; construct; }
 	
 	public Window(Dragonstone.Application application) {
 		Object(

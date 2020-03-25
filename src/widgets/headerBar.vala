@@ -2,8 +2,9 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 	
 	public Gtk.Notebook tabs { get; construct; }
 	public Dragonstone.Window parent_window { get; construct; }
+	public Dragonstone.SuperRegistry super_registry { get; construct; }
 	public Dragonstone.Tab current_tab { get; protected set; }
-	public Dragonstone.Registry.UriAutoprefix uriAutoprefixer;
+	public Dragonstone.Registry.UriAutoprefix uri_autoprefixer;
 	
 	public Gtk.Entry addressfield;
 	public Gtk.Button backbutton;
@@ -22,9 +23,13 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 	public HeaderBar (Dragonstone.Window parent_window) {
 		Object (
 			tabs: parent_window.tabs,
-			parent_window: parent_window
+			parent_window: parent_window,
+			super_registry: parent_window.super_registry
 		);
-		uriAutoprefixer = new Dragonstone.Registry.UriAutoprefix.default_configuration();
+		uri_autoprefixer = (super_registry.retrieve("core.uri_autoprefixer") as Dragonstone.Registry.UriAutoprefix);
+		if (uri_autoprefixer == null) {
+			uri_autoprefixer = new Dragonstone.Registry.UriAutoprefix.default_configuration();
+		}
 	}
 
 	construct {
@@ -215,7 +220,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 	
 	public string tryUriCorrection(string uri){
 		if(uri == "") { return "about:blank"; }
-		return uriAutoprefixer.try_autoprefix(uri);
+		return uri_autoprefixer.try_autoprefix(uri);
 	}
 	
 }

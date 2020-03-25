@@ -1,4 +1,4 @@
-public class Dragonstone.Registry.SuperRegistry : Object {
+public class Dragonstone.SuperRegistry : Object {
 
 	private Gee.HashMap<string,Object> objects = new Gee.HashMap<string,Object>();
 	
