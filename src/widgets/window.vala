@@ -58,8 +58,12 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		
 		add(tabs);
 		
-		//initalize resource store //TODO move to application
-		store = new Dragonstone.Store.Switch.default_configuration();
+		//initalize resource store
+		store = (super_registry.retrieve("core.stores.main") as Dragonstone.ResourceStore);
+		if (store == null) {
+			print("[window] no store in super registry at core.stores.main, fallung back to switch store default configuration\n");
+			store = new Dragonstone.Store.Switch.default_configuration();
+		}
 		
 		//header bar
 		var headerbar = new Dragonstone.HeaderBar(this);

@@ -3,10 +3,7 @@ public class Dragonstone.Registry.StoreRegistry : Object {
 	
 	public StoreRegistry.default_configuration(){
 		this.add_resource_store("test://",new Dragonstone.Store.Test());
-		this.add_resource_store("gopher://",new Dragonstone.Store.Gopher());
-		this.add_resource_store("gemini://",new Dragonstone.Store.Gemini());
 		this.add_resource_store("about:",new Dragonstone.Store.About());
-		this.add_resource_store("file://",new Dragonstone.Store.File());
 	}
 	
 	public void add_resource_store(string prefix,Dragonstone.ResourceStore store){

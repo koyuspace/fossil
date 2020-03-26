@@ -2,19 +2,6 @@ public class Dragonstone.Registry.UriAutoprefix : Object {
 
 	public List<Dragonstone.Util.UriAutoprefixEntry> entrys = new List<Dragonstone.Util.UriAutoprefixEntry>();
 	
-	public UriAutoprefix.default_configuration(){
-		add("gopher.","gopher://gopher.");
-		add("gopher:","gopher://");
-		add("gopher://","gopher://");
-		add("gemini.","gemini://gemini.");
-		add("gemini:","gemini://");
-		add("gemini://","gemini://");
-		add("file:","file://");
-		add("file://","file://");
-		add("/","file:///");
-		add("~/","file://"+GLib.Environment.get_home_dir()+"/");
-	}
-	
 	public void add(string prefix, string replacement){
 		entrys.append(new Dragonstone.Util.UriAutoprefixEntry(prefix, replacement));
 	}

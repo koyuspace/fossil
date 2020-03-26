@@ -4,10 +4,6 @@ public class Dragonstone.Registry.MimetypeGuesser : Object {
 	
 	public MimetypeGuesser.default_configuration(){
 		add_type(".txt","text/plain");
-		add_type(".gmi","text/gemini");
-		add_type(".gemini","text/gemini");
-		//add_type(".gph","text/gopher");
-		add_type(".gopher","text/gopher");
 		add_type(".html","text/html");
 		add_type(".png","image/png");
 		add_type(".jpg","image/jpg");

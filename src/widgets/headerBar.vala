@@ -28,7 +28,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		);
 		uri_autoprefixer = (super_registry.retrieve("core.uri_autoprefixer") as Dragonstone.Registry.UriAutoprefix);
 		if (uri_autoprefixer == null) {
-			uri_autoprefixer = new Dragonstone.Registry.UriAutoprefix.default_configuration();
+			uri_autoprefixer = new Dragonstone.Registry.UriAutoprefix();
 		}
 	}
 
