@@ -15,7 +15,7 @@ public class Dragonstone.Application : Gtk.Application {
 		super_registry.store("core.stores",new Dragonstone.Registry.StoreRegistry.default_configuration());
 		super_registry.store("core.uri_autoprefixer",new Dragonstone.Registry.UriAutoprefix());
 		//Initalize Cache
-		Dragonstone.Startup.Cache.setup_store(super_registry); //register before switch
+		Dragonstone.Startup.Cache.Backend.setup_store(super_registry); //register before switch
 		//Initalize backends
 		Dragonstone.Startup.Gopher.Backend.setup_gophertypes(super_registry);
 		Dragonstone.Startup.Gopher.Backend.setup_mimetypes(super_registry);
