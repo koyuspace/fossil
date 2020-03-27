@@ -23,12 +23,12 @@ public class Dragonstone.Registry.ViewRegistry : Object {
 		add_resource_view("text/",() => { return new Dragonstone.View.Plaintext(); });
 	}
 	
-	public void add_resource_view(string mimetype,Dragonstone.Registry.ViewConstructor constructor,string status = "success"){
-		entrys.append(new Dragonstone.Registry.ViewRegistryEntry(status,mimetype,constructor));
+	public void add_resource_view(string mimetype, owned Dragonstone.Registry.ViewConstructor constructor, string status = "success"){
+		entrys.append(new Dragonstone.Registry.ViewRegistryEntry(status, mimetype, (owned) constructor));
 	}
 	
-	public void add_view(string status,Dragonstone.Registry.ViewConstructor constructor,string? mimetype = null){
-		entrys.append(new Dragonstone.Registry.ViewRegistryEntry(status,mimetype,constructor));
+	public void add_view(string status,owned Dragonstone.Registry.ViewConstructor constructor,string? mimetype = null){
+		entrys.append(new Dragonstone.Registry.ViewRegistryEntry(status, mimetype, (owned) constructor));
 	}
 	
 	//TODO: public void remove_view(string status,string? mimetype){}
@@ -50,7 +50,7 @@ public class Dragonstone.Registry.ViewRegistry : Object {
 			}
 		}
 		if (best_match == null){ return null; }
-		return best_match.viewConstructor();
+		return best_match.view_vonstructor();
 	}
 	
 }
@@ -58,11 +58,11 @@ public class Dragonstone.Registry.ViewRegistry : Object {
 private class Dragonstone.Registry.ViewRegistryEntry {
 	public string status;
 	public string? mimetype;
-	public Dragonstone.Registry.ViewConstructor viewConstructor;
+	public Dragonstone.Registry.ViewConstructor view_vonstructor;
 	
-	public ViewRegistryEntry(string status,string? mimetype,Dragonstone.Registry.ViewConstructor viewConstructor){
+	public ViewRegistryEntry(string status,string? mimetype,owned Dragonstone.Registry.ViewConstructor view_vonstructor){
 		this.status = status;
 		this.mimetype = mimetype;
-		this.viewConstructor = viewConstructor;
+		this.view_vonstructor = (owned) view_vonstructor;
 	}
 }
