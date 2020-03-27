@@ -1,8 +1,9 @@
 public class Dragonstone.Store.Cache : Object, Dragonstone.ResourceStore, Dragonstone.Cache{
 	
-	HashTable<string,Dragonstone.Resource> cached_resources = new HashTable<string,Dragonstone.Resource>(str_hash, str_equal);
+	public HashTable<string,Dragonstone.Resource> cached_resources { get; protected set; }
 	
 	construct {
+		cached_resources = new HashTable<string,Dragonstone.Resource>(str_hash, str_equal);
 		Timeout.add(1000*60*5,() => { //clean cache
 			print("[cache] Cleaning Up!\n");
 			clean();
@@ -11,7 +12,7 @@ public class Dragonstone.Store.Cache : Object, Dragonstone.ResourceStore, Dragon
 	}
 	
 	public void request(Dragonstone.Request request,string? filepath = null){
-		var resource = cached_resources.get(request.uri);
+		var resource = cached_resources.get(request.uri); //let's hope this is threadsafe
 		if(resource == null) { request.setStatus("error/resourceUnavaiable"); }
 		request.setResource(resource,"cache");
 	}
@@ -20,7 +21,7 @@ public class Dragonstone.Store.Cache : Object, Dragonstone.ResourceStore, Dragon
 	//maxge is in milliseconds
 	public bool can_serve_request(string uri,int64 maxage = 0){
 		print(@"[cache] can serve request? URI:$uri MAXAGE:$maxage\n");
-		var resource = cached_resources.get(uri);
+		var resource = cached_resources.get(uri); //let's hope this is threadsafe
 		if(resource == null) { print("[cache] No, beacause resource is not cached.\n"); return false; }
 		if(resource.filepath == null) { print("[cache] No, beacause resource is not cached anymore.\n"); return false; }
 		if(resource.valid_until >= GLib.get_real_time()){ print("[cache] No, beacause resource is not vali anymore.\n"); return false; }
@@ -32,9 +33,11 @@ public class Dragonstone.Store.Cache : Object, Dragonstone.ResourceStore, Dragon
 		if (will_cache_resource(resource)){
 			print(@"[cache] put resource $(resource.uri) fully loaded at $(resource.timestamp) valid until $(resource.valid_until)\n");
 			resource.increment_users("cache");
-			var old_resource = cached_resources.get(resource.uri);
-			if (old_resource != null){ old_resource.decrement_users("cache"); }
-			cached_resources.set(resource.uri,resource);
+			lock (cached_resources){
+				var old_resource = cached_resources.get(resource.uri);
+				if (old_resource != null){ old_resource.decrement_users("cache"); }
+				cached_resources.set(resource.uri,resource);
+			}
 		}
 	}
 	
@@ -46,33 +49,39 @@ public class Dragonstone.Store.Cache : Object, Dragonstone.ResourceStore, Dragon
 	}
 	
 	public void erase(){
-		foreach (Dragonstone.Resource resource in cached_resources.get_values()){
-			resource.decrement_users("cache");
+		lock (cached_resources){
+			foreach (Dragonstone.Resource resource in cached_resources.get_values()){
+				resource.decrement_users("cache");
+			}
+			cached_resources.remove_all();
 		}
-		cached_resources.remove_all();
 	}
 	
 	public void clean(){
 		//print(@"[cache] $(GLib.get_real_time()) | current time\n");
-		foreach (string uri in cached_resources.get_keys()){
-			var resource = cached_resources.get(uri);
-			bool clean = false;
-			if (resource.filepath == null){ clean = true; }
-			//print(@"[cache] $(resource.valid_until) | $uri");
-			if (resource.valid_until < GLib.get_real_time()){ clean = true; }
-			//print(@" [$clean]\n");
-			if (clean){
-				resource.decrement_users("cache");
-				cached_resources.remove(uri);
+		lock (cached_resources){
+			foreach (string uri in cached_resources.get_keys()){
+				var resource = cached_resources.get(uri);
+				bool clean = false;
+				if (resource.filepath == null){ clean = true; }
+				//print(@"[cache] $(resource.valid_until) | $uri");
+				if (resource.valid_until < GLib.get_real_time()){ clean = true; }
+				//print(@" [$clean]\n");
+				if (clean){
+					resource.decrement_users("cache");
+					cached_resources.remove(uri);
+				}
 			}
 		}
 	}
 	
 	public void invalidate_for_uri(string uri){
-		var resource = cached_resources.get(uri);
-		if (resource != null){
-			resource.decrement_users("cache");
-			cached_resources.remove(uri);
+		lock (cached_resources){
+			var resource = cached_resources.get(uri);
+			if (resource != null){
+				resource.decrement_users("cache");
+				cached_resources.remove(uri);
+			}
 		}
 	}
 }
