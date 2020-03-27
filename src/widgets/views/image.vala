@@ -55,7 +55,7 @@ public class Dragonstone.View.Image : Gtk.ScrolledWindow, Dragonstone.IView {
 		if (off > 1.0001 || off < 0.9999){
 			var scaled_pixbuf = pixbuf.scale_simple(w, h, Gdk.InterpType.BILINEAR);
 			if (scaled_pixbuf != null){
-				image.set_from_pixbuf(scaled_pixbuf);
+				image.set_from_pixbuf( (owned) scaled_pixbuf);
 			}
 		}
 		image.set_padding(0,0);
