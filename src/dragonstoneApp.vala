@@ -17,6 +17,7 @@ public class Dragonstone.Application : Gtk.Application {
 		//Initalize Cache
 		Dragonstone.Startup.Cache.Backend.setup_store(super_registry); //register before switch
 		//Initalize backends
+		Dragonstone.Startup.About.Backend.setup_store(super_registry);
 		Dragonstone.Startup.Gopher.Backend.setup_gophertypes(super_registry);
 		Dragonstone.Startup.Gopher.Backend.setup_mimetypes(super_registry);
 		Dragonstone.Startup.Gopher.Backend.setup_store(super_registry);
