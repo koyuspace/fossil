@@ -20,11 +20,15 @@ public class Dragonstone.Startup.Gopher.Backend {
 		if (store_registry != null){
 			var mimeguesser = (super_registry.retrieve("core.mimeguesser") as Dragonstone.Registry.MimetypeGuesser);
 			var gopher_type_registry = (super_registry.retrieve("gopher.types") as Dragonstone.Registry.GopherTypeRegistry);
+			Dragonstone.Store.Gopher store; 
 			if (mimeguesser == null){
-				store_registry.add_resource_store("gopher://",new Dragonstone.Store.Gopher());
+				store = new Dragonstone.Store.Gopher();
 			} else {
-				store_registry.add_resource_store("gopher://",new Dragonstone.Store.Gopher.with_mimeguesser(mimeguesser,gopher_type_registry));
+				store = new Dragonstone.Store.Gopher.with_mimeguesser(mimeguesser,gopher_type_registry);
 			}
+			var cache = (super_registry.retrieve("core.stores.cache") as Dragonstone.Cache);
+			store.set_cache(cache);
+			store_registry.add_resource_store("gopher://",store);
 		}
 	}
 	

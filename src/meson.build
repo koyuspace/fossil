@@ -1,6 +1,7 @@
 executable(
 	meson.project_name(),
 	
+	'cache.vala',
 	'downloader.vala',
 	'dragonstoneApp.vala',
 	'main.vala',
@@ -17,11 +18,13 @@ executable(
 	'registries/uriAutocorrect.vala',
 	'registries/viewRegistry.vala',
 	'stores/about.vala',
+	'stores/cache.vala',
 	'stores/file.vala',
 	'stores/gemini.vala',
 	'stores/gopher.vala',
 	'stores/switch.vala',
 	'stores/test.vala',
+	'startup/cache.vala',
 	'startup/file.backend.vala',
 	'startup/gemini.backend.vala',
 	'startup/gemini.gtk.vala',

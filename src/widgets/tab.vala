@@ -21,6 +21,8 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public signal void on_cleanup();
 	public signal void on_title_change();
 	
+	private string resource_user_id = "tab_"+GLib.Uuid.string_random();
+	
 	private Dragonstone.Registry.ViewRegistry view_registry;
 	private Dragonstone.Registry.ViewRegistry source_view_registry;
 	
@@ -69,9 +71,9 @@ public class Dragonstone.Tab : Gtk.Bin {
 		_uri = uri;
 		if (request != null){
 			if (request.resource != null){
-				request.resource.decrement_users();
+				request.resource.decrement_users(resource_user_id);
 			}
-			request.notify["status"].disconnect(checkViewTimeoutHack);
+			request.notify["status"].disconnect(on_status_update);
 		}
 		setTitle(uri,true);
 		request = new Dragonstone.Request(uri,"",reload);
@@ -82,16 +84,13 @@ public class Dragonstone.Tab : Gtk.Bin {
 		}
 		store.request(request);
 		if (request != null){
-			if (request.resource != null){
-				request.resource.increment_users();
-			}
-			request.notify["status"].connect(checkViewTimeoutHack);
+			request.notify["status"].connect(on_status_update);
 		}
 		updateView();
 		uriChanged(this.uri);
 	}
 	
-	private void checkViewTimeoutHack(){
+	private void on_status_update(){
 		if(locked>0){ return; }
 		Timeout.add(0,() => {
 			checkView();
@@ -120,6 +119,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		view = view_registry.get_view(request.status);
 		//choose a new one
 		if (request.status == "success"){
+			request.resource.increment_users(resource_user_id); //TODO: move somewhere else
 			print(@"STATIC/DYNAMIC $(request.resource.mimetype)\n");
 			setTitle(uri);
 			if (prefer_source_view && source_view_registry != null){
@@ -180,9 +180,9 @@ public class Dragonstone.Tab : Gtk.Bin {
 		if (request != null){
 			request.cancel();
 			if (request.resource != null){
-				request.resource.decrement_users();
+				request.resource.decrement_users(resource_user_id);
 			}
-			request.notify["status"].disconnect(checkViewTimeoutHack);
+			request.notify["status"].disconnect(on_status_update);
 		}
 		on_cleanup();
 	}
@@ -221,7 +221,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		string urix = uri; //setting a variable to itself the complicatd way
 		print("reloading!\n");
 		print("URI: '"+urix+"'\n");
-		loadUri(urix);
+		loadUri(urix,true);
 	}
 	
 	public void download(){

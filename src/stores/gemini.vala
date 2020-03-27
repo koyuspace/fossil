@@ -1,5 +1,13 @@
 public class Dragonstone.Store.Gemini : Object, Dragonstone.ResourceStore {
 	
+	private Dragonstone.Cache? cache = null;
+	public int32 default_resource_lifetime = 1000*60*10; //10 minutes
+	
+	public void set_cache(Dragonstone.Cache? cache){
+		this.cache = cache;
+		print(@"Setting gemini cache null:$(cache == null)\n");
+	}
+	
 	public void request(Dragonstone.Request request,string? filepath = null){
 		if (filepath == null){
 			request.setStatus("error/internal","Filepath required!");
@@ -76,9 +84,9 @@ public class Dragonstone.Store.Gemini : Object, Dragonstone.ResourceStore {
 		//debugging information
 		print(@"Gemini Request:\n  Host:  $host\n  Port:  $port\n  Query: $query\n  Uri:   $(request.uri)\n");
 		var resource = new Dragonstone.Resource(request.uri,filepath,true);
-		var fetcher = new Dragonstone.GeminiResourceFetcher(resource,request,host,port);
+		var fetcher = new Dragonstone.GeminiResourceFetcher(resource,request,host,port,cache);
 		new Thread<int>(@"Gemini resource fetcher $host:$port [$(request.uri)]",() => {
-			fetcher.fetchResource();
+			fetcher.fetchResource(default_resource_lifetime);
 			return 0;
 		});
 		return;
@@ -94,19 +102,21 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 	public string uri { get; construct; }
 	public Dragonstone.Resource resource { get; construct; }
 	public Dragonstone.Request request { get; construct; }
+	public Dragonstone.Cache? cache { get; construct; }
 	
-	public GeminiResourceFetcher(Dragonstone.Resource resource,Dragonstone.Request request,string host,uint16 port){
+	public GeminiResourceFetcher(Dragonstone.Resource resource,Dragonstone.Request request,string host,uint16 port,Dragonstone.Cache? cache = null){
 		Object(
 			resource: resource,
 			request: request,
 			host: host,
 			port: port,
 			//query: query,
-			uri: request.uri
+			uri: request.uri,
+			cache: cache
 		);
 	}
 	
-	public void fetchResource(){
+	public void fetchResource(int32 default_resource_lifetime){
 		
 		//make request
 		request.setStatus("connecting");
@@ -176,7 +186,9 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 					resource.add_metadata(metaline/*mimetype*/,@"[gemini] $uri");
 					if (helper.error){return;}
 					helper.close();
+					resource.valid_until = resource.timestamp+default_resource_lifetime;
 					request.setResource(resource,"gemini");
+					if (cache != null){cache.put_resource(resource);}
 				} else if (statuscode/10==3){
 					var joined_uri = Dragonstone.Util.Uri.join(uri,metaline);
 					if (joined_uri == null){joined_uri = uri;}

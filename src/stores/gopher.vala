@@ -2,6 +2,8 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 	
 	private Dragonstone.Registry.MimetypeGuesser mimeguesser;
 	private Dragonstone.Registry.GopherTypeRegistry type_registry;
+	private Dragonstone.Cache? cache = null;
+	public int32 default_resource_lifetime = 1000*60*10; //10 minutes
 	
 	public Gopher(){
 		mimeguesser = new Dragonstone.Registry.MimetypeGuesser.default_configuration();
@@ -17,6 +19,10 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 		}
 	}
 	
+	public void set_cache(Dragonstone.Cache? cache){
+		this.cache = cache;
+		print(@"Setting gopher cache null:$(cache == null)\n");
+	}
 	
 	public void request(Dragonstone.Request request,string? filepath = null){
 		if (filepath == null){
@@ -105,9 +111,9 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 		//debugging information
 		print(@"Gopher Request:\n  Host:  $host\n  Port:  $port\n  Type:  $gophertype\n  Query: $query\n");
 		var resource = new Dragonstone.Resource(request.uri,filepath,true);
-		var fetcher = new Dragonstone.GopherResourceFetcher(resource,request,host,port,query,mimetype);
+		var fetcher = new Dragonstone.GopherResourceFetcher(resource,request,host,port,query,mimetype,cache);
 		new Thread<int>(@"Gopher resource fetcher $host:$port [$gophertype|$query]",() => {
-			fetcher.fetchResource();
+			fetcher.fetchResource(default_resource_lifetime);
 			return 0;
 		});
 	}
@@ -121,19 +127,21 @@ private class Dragonstone.GopherResourceFetcher : Object {
 	public string mimetype { get; construct; }
 	public Dragonstone.Resource resource { get; construct; }
 	public Dragonstone.Request request { get; construct; }
+	public Dragonstone.Cache? cache { get; construct; }
 	
-	public GopherResourceFetcher(Dragonstone.Resource resource,Dragonstone.Request request,string host,uint16 port,string query,string mimetype){
+	public GopherResourceFetcher(Dragonstone.Resource resource,Dragonstone.Request request,string host,uint16 port,string query,string mimetype, Dragonstone.Cache? cache = null){
 		Object(
 			resource: resource,
 			request: request,
 			host: host,
 			port: port,
 			query: query,
-			mimetype: mimetype
+			mimetype: mimetype,
+			cache: cache
 		);
 	}
 	
-	public void fetchResource(){
+	public void fetchResource(int32 default_resource_lifetime){
 			
 		request.setStatus("connecting");
 		//make request
@@ -192,7 +200,9 @@ private class Dragonstone.GopherResourceFetcher : Object {
 			}
 			if (helper.closed){return;} //error or cancelled
 			helper.close();
+			resource.valid_until = resource.timestamp+default_resource_lifetime;
 			request.setResource(resource,"gopher");
+			if (cache != null){cache.put_resource(resource);}
 			return;
 		} catch (Error e) {
 				request.setStatus("error/gibberish");

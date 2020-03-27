@@ -13,6 +13,8 @@ public class Dragonstone.Application : Gtk.Application {
 		super_registry.store("core.mimeguesser",new Dragonstone.Registry.MimetypeGuesser.default_configuration());
 		super_registry.store("core.stores",new Dragonstone.Registry.StoreRegistry.default_configuration());
 		super_registry.store("core.uri_autoprefixer",new Dragonstone.Registry.UriAutoprefix());
+		//Initalize Cache
+		Dragonstone.Startup.Cache.setup_store(super_registry); //register before switch
 		//Initalize backends
 		Dragonstone.Startup.Gopher.Backend.setup_gophertypes(super_registry);
 		Dragonstone.Startup.Gopher.Backend.setup_mimetypes(super_registry);
@@ -39,6 +41,11 @@ public class Dragonstone.Application : Gtk.Application {
 	
 	protected override void open(GLib.File[] files, string hint) {
 		build_window();
+	}
+	
+	protected void shutdown() {
+		var cache = (super_registry.retrieve("core.stores.cache") as Dragonstone.Cache);
+		if (cache != null){ cache.erase(); }
 	}
 	
 	private void build_window() {

@@ -1,7 +1,7 @@
 public class Dragonstone.Request : Object {
 	//request
 	public string uri { get; protected set; default = null;} //what exactly do you want?
-	public string queryMetadata { get; protected set; default = null;} //here, have a cookie, or a certificate, or a preferend mimetype ...
+	public string queryMetadata { get; protected set; default = null;} //here, have a cookie, or a certificate, or a preferend mimetype ... //subject to change
 	public bool reload { get; set; default = false; } //if the resource should not be fetched from cache
 	//feedback
 	public string cacheId { get; set; default = null; } //use this to request it from the cache
