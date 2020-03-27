@@ -33,7 +33,10 @@ public class Dragonstone.Tab : Gtk.Bin {
 		);
 		this.view_registry = (super_registry.retrieve("gtk.views") as Dragonstone.Registry.ViewRegistry);
 		this.source_view_registry = (super_registry.retrieve("gtk.source_views") as Dragonstone.Registry.ViewRegistry);
-		if (this.view_registry == null){ throw new Dragonstone.SuperRegistryError.MISSING_ENTRY("[tab] missing super registry entry: gtk.views"); }
+		if (this.view_registry == null){
+			print("[tab] No view registry in super registry, falling back to default configuration!\n");
+			this.view_registry = new Dragonstone.Registry.ViewRegistry.default_configuration();
+		}
 		this.parent_window = parent_window;
 		loadUri(uri);
 	}
@@ -163,8 +166,9 @@ public class Dragonstone.Tab : Gtk.Bin {
 	
 	public void close(){
 		cleanup();
-		if (parent_window is Dragonstone.Window){
-			(parent_window as Dragonstone.Window).close_tab(this);
+		var window = (parent_window as Dragonstone.Window);
+		if (window != null){
+			window.close_tab(this);
 		}
 	}
 	
