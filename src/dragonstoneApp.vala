@@ -22,11 +22,15 @@ public class Dragonstone.Application : Gtk.Application {
 		Dragonstone.Startup.Gemini.Backend.setup_store(super_registry);
 		Dragonstone.Startup.Gemini.Backend.setup_uri_autocompletion(super_registry);
 		Dragonstone.Startup.File.Backend.setup_store(super_registry);
-		Dragonstone.Startup.StoreSwitch.setup_store(super_registry);
-		//Initalize fontend stuff
 		Dragonstone.Startup.File.Backend.setup_uri_autocompletion(super_registry);
+		Dragonstone.Startup.StoreSwitch.setup_store(super_registry);
+		//Initalize fontend registries
 		super_registry.store("gtk.views",new Dragonstone.Registry.ViewRegistry.default_configuration());
 		super_registry.store("gtk.source_views",new Dragonstone.Registry.ViewRegistry.source_view_configuration());
+		//Initalize frontends
+		Dragonstone.Startup.Gopher.Gtk.setup_views(super_registry);
+		Dragonstone.Startup.Gemini.Gtk.setup_views(super_registry);
+		
 	}
 	
 	protected override void activate() {

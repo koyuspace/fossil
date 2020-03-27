@@ -14,9 +14,6 @@ public class Dragonstone.Registry.ViewRegistry : Object {
 		add_view("error/noHost", () => { return new Dragonstone.View.HostUnreachable(); });
 		add_view("error/resourceUnavaiable", () => { return new Dragonstone.View.Unavaiable(); });
 		add_view("error",() => { return new Dragonstone.View.Error.Generic(); });
-		add_resource_view("text/gopher",() => { return new Dragonstone.View.Gophertext(); });
-		add_resource_view("text/gemini",() => { return new Dragonstone.View.Geminitext(); });
-		add_resource_view("gemini/input",() => { return new Dragonstone.View.GeminiInput(); });
 		add_resource_view("text/",() => { return new Dragonstone.View.Plaintext(); });
 		add_resource_view("image/",() => { return new Dragonstone.View.Image(); });
 		add_resource_view("",() => { return new Dragonstone.View.Download(); });
@@ -33,6 +30,8 @@ public class Dragonstone.Registry.ViewRegistry : Object {
 	public void add_view(string status,Dragonstone.Registry.ViewConstructor constructor,string? mimetype = null){
 		entrys.append(new Dragonstone.Registry.ViewRegistryEntry(status,mimetype,constructor));
 	}
+	
+	//TODO: public void remove_view(string status,string? mimetype){}
 	
 	public Dragonstone.IView? get_view(string status,string? mimetype = null){
 		Dragonstone.Registry.ViewRegistryEntry best_match = null;
