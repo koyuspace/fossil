@@ -17,6 +17,7 @@ A simple gtk gopher/gemini client written in vala, that will eventually support 
 ### Wishlist
 - display a menu when right clicking on a link
 - save bookmarks
+- a non codename for the project
 
 ##How to build/install?
 Note: to build dragonstone you need the following dependedencys:
