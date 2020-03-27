@@ -8,6 +8,7 @@ public class Dragonstone.Application : Gtk.Application {
 			application_id: "com.gitlab.baschdel.Dragonstone",
 			flags: ApplicationFlags.FLAGS_NONE
 		);
+		this.shutdown.connect(on_shutdown);
 		super_registry = new Dragonstone.SuperRegistry();
 		//Initalize core registries
 		super_registry.store("core.mimeguesser",new Dragonstone.Registry.MimetypeGuesser.default_configuration());
@@ -32,7 +33,6 @@ public class Dragonstone.Application : Gtk.Application {
 		//Initalize frontends
 		Dragonstone.Startup.Gopher.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Gemini.Gtk.setup_views(super_registry);
-		
 	}
 	
 	protected override void activate() {
@@ -43,7 +43,7 @@ public class Dragonstone.Application : Gtk.Application {
 		build_window();
 	}
 	
-	protected void shutdown() {
+	protected void on_shutdown() {
 		var cache = (super_registry.retrieve("core.stores.cache") as Dragonstone.Cache);
 		if (cache != null){ cache.erase(); }
 	}

@@ -69,4 +69,9 @@ public class Dragonstone.View.Image : Gtk.ScrolledWindow, Dragonstone.IView {
 		}
 	}
 	
+	public void cleanup(){
+		this.image.clear();
+		size_allocate.disconnect(scaleToWindow);
+	}
+	
 }
