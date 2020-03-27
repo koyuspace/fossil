@@ -67,4 +67,12 @@ public class Dragonstone.Store.Cache : Object, Dragonstone.ResourceStore, Dragon
 			}
 		}
 	}
+	
+	public void invalidate_for_uri(string uri){
+		var resource = cached_resources.get(uri);
+		if (resource != null){
+			resource.decrement_users("cache");
+			cached_resources.remove(uri);
+		}
+	}
 }

@@ -5,6 +5,8 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
 	private Dragonstone.Registry.MimetypeGuesser mimeguesser;
 	private Dragonstone.Registry.GopherTypeRegistry type_registry;
 	
+	private Dragonstone.Cache? cache = null;
+	
 	public Gophertext(){
 		mimeguesser = new Dragonstone.Registry.MimetypeGuesser.default_configuration();
 		type_registry = new Dragonstone.Registry.GopherTypeRegistry.default_configuration();
@@ -17,6 +19,10 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
 		} else {
 			this.type_registry = new Dragonstone.Registry.GopherTypeRegistry.default_configuration();
 		}
+	}
+	
+	public void set_cache(Dragonstone.Cache? cache){
+		this.cache = cache;
 	}
 	
 	
@@ -73,7 +79,12 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
 								uri = @"gopher://$host/$gophertype$query";
 							}
 							var searchfield = new Dragonstone.View.GophertextInlineSearch(htext,uri);
-							searchfield.go.connect((s,uri) => {tab.goToUri(uri);});
+							searchfield.go.connect((s,uri) => {
+								tab.goToUri(uri);
+								if (cache != null){
+									cache.invalidate_for_uri(request.uri);
+								}
+							});
 							appendWidget(searchfield);
 						} else if (typeinfo.hint == Dragonstone.Registry.GopherTypeRegistryContentHint.ERROR){ //Error
 							appendWidget(new Dragonstone.View.GophertextIconLabel(htext,"dialog-error-symbolic"));

@@ -4,5 +4,7 @@ public interface Dragonstone.Cache : Dragonstone.ResourceStore {
 	
 	public abstract void put_resource(Dragonstone.Resource resource);
 	
+	public abstract void invalidate_for_uri(string uri);
+	
 	public abstract void erase();
 }
