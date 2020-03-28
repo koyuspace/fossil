@@ -160,6 +160,9 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 				return false;
 			}
 		});
+		cachebutton.clicked.connect(e => {
+			parent_window.add_tab("about:cache");
+		});
 		//connect stack signal
 		tabs.switch_page.connect((widget,num) => {
 			onVisibleTabChanged(widget);
