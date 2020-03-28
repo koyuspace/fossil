@@ -6,5 +6,5 @@ public interface Dragonstone.IView : Gtk.Widget {
 	public abstract bool canHandleCurrentResource(); 
 	//tells the View to unhook from all resource and request signal it may be hooked up to
 	//and clean up after itself
-	public void cleanup(){}
+	public virtual void cleanup(){}
 }
