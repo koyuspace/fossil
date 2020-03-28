@@ -113,9 +113,10 @@ public class Dragonstone.Tab : Gtk.Bin {
 	//update the view either beacause of a new Resource or beacause of a change of the current reource
 	public void updateView(){
 		if(locked>0){ return; }
-		print(@"UPDATING view! [$(request.status)]\n");
+		print(@"[tab] UPDATING view! [$(request.status)]\n");
 		//remove the old view
 		if (view != null){
+			print("[tab] cleaning up old view\n");
 			view.cleanup();
 			remove(view);
 		}
@@ -140,6 +141,8 @@ public class Dragonstone.Tab : Gtk.Bin {
 			if (autoredirect){
 				redirect(request.substatus);
 			}
+		} else {
+			setTitle(uri);
 		}
 		if(request.status.has_prefix("error")){
 			setTitle("🔴 "+uri);
@@ -176,6 +179,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		if(locked>0){ return; }
 		locked++;
 		if (view != null){
+			print("[tab] cleaning up old view\n");
 			view.cleanup();
 			remove(view);
 			view = null;
