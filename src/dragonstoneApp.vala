@@ -16,8 +16,9 @@ public class Dragonstone.Application : Gtk.Application {
 		super_registry.store("core.uri_autoprefixer",new Dragonstone.Registry.UriAutoprefix());
 		//Initalize Cache
 		Dragonstone.Startup.Cache.Backend.setup_store(super_registry); //register before switch
-		//Initalize backends
 		Dragonstone.Startup.About.Backend.setup_store(super_registry);
+		//Initalize backends
+		Dragonstone.Startup.Cache.Backend.setup_about_page(super_registry);
 		Dragonstone.Startup.Gopher.Backend.setup_gophertypes(super_registry);
 		Dragonstone.Startup.Gopher.Backend.setup_mimetypes(super_registry);
 		Dragonstone.Startup.Gopher.Backend.setup_store(super_registry);
@@ -32,6 +33,7 @@ public class Dragonstone.Application : Gtk.Application {
 		super_registry.store("gtk.views",new Dragonstone.Registry.ViewRegistry.default_configuration());
 		super_registry.store("gtk.source_views",new Dragonstone.Registry.ViewRegistry.source_view_configuration());
 		//Initalize frontends
+		Dragonstone.Startup.Cache.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Gopher.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Gemini.Gtk.setup_views(super_registry);
 	}

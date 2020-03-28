@@ -66,6 +66,6 @@ public class Dragonstone.Resource : Object {
 		this.mimetype = mimetype;
 		this.name = name;
 		this.metadata = metadata;
-		this.timestamp = GLib.get_real_time();
+		this.timestamp = (GLib.get_real_time()/1000);
 	}
 }
