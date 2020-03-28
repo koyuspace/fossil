@@ -145,30 +145,36 @@ private class Dragonstone.GopherResourceFetcher : Object {
 			
 		request.setStatus("connecting");
 		//make request
-		InetAddress address;
+		List<InetAddress> addresses;
 		try {
 			// Resolve hostname to IP address
 			var resolver = Resolver.get_default ();
-			var addresses = resolver.lookup_by_name (host, null);
-			address = addresses.nth_data (0);
-			print (@"[gopher] Resolved $host to $address\n");
+			addresses = resolver.lookup_by_name (host, null);
 		} catch (Error e) {
 			request.setStatus("error/noHost");
 			return;
 		}
 		
-		SocketConnection conn;
-		try {
-			// Connect
-			var client = new SocketClient ();
-			print (@"[gopher] Connecting to $host...\n");
-			conn = client.connect (new InetSocketAddress (address, port));
-			print (@"[gopher] Connected to $host\n");
-		} catch (Error e) {
-			print("[gopher] ERROR while connecting: "+e.message+"\n");
+		SocketConnection? conn = null;
+		foreach (InetAddress address in addresses){
+			try {
+				// Connect
+				var client = new SocketClient ();
+				client.timeout = 30;
+				print (@"[gopher] Connecting to $host ($address) ...\n");
+				conn = client.connect (new InetSocketAddress (address, port));
+				print (@"[gopher] Connected to $host ($address)\n");
+			} catch (Error e) {
+				print(@"[gopher] ERROR while connecting to $host ($address) : $(e.message)\n");
+				conn = null;
+			}
+			if ( conn != null ) { break; }
+		}
+		if (conn == null){
 			request.setStatus("error/connectionRefused");
 			return;
 		}
+		
 		request.setStatus("loading");
 		try {
 			//send gopher request
