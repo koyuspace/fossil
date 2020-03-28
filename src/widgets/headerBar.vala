@@ -155,7 +155,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		});
 		prefer_source_view_switch.state_set.connect(e => {
 			if (current_tab != null) {
-				current_tab.prefer_source_view = !prefer_source_view_switch.state;
+				current_tab.prefer_source_view = prefer_source_view_switch.state;
 				current_tab.updateView();
 				return false;
 			}

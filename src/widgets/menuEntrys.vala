@@ -10,7 +10,7 @@ public class Dragonstone.Widget.MenuButton : Gtk.Button {
 	}
 }
 
-public class Dragonstone.Widget.MenuSwitch : Gtk.Bin {
+public class Dragonstone.Widget.MenuSwitch : Gtk.Button {
 
 	public Gtk.Switch switch_widget;
 	
@@ -26,5 +26,9 @@ public class Dragonstone.Widget.MenuSwitch : Gtk.Bin {
 		halign = Gtk.Align.FILL;
 		add(box);
 		get_style_context().add_class("flat");
+		
+		this.clicked.connect(() => {
+			switch_widget.set_state(!switch_widget.get_state());
+		});
 	}
 }
