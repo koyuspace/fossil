@@ -59,8 +59,7 @@ executable(
 	'widgets/views/redirect.vala',
 	
 	dependencies: [
-		dependency('gtk+-3.0'),
-		dependency('gee-0.8')
+		dependency('gtk+-3.0')
 	],
 	install: true
 )

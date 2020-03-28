@@ -1,6 +1,6 @@
 public class Dragonstone.SuperRegistry : Object {
 
-	private Gee.HashMap<string,Object> objects = new Gee.HashMap<string,Object>();
+	private HashTable<string,Object> objects = new HashTable<string,Object>(str_hash, str_equal);
 	
 	public void store(string key,Object val){
 		objects.set(key,val);
