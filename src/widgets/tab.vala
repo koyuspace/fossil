@@ -232,6 +232,13 @@ public class Dragonstone.Tab : Gtk.Bin {
 		loadUri(urix,true);
 	}
 	
+	public void open_uri_in_new_tab(string uri){
+		var window = (parent_window as Dragonstone.Window);
+		if (window != null){
+			window.add_tab(uri);
+		}
+	}
+	
 	public void download(){
 		if(locked>0){ return; }
 		if (this.request.resource == null){

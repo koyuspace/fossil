@@ -65,7 +65,7 @@ public class Dragonstone.Store.Cache : Object, Dragonstone.ResourceStore, Dragon
 				bool clean = false;
 				if (resource.filepath == null){ clean = true; }
 				//print(@"[cache] $(resource.valid_until) | $uri");
-				if (resource.valid_until < GLib.get_real_time()){ clean = true; }
+				if (resource.valid_until < (GLib.get_real_time()/1000)){ clean = true; }
 				//print(@" [$clean]\n");
 				if (clean){
 					resource.decrement_users("cache");
