@@ -158,12 +158,14 @@ public class Dragonstone.Tab : Gtk.Bin {
 				add(view);
 			} else {
 				setTitle("🔴 "+uri);
-				view = new Dragonstone.View.Label("I think i chose the wrong view ...\nPlease report this to the developer!"); //TOTRANSLATE
+				var error_message_localized = translation.get_localized_string("tab.error.wrong_view.message");
+				view = new Dragonstone.View.Label(error_message_localized); //TOTRANSLATE
 				add(view);
 			}
 		} else {
 			setTitle("🔴 "+uri);
-			view = new Dragonstone.View.Label(@"I'm sorry, but I don't know how to show that to you\nPlease report this to the developer if this is a release version (or you think this really shouldn't have happened)!\n$(request.status)\n$(request.substatus)"); //TOTRANSLATE
+			var error_message_localized = translation.get_localized_string("tab.error.no_view.message");
+			view = new Dragonstone.View.Label(@"$error_message_localized\n$(request.status)\n$(request.substatus)");
 			add(view);
 		}
 		show_all();

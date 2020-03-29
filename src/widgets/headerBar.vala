@@ -30,11 +30,10 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		if (uri_autoprefixer == null) {
 			uri_autoprefixer = new Dragonstone.Registry.UriAutoprefix();
 		}
-	}
-
-	construct {
-		//show_close_button = false;
+	
+		show_close_button = true;
 		has_subtitle = false;
+		//load translation
 		//backbutton
 		backbutton = new Gtk.Button.from_icon_name("go-previous-symbolic");
 		backbutton.relief = Gtk.ReliefStyle.NONE;
@@ -72,20 +71,21 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		//savetodiskbutton.relief = Gtk.ReliefStyle.NONE;
 		mainmenuhbox.pack_start(savetodiskbutton);
 		//prefer_source_view
-		var prefer_source_view_widget = new Dragonstone.Widget.MenuSwitch("View source");
+		var view_source_localized = parent_window.translation.get_localized_string("window.main_menu.prefer_source_view.label");
+		var prefer_source_view_widget = new Dragonstone.Widget.MenuSwitch(view_source_localized);
 		prefer_source_view_switch = prefer_source_view_widget.switch_widget;
 		mainmenubox.pack_start(prefer_source_view_widget);
 		//Cache
-		var cachebutton = new Dragonstone.Widget.MenuButton("Cache"); //TOTRANSLATE
+		var view_cache_localized = parent_window.translation.get_localized_string("window.main_menu.cache.label");
+		var cachebutton = new Dragonstone.Widget.MenuButton(view_cache_localized); //TOTRANSLATE
 		mainmenubox.pack_start(cachebutton);
 		//Settings
-		var settingsbutton = new Dragonstone.Widget.MenuButton("Settings"); //TOTRANSLATE
+		var view_settings_localized = parent_window.translation.get_localized_string("window.main_menu.settings.label");
+		var settingsbutton = new Dragonstone.Widget.MenuButton(view_settings_localized); //TOTRANSLATE
 		mainmenubox.pack_start(settingsbutton);
-		//About
-		var aboutbutton = new Dragonstone.Widget.MenuButton("About"); //TOTRANSLATE
-		mainmenubox.pack_start(aboutbutton);
 		//close tabs button
-		close_tab_button = new Dragonstone.Widget.MenuButton("Close Tab"); //TOSTRANSLATE
+		var close_tab_localized = parent_window.translation.get_localized_string("window.main_menu.close_tab.label");		
+		close_tab_button = new Dragonstone.Widget.MenuButton(close_tab_localized); //TOSTRANSLATE
 		mainmenubox.pack_start(close_tab_button);
 		//main menu end
 		mainmenu.add(mainmenubox);
@@ -159,6 +159,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 				current_tab.updateView();
 				return false;
 			}
+			return true;
 		});
 		cachebutton.clicked.connect(e => {
 			parent_window.add_tab("about:cache");

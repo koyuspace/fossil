@@ -4,12 +4,15 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 	public Gtk.Notebook tabs;
 	public Dragonstone.ResourceStore store;	
 	public Dragonstone.SuperRegistry super_registry { get; construct; }
+	public Dragonstone.Registry.TranslationRegistry translation;
 	
 	public Window(Dragonstone.Application application) {
 		Object(
 			application: application,
 			super_registry: application.super_registry
 		);
+		load_translation();
+		initalize();
 		add_new_tab();
 	}
 	
@@ -19,11 +22,21 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 			super_registry: application.super_registry
 		);
 		move(x,y);
+		load_translation();
+		initalize();
 		add_tab_object(tab);
 	}
 	
-	construct {
-		title = "Project Dragonstone";
+	private void load_translation() {
+		this.translation = (super_registry.retrieve("localization.translation") as Dragonstone.Registry.TranslationRegistry);
+		if (this.translation == null){
+			print("[window] No translation resgistry found, falling back to an empty one!\n");
+			this.translation = new Dragonstone.Registry.TranslationLanguageRegistry();
+		}
+		title = translation.get_localized_string("window.title");
+	}
+	
+	private void initalize() {
 		window_position = Gtk.WindowPosition.CENTER;
 		set_default_size(600,400);
 		
@@ -87,18 +100,22 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		Gtk.accelerator_parse("<control>w",out key,out modifiers);
 		accelerator_group.connect(key,modifiers,Gtk.AccelFlags.VISIBLE,() => {
 			close_tab(null);
+			return true;
 		});
 		Gtk.accelerator_parse("<control>p",out key,out modifiers);
 		accelerator_group.connect(key,modifiers,Gtk.AccelFlags.VISIBLE,() => {
 			tabs.prev_page();
+			return true;
 		});
 		Gtk.accelerator_parse("<control>n",out key,out modifiers);
 		accelerator_group.connect(key,modifiers,Gtk.AccelFlags.VISIBLE,() => {
 			tabs.next_page();
+			return true;
 		});
 		Gtk.accelerator_parse("F5",out key,out modifiers);
 		accelerator_group.connect(key,modifiers,Gtk.AccelFlags.VISIBLE,() => {
 			headerbar.current_tab.reload();
+			return true;
 		});
 		show_all();
 	}
