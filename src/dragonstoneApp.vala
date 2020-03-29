@@ -29,6 +29,10 @@ public class Dragonstone.Application : Gtk.Application {
 		Dragonstone.Startup.File.Backend.setup_store(super_registry);
 		Dragonstone.Startup.File.Backend.setup_uri_autocompletion(super_registry);
 		Dragonstone.Startup.StoreSwitch.setup_store(super_registry);
+		//Initalize localization
+		Dragonstone.Startup.LocalizationRegistry.setup_translation_registry(super_registry);
+		Dragonstone.Startup.Localization.English.setup_language(super_registry);
+		Dragonstone.Startup.Localization.English.use_language(super_registry);
 		//Initalize fontend registries
 		super_registry.store("gtk.views",new Dragonstone.Registry.ViewRegistry.default_configuration());
 		super_registry.store("gtk.source_views",new Dragonstone.Registry.ViewRegistry.source_view_configuration());

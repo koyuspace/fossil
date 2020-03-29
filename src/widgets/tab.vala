@@ -12,6 +12,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public Dragonstone.Util.Stack<string> history = new Dragonstone.Util.Stack<string>();
 	public Dragonstone.Util.Stack<string> forward = new Dragonstone.Util.Stack<string>();
 	public Dragonstone.SuperRegistry super_registry { get; construct; }
+	public Dragonstone.Registry.TranslationRegistry translation;
 	private Gtk.Window parent_window;
 	private int locked = 0;
 	//a label widget for adding to tabs in a notebook
@@ -36,6 +37,11 @@ public class Dragonstone.Tab : Gtk.Bin {
 		if (this.view_registry == null){
 			print("[tab] No view registry in super registry, falling back to default configuration!\n");
 			this.view_registry = new Dragonstone.Registry.ViewRegistry.default_configuration();
+		}
+		this.translation = (super_registry.retrieve("localization.translation") as Dragonstone.Registry.TranslationRegistry);
+		if (this.translation == null){
+			print("[tab] No translation resgistry found, falling back to an empty one!\n");
+			this.translation = new Dragonstone.Registry.TranslationLanguageRegistry();
 		}
 		this.parent_window = parent_window;
 		loadUri(uri);
@@ -245,7 +251,8 @@ public class Dragonstone.Tab : Gtk.Bin {
 			print("Can't download an non existant resource!");
 			return;
 		}
-		var filechooser = new Gtk.FileChooserNative(@"Download - $uri",parent_window,Gtk.FileChooserAction.SAVE,"Download","_Cancel"); //TOTRANSLATE
+		var download_localized = translation.get_localized_string("action.download");
+		var filechooser = new Gtk.FileChooserNative(@"$download_localized - $uri",parent_window,Gtk.FileChooserAction.SAVE,download_localized,translation.get_localized_string("action.cancel")); //TOTRANSLATE
 		filechooser.set_current_name(Dragonstone.Util.Uri.get_filename(uri));
 		filechooser.set_current_folder(Environment.get_user_special_dir(UserDirectory.DOWNLOAD));
 		filechooser.set_select_multiple(false);
