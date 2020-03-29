@@ -24,6 +24,7 @@ Note: to build dragonstone you need the following dependedencys:
 - gtk3+ - the graphics toolkit
 - valac - the vala compiler
 - meson - the buildsystem
+- cmake - used by meson
 - python 3.x
 
 to build it either run the build.sh script, which will automatically setup the build folder run ninja and put the output in the projects root directory
