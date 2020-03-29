@@ -117,6 +117,13 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 			headerbar.current_tab.reload();
 			return true;
 		});
+		Gtk.accelerator_parse("F8",out key,out modifiers);
+		accelerator_group.connect(key,modifiers,Gtk.AccelFlags.VISIBLE,() => {
+			headerbar.show_close_button = !headerbar.show_close_button;
+			headerbar.visible = false;
+			headerbar.visible = true;
+			return true;
+		});
 		show_all();
 	}
 	
