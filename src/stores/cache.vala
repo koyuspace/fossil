@@ -24,8 +24,8 @@ public class Dragonstone.Store.Cache : Object, Dragonstone.ResourceStore, Dragon
 		var resource = cached_resources.get(uri); //let's hope this is threadsafe
 		if(resource == null) { print("[cache] No, beacause resource is not cached.\n"); return false; }
 		if(resource.filepath == null) { print("[cache] No, beacause resource is not cached anymore.\n"); return false; }
-		if(resource.valid_until >= GLib.get_real_time()){ print("[cache] No, beacause resource is not vali anymore.\n"); return false; }
-		if(maxage > 0){ return resource.timestamp+maxage >= GLib.get_real_time(); }
+		if(resource.valid_until >= (GLib.get_real_time()/1000) && resource.valid_until != int64.MAX){ print("[cache] No, beacause resource is not valid anymore.\n"); return false; }
+		if(maxage > 0){ return resource.timestamp+maxage >= (GLib.get_real_time()/1000); }
 		return true;
 	}
 	

@@ -37,7 +37,7 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 		var actionbar = new Gtk.ActionBar();
 		actionbar.expand = false;
 		//erasebutton
-		var erasebutton = new Gtk.Button.with_label("Erase cache");
+		var erasebutton = new Gtk.Button.with_label("Erase cache"); //TOTRANSLATE
 		erasebutton.get_style_context().add_class("destructive-action");
 		actionbar.pack_end(erasebutton);
 		erasebutton.clicked.connect(() => {
@@ -45,7 +45,7 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 		});
 		//search_entry
 		search_entry = new Gtk.Entry();
-		search_entry.placeholder_text = "Search for uri ...";
+		search_entry.placeholder_text = "Search for uri ..."; //TOTRANSLATE
 		search_entry.width_chars = 35;
 		search_entry.buffer.deleted_text.connect(() => {this.search_dirty = true;});
 		search_entry.buffer.inserted_text.connect(() => {this.search_dirty = true;});
@@ -55,17 +55,17 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 		//removebutton
 		var removebutton = new Gtk.Button.from_icon_name("list-remove-symbolic");
 		removebutton.get_style_context().add_class("destructive-action");
-		removebutton.set_tooltip_text("Remove resource from cache");
+		removebutton.set_tooltip_text("Remove resource from cache"); //TOTRANSLATE
 		controls.pack_start(removebutton);
 		removebutton.clicked.connect(remove_selected);
 		//gotobutton
 		var gotobutton = new Gtk.Button.from_icon_name("go-jump-symbolic");
-		gotobutton.set_tooltip_text("Open resource in new tab");
+		gotobutton.set_tooltip_text("Open resource in new tab"); //TOTRANSLATE
 		controls.pack_start(gotobutton);
 		gotobutton.clicked.connect(open_selected_in_new_tab);
 		//pinbutton
 		pinbutton = new Gtk.Button.from_icon_name("view-pin-symbolic");
-		pinbutton.set_tooltip_text("Stop resource from expireing");
+		pinbutton.set_tooltip_text("Stop resource from expireing"); //TOTRANSLATE
 		controls.pack_start(pinbutton);
 		pinbutton.clicked.connect(pin_selected);
 		controls.pack_start(new Gtk.Separator(Gtk.Orientation.VERTICAL));
