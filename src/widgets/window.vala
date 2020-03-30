@@ -5,26 +5,28 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 	public Dragonstone.ResourceStore store;	
 	public Dragonstone.SuperRegistry super_registry { get; construct; }
 	public Dragonstone.Registry.TranslationRegistry translation;
+	private Dragonstone.Application app;
 	
 	public Window(Dragonstone.Application application) {
 		Object(
 			application: application,
 			super_registry: application.super_registry
 		);
+		this.app = application;
 		load_translation();
 		initalize();
 		add_new_tab();
 	}
 	
-	public Window.from_dropped_Tab(Dragonstone.Application application,Dragonstone.Tab tab,int x,int y) {
+	public Window.from_dropped_tab(Dragonstone.Application application,int x,int y) {
 		Object(
 			application: application,
 			super_registry: application.super_registry
 		);
+		this.app = application;
 		move(x,y);
 		load_translation();
 		initalize();
-		add_tab_object(tab);
 	}
 	
 	private void load_translation() {
@@ -60,6 +62,11 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 				var tab = (widget as Dragonstone.Tab);
 				tab.set_tab_parent_window(this);
 			}
+		});
+		
+		tabs.create_window.connect((page,x,y) => {
+			var window = new Dragonstone.Window.from_dropped_tab(this.app,x,y);
+			return window.tabs;
 		});
 		
 		//new tab button
