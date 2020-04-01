@@ -28,6 +28,8 @@ public class Dragonstone.Application : Gtk.Application {
 		Dragonstone.Startup.Gemini.Backend.setup_uri_autocompletion(super_registry);
 		Dragonstone.Startup.File.Backend.setup_store(super_registry);
 		Dragonstone.Startup.File.Backend.setup_uri_autocompletion(super_registry);
+		Dragonstone.Startup.Finger.Backend.setup_store(super_registry);
+		Dragonstone.Startup.Finger.Backend.setup_uri_autocompletion(super_registry);
 		Dragonstone.Startup.StoreSwitch.setup_store(super_registry);
 		//Initalize localization
 		Dragonstone.Startup.LocalizationRegistry.setup_translation_registry(super_registry);
