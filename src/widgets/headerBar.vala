@@ -10,6 +10,8 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 	public Gtk.Button backbutton;
 	public Gtk.Button forwardbutton;
 	public Gtk.Button loadbutton;
+	private Gtk.Button savetodiskbutton;
+	private Gtk.Button downloadbutton;
 	private bool loadButtonReloadMode = false;
 	private Gtk.Image reloadIcon = new Gtk.Image.from_icon_name("view-refresh-symbolic",Gtk.IconSize.BUTTON);
 	private Gtk.Image goIcon = new Gtk.Image.from_icon_name("go-jump-symbolic",Gtk.IconSize.BUTTON);
@@ -62,10 +64,10 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		mainmenuhbox.get_style_context().add_class("linked");
 		mainmenuhbox.homogeneous = true;
 		mainmenubox.pack_start(mainmenuhbox);
-		var downloadbutton = new Gtk.Button.from_icon_name("document-save-symbolic",Gtk.IconSize.LARGE_TOOLBAR );
+		downloadbutton = new Gtk.Button.from_icon_name("document-save-symbolic",Gtk.IconSize.LARGE_TOOLBAR );
 		//downloadbutton.relief = Gtk.ReliefStyle.NONE;
 		mainmenuhbox.pack_start(downloadbutton);
-		var savetodiskbutton = new Gtk.ToggleButton();
+		savetodiskbutton = new Gtk.ToggleButton();
 		var diskicon = new Gtk.Image.from_icon_name("drive-harddisk-symbolic",Gtk.IconSize.LARGE_TOOLBAR );
 		savetodiskbutton.add(diskicon);
 		//savetodiskbutton.relief = Gtk.ReliefStyle.NONE;
@@ -75,6 +77,18 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		var prefer_source_view_widget = new Dragonstone.Widget.MenuSwitch(view_source_localized);
 		prefer_source_view_switch = prefer_source_view_widget.switch_widget;
 		mainmenubox.pack_start(prefer_source_view_widget);
+		//seperator
+		mainmenubox.pack_start(new Gtk.Separator(Gtk.Orientation.HORIZONTAL));
+		//open uri external
+		var open_uri_externally_localized = parent_window.translation.get_localized_string("window.main_menu.open_uri_externally.label");
+		var openuriexternllybutton = new Dragonstone.Widget.MenuButton(open_uri_externally_localized); //TOTRANSLATE
+		mainmenubox.pack_start(openuriexternllybutton);
+		//open file external
+		var open_file_externally_localized = parent_window.translation.get_localized_string("window.main_menu.open_file_externally.label");
+		var openfileexternllybutton = new Dragonstone.Widget.MenuButton(open_file_externally_localized); //TOTRANSLATE
+		mainmenubox.pack_start(openfileexternllybutton);
+		//seperator
+		mainmenubox.pack_start(new Gtk.Separator(Gtk.Orientation.HORIZONTAL));
 		//Cache
 		var view_cache_localized = parent_window.translation.get_localized_string("window.main_menu.cache.label");
 		var cachebutton = new Dragonstone.Widget.MenuButton(view_cache_localized); //TOTRANSLATE
@@ -146,6 +160,16 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		downloadbutton.clicked.connect(e => {
 			if (current_tab != null) {
 				current_tab.download();
+			}
+		});
+		openfileexternllybutton.clicked.connect(e => {
+			if (current_tab != null) {
+				current_tab.open_resource_externally();
+			}
+		});
+		openuriexternllybutton.clicked.connect(e => {
+			if (current_tab != null) {
+				current_tab.open_uri_externally();
 			}
 		});
 		close_tab_button.clicked.connect(e => {

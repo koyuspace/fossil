@@ -247,6 +247,20 @@ public class Dragonstone.Tab : Gtk.Bin {
 		}
 	}
 	
+	public void open_uri_externally(){
+		Dragonstone.External.open_uri(this.uri);
+	}
+	
+	public void open_resource_externally(){
+		if (this.request != null){
+			if (this.request.resource != null){
+				if (this.request.resource.filepath != null){
+					Dragonstone.External.open_uri(this.request.resource.filepath);
+				}
+			}
+		}
+	}
+	
 	public void download(){
 		if(locked>0){ return; }
 		if (this.request.resource == null){

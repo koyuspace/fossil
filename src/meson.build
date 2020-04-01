@@ -4,6 +4,7 @@ executable(
 	'cache.vala',
 	'downloader.vala',
 	'dragonstoneApp.vala',
+	'external.vala',
 	'main.vala',
 	#'module.vala',
 	'request.vala',

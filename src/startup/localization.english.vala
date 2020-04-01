@@ -14,6 +14,8 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("window.main_menu.cache.label","Cache");
 		language.set_text("window.main_menu.settings.label","Settings");
 		language.set_text("window.main_menu.close_tab.label","Close tab");
+		language.set_text("window.main_menu.open_uri_externally.label","Open in external browser");
+		language.set_text("window.main_menu.open_file_externally.label","Open in external viewer");
 		//done
 		super_registry.store("localization.translation.english",language);
 		var multiplexer = (super_registry.retrieve("localization.translation") as Dragonstone.Registry.TranslationMultiplexerRegistry);

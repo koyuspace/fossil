@@ -40,7 +40,7 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 	
 	private void initalize() {
 		window_position = Gtk.WindowPosition.CENTER;
-		set_default_size(600,400);
+		set_default_size(800,600);
 		
 		//settings = new GLib.Settings("com.gitlab.baschdel.Dragonstone");
 		
@@ -112,6 +112,13 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		Gtk.accelerator_parse("<control>p",out key,out modifiers);
 		accelerator_group.connect(key,modifiers,Gtk.AccelFlags.VISIBLE,() => {
 			tabs.prev_page();
+			return true;
+		});
+		Gtk.accelerator_parse("<control>s",out key,out modifiers);
+		accelerator_group.connect(key,modifiers,Gtk.AccelFlags.VISIBLE,() => {
+			if(headerbar.current_tab != null){
+				headerbar.current_tab.download();
+			}
 			return true;
 		});
 		Gtk.accelerator_parse("<control>n",out key,out modifiers);
