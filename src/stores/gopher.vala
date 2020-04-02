@@ -4,6 +4,7 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 	private Dragonstone.Registry.GopherTypeRegistry type_registry;
 	private Dragonstone.Cache? cache = null;
 	public int32 default_resource_lifetime = 1000*60*10; //10 minutes
+	public Dragonstone.Util.ConnectionHelper connection_helper = new Dragonstone.Util.ConnectionHelper();
 	
 	public Gopher(){
 		mimeguesser = new Dragonstone.Registry.MimetypeGuesser.default_configuration();
@@ -113,7 +114,7 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 		var resource = new Dragonstone.Resource(request.uri,filepath,true);
 		var fetcher = new Dragonstone.GopherResourceFetcher(resource,request,host,port,query,mimetype,cache);
 		new Thread<int>(@"Gopher resource fetcher $host:$port [$gophertype|$query]",() => {
-			fetcher.fetchResource(default_resource_lifetime);
+			fetcher.fetchResource(connection_helper, default_resource_lifetime);
 			return 0;
 		});
 	}
@@ -141,39 +142,15 @@ private class Dragonstone.GopherResourceFetcher : Object {
 		);
 	}
 	
-	public void fetchResource(int32 default_resource_lifetime){
+	public void fetchResource(Dragonstone.Util.ConnectionHelper connection_helper, int32 default_resource_lifetime){
 			
 		request.setStatus("connecting");
-		//make request
-		List<InetAddress> addresses;
-		try {
-			// Resolve hostname to IP address
-			var resolver = Resolver.get_default ();
-			addresses = resolver.lookup_by_name (host, null);
-		} catch (Error e) {
-			request.setStatus("error/noHost");
-			return;
-		}
 		
-		SocketConnection? conn = null;
-		foreach (InetAddress address in addresses){
-			try {
-				// Connect
-				var client = new SocketClient ();
-				client.timeout = 30;
-				print (@"[gopher] Connecting to $host ($address) ...\n");
-				conn = client.connect (new InetSocketAddress (address, port));
-				print (@"[gopher] Connected to $host ($address)\n");
-			} catch (Error e) {
-				print(@"[gopher] ERROR while connecting to $host ($address) : $(e.message)\n");
-				conn = null;
-			}
-			if ( conn != null ) { break; }
-		}
+		var conn = connection_helper.connect_to_server(host,port,request,port!=70);
 		if (conn == null){
-			request.setStatus("error/connectionRefused");
-			return;
+			conn = connection_helper.connect_to_server(host,port,request,false);
 		}
+		if (conn == null){ return; }
 		
 		request.setStatus("loading");
 		try {
@@ -189,11 +166,15 @@ private class Dragonstone.GopherResourceFetcher : Object {
 			if (mimetype.has_prefix("text/")){
 				// Receive text
 				var str = readText(input_stream);
-				if (str.validate()){
-					helper.appendString(str);
-					resource.add_metadata(mimetype,@"[gopher] $host:$port | $query");
-				}else{
-					request.setStatus("error/gibberish");
+				if (str == null){
+				request.setStatus("error/gibberish");
+				} else {
+					if (str.validate()) {
+						helper.appendString(str);
+						resource.add_metadata(mimetype,@"[gopher] $host:$port | $query");
+					} else {
+						request.setStatus("error/gibberish");
+					}
 				}
 			} else {
 				try{
@@ -216,7 +197,7 @@ private class Dragonstone.GopherResourceFetcher : Object {
 		return;
 	}
 	
-	public string readText(DataInputStream input_stream){
+	public string? readText(DataInputStream input_stream){
 		string str = "";
 		uint64 counter = 0;
 		
@@ -235,6 +216,7 @@ private class Dragonstone.GopherResourceFetcher : Object {
 			}
 		}catch (Error e){
 			print("An error occourred while reding text from a connection to a gopher Server\n"+e.message+"\n");
+			return null;
 		}
 		
 		print("DONE reading!\n");

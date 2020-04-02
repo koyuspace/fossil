@@ -2,6 +2,7 @@ public class Dragonstone.Store.Gemini : Object, Dragonstone.ResourceStore {
 	
 	private Dragonstone.Cache? cache = null;
 	public int32 default_resource_lifetime = 1000*60*10; //10 minutes
+	public Dragonstone.Util.ConnectionHelper connection_helper = new Dragonstone.Util.ConnectionHelper();
 	
 	public void set_cache(Dragonstone.Cache? cache){
 		this.cache = cache;
@@ -86,7 +87,7 @@ public class Dragonstone.Store.Gemini : Object, Dragonstone.ResourceStore {
 		var resource = new Dragonstone.Resource(request.uri,filepath,true);
 		var fetcher = new Dragonstone.GeminiResourceFetcher(resource,request,host,port,cache);
 		new Thread<int>(@"Gemini resource fetcher $host:$port [$(request.uri)]",() => {
-			fetcher.fetchResource(default_resource_lifetime);
+			fetcher.fetchResource(connection_helper, default_resource_lifetime);
 			return 0;
 		});
 		return;
@@ -116,36 +117,10 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 		);
 	}
 	
-	public void fetchResource(int32 default_resource_lifetime){
+	public void fetchResource(Dragonstone.Util.ConnectionHelper connection_helper, int32 default_resource_lifetime){
 		
-		//make request
-		request.setStatus("connecting");
-		InetAddress address;
-		try {
-			// Resolve hostname to IP address
-			var resolver = Resolver.get_default ();
-			var addresses = resolver.lookup_by_name (host, null);
-			address = addresses.nth_data (0);
-			print (@"Resolved $host to $address\n");
-		} catch (Error e) {
-			request.setStatus("error/noHost");
-			return;
-		}
-		
-		SocketConnection conn;
-		try {
-			// Connect
-			var client = new SocketClient ();
-			client.tls = true;
-      client.set_tls_validation_flags(GLib.TlsCertificateFlags.EXPIRED | GLib.TlsCertificateFlags.GENERIC_ERROR | GLib.TlsCertificateFlags.INSECURE | GLib.TlsCertificateFlags.NOT_ACTIVATED | GLib.TlsCertificateFlags.REVOKED);
-			print (@"Connecting to $host...\n");
-			conn = client.connect (new InetSocketAddress (address, port));
-			print (@"Connected to $host\n");
-		} catch (Error e) {
-			print("ERROR while connecting: "+e.message+"\n");
-			request.setStatus("error/connecionRefused");
-			return;
-		}
+		var conn = connection_helper.connect_to_server(host,port,request,true);
+		if (conn == null){ return; }
 		
 		try {
 			//send gemini request

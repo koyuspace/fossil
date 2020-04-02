@@ -2,6 +2,7 @@ public class Dragonstone.Store.Finger : Object, Dragonstone.ResourceStore {
 	
 	private Dragonstone.Cache? cache = null;
 	public int32 default_resource_lifetime = 1000*60*10; //10 minutes
+	public Dragonstone.Util.ConnectionHelper connection_helper = new Dragonstone.Util.ConnectionHelper();
 	
 	public void set_cache(Dragonstone.Cache? cache){
 		this.cache = cache;
@@ -89,7 +90,7 @@ public class Dragonstone.Store.Finger : Object, Dragonstone.ResourceStore {
 		var resource = new Dragonstone.Resource(request.uri,filepath,true);
 		var fetcher = new Dragonstone.FingerResourceFetcher(resource,request,host,port,query,"text/plain",cache);
 		new Thread<int>(@"Finger resource fetcher $host:$port [$query]",() => {
-			fetcher.fetchResource(default_resource_lifetime);
+			fetcher.fetchResource(connection_helper, default_resource_lifetime);
 			return 0;
 		});
 	}
@@ -117,39 +118,11 @@ private class Dragonstone.FingerResourceFetcher : Object {
 		);
 	}
 	
-	public void fetchResource(int32 default_resource_lifetime){
+	public void fetchResource(Dragonstone.Util.ConnectionHelper connection_helper, int32 default_resource_lifetime){
 			
 		request.setStatus("connecting");
-		//make request
-		List<InetAddress> addresses;
-		try {
-			// Resolve hostname to IP address
-			var resolver = Resolver.get_default ();
-			addresses = resolver.lookup_by_name (host, null);
-		} catch (Error e) {
-			request.setStatus("error/noHost");
-			return;
-		}
-		
-		SocketConnection? conn = null;
-		foreach (InetAddress address in addresses){
-			try {
-				// Connect
-				var client = new SocketClient ();
-				client.timeout = 30;
-				print (@"[finger] Connecting to $host ($address) ...\n");
-				conn = client.connect (new InetSocketAddress (address, port));
-				print (@"[finger] Connected to $host ($address)\n");
-			} catch (Error e) {
-				print(@"[finger] ERROR while connecting to $host ($address) : $(e.message)\n");
-				conn = null;
-			}
-			if ( conn != null ) { break; }
-		}
-		if (conn == null){
-			request.setStatus("error/connectionRefused");
-			return;
-		}
+		var conn = connection_helper.connect_to_server(host,port,request,true);
+		if (conn == null){ return; }
 		
 		request.setStatus("loading");
 		try {

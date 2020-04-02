@@ -9,6 +9,7 @@ executable(
 	#'module.vala',
 	'request.vala',
 	'resource.vala',
+	'util/connectionHelper.vala',
 	'util/resourceFileHelper.vala',
 	'util/stack.vala',
 	'util/uri.vala',
