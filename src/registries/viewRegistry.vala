@@ -46,8 +46,8 @@ public class Dragonstone.Registry.ViewRegistry : Object {
 		add_view("error/resourceUnavaiable/temporary", resource_unavaiable_temoprary_error_view_factory.construct_view);
 		var uri_unknown_scheme_error_view_factory = new Dragonstone.Util.MessageViewFactory("error/uri/unknownScheme","dialog-question-symbolic",translator);
 		add_view("error/uri/unknownScheme", uri_unknown_scheme_error_view_factory.construct_view);
-		var uri_unknown_scheme_error_view_factory = new Dragonstone.Util.MessageViewFactory("error/uri/unknownScheme/cat","user-available-symbolic",translator);
-		add_view("error/uri/unknownScheme", uri_unknown_scheme_error_view_factory.construct_view);
+		var uri_unknown_scheme_error_cat_view_factory = new Dragonstone.Util.MessageViewFactory("error/uri/unknownScheme/cat","user-available-symbolic",translator);
+		add_view("error/uri/unknownScheme", uri_unknown_scheme_error_cat_view_factory.construct_view);
 		add_view("error",() => { return new Dragonstone.View.Error.Generic(); });
 		add_resource_view("text/",() => { return new Dragonstone.View.Plaintext(); });
 		add_resource_view("image/",() => { return new Dragonstone.View.Image(); });
