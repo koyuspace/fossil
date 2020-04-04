@@ -101,6 +101,11 @@ public class Dragonstone.Tab : Gtk.Bin {
 	
 	private void on_status_update(){
 		if(locked>0){ return; }
+		if (request.status.has_prefix("redirect")){ //autoredirect on small changes
+			if ((request.substatus == this.uri+"/" && !this.uri.has_suffix("//")) || (request.substatus+"/" == this.uri && this.uri.has_suffix("/"))){
+				redirect(request.substatus);
+			}
+		}
 		Timeout.add(0,() => {
 			checkView();
 			return false;
@@ -159,7 +164,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 			} else {
 				setTitle("🔴 "+uri);
 				var error_message_localized = translation.get_localized_string("tab.error.wrong_view.message");
-				view = new Dragonstone.View.Label(error_message_localized); //TOTRANSLATE
+				view = new Dragonstone.View.Label(@"$error_message_localized\n$(request.status)\n$(request.substatus)");
 				add(view);
 			}
 		} else {
