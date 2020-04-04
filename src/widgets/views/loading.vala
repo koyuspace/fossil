@@ -22,7 +22,7 @@ public class Dragonstone.View.Loading : Gtk.Bin, Dragonstone.IView {
 	}
 	
 	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
-		if (!(request.status == "loading" || request.status == "connecting")) {return false;}
+		if (!(request.status == "loading" || request.status == "connecting" || request.status == "routing")) {return false;}
 		this.request = request;
 		this.request.notify["substatus"].connect(loadUpdatedTimeoutHack);
 		return true;
@@ -32,7 +32,7 @@ public class Dragonstone.View.Loading : Gtk.Bin, Dragonstone.IView {
 		if (request == null){
 			return false;
 		}else{
-			return request.status == "loading" || request.status == "connecting";
+			return request.status == "loading" || request.status == "connecting" || request.status == "routing";
 		}
 	}
 	

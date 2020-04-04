@@ -178,7 +178,11 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 					request.setStatus("error/gibberish","#invalid status code");
 				}
 			}catch(Error e){
-				request.setStatus("error/internalError","Something with binary gemini:\n"+e.message);
+				if (e.message == "TLS connection closed unexpectedly") {
+					request.setStatus("error/gibberish");
+				} else {
+					request.setStatus("error/internalError","Something with binary gemini:\n"+e.message);
+				}
 			}
 			
 
