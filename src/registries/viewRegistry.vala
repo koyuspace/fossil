@@ -21,15 +21,17 @@ public class Dragonstone.Registry.ViewRegistry : Object {
 			language.set_text("view.error/resourceUnavaiable.sublabel","No idea if there ever was or will be something ...");
 			language.set_text("view.error/resourceUnavaiable/temporary.label","Reource not found");
 			language.set_text("view.error/resourceUnavaiable/temporary.sublabel","Should be back soon™️");
+			language.set_text("view.error/uri/unknownScheme.label","Unknown uri scheme");
+			language.set_text("view.error/uri/unknownScheme.sublabel","No I don't support cat:// uris!");
+			language.set_text("view.error/uri/unknownScheme/cat.label","Meow!");
+			language.set_text("view.error/uri/unknownScheme/cat.sublabel","");
 			translator = (owned) language;
 		}
 		print(@"$(translator != null)\n");
-		print("- 1 -\n");
 		add_view("loading", () => { return new Dragonstone.View.Loading(); });
 		add_view("connecting", () => { return new Dragonstone.View.Loading(); });
 		add_view("routing", () => { return new Dragonstone.View.Loading(); });
 		add_view("redirect", () => { return new Dragonstone.View.Redirect();});
-		print("- 2 -\n");
 		var interal_error_view_factory = new Dragonstone.Util.MessageViewFactory("error/internal","dialog-warning-symbolic",translator);
 		add_view("error/internal", interal_error_view_factory.construct_view);
 		var gibberish_error_view_factory = new Dragonstone.Util.MessageViewFactory("error/gibberish","dialog-question-symbolic",translator);
@@ -42,12 +44,14 @@ public class Dragonstone.Registry.ViewRegistry : Object {
 		add_view("error/resourceUnavaiable", resource_unavaiable_error_view_factory.construct_view);
 		var resource_unavaiable_temoprary_error_view_factory = new Dragonstone.Util.MessageViewFactory("error/resourceUnavaiable/temporary","computer-fail-symbolic",translator);
 		add_view("error/resourceUnavaiable/temporary", resource_unavaiable_temoprary_error_view_factory.construct_view);
-		print("- 3 -\n");
+		var uri_unknown_scheme_error_view_factory = new Dragonstone.Util.MessageViewFactory("error/uri/unknownScheme","dialog-question-symbolic",translator);
+		add_view("error/uri/unknownScheme", uri_unknown_scheme_error_view_factory.construct_view);
+		var uri_unknown_scheme_error_view_factory = new Dragonstone.Util.MessageViewFactory("error/uri/unknownScheme/cat","user-available-symbolic",translator);
+		add_view("error/uri/unknownScheme", uri_unknown_scheme_error_view_factory.construct_view);
 		add_view("error",() => { return new Dragonstone.View.Error.Generic(); });
 		add_resource_view("text/",() => { return new Dragonstone.View.Plaintext(); });
 		add_resource_view("image/",() => { return new Dragonstone.View.Image(); });
 		add_resource_view("",() => { return new Dragonstone.View.Download(); });
-		print("- 4 -\n");
 	}
 	
 	public ViewRegistry.source_view_configuration(){
