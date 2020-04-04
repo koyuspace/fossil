@@ -1,18 +1,20 @@
-public class Dragonstone.View.Error.Generic : Gtk.Bin, Dragonstone.IView {
+public class Dragonstone.View.Message : Gtk.Bin, Dragonstone.IView {
 	
 	private Dragonstone.Request request = null;
 	private Gtk.Label nameLabel = new Gtk.Label("");
 	private Gtk.Label sublabel; 
-	private string view_status = null;
+	private Gtk.Label error_label = new Gtk.Label(""); 
+	private string status;
 	
-	construct {
+	public Message(string status, string label_text = "Something went wrong ...", string sublabel_text = "...", string icon_name = "dialog-error-symbolic") {
+		this.status = status;
 		nameLabel.valign = Gtk.Align.START;
 		var outerBox = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
 		var centerBox = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
-		var label = new Gtk.Label("Something went wrong ..."); //TOTRANSLATE
-		sublabel = new Gtk.Label("..."); //TOTRANSLATE
+		var label = new Gtk.Label(label_text);
+		sublabel = new Gtk.Label(sublabel_text);
 		sublabel.justify = Gtk.Justification.CENTER;
-		var icon = new Gtk.Image.from_icon_name("dialog-error-symbolic",Gtk.IconSize.DIALOG);
+		var icon = new Gtk.Image.from_icon_name(icon_name,Gtk.IconSize.DIALOG);
 		icon.icon_size=6;
 		var labelAttrList = new Pango.AttrList();
 		labelAttrList.insert(new Pango.AttrSize(48000));
@@ -26,6 +28,7 @@ public class Dragonstone.View.Error.Generic : Gtk.Bin, Dragonstone.IView {
 		centerBox.pack_start(icon);
 		centerBox.pack_start(label);
 		centerBox.pack_start(sublabel);
+		centerBox.pack_start(error_label);
 		outerBox.set_center_widget(centerBox);
 		outerBox.pack_start(nameLabel);
 		var empty = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
@@ -34,10 +37,9 @@ public class Dragonstone.View.Error.Generic : Gtk.Bin, Dragonstone.IView {
 	}
 	
 	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
-		if (!(request.status.has_prefix("error/"))) {return false;}
-		view_status = request.status;
+		if (!(request.status.has_prefix(status))) {return false;}
 		this.request = request;
-		sublabel.label = request.status+"\n"+request.substatus;
+		error_label.label = request.status+"\n"+request.substatus;
 		//nameLabel.label = request.name;
 		return true;
 	}
@@ -46,9 +48,8 @@ public class Dragonstone.View.Error.Generic : Gtk.Bin, Dragonstone.IView {
 		if (request == null){
 			return false;
 		}else{
-			return request.status == view_status; //refresh when status changes
+			return request.status.has_prefix(status);
 		}
 	}
 	
 }
-

@@ -3,20 +3,51 @@ public delegate Dragonstone.IView Dragonstone.Registry.ViewConstructor();
 public class Dragonstone.Registry.ViewRegistry : Object {
 	private List<Dragonstone.Registry.ViewRegistryEntry> entrys = new List<Dragonstone.Registry.ViewRegistryEntry>();
 	
-	public ViewRegistry.default_configuration(){
+	public ViewRegistry.default_configuration(Dragonstone.Registry.TranslationRegistry? translatori = null){
+		var translator = translatori;
+		print("[view_registry] initalizung with default configuration\n");
+		if (translator == null){
+			print("tranlator not found\n");
+			var language = new Dragonstone.Registry.TranslationLanguageRegistry();
+			language.set_text("view.error/internal.label","Hell just broke loose");
+			language.set_text("view.error/internal.sublabel","or maybe it was just a tiny bug?\nPlease report to the developer!");
+			language.set_text("view.error/gibberish.label","Gibberish!");
+			language.set_text("view.error/gibberish.sublabel","That not what the server said,\n that's what it looks like!");
+			language.set_text("view.error/connectionRefused.label","Connection refused");
+			language.set_text("view.error/connectionRefused.sublabel","so rude ...");
+			language.set_text("view.error/noHost.label","Host not found!");
+			language.set_text("view.error/noHost.sublabel","How about a game of hide and seek?");
+			language.set_text("view.error/resourceUnavaiable.label","Resource not found");
+			language.set_text("view.error/resourceUnavaiable.sublabel","No idea if there ever was or will be something ...");
+			language.set_text("view.error/resourceUnavaiable/temporary.label","Reource not found");
+			language.set_text("view.error/resourceUnavaiable/temporary.sublabel","Should be back soon™️");
+			translator = (owned) language;
+		}
+		print(@"$(translator != null)\n");
+		print("- 1 -\n");
 		add_view("loading", () => { return new Dragonstone.View.Loading(); });
 		add_view("connecting", () => { return new Dragonstone.View.Loading(); });
 		add_view("routing", () => { return new Dragonstone.View.Loading(); });
 		add_view("redirect", () => { return new Dragonstone.View.Redirect();});
-		add_view("error/internal", () => { return new Dragonstone.View.InternalError(); });
-		add_view("error/gibberish", () => { return new Dragonstone.View.Gibberish(); });
-		add_view("error/connectionRefused", () => { return new Dragonstone.View.ConnectionRefused(); });
-		add_view("error/noHost", () => { return new Dragonstone.View.HostUnreachable(); });
-		add_view("error/resourceUnavaiable", () => { return new Dragonstone.View.Unavaiable(); });
+		print("- 2 -\n");
+		var interal_error_view_factory = new Dragonstone.Util.MessageViewFactory("error/internal","dialog-warning-symbolic",translator);
+		add_view("error/internal", interal_error_view_factory.construct_view);
+		var gibberish_error_view_factory = new Dragonstone.Util.MessageViewFactory("error/gibberish","dialog-question-symbolic",translator);
+		add_view("error/gibberish", gibberish_error_view_factory.construct_view);
+		var connection_refused_error_view_factory = new Dragonstone.Util.MessageViewFactory("error/connectionRefused","action-unavailable-symbolic",translator);
+		add_view("error/connectionRefused", connection_refused_error_view_factory.construct_view);
+		var no_host_error_view_factory = new Dragonstone.Util.MessageViewFactory("error/noHost","find-location-symbolic",translator);
+		add_view("error/noHost", no_host_error_view_factory.construct_view);
+		var resource_unavaiable_error_view_factory = new Dragonstone.Util.MessageViewFactory("error/resourceUnavaiable","computer-fail-symbolic",translator);
+		add_view("error/resourceUnavaiable", resource_unavaiable_error_view_factory.construct_view);
+		var resource_unavaiable_temoprary_error_view_factory = new Dragonstone.Util.MessageViewFactory("error/resourceUnavaiable/temporary","computer-fail-symbolic",translator);
+		add_view("error/resourceUnavaiable/temporary", resource_unavaiable_temoprary_error_view_factory.construct_view);
+		print("- 3 -\n");
 		add_view("error",() => { return new Dragonstone.View.Error.Generic(); });
 		add_resource_view("text/",() => { return new Dragonstone.View.Plaintext(); });
 		add_resource_view("image/",() => { return new Dragonstone.View.Image(); });
 		add_resource_view("",() => { return new Dragonstone.View.Download(); });
+		print("- 4 -\n");
 	}
 	
 	public ViewRegistry.source_view_configuration(){
