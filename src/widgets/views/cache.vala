@@ -21,23 +21,28 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 		2: TTL as text
 	*/
 	
-	public Cache(Dragonstone.Store.Cache cache){
+	public Cache(Dragonstone.Store.Cache cache, Dragonstone.Registry.TranslationRegistry? itranslation){
+		var translation = itranslation;
+		if(translation == null) {
+			var language = new Dragonstone.Registry.TranslationLanguageRegistry();
+			language.set_text("view.interactive/cache.erase_cache","Erase cache");
+			language.set_text("view.interactive/cache.search.placeholder","Search for uri ...");
+			language.set_text("view.interactive/cache.remove.tooltip","Remove resource from cache");
+			language.set_text("view.interactive/cache.open_in_new_tab.tooltip","Open resource in new tab");
+			language.set_text("view.interactive/cache.pin.tooltip","Stop resource from expireing");
+			language.set_text("view.interactive/cache.column.uri.head","Uri");
+			language.set_text("view.interactive/cache.colum.time_to_live.head","TTL");
+			language.set_text("view.interactive/cache.colum.users.head","Users");
+			translation = language;
+		}
 		this.cache = cache;
-		refresh_cache_items();
-		Timeout.add(1000,() => {
-			//print(@"[cache.gtk] refresh [$still_alive]\n");
-			refresh_cache_items();
-			return still_alive;
-		});
-	}
-	
-	construct {
+		//init gui
 		expand = true;
 		orientation = Gtk.Orientation.VERTICAL;
 		var actionbar = new Gtk.ActionBar();
 		actionbar.expand = false;
 		//erasebutton
-		var erasebutton = new Gtk.Button.with_label("Erase cache"); //TOTRANSLATE
+		var erasebutton = new Gtk.Button.with_label(translation.localize("view.interactive/cache.erase_cache"));
 		erasebutton.get_style_context().add_class("destructive-action");
 		actionbar.pack_end(erasebutton);
 		erasebutton.clicked.connect(() => {
@@ -45,7 +50,7 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 		});
 		//search_entry
 		search_entry = new Gtk.Entry();
-		search_entry.placeholder_text = "Search for uri ..."; //TOTRANSLATE
+		search_entry.placeholder_text = translation.localize("view.interactive/cache.search.placeholder");
 		search_entry.width_chars = 35;
 		search_entry.buffer.deleted_text.connect(() => {this.search_dirty = true;});
 		search_entry.buffer.inserted_text.connect(() => {this.search_dirty = true;});
@@ -55,17 +60,17 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 		//removebutton
 		var removebutton = new Gtk.Button.from_icon_name("list-remove-symbolic");
 		removebutton.get_style_context().add_class("destructive-action");
-		removebutton.set_tooltip_text("Remove resource from cache"); //TOTRANSLATE
+		removebutton.set_tooltip_text(translation.localize("view.interactive/cache.remove.tooltip"));
 		controls.pack_start(removebutton);
 		removebutton.clicked.connect(remove_selected);
 		//gotobutton
 		var gotobutton = new Gtk.Button.from_icon_name("go-jump-symbolic");
-		gotobutton.set_tooltip_text("Open resource in new tab"); //TOTRANSLATE
+		gotobutton.set_tooltip_text(translation.localize("view.interactive/cache.open_in_new_tab.tooltip"));
 		controls.pack_start(gotobutton);
 		gotobutton.clicked.connect(open_selected_in_new_tab);
 		//pinbutton
 		pinbutton = new Gtk.Button.from_icon_name("view-pin-symbolic");
-		pinbutton.set_tooltip_text("Stop resource from expireing"); //TOTRANSLATE
+		pinbutton.set_tooltip_text(translation.localize("view.interactive/cache.pin.tooltip"));
 		controls.pack_start(pinbutton);
 		pinbutton.clicked.connect(pin_selected);
 		controls.pack_start(new Gtk.Separator(Gtk.Orientation.VERTICAL));
@@ -79,9 +84,9 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 		treeview = new Gtk.TreeView();
 		treeview.get_selection().set_mode(Gtk.SelectionMode.SINGLE);
 		treeview.set_model(filterstore);
-		treeview.insert_column_with_attributes(-1,"Uri", new Gtk.CellRendererText (), "text", 0);
+		treeview.insert_column_with_attributes(-1,translation.localize("view.interactive/cache.column.uri.head"), new Gtk.CellRendererText (), "text", 0);
 		//treeview.insert_column_with_attributes(-1,"Filename", new Gtk.CellRendererText (), "text", 1);
-		treeview.insert_column_with_attributes(-1,"TTL", new Gtk.CellRendererText (), "text", 2);
+		treeview.insert_column_with_attributes(-1,translation.localize("view.interactive/cache.column.time_to_live.head"), new Gtk.CellRendererText (), "text", 2);
 		treeview.row_activated.connect(treeview_row_activated);
 		treeview.cursor_changed.connect(update_selected_uri);
 		//scrolled window
@@ -96,6 +101,12 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 		//show all
 		show_all();
 		controls.visible = false;
+		refresh_cache_items();
+		Timeout.add(1000,() => {
+			//print(@"[cache.gtk] refresh [$still_alive]\n");
+			refresh_cache_items();
+			return still_alive;
+		});
 	}
 	
 	private void refresh_cache_items(){

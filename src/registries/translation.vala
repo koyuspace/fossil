@@ -3,6 +3,10 @@ public interface Dragonstone.Registry.TranslationRegistry : Object {
 	//returns "?_"+text_id if no translation is known
 	public abstract string get_localized_string(string text_id);
 	
+	public string localize(string text_id){
+		return this.get_localized_string(text_id);
+	}
+	
 	public virtual string get_language_name(){ return ""; }
 	
 }

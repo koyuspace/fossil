@@ -16,6 +16,15 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("window.main_menu.close_tab.label","Close tab");
 		language.set_text("window.main_menu.open_uri_externally.label","Open in external browser");
 		language.set_text("window.main_menu.open_file_externally.label","Open in external viewer");
+		//cache
+		language.set_text("view.interactive/cache.erase_cache","Erase cache");
+		language.set_text("view.interactive/cache.search.placeholder","Search for uri ...");
+		language.set_text("view.interactive/cache.remove.tooltip","Remove resource from cache");
+		language.set_text("view.interactive/cache.open_in_new_tab.tooltip","Open resource in new tab");
+		language.set_text("view.interactive/cache.pin.tooltip","Stop resource from expireing");
+		language.set_text("view.interactive/cache.column.uri.head","Uri");
+		language.set_text("view.interactive/cache.colum.time_to_live.head","TTL");
+		language.set_text("view.interactive/cache.colum.users.head","Users");
 		//done
 		super_registry.store("localization.translation.english",language);
 		var multiplexer = (super_registry.retrieve("localization.translation") as Dragonstone.Registry.TranslationMultiplexerRegistry);
