@@ -78,6 +78,7 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 					break;
 				} else {
 					request.setStatus("error/uri/invalid","Port has to be a number");
+					return;
 				}
 				i++;
 			}

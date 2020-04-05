@@ -61,6 +61,7 @@ public class Dragonstone.Store.Gemini : Object, Dragonstone.ResourceStore {
 					break;
 				} else {
 					request.setStatus("error/uri/invalid");
+					return;
 				}
 				i++;
 			}
