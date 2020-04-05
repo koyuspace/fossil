@@ -167,14 +167,11 @@ private class Dragonstone.GopherResourceFetcher : Object {
 				// Receive text
 				var str = readText(input_stream);
 				if (str == null){
-				request.setStatus("error/gibberish");
+					request.setStatus("error/gibberish");
+					return;
 				} else {
-					if (str.validate()) {
-						helper.appendString(str);
-						resource.add_metadata(mimetype,@"[gopher] $host:$port | $query");
-					} else {
-						request.setStatus("error/gibberish");
-					}
+					helper.appendString(str);
+					resource.add_metadata(mimetype,@"[gopher] $host:$port | $query");
 				}
 			} else {
 				try{
@@ -210,16 +207,16 @@ private class Dragonstone.GopherResourceFetcher : Object {
 				str = str+line+"\n";
 				counter = counter+line.length;
 				if (counter > 1024*1024*256){
-					print("GOPHER Text file is too large (>256MB) terminating read\n");
+					print("[gopher][error] Text file is too large (>256MB) terminating read\n");
 					break;
 				}
 			}
 		}catch (Error e){
-			print("An error occourred while reding text from a connection to a gopher Server\n"+e.message+"\n");
+			print("[gopher][error] An error occourred while reding text from a connection to a gopher Server\n"+e.message+"\n");
 			return null;
 		}
 		
-		print("DONE reading!\n");
+		print("[gopher] DONE reading!\n");
 		//print("result:\n");
 		//print(str);
 		//print("\n");

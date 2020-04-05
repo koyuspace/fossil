@@ -115,7 +115,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	//check if the current view is still appropriate, and if not change it
 	public void checkView(){
 		if(locked>0){ return; }
-		//print(@"check view -- $(request.status) -- $(request.substatus) --\n");
+		print(@"check view -- $(request.status) -- $(request.substatus) --\n");
 		if (!view.canHandleCurrentResource() ) {
 			updateView();
 		}

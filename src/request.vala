@@ -21,6 +21,9 @@ public class Dragonstone.Request : Object {
 	public void setStatus(string status, string substatus = ""){
 		this.status = status;
 		this.substatus = substatus;
+		if (status == null || substatus == null){
+			print(@"[request][error] status or substatus was attempted to be set to null (status==null=$(status==null)|substatus==null=$(substatus==null))");
+		}
 	}
 	
 	public void setResource(Dragonstone.Resource resource, string store, string status = "success", string substatus = ""){
