@@ -31,6 +31,7 @@ public class Dragonstone.Resource : Object {
 	public int64 valid_until { get; set; default = 0;} //The unix time in milliseconds when the resource is invlid in cache, do not cache if 0, valid for forever if int64.MAX
 	public bool is_temporary { get; protected set; default = false;} //only for cache, if the file may be deleted
 	public int users { get; protected set; default=0; } //how many systems use this resource
+	private HashTable<string,bool> user_ids = new HashTable<string,bool>(str_hash, str_equal);
 	
 	public Resource(string uri,string filepath,bool is_temporary){
 		Object(
@@ -42,12 +43,18 @@ public class Dragonstone.Resource : Object {
 	
 	public void increment_users(string user){
 		print(@"[res] Users increment: URI:$(this.uri) FILEPATH:$(this.filepath) {$user}\n");
-		this.users++;
+		if (!user_ids.contains(user)){
+			this.user_ids.set(user,true);
+			this.users++;
+		}
 	}
 	
 	public void decrement_users(string user){
 		print(@"[res] Users decrement: URI:$(this.uri) FILEPATH:$(this.filepath) {$user}\n");
-		this.users--;
+		if (user_ids.contains(user)){
+			this.user_ids.remove(user);
+			this.users--;
+		}
 		if (this.users <= 0 && this.is_temporary){
 			var file = File.new_for_path(this.filepath);
 			try{
