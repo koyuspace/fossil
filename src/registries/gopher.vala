@@ -23,6 +23,7 @@ public class Dragonstone.Registry.GopherTypeRegistry : Object {
 		add(new GopherTypeRegistryEntry('h',"text/html"));
 		add(new GopherTypeRegistryEntry('p',"image/png"));
 		add(new GopherTypeRegistryEntry('P',"application/pdf"));
+		add(new GopherTypeRegistryEntry('s',"audio/*"));
 	}
 	
 	public Dragonstone.Registry.GopherTypeRegistryEntry? get_entry_by_gophertype(unichar gophertype){
