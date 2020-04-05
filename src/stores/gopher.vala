@@ -31,7 +31,7 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 			return;
 		}
 		// parse uri
-		var parsed_uri = new Dragonstone.Util.ParsedUri(request.uri);
+		var parsed_uri = new Dragonstone.Util.ParsedUri(request.uri,false);
 		
 		if(!(parsed_uri.scheme == "gopher" || parsed_uri.scheme == null)){
 			request.setStatus("error/uri/unknownScheme","Gopher only knows gopher://");

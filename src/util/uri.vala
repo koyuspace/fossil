@@ -183,19 +183,19 @@ public class Dragonstone.Util.ParsedUri : Object {
 	//<scheme>:<path>?query#<index>
 	//<scheme>://<authority>/<path>?<query>#<index>
 	
-	public ParsedUri(string uri){
+	public ParsedUri(string uri, bool parse_query = true, bool parse_index = true){
 		this.uri = uri;
 		print("=== Parsing uri ===\n");
 		print(@"URI: $uri\n");
 		var index_of_hash = uri.index_of_char('#'); //end of query
 		var index_of_questionmark = uri.index_of_char('?'); //end of path
-		if (index_of_hash >= 0){
+		if (index_of_hash >= 0 && parse_index){
 			this.index = uri.substring(index_of_hash+1);
 			print(@"index: '$index'\n");
 		} else {
 			index_of_hash = uri.length;
 		}
-		if (index_of_questionmark >= 0){
+		if (index_of_questionmark >= 0 && parse_query){
 			this.query = uri.substring(index_of_questionmark+1,index_of_hash-index_of_questionmark-1);
 			print(@"query: '$query'\n");
 		} else {
