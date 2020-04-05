@@ -41,6 +41,10 @@ public class Dragonstone.Resource : Object {
 		);
 	}
 	
+	~Resource(){
+		this.delete_file();
+	}
+	
 	public void increment_users(string user){
 		print(@"[res] Users increment: URI:$(this.uri) FILEPATH:$(this.filepath) {$user}\n");
 		if (!user_ids.contains(user)){
@@ -55,16 +59,22 @@ public class Dragonstone.Resource : Object {
 			this.user_ids.remove(user);
 			this.users--;
 		}
-		if (this.users <= 0 && this.is_temporary){
+		if (this.users <= 0){
+			this.delete_file();
+		}
+	}
+	
+	private void delete_file(){
+		if (this.is_temporary){
 			var file = File.new_for_path(this.filepath);
-			try{
-				file.delete();
-				//filepath = null;
-			}catch( Error e ){
-				;
+			if (file.query_exists){
+				try{
+					file.delete();
+				}catch( Error e ){
+					print(@"[res][error] Failed to delete file for resource $(this.uri) | $(e.message)\n");
+				}
+				print(@"[res] Resource free: URI:$(this.uri) FILEPATH:$(this.filepath)\n");
 			}
-			
-			print(@"[res] Resource free: URI:$(this.uri) FILEPATH:$(this.filepath)\n");
 		}
 	}
 	
