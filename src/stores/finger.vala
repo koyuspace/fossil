@@ -15,75 +15,25 @@ public class Dragonstone.Store.Finger : Object, Dragonstone.ResourceStore {
 			return;
 		}
 		// parse uri
-		if(!request.uri.has_prefix("finger://")){
+		var parsed_uri = new Dragonstone.Util.ParsedUri(request.uri);
+		
+		if(!(parsed_uri.scheme == "finger" || parsed_uri.scheme == null)){
 			request.setStatus("error/uri/unknownScheme","Finger only knows finger://");
 			return;
 		}
-		var startoffset = 9;
-		var indexofat = request.uri.index_of_char('@',startoffset);
-		int hostoffset = startoffset;
-		if(indexofat >= 0){ hostoffset = indexofat+1; }
-		var indexofslash = request.uri.index_of_char('/',indexofat);
-		var indexofcolon = request.uri.index_of_char(':',indexofat);
 		
-		if (indexofslash < indexofcolon && indexofslash > 1){
-			indexofcolon = -1;
+		string? host = parsed_uri.host;
+		if (host == "null"){
+			request.setStatus("error/uri/noHost","Finger needs a host");
+			return;
 		}
-		
+		uint16? port = parsed_uri.get_port_number();
+		if (port == null){
+			port = 79;
+		}
 		string query = "";
-		uint16 port = 79;
-		string host;
-		
-		if (indexofcolon > 0){
-			uint32 num = 0;
-			uint i = indexofcolon+1;
-			while(true){
-				num = num*10;
-				var c = request.uri.get_char(i);
-				if (c == '0') {
-					num += 0;
-				} else if (c == '1') {
-					num += 1;
-				} else if (c == '2') {
-					num += 2;
-				} else if (c == '3') {
-					num += 3;
-				} else if (c == '4') {
-					num += 4;
-				} else if (c == '5') {
-					num += 5;
-				} else if (c == '6') {
-					num += 6;
-				} else if (c == '7') {
-					num += 7;
-				} else if (c == '8') {
-					num += 8;
-				} else if (c == '9') {
-					num += 9;
-				} else if (c == '/' || c == '\0') {
-					break;
-				} else {
-					request.setStatus("error/uri/invalid","Port has to be a number");
-					return;
-				}
-				i++;
-			}
-			num = num/10;
-			port = (uint16) num;
-		}
-		
-		if (indexofcolon > 0){
-			host = request.uri.substring(hostoffset,indexofcolon-hostoffset);
-		}else if (indexofslash > 0){
-			host = request.uri.substring(hostoffset,indexofslash-hostoffset);
-		}else{
-			host = request.uri.substring(hostoffset);
-		}
-	
-		if (indexofat > 0){
-			if (request.uri.length > indexofat+2){
-				query = request.uri.substring(startoffset,indexofat-startoffset);
-			}
+		if(parsed_uri.username != null){
+			query = parsed_uri.username;
 		}
 		
 		//debugging information
@@ -122,7 +72,7 @@ private class Dragonstone.FingerResourceFetcher : Object {
 	public void fetchResource(Dragonstone.Util.ConnectionHelper connection_helper, int32 default_resource_lifetime){
 			
 		request.setStatus("connecting");
-		var conn = connection_helper.connect_to_server(host,port,request,true);
+		var conn = connection_helper.connect_to_server(host,port,request,false);
 		if (conn == null){ return; }
 		
 		request.setStatus("loading");
