@@ -160,8 +160,132 @@ public class Dragonstone.Util.Uri {
 	public static string get_scheme(string uri){
 		var index = strip_querys(uri).index_of_char(':');
 		if (index<0) { return ""; }
-		if ("." in uri[0:index]) { return ""; }
 		return uri[0:index];
 	}
 	
+}
+
+public class Dragonstone.Util.ParsedUri : Object {
+	public string uri;
+	public string? scheme = null;
+	public string? authority = null;
+	public string? index = null; // ..#<index>
+	public string? query = null; // ..?<query>
+	public string? path = null;
+	public string? user_credentials = null;
+	//parse authority
+	public string? host = null;
+	public string? port = null;
+	//parse user_credentials
+	public string? username = null;
+	public string? password = null;
+	
+	//<scheme>:<path>?query#<index>
+	//<scheme>://<authority>/<path>?<query>#<index>
+	
+	public ParsedUri(string uri){
+		this.uri = uri;
+		print("=== Parsing uri ===\n");
+		print(@"URI: $uri\n");
+		var index_of_hash = uri.index_of_char('#'); //end of query
+		var index_of_questionmark = uri.index_of_char('?'); //end of path
+		if (index_of_hash >= 0){
+			this.index = uri.substring(index_of_hash+1);
+			print(@"index: '$index'\n");
+		} else {
+			index_of_hash = uri.length;
+		}
+		if (index_of_questionmark >= 0){
+			this.query = uri.substring(index_of_questionmark+1,index_of_hash-index_of_questionmark-1);
+			print(@"query: '$query'\n");
+		} else {
+			index_of_questionmark = index_of_hash;
+		}
+		var index_of_colon = uri.index_of_char(':');
+		if (index_of_colon >= 0 && index_of_colon < index_of_questionmark){
+			this.scheme = uri.substring(0,index_of_colon);
+			print(@"scheme: '$scheme'\n");
+		} else {
+			index_of_colon = 0;
+		}
+		string part_uri = uri.substring(index_of_colon+1,index_of_questionmark-index_of_colon-1);
+		print(@"Partial uri: '$part_uri'\n");
+		if (part_uri.has_prefix("//")){
+			if(part_uri.length == 2){
+				this.authority = "";
+				part_uri = "";
+			} else {
+				var index_of_at = part_uri.index_of_char('@'); //start of authority
+				int start_of_authority = index_of_at+1;
+				if (index_of_at >= 0){
+					this.user_credentials = part_uri.substring(2,index_of_at-2);
+					print(@"user_credentials: '$user_credentials'\n");
+				}	else {
+					index_of_at = 2;
+					start_of_authority = index_of_at;
+				}
+				var index_of_slash = part_uri.index_of_char('/',index_of_at);
+				if (index_of_slash < 0){
+					index_of_slash = part_uri.length;
+				}
+				this.authority = part_uri.substring(start_of_authority,index_of_slash-start_of_authority);
+				part_uri = part_uri.substring(index_of_slash);
+			}
+			print(@"authority: '$authority'\n");
+		}
+		this.path = part_uri;
+		print(@"path: '$path'\n");
+		print("=== DONE ===\n");
+		parse_authority();
+		parse_user_credentials();
+	}
+	
+	public void parse_authority(){
+		print("=== Parsing authority ===\n");
+		if (this.authority != null){
+			var index_of_colon = this.authority.last_index_of_char(':');
+			if (index_of_colon >= 0){
+				this.host = this.authority.substring(0,index_of_colon);
+				print(@"host?: '$host'\n");
+				if (this.host.has_prefix("[") == this.host.has_suffix("]")){
+					this.port = this.authority.substring(index_of_colon+1);
+					print(@"host: '$host'\n");
+					print(@"port: '$port'\n");
+					return;
+				}
+			}
+			host = this.authority;
+			print(@"host: '$host'\n");
+		}
+		print("=== DONE ===\n");
+	}
+	
+	public void parse_user_credentials(){
+		print("=== Parsing user credentials ===\n");
+		if (this.user_credentials != null){
+			var index_of_colon = this.user_credentials.index_of_char(':');
+			if (index_of_colon >= 0){
+				this.username = this.user_credentials.substring(0,index_of_colon);
+				this.password = this.user_credentials.substring(index_of_colon+1);
+				print(@"username: '$username'\n");
+				print(@"password: '$password'\n");
+			} else {
+				this.username = this.user_credentials;
+				print(@"username: '$username'\n");
+			}
+		}
+		print("=== DONE ===\n");
+	}
+	
+	public uint16? get_port_number(){
+		if (this.port != null){
+			int result;
+			if (int.try_parse(this.port,out result)) {
+				if (result >= 0 && result <= uint16.MAX){
+					return (uint16) result;
+				}
+			}
+		}
+		return null;
+	}
 }
