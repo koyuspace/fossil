@@ -39,7 +39,7 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
         string line;
 				while ((line = dis.read_line (null)) != null) {
 					var tokens = line.split("\t");
-					if(tokens.length == 4){//valid line
+					if(tokens.length >= 4){//valid line, ignores gopher+ lines
 						unichar gophertype = 'i';
 						string htext = "";
 						if (tokens[0].length != 0){
@@ -64,19 +64,21 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
 							if (query.has_prefix("URL:")) {
 								uri = query.substring(4);
 							}else{
+								var equery = Uri.escape_string(query,"/");
 								if( port != "70" ){
-									uri = @"gopher://$host:$port/$gophertype$query";
+									uri = @"gopher://$host:$port/$gophertype$equery";
 								}else{
-									uri = @"gopher://$host/$gophertype$query";
+									uri = @"gopher://$host/$gophertype$equery";
 								}
 							}
 							appendWidget(new Dragonstone.Widget.LinkButton(tab,htext,uri));
 						} else if (typeinfo.hint == Dragonstone.Registry.GopherTypeRegistryContentHint.SEARCH){ //Search
 							string? uri = null;
+							var equery = Uri.escape_string(query,"/");
 							if( port != "70" ){
-								uri = @"gopher://$host:$port/$gophertype$query";
+								uri = @"gopher://$host:$port/$gophertype$equery";
 							}else{
-								uri = @"gopher://$host/$gophertype$query";
+								uri = @"gopher://$host/$gophertype$equery";
 							}
 							var searchfield = new Dragonstone.View.GophertextInlineSearch(htext,uri);
 							searchfield.go.connect((s,uri) => {
@@ -147,12 +149,13 @@ private class Dragonstone.View.GophertextInlineSearch : Gtk.Bin {
 		box.pack_start(button);
 		box.halign = Gtk.Align.FILL;
 		add(box);
+		set_tooltip_text(base_uri);
 	}
 	
 	private void submit(){
 		if (entry.text != ""){
-			var searchstring = entry.text.replace("\t","%09");
-			go(@"$base_uri\t$searchstring");
+			var searchstring = Uri.escape_string(entry.text);
+			go(@"$base_uri%09$searchstring");
 		}
 	}
 }
