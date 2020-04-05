@@ -36,10 +36,10 @@ public class Dragonstone.View.Image : Gtk.ScrolledWindow, Dragonstone.IView {
 		float new_factor = 1;
 		if (hr > 1 || wr > 1){
 			new_factor = 1/float.max(hr,wr);
+			print(@"[image] rect.width=$(rect.width) rect.height=$(rect.height)\n");
+			print(@"[image] width: $pw,$ww rat: $wr | height: $ph,$wh rat: $hr\n");
+			print(@"[image] factor: $factor\n");
 		}
-		print(@"[image] rect.width=$(rect.width) rect.height=$(rect.height)\n");
-		print(@"[image] width: $pw,$ww rat: $wr | height: $ph,$wh rat: $hr\n");
-		print(@"[image] factor: $factor\n");
 		scale(new_factor);
 	}
 	
