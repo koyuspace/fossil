@@ -41,7 +41,8 @@ public class Dragonstone.Application : Gtk.Application {
 		Dragonstone.Startup.Localization.English.setup_language(super_registry);
 		Dragonstone.Startup.Localization.English.use_language(super_registry);
 		//Initalize fontend registries
-		super_registry.store("gtk.views",new Dragonstone.Registry.ViewRegistry.default_configuration());
+		var translation = (super_registry.retrieve("localization.translation") as Dragonstone.Registry.TranslationRegistry);
+		super_registry.store("gtk.views",new Dragonstone.Registry.ViewRegistry.default_configuration(translation));
 		super_registry.store("gtk.source_views",new Dragonstone.Registry.ViewRegistry.source_view_configuration());
 		//Initalize frontends
 		Dragonstone.Startup.Cache.Gtk.setup_views(super_registry);

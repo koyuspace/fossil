@@ -25,6 +25,23 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("view.interactive/cache.column.uri.head","Uri");
 		language.set_text("view.interactive/cache.colum.time_to_live.head","TTL");
 		language.set_text("view.interactive/cache.colum.users.head","Users");
+		//messages
+		language.set_text("view.error/internal.label","Hell just broke loose");
+		language.set_text("view.error/internal.sublabel","or maybe it was just a tiny bug?\nPlease report to the developer!");
+		language.set_text("view.error/gibberish.label","Gibberish!");
+		language.set_text("view.error/gibberish.sublabel","That not what the server said,\n that's what it looks like!");
+		language.set_text("view.error/connectionRefused.label","Connection refused");
+		language.set_text("view.error/connectionRefused.sublabel","so rude ...");
+		language.set_text("view.error/noHost.label","Host not found!");
+		language.set_text("view.error/noHost.sublabel","How about a game of hide and seek?");
+		language.set_text("view.error/resourceUnavaiable.label","Resource not found");
+		language.set_text("view.error/resourceUnavaiable.sublabel","No idea if there ever was or will be something ...");
+		language.set_text("view.error/resourceUnavaiable/temporary.label","Reource not found");
+		language.set_text("view.error/resourceUnwavaiable/temporary.sublabel","Should be back soon™️");
+		language.set_text("view.error/uri/unknownScheme.label","Unknown uri scheme");
+		language.set_text("view.error/uri/unknownScheme.sublabel","No I don't support cat:// uris!");
+		language.set_text("view.error/uri/unknownScheme/cat.label","Meow!");
+		language.set_text("view.error/uri/unknownScheme/cat.sublabel","");
 		//done
 		super_registry.store("localization.translation.english",language);
 		var multiplexer = (super_registry.retrieve("localization.translation") as Dragonstone.Registry.TranslationMultiplexerRegistry);
