@@ -105,6 +105,7 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 		var typeinfo = type_registry.get_entry_by_gophertype(gophertype);
 		if (typeinfo == null) {
 			request.setStatus("error/gopher",@"Gophertype $gophertype not supported!");
+			return;
 		}
 		var stripped_uri = Dragonstone.Util.Uri.strip_querys(request.uri);
 		string mimetype = mimeguesser.get_closest_match(stripped_uri,typeinfo.mimetype);
