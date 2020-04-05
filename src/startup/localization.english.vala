@@ -23,8 +23,8 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("view.interactive/cache.open_in_new_tab.tooltip","Open resource in new tab");
 		language.set_text("view.interactive/cache.pin.tooltip","Stop resource from expireing");
 		language.set_text("view.interactive/cache.column.uri.head","Uri");
-		language.set_text("view.interactive/cache.colum.time_to_live.head","TTL");
-		language.set_text("view.interactive/cache.colum.users.head","Users");
+		language.set_text("view.interactive/cache.column.time_to_live.head","TTL");
+		language.set_text("view.interactive/cache.column.users.head","Users");
 		//messages
 		language.set_text("view.error/internal.label","Hell just broke loose");
 		language.set_text("view.error/internal.sublabel","or maybe it was just a tiny bug?\nPlease report to the developer!");

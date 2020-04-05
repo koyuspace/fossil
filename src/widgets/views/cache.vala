@@ -3,7 +3,7 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 	private Dragonstone.Request request = null;
 	private Dragonstone.Tab tab = null;
 	private Dragonstone.Store.Cache cache;
-	private Gtk.ListStore liststore = new Gtk.ListStore(3,typeof(string),typeof(string),typeof(string));
+	private Gtk.ListStore liststore = new Gtk.ListStore(4,typeof(string),typeof(string),typeof(string),typeof(string));
 	private HashTable<string,Gtk.TreeIter?> displayed_uris = new HashTable<string,Gtk.TreeIter?>(str_hash, str_equal);
 	private Gtk.TreeModelFilter filterstore;
 	private Gtk.Entry search_entry;
@@ -19,6 +19,7 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 		0: uri
 		1: filename
 		2: TTL as text
+		3: # of users as string
 	*/
 	
 	public Cache(Dragonstone.Store.Cache cache, Dragonstone.Registry.TranslationRegistry? itranslation){
@@ -84,6 +85,7 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 		treeview = new Gtk.TreeView();
 		treeview.get_selection().set_mode(Gtk.SelectionMode.SINGLE);
 		treeview.set_model(filterstore);
+		treeview.insert_column_with_attributes(-1,translation.localize("view.interactive/cache.column.users.head"), new Gtk.CellRendererText (), "text", 3);
 		treeview.insert_column_with_attributes(-1,translation.localize("view.interactive/cache.column.uri.head"), new Gtk.CellRendererText (), "text", 0);
 		//treeview.insert_column_with_attributes(-1,"Filename", new Gtk.CellRendererText (), "text", 1);
 		treeview.insert_column_with_attributes(-1,translation.localize("view.interactive/cache.column.time_to_live.head"), new Gtk.CellRendererText (), "text", 2);
@@ -117,6 +119,7 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 			if (resource != null) {
 				//update
 				liststore.set_value(iter,2,format_time_to_live(resource.valid_until));
+				liststore.set_value(iter,3,resource.users.to_string());
 			} else {
 				//remove
 				liststore.remove(ref iter);
@@ -132,7 +135,7 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 					liststore.append (out iter);
 					string ttl = format_time_to_live(resource.valid_until);
 					//print(@"[cache.gtk] $(resource.uri) | $(resource.filepath) | $ttl\n");
-					liststore.set (iter, 0, resource.uri, 1, resource.filepath, 2, ttl);
+					liststore.set (iter, 0, resource.uri, 1, resource.filepath, 2, ttl, 3, resource.users.to_string());
 					displayed_uris.set(uri,iter);
 				}
 				search_dirty = true;
