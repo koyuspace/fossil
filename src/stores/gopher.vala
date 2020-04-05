@@ -31,77 +31,32 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 			return;
 		}
 		// parse uri
-		if(!request.uri.has_prefix("gopher://")){
+		var parsed_uri = new Dragonstone.Util.ParsedUri(request.uri);
+		
+		if(!(parsed_uri.scheme == "gopher" || parsed_uri.scheme == null)){
 			request.setStatus("error/uri/unknownScheme","Gopher only knows gopher://");
 			return;
 		}
-		var startoffset = 9;
-		var indexofslash = request.uri.index_of_char('/',startoffset);
-		var indexofcolon = request.uri.index_of_char(':',startoffset);
-		
-		if (indexofslash < indexofcolon && indexofslash > 1){
-			indexofcolon = -1;
-		}
 		
 		string query = "";
-		uint16 port = 70;
-		string host;
 		unichar gophertype = '1'; //directory
 		
-		if (indexofcolon > 0){
-			uint32 num = 0;
-			uint i = indexofcolon+1;
-			while(true){
-				num = num*10;
-				var c = request.uri.get_char(i);
-				if (c == '0') {
-					num += 0;
-				} else if (c == '1') {
-					num += 1;
-				} else if (c == '2') {
-					num += 2;
-				} else if (c == '3') {
-					num += 3;
-				} else if (c == '4') {
-					num += 4;
-				} else if (c == '5') {
-					num += 5;
-				} else if (c == '6') {
-					num += 6;
-				} else if (c == '7') {
-					num += 7;
-				} else if (c == '8') {
-					num += 8;
-				} else if (c == '9') {
-					num += 9;
-				} else if (c == '/' || c == '\0') {
-					break;
-				} else {
-					request.setStatus("error/uri/invalid","Port has to be a number");
-					return;
-				}
-				i++;
+		string? host = parsed_uri.host;
+		if (host == "null"){
+			request.setStatus("error/uri/noHost","Finger needs a host");
+			return;
+		}
+		uint16? port = parsed_uri.get_port_number();
+		if (port == null){
+			port = 70;
+		}
+		if(parsed_uri.path != null){
+			if(parsed_uri.path.has_prefix("/")){
+				query = parsed_uri.path.substring(2);
+				gophertype = parsed_uri.path.get(1);
 			}
-			num = num/10;
-			port = (uint16) num;
 		}
 		
-		if (indexofcolon > 0){
-			host = request.uri.substring(startoffset,indexofcolon-startoffset);
-		}else if (indexofslash > 0){
-			host = request.uri.substring(startoffset,indexofslash-startoffset);
-		}else{
-			host = request.uri.substring(startoffset);
-		}
-	
-		if (indexofslash > 0){
-			if (request.uri.length > indexofslash+1){
-				gophertype = request.uri.get_char(indexofslash+1);
-			}
-			if (request.uri.length > indexofslash+2){
-				query = request.uri.substring(indexofslash+2);
-			}
-		}
 		
 		var typeinfo = type_registry.get_entry_by_gophertype(gophertype);
 		if (typeinfo == null) {
