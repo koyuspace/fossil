@@ -67,7 +67,7 @@ public class Dragonstone.Resource : Object {
 	private void delete_file(){
 		if (this.is_temporary){
 			var file = File.new_for_path(this.filepath);
-			if (file.query_exists){
+			if (file.query_exists()){
 				try{
 					file.delete();
 				}catch( Error e ){
