@@ -139,6 +139,9 @@ public class Dragonstone.Util.Uri {
 		if (slashindex > 0 && slashindex+1 < uri.length){
 			return colonindex > 0 && colonindex+1==slashindex && uri[slashindex+1] == '/';
 		}
+		if (slashindex < 0 && colonindex >= 0){
+			return true;
+		}
 		return false;
 	}
 	
