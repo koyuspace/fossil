@@ -40,11 +40,15 @@ public class Dragonstone.Widget.LinkButton : Gtk.Button {
 	
 	private bool handle_button_press(Gdk.EventButton event){
 		if (event.type == BUTTON_PRESS){
-			if (event.button == 2){ //middleclick
+			if (event.button == 2) { //middleclick
 				tab.open_uri_in_new_tab(uri);
 				return true;
-			} else if (event.button == 3) {
-				//right click
+			} else if (event.button == 3) { //right click
+				var popover = new Dragonstone.Widget.LinkButtonPopover(this.tab,uri);
+				popover.set_relative_to(this);
+				popover.popup();
+				popover.show_all();
+				return true;
 			}
 		}
 		return false;
@@ -102,5 +106,22 @@ public class Dragonstone.Widget.LinkButton : Gtk.Button {
 			}
 		}
 		return "go-jump-symbolic";
+	}
+}
+
+public class Dragonstone.Widget.LinkButtonPopover : Gtk.Popover {
+	
+	public LinkButtonPopover(Dragonstone.Tab tab,string uri){
+		var box = new Gtk.Box(Gtk.Orientation.VERTICAL,0);
+		var uri_label = new Gtk.Label(uri);
+		uri_label.selectable = true;
+		var open_in_new_tab_button = new Gtk.Button.with_label("Open in new Tab");
+		open_in_new_tab_button.set_relief(Gtk.ReliefStyle.NONE);
+		open_in_new_tab_button.clicked.connect(() => {
+			tab.open_uri_in_new_tab(uri);
+		});
+		box.pack_start(uri_label);
+		box.pack_start(open_in_new_tab_button);
+		add(box);
 	}
 }
