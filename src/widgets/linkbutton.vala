@@ -1,8 +1,10 @@
 public class Dragonstone.Widget.LinkButton : Gtk.Button {
 
 	string uri;	
+	private Dragonstone.Tab tab;
 	
 	public LinkButton(Dragonstone.Tab tab,string name,string uri,string? icon_name = null){
+		this.tab = tab;
 		var icon_name_ = icon_name;
 		halign = Gtk.Align.START;
 		this.uri = uri;
@@ -32,9 +34,20 @@ public class Dragonstone.Widget.LinkButton : Gtk.Button {
 			label = @"$name";
 		}
 		set_tooltip_text(uri);
-		//var linkwidget = new Dragonstone.Widget.LinkButtonDisplay(name,uri,icon_name_);
-		//add(linkwidget);
+		button_press_event.connect(handle_button_press);
 		set_relief(Gtk.ReliefStyle.NONE);
+	}
+	
+	private bool handle_button_press(Gdk.EventButton event){
+		if (event.type == BUTTON_PRESS){
+			if (event.button == 2){ //middleclick
+				tab.open_uri_in_new_tab(uri);
+				return true;
+			} else if (event.button == 3) {
+				//right click
+			}
+		}
+		return false;
 	}
 	
 	private string guessIconNameByUri(string uri){
@@ -89,28 +102,5 @@ public class Dragonstone.Widget.LinkButton : Gtk.Button {
 			}
 		}
 		return "go-jump-symbolic";
-	}
-}
-
-private class Dragonstone.Widget.LinkButtonDisplay : Gtk.Bin {
-	public LinkButtonDisplay(string name,string uri,string icon_name){
-		var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL,4);
-		box.homogeneous = false;
-		var labeltext = @"$name [$uri]";
-		if (name == uri || uri.has_prefix("file://")){
-			labeltext = @"$uri";
-		}
-		var label = new Gtk.Label(labeltext);
-		label.selectable = true;
-		label.halign = Gtk.Align.START;
-		var labelAttrList = new Pango.AttrList();
-		labelAttrList.insert(new Pango.AttrSize(12000));
-		label.attributes = labelAttrList;
-		var icon = new Gtk.Image.from_icon_name(icon_name,Gtk.IconSize.LARGE_TOOLBAR);
-		icon.halign = Gtk.Align.START;
-		box.pack_start(icon);
-		box.pack_start(label);
-		box.halign = Gtk.Align.START;
-		add(box);
 	}
 }

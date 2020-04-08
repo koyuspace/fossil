@@ -42,6 +42,8 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		window_position = Gtk.WindowPosition.CENTER;
 		set_default_size(800,600);
 		
+		set_events(Gdk.EventMask.ALL_EVENTS_MASK);
+		
 		//settings = new GLib.Settings("com.gitlab.baschdel.Dragonstone");
 		
 		//place window where it has been bofore closing
