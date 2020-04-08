@@ -19,11 +19,11 @@ public class Dragonstone.Widget.TabHead : Gtk.Box {
 		closeButton.clicked.connect(tab.close);
 		this.tab = tab;
 		this.tab.on_cleanup.connect(this.detach);
-		this.tab.on_title_change.connect(this.refreshTitle);
-		refreshTitle();
+		this.tab.on_title_change.connect(this.refresh_title);
+		refresh_title();
 	}
 	
-	public void refreshTitle(){
+	public void refresh_title(){
 		spinner.active = tab.loading;
 		spinner.visible = tab.loading;
 		string title = tab.title;
@@ -37,7 +37,7 @@ public class Dragonstone.Widget.TabHead : Gtk.Box {
 	
 	public void detach(){
 		tab.on_cleanup.disconnect(detach);
-		tab.on_title_change.disconnect(refreshTitle);
+		tab.on_title_change.disconnect(refresh_title);
 	}
 	
 }
