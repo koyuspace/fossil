@@ -24,9 +24,10 @@ public class Dragonstone.Widget.MenuSwitch : Gtk.Button {
 		switch_widget = new Gtk.Switch();
 		box.pack_end(switch_widget);
 		halign = Gtk.Align.FILL;
+		box.set_child_packing(label,true,true,0,Gtk.PackType.START);
+		box.set_child_packing(switch_widget,false,true,0,Gtk.PackType.END);
 		add(box);
 		get_style_context().add_class("flat");
-		
 		this.clicked.connect(() => {
 			switch_widget.set_state(!switch_widget.get_state());
 		});
