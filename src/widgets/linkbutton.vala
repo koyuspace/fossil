@@ -124,5 +124,6 @@ public class Dragonstone.Widget.LinkButtonPopover : Gtk.Popover {
 		box.pack_start(uri_label);
 		box.pack_start(open_in_new_tab_button);
 		add(box);
+		this.set_position(Gtk.PositionType.BOTTOM);
 	}
 }
