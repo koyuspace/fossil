@@ -13,6 +13,8 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 	private string? selected_uri = null;
 	private bool still_alive = true;
 	private bool search_dirty = true;
+	private string translation_forever = "forever";
+	private string translation_over_a_year = "over a year";
 	
 	/*
 		Colums:
@@ -34,8 +36,12 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 			language.set_text("view.interactive/cache.column.uri.head","Uri");
 			language.set_text("view.interactive/cache.colum.time_to_live.head","TTL");
 			language.set_text("view.interactive/cache.colum.users.head","Users");
+			language.set_text("view.interactive/cache.duration.infinite","forever");
+			language.set_text("view.interactive/cache.duration.over_a_year","over a year");
 			translation = language;
 		}
+		this.translation_forever = translation.localize("view.interactive/cache.duration.infinite");
+		this.translation_over_a_year = translation.localize("view.interactive/cache.duration.over_a_year");
 		this.cache = cache;
 		//init gui
 		expand = true;
@@ -160,7 +166,7 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 	
 	private string format_time_to_live(int64 valid_until){
 		if (valid_until == int64.MAX){
-			return "forever"; //TOTRANSLATE
+			return translation_forever;
 		} else {
 			string sign;
 			int64 seconds = ((valid_until - (GLib.get_real_time()/1000))/1000);
@@ -173,7 +179,7 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 			int64 minutes = seconds/60;
 			int64 hours = minutes/60;
 			if (hours > 8760){
-				return "over a year"; //TOTRANSLATE
+				return translation_over_a_year;
 			}
 			return sign+("%02d:%02d:%02d".printf((int) hours, (int) (minutes%60), (int) (seconds%60)));
 		}

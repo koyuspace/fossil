@@ -25,6 +25,8 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("view.interactive/cache.column.uri.head","Uri");
 		language.set_text("view.interactive/cache.column.time_to_live.head","TTL");
 		language.set_text("view.interactive/cache.column.users.head","Users");
+		language.set_text("view.interactive/cache.duration.infinite","forever");
+		language.set_text("view.interactive/cache.duration.over_a_year","over a year");
 		//messages
 		language.set_text("view.error/internal.label","Hell just broke loose");
 		language.set_text("view.error/internal.sublabel","or maybe it was just a tiny bug?\nPlease report to the developer!");
