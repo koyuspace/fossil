@@ -5,6 +5,7 @@ public class Dragonstone.Startup.Localization.English {
 		//general actions
 		language.set_text("action.cancel","Cancel");
 		language.set_text("action.download","Download");
+		language.set_text("action.open_in_new_tab","Open in new tab");
 		//Tabs
 		language.set_text("tab.error.no_view.message","I'm sorry, but I don't know how to show that to you\nPlease report this to the developer if this is a release version (or you think this really shouldn't have happened)!");
 		language.set_text("tab.error.wrong_view.message","I think i chose the wrong view ...\nPlease report this to the developer!");

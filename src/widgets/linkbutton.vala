@@ -115,7 +115,8 @@ public class Dragonstone.Widget.LinkButtonPopover : Gtk.Popover {
 		var box = new Gtk.Box(Gtk.Orientation.VERTICAL,0);
 		var uri_label = new Gtk.Label(uri);
 		uri_label.selectable = true;
-		var open_in_new_tab_button = new Gtk.Button.with_label("Open in new Tab");
+		var open_in_new_tab_button_label = tab.translation.localize("action.open_in_new_tab");
+		var open_in_new_tab_button = new Gtk.Button.with_label(open_in_new_tab_button_label);
 		open_in_new_tab_button.set_relief(Gtk.ReliefStyle.NONE);
 		open_in_new_tab_button.clicked.connect(() => {
 			tab.open_uri_in_new_tab(uri);
