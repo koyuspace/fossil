@@ -31,6 +31,7 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
 			var file = File.new_for_path(request.resource.filepath);
 			if (!file.query_exists ()) {
         this.textview.buffer.text ="The cache file for this resource does not exist!\nReloading the page should help,\nif not please contact the developer!";
+        return false;
     	}
     	try{
 				//parse text
