@@ -18,10 +18,10 @@ public class Dragonstone.Application : Gtk.Application {
 		Dragonstone.Startup.Cache.Backend.setup_store(super_registry); //register before switch
 		Dragonstone.Startup.About.Backend.setup_store(super_registry);
 		//Initalize Bookmarks
-		Dragonstone.Startup.Bookmarks.Backend.setup_registry(super_registry);
-		Dragonstone.Startup.Bookmarks.Backend.setup_default_folders(super_registry);
-		Dragonstone.Startup.Bookmarks.Backend.setup_about_page(super_registry);
-		Dragonstone.Startup.Bookmarks.Backend.setup_store(super_registry);
+		//Dragonstone.Startup.Bookmarks.Backend.setup_registry(super_registry);
+		//Dragonstone.Startup.Bookmarks.Backend.setup_default_folders(super_registry);
+		//Dragonstone.Startup.Bookmarks.Backend.setup_about_page(super_registry);
+		//Dragonstone.Startup.Bookmarks.Backend.setup_store(super_registry);
 		//Initalize backends
 		Dragonstone.Startup.Cache.Backend.setup_about_page(super_registry);
 		Dragonstone.Startup.Gopher.Backend.setup_gophertypes(super_registry);
@@ -46,7 +46,7 @@ public class Dragonstone.Application : Gtk.Application {
 		super_registry.store("gtk.source_views",new Dragonstone.Registry.ViewRegistry.source_view_configuration());
 		//Initalize frontends
 		Dragonstone.Startup.Cache.Gtk.setup_views(super_registry);
-		Dragonstone.Startup.Bookmarks.Gtk.setup_views(super_registry);
+		//Dragonstone.Startup.Bookmarks.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.File.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Gopher.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Gemini.Gtk.setup_views(super_registry);
