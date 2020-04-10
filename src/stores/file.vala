@@ -42,13 +42,13 @@ public class Dragonstone.Store.File : Object, Dragonstone.ResourceStore {
 			try {
 				Dir dir = Dir.open (path, 0);
 				string? name = null;
-				helper.appendString("=> file://"+GLib.Uri.escape_string(Environment.get_home_dir(),"/")+"/ Go to home folder\n");
-				helper.appendString("=> file:/// Go to root folder\n");
+				helper.appendString("HOME\tfile://"+GLib.Uri.escape_string(Environment.get_home_dir(),"/")+"/\n");
+				helper.appendString("ROOT\tfile:///\n");
 				helper.appendString("\n");
-				helper.appendString("File listig for: "+path+"\n");
+				helper.appendString("THIS\t"+path+"\n");
 				var parent = file.get_parent();
 				if (parent != null){
-					helper.appendString("=> "+parent.get_uri()+"/ Go to parent folder\n");
+					helper.appendString("PARENT\t"+parent.get_uri()+"/\n");
 				}
 				helper.appendString("\n");
 				while ((name = dir.read_name ()) != null) {
@@ -57,11 +57,13 @@ public class Dragonstone.Store.File : Object, Dragonstone.ResourceStore {
 						break;
 					}
 					string fpath = Path.build_filename (path, name);
+					string type = "FILE";
 					if (FileUtils.test (fpath, FileTest.IS_DIR)) {
 						fpath = fpath+"/";
+						type = "DIRECTORY";
 					}
 					if (!name.has_prefix(".")){
-						helper.appendString("=> file://"+GLib.Uri.escape_string(fpath,"/")+" "+name+"\n");
+						helper.appendString(type+"\tfile://"+GLib.Uri.escape_string(fpath,"/")+"\t"+name+"\n");
 					}
 				}
 			} catch (FileError e) {
@@ -71,7 +73,7 @@ public class Dragonstone.Store.File : Object, Dragonstone.ResourceStore {
 			if (helper.closed) { return; }
 			helper.close();
 			var resource = new Dragonstone.Resource(request.uri,filepath,false);
-			resource.add_metadata("text/gemini",basename);
+			resource.add_metadata("text/dragonstone-directory",basename);
 			request.setResource(resource,"file");
 			return;
 		}

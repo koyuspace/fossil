@@ -47,6 +47,7 @@ public class Dragonstone.Application : Gtk.Application {
 		//Initalize frontends
 		Dragonstone.Startup.Cache.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Bookmarks.Gtk.setup_views(super_registry);
+		Dragonstone.Startup.File.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Gopher.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Gemini.Gtk.setup_views(super_registry);
 	}
