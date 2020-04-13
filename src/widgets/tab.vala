@@ -3,7 +3,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public string uri {
 		get { return _uri; }
 		set { 
-			goToUri(value);
+			go_to_uri(value);
 		}}
 	public Dragonstone.IView view;
 	public Dragonstone.Request request;
@@ -44,14 +44,14 @@ public class Dragonstone.Tab : Gtk.Bin {
 			this.translation = new Dragonstone.Registry.TranslationLanguageRegistry();
 		}
 		this.parent_window = parent_window;
-		loadUri(uri);
+		load_uri(uri);
 	}
 	
-	public void goToUri(string uri, bool is_absolute = false){
+	public void go_to_uri(string uri, bool is_absolute = false){
 		if(locked>0){ return; }
 		print(@"raw uri: $uri absolute: $is_absolute\n");
 		if (uri == null){
-			print("Potential ERROR: tab.goToUri called with a null uri!\n");
+			print("Potential ERROR: tab.go_to_uri called with a null uri!\n");
 			return;
 		}
 		string uritogo = null;
@@ -63,7 +63,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		//add to history
 		history.push(_uri);
 		forward.clear();
-		loadUri(uritogo);
+		load_uri(uritogo);
 	}
 	
 	//this will overwrite the last uri in the tab history
@@ -72,10 +72,10 @@ public class Dragonstone.Tab : Gtk.Bin {
 		if(locked>0){ return; }
 		var joined_uri = Dragonstone.Util.Uri.join(_uri,uri);
 		if (joined_uri == null){joined_uri = uri;}
-		loadUri(joined_uri);
+		load_uri(joined_uri);
 	}
 	
-	private void loadUri(string uri,bool reload = false){
+	private void load_uri(string uri,bool reload = false){
 		if(locked>0){ return; }
 		_uri = uri;
 		if (request != null){
@@ -95,7 +95,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		if (request != null){
 			request.notify["status"].connect(on_status_update);
 		}
-		updateView();
+		update_view();
 		uriChanged(this.uri);
 	}
 	
@@ -107,22 +107,22 @@ public class Dragonstone.Tab : Gtk.Bin {
 			}
 		}
 		Timeout.add(0,() => {
-			checkView();
+			check_view();
 			return false;
 		},Priority.HIGH);
 	}
 	
 	//check if the current view is still appropriate, and if not change it
-	public void checkView(){
+	public void check_view(){
 		if(locked>0){ return; }
 		print(@"check view -- $(request.status) -- $(request.substatus) --\n");
 		if (!view.canHandleCurrentResource() ) {
-			updateView();
+			update_view();
 		}
 	}
 	
 	//update the view either beacause of a new Resource or beacause of a change of the current reource
-	public void updateView(){
+	public void update_view(){
 		if(locked>0){ return; }
 		print(@"[tab] UPDATING view! [$(request.status)]\n");
 		//remove the old view
@@ -209,30 +209,30 @@ public class Dragonstone.Tab : Gtk.Bin {
 	}
 
 	//backbutton handler
-	public void goBack(){
+	public void go_back(){
 		if(locked>0){ return; }
-		if(!canGoBack()) return;
+		if(!can_go_back()) return;
 		var uri = history.pop();
 		if (uri == null) { return; }
 		forward.push(_uri);
-		loadUri(uri);
+		load_uri(uri);
 	}
 	
 	//forwardbuttonhandler
-	public void goForward(){
+	public void go_forward(){
 		if(locked>0){ return; }
-		if(!canGoForward()) return;
+		if(!can_go_forward()) return;
 		var uri = forward.pop();
 		if (uri == null) { return; }
 		history.push(_uri);
-		loadUri(uri);
+		load_uri(uri);
 	}
 	
-	public bool canGoBack(){
+	public bool can_go_back(){
 		return history.size()>0;
 	}
 	
-	public bool canGoForward(){
+	public bool can_go_forward(){
 		return forward.size()>0;
 	}
 	
@@ -242,7 +242,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		string urix = uri; //setting a variable to itself the complicatd way
 		print("reloading!\n");
 		print("URI: '"+urix+"'\n");
-		loadUri(urix,true);
+		load_uri(urix,true);
 	}
 	
 	public void open_uri_in_new_tab(string uri){

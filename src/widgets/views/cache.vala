@@ -192,7 +192,7 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 		}
 		string uri = get_uri_from_model(filterstore,iter);
 		if (uri != null && tab != null){
-			tab.goToUri(uri);
+			tab.go_to_uri(uri);
 		}
 	}
 	

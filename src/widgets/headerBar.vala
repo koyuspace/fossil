@@ -117,7 +117,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 			addressfield.text = tryUriCorrection(addressfield.text);
 			if (current_tab != null){
 				if (current_tab.uri != addressfield.text){
-					current_tab.goToUri(addressfield.text,true);
+					current_tab.go_to_uri(addressfield.text,true);
 				}
 			} else {
 				parent_window.add_tab(addressfield.text);
@@ -148,13 +148,13 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		backbutton.clicked.connect(e => {
 			//print("GO back!\n");
 			if (current_tab != null) {
-				current_tab.goBack();
+				current_tab.go_back();
 			}
 		});
 		forwardbutton.clicked.connect(e => {
 			//print("GO forward!\n");
 			if (current_tab != null) {
-				current_tab.goForward();
+				current_tab.go_forward();
 			}
 		});
 		downloadbutton.clicked.connect(e => {
@@ -180,7 +180,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		prefer_source_view_switch.state_set.connect(e => {
 			if (current_tab != null) {
 				current_tab.prefer_source_view = prefer_source_view_switch.state;
-				current_tab.updateView();
+				current_tab.update_view();
 				return false;
 			}
 			return true;
@@ -223,8 +223,8 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 	private void onUriChanged(string uri){
 		addressfield.text = uri;
 		if (current_tab != null) {
-			backbutton.set_sensitive(current_tab.canGoBack());
-			forwardbutton.set_sensitive(current_tab.canGoForward());
+			backbutton.set_sensitive(current_tab.can_go_back());
+			forwardbutton.set_sensitive(current_tab.can_go_forward());
 		} else {
 			backbutton.set_sensitive(false);
 			forwardbutton.set_sensitive(false);

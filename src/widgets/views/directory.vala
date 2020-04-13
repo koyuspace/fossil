@@ -145,29 +145,29 @@ public class Dragonstone.View.Directory : Gtk.Box, Dragonstone.IView {
 		}
 		string uri = get_uri_from_model(filterstore,iter);
 		if (uri != null && tab != null){
-			tab.goToUri(uri);
+			tab.go_to_uri(uri);
 		}
 	}
 	
 	private void go_path() {
 		if (this.root_uri != null) {
-			this.tab.goToUri(Dragonstone.Util.Uri.join(this.root_uri,this.path_entry.text));
+			this.tab.go_to_uri(Dragonstone.Util.Uri.join(this.root_uri,this.path_entry.text));
 		} else {
-			this.tab.goToUri(this.path_entry.text);
+			this.tab.go_to_uri(this.path_entry.text);
 		}
 	}
 	
 	private void go_home() {
 		if (this.home_uri != null){
 		print("[directory.gtk] go home\n");
-			this.tab.goToUri(this.home_uri);
+			this.tab.go_to_uri(this.home_uri);
 		}
 	}
 	
 	private void go_parent() {
 		if (this.parent_uri != null){
 			print("[directory.gtk] go parent\n");
-			this.tab.goToUri(this.parent_uri);
+			this.tab.go_to_uri(this.parent_uri);
 		}
 	}
 	

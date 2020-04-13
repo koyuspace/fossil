@@ -85,7 +85,7 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
 							}
 							var searchfield = new Dragonstone.View.GophertextInlineSearch(htext,uri);
 							searchfield.go.connect((s,uri) => {
-								tab.goToUri(uri);
+								tab.go_to_uri(uri);
 								if (cache != null){
 									cache.invalidate_for_uri(request.uri);
 								}

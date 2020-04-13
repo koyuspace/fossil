@@ -19,7 +19,7 @@ public class Dragonstone.Widget.LinkButton : Gtk.Button {
 					print(@"Error while spawing xdg-open: $(e.message)\n");
 				}
 			}else{
-				tab.goToUri(this.uri);
+				tab.go_to_uri(this.uri);
 			}
 		});
 		if(icon_name_ == null){

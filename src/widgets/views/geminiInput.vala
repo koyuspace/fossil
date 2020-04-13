@@ -27,7 +27,7 @@ public class Dragonstone.View.GeminiInput : Gtk.Bin, Dragonstone.IView {
 		this.request = request;
 		centerBox.pack_start(new Gtk.Label(request.resource.name));
 		var input = new Dragonstone.View.GeminiInputInput("",tab.uri);
-		input.go.connect((s,uri) => {tab.goToUri(uri);});
+		input.go.connect((s,uri) => {tab.go_to_uri(uri);});
 		centerBox.pack_start(input);
 		return true;
 	}
