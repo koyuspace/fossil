@@ -64,11 +64,13 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
 							string? uri = null;
 							if (query.has_prefix("URL:")) {
 								uri = query.substring(4);
-							}else{
+							} else if (query.has_prefix("/URL:")) { //pygopherd get your url right!
+								uri = query.substring(5);
+							} else {
 								var equery = Uri.escape_string(query,"/");
-								if( port != "70" ){
+								if ( port != "70" ) {
 									uri = @"gopher://$host:$port/$gophertype$equery";
-								}else{
+								} else {
 									uri = @"gopher://$host/$gophertype$equery";
 								}
 							}
