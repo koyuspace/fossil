@@ -5,6 +5,7 @@ public class Dragonstone.View.Directory : Gtk.Box, Dragonstone.IView {
 	private Gtk.ListStore liststore = new Gtk.ListStore(3,typeof(string),typeof(string),typeof(string));
 	private HashTable<string,Gtk.TreeIter?> displayed_uris = new HashTable<string,Gtk.TreeIter?>(str_hash, str_equal);
 	private Gtk.TreeModelFilter filterstore;
+	private Gtk.TreeModelSort sortedstore;
 	private Gtk.Entry search_entry;
 	private Gtk.Entry path_entry;
 	private Gtk.Button home_button;
@@ -63,10 +64,12 @@ public class Dragonstone.View.Directory : Gtk.Box, Dragonstone.IView {
 		//stores
 		filterstore = new Gtk.TreeModelFilter((Gtk.TreeModel) liststore,null);
 		filterstore.set_visible_func(filter_visible_function);
+		sortedstore = new Gtk.TreeModelSort.with_model(filterstore);
+		sortedstore.set_sort_column_id (1, Gtk.SortType.ASCENDING); 
 		//treeview
 		treeview = new Gtk.TreeView();
 		treeview.get_selection().set_mode(Gtk.SelectionMode.SINGLE);
-		treeview.set_model(filterstore);
+		treeview.set_model(sortedstore);
 		treeview.insert_column_with_attributes(-1,translation.localize("view.directory.column.filename.head"), new Gtk.CellRendererText (), "text", 1);
 		treeview.insert_column_with_attributes(-1,translation.localize("view.directory.column.uri.head"), new Gtk.CellRendererText (), "text", 0);
 		//treeview.insert_column_with_attributes(-1,"Filename", new Gtk.CellRendererText (), "text", 1);
