@@ -72,7 +72,7 @@ public class Dragonstone.Store.File : Object, Dragonstone.ResourceStore {
 			}
 			if (helper.closed) { return; }
 			helper.close();
-			var resource = new Dragonstone.Resource(request.uri,filepath,false);
+			var resource = new Dragonstone.Resource(request.uri,filepath,true);
 			resource.add_metadata("text/dragonstone-directory",basename);
 			request.setResource(resource,"file");
 			return;

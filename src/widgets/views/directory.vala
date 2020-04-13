@@ -6,7 +6,14 @@ public class Dragonstone.View.Directory : Gtk.Box, Dragonstone.IView {
 	private HashTable<string,Gtk.TreeIter?> displayed_uris = new HashTable<string,Gtk.TreeIter?>(str_hash, str_equal);
 	private Gtk.TreeModelFilter filterstore;
 	private Gtk.Entry search_entry;
+	private Gtk.Entry path_entry;
+	private Gtk.Button home_button;
+	private Gtk.Button parent_button;
 	private Gtk.TreeView treeview;
+	private string? home_uri = null;
+	private string? root_uri = null;
+	private string? parent_uri = null;
+	private string? relative_uri = null;
 	private string? selected_uri = null;
 	private bool still_alive = true;
 	private bool search_dirty = true;
@@ -32,6 +39,20 @@ public class Dragonstone.View.Directory : Gtk.Box, Dragonstone.IView {
 		orientation = Gtk.Orientation.VERTICAL;
 		var actionbar = new Gtk.ActionBar();
 		actionbar.expand = false;
+		//parent_button
+		parent_button = new Gtk.Button.from_icon_name("go-up-symbolic");
+		parent_button.clicked.connect(go_parent);
+		actionbar.pack_start(parent_button);
+		//home_button
+		home_button = new Gtk.Button.from_icon_name("user-home-symbolic");
+		home_button.clicked.connect(go_home);
+		actionbar.pack_start(home_button);
+		//path_entry
+		path_entry = new Gtk.Entry();
+		path_entry.expand = true;
+		path_entry.placeholder_text = translation.localize("view.directory.path.placeholder");
+		path_entry.activate.connect(go_path);
+		actionbar.pack_start(path_entry);
 		//search_entry
 		search_entry = new Gtk.Entry();
 		search_entry.placeholder_text = translation.localize("view.directory.search.placeholder");
@@ -74,11 +95,21 @@ public class Dragonstone.View.Directory : Gtk.Box, Dragonstone.IView {
 	}
 	
 	private void add_item(string uri, string name, string type){
-		Gtk.TreeIter iter;
-		liststore.append (out iter);
-		liststore.set (iter, 0, uri, 1, name, 2, "");
-		displayed_uris.set(uri,iter);
-		search_dirty = true;
+		if (type == "HOME") {
+			this.home_uri = uri;
+		} else if (type == "ROOT") {
+			this.root_uri = uri;
+		} else if (type == "THIS") {
+			this.relative_uri = uri;
+		} else if (type == "PARENT") {
+			this.parent_uri = uri;
+		} else {
+			Gtk.TreeIter iter;
+			liststore.append (out iter);
+			liststore.set (iter, 0, uri, 1, name, 2, "");
+			displayed_uris.set(uri,iter);
+			search_dirty = true;
+		}
 	}
 	
 	private void add_line(string line){
@@ -118,7 +149,43 @@ public class Dragonstone.View.Directory : Gtk.Box, Dragonstone.IView {
 		}
 	}
 	
-	private void update_controls(){
+	private void go_path() {
+		if (this.root_uri != null) {
+			this.tab.goToUri(Dragonstone.Util.Uri.join(this.root_uri,this.path_entry.text));
+		} else {
+			this.tab.goToUri(this.path_entry.text);
+		}
+	}
+	
+	private void go_home() {
+		if (this.home_uri != null){
+		print("[directory.gtk] go home\n");
+			this.tab.goToUri(this.home_uri);
+		}
+	}
+	
+	private void go_parent() {
+		if (this.parent_uri != null){
+			print("[directory.gtk] go parent\n");
+			this.tab.goToUri(this.parent_uri);
+		}
+	}
+	
+	private void update_navigation() {
+		if (path_entry.buffer.text == "" && this.relative_uri != null){
+			path_entry.text = this.relative_uri;
+		}
+		parent_button.visible = this.parent_uri != null;
+		if (this.parent_uri != null){
+			parent_button.set_tooltip_text(parent_uri);
+		}
+		home_button.visible = this.home_uri != null;
+		if (this.home_uri != null){
+			home_button.set_tooltip_text(home_uri);
+		}
+	}
+	
+	private void update_controls() {
 		//controls.visible = selected_uri != null;
 		if (selected_uri != null){
 			//left blank 
@@ -164,6 +231,7 @@ public class Dragonstone.View.Directory : Gtk.Box, Dragonstone.IView {
 			while ((line = dis.read_line (null)) != null) {
 				add_line(line.strip());
 			}
+			update_navigation();
 		}catch (GLib.Error e) {
 			print("[directory.gtk][error] Error while rendering directory content:\n"+e.message);
 		}
