@@ -30,8 +30,9 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("view.interactive/cache.duration.over_a_year","over a year");
 		//directory
 		language.set_text("view.directory.search.placeholder","Search ...");
+		language.set_text("view.directory.path.placeholder","Relative filepath to root uri");
 		language.set_text("view.directory.column.uri.head","Uri");
-		language.set_text("view.directory.colum.filename.head","Filename");
+		language.set_text("view.directory.column.filename.head","Filename");
 		//messages
 		language.set_text("view.error/internal.label","Hell just broke loose");
 		language.set_text("view.error/internal.sublabel","or maybe it was just a tiny bug?\nPlease report to the developer!");
