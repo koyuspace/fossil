@@ -282,8 +282,8 @@ public class Dragonstone.Util.ParsedUri : Object {
 	
 	public uint16? get_port_number(){
 		if (this.port != null){
-			int result;
-			if (int.try_parse(this.port,out result)) {
+			uint64 result;
+			if (Dragonstone.Util.Intparser.try_parse_unsigned(this.port,out result)) {
 				if (result >= 0 && result <= uint16.MAX){
 					return (uint16) result;
 				}

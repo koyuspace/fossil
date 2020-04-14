@@ -45,7 +45,10 @@ public class Dragonstone.View.Loading : Gtk.Bin, Dragonstone.IView {
 	
 	public void loadUpdated(){
 		progressbar.pulse();
-		float kb = int64.parse(request.substatus,16)/1000;
+		uint64 bytes = 0;
+		Dragonstone.Util.Intparser.try_parse_base_16_unsigned(request.substatus,out bytes);
+		float kb = bytes/1000;
+		//float kb = int64.parse(request.substatus,16)/1000;
 		progressbar.set_text(@"$kb KB");
 		progressbar.set_show_text(true);
 	}
