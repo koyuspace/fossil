@@ -66,6 +66,8 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
 								uri = query.substring(4);
 							} else if (query.has_prefix("/URL:")) { //pygopherd get your url right!
 								uri = query.substring(5);
+							} else if (query.has_prefix("url:")) { //It is bloody "URL:", it even is on wikipedia!
+								uri = query.substring(4);
 							} else {
 								var equery = Uri.escape_string(query,"/");
 								if ( port != "70" ) {
