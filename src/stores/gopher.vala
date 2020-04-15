@@ -43,7 +43,7 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 		
 		string? host = parsed_uri.host;
 		if (host == "null"){
-			request.setStatus("error/uri/noHost","Finger needs a host");
+			request.setStatus("error/uri/noHost","Gopher needs a host");
 			return;
 		}
 		uint16? port = parsed_uri.get_port_number();
@@ -64,7 +64,10 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 			return;
 		}
 		var stripped_uri = Dragonstone.Util.Uri.strip_querys(request.uri);
-		string mimetype = mimeguesser.get_closest_match(stripped_uri,typeinfo.mimetype);
+		string? mimetype = typeinfo.mimetype;
+		if (typeinfo.mimeyte_is_suggestion) {
+			mimetype = mimeguesser.get_closest_match(stripped_uri,mimetype);
+		}
 		
 		//debugging information
 		print(@"Gopher Request:\n  Host:  $host\n  Port:  $port\n  Type:  $gophertype\n  Query: $query\n");

@@ -6,16 +6,16 @@ public class Dragonstone.Registry.GopherTypeRegistry : Object {
 		//fast
 		add(new GopherTypeRegistryEntry('i',null,".",GopherTypeRegistryContentHint.TEXT));
 		//standardized
-		add(new GopherTypeRegistryEntry('0',"text/plain"));
+		add(new GopherTypeRegistryEntry('0',"text/*"));
 		add(new GopherTypeRegistryEntry('1',"text/gopher"));
 		add(new GopherTypeRegistryEntry('2',null,"CCSO://{host}:{port}/{selector}"));
 		add(new GopherTypeRegistryEntry('3',null,".",GopherTypeRegistryContentHint.ERROR));
 		add(new GopherTypeRegistryEntry('4',"text/x-hex"));
-		add(new GopherTypeRegistryEntry('5',"application/octet-stream"));
+		add(new GopherTypeRegistryEntry('5',"application/octet-stream").make_mimetype_suggestion());
 		add(new GopherTypeRegistryEntry('6',null));
 		add(new GopherTypeRegistryEntry('7',"text/gopher",null,GopherTypeRegistryContentHint.SEARCH));
 		add(new GopherTypeRegistryEntry('8',null,"telnet://{host}:{port}"));
-		add(new GopherTypeRegistryEntry('9',"application/octet-stream"));
+		add(new GopherTypeRegistryEntry('9',"application/octet-stream").make_mimetype_suggestion());
 		add(new GopherTypeRegistryEntry('g',"image/gif"));
 		add(new GopherTypeRegistryEntry('I',"image/*"));
 		add(new GopherTypeRegistryEntry('T',null,"telnet://{host}:{port}"));
@@ -45,17 +45,28 @@ public class Dragonstone.Registry.GopherTypeRegistryEntry {
 	public unichar gophertype { get; protected set; }
 	public string? mimetype { get; protected set; }
 	public string uri_template { get; protected set; }
+	public bool mimeyte_is_suggestion { get; protected set; }
 	public GopherTypeRegistryContentHint hint { get; protected set; }
 	
 	public GopherTypeRegistryEntry(unichar gophertype, string? mimetype = null, string? uri_template = null, GopherTypeRegistryContentHint hint = GopherTypeRegistryContentHint.LINK){
 		this.gophertype = gophertype;
 		this.mimetype = mimetype;
 		this.hint = hint;
+		if (mimetype != null) {
+			this.mimeyte_is_suggestion = mimetype.has_suffix("*");
+		} else {
+			this.mimeyte_is_suggestion = true;
+		}
 		if (uri_template != null){
 			this.uri_template = uri_template;
 		} else {
 			this.uri_template = "gopher://{host}:{port}/{type}{selector}";
 		}
+	}
+	
+	public Dragonstone.Registry.GopherTypeRegistryEntry make_mimetype_suggestion(){
+		this.mimeyte_is_suggestion = true;
+		return this;
 	}
 	
 	public string get_uri(string host, string port, string selector, string? query = null){
