@@ -143,10 +143,10 @@ public class Dragonstone.View.Directory : Gtk.Box, Dragonstone.IView {
 	
 	private void treeview_row_activated(Gtk.TreePath path, Gtk.TreeViewColumn column){
 		Gtk.TreeIter iter;
-		if(!filterstore.get_iter(out iter,path)){
+		if(!sortedstore.get_iter(out iter,path)){
 			return;
 		}
-		string uri = get_uri_from_model(filterstore,iter);
+		string uri = get_uri_from_model(sortedstore,iter);
 		if (uri != null && tab != null){
 			tab.go_to_uri(uri);
 		}
