@@ -23,6 +23,17 @@ public class Dragonstone.View.Image : Gtk.ScrolledWindow, Dragonstone.IView {
 			return false;
 		}
 		this.request = request;
+		
+		set_events(Gdk.EventMask.ALL_EVENTS_MASK);
+		
+		this.scroll_event.connect((event) => {
+			float new_factor = factor-((float) event.delta_y)/10;
+			if (new_factor > 0 && new_factor < 1000){
+				scale(new_factor);
+			}
+			return false;
+		});
+		
 		return true;
 	}
 	
@@ -33,7 +44,7 @@ public class Dragonstone.View.Image : Gtk.ScrolledWindow, Dragonstone.IView {
 		float ww = get_allocated_width();
 		float hr = ph/wh;
 		float wr = pw/ww;
-		float new_factor = 1;
+		float new_factor = factor;
 		if (hr > 1 || wr > 1){
 			new_factor = 1/float.max(hr,wr);
 			print(@"[image] rect.width=$(rect.width) rect.height=$(rect.height)\n");
