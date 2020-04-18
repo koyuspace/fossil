@@ -179,7 +179,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		});
 		prefer_source_view_switch.state_set.connect(e => {
 			if (current_tab != null) {
-				current_tab.prefer_source_view = prefer_source_view_switch.state;
+				current_tab.view_flags.set_flag("sourceview",prefer_source_view_switch.state);
 				current_tab.update_view();
 				return false;
 			}
@@ -214,7 +214,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 			current_tab.uriChanged.connect(onUriChanged);
 			//everything else
 			onUriChanged(current_tab.uri);
-			prefer_source_view_switch.state = current_tab.prefer_source_view;
+			prefer_source_view_switch.state = current_tab.view_flags.has_flag("sourceview");
 		} else {
 			onUriChanged("");
 		}

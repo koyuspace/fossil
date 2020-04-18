@@ -48,8 +48,8 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("view.error/resourceUnwavaiable/temporary.sublabel","Should be back soon™️");
 		language.set_text("view.error/uri/unknownScheme.label","Unknown uri scheme");
 		language.set_text("view.error/uri/unknownScheme.sublabel","No I don't support cat:// uris!");
-		language.set_text("view.error/uri/unknownScheme/cat.label","Meow!");
-		language.set_text("view.error/uri/unknownScheme/cat.sublabel","");
+		language.set_text("view.error/uri/unknownSchem.label","Meow!");
+		language.set_text("view.error/uri/unknownSchem.sublabel","");
 		//done
 		super_registry.store("localization.translation.english",language);
 		var multiplexer = (super_registry.retrieve("localization.translation") as Dragonstone.Registry.TranslationMultiplexerRegistry);

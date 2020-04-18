@@ -15,17 +15,16 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public Dragonstone.Registry.TranslationRegistry translation;
 	private Gtk.Window parent_window;
 	private int locked = 0;
-	//a label widget for adding to tabs in a notebook
 	public string title = "New Tab";
-	public bool loading = false; //changeing this counts as a title change
-	public bool prefer_source_view = false;
+	public bool loading = false; //changing this counts as a title change
+	public Dragonstone.Util.Flaglist view_flags = new Dragonstone.Util.Flaglist();
+	public Dragonstone.Registry.ViewRegistryViewChooser view_chooser;
 	public signal void on_cleanup();
 	public signal void on_title_change();
 	
 	private string resource_user_id = "tab_"+GLib.Uuid.string_random();
 	
 	private Dragonstone.Registry.ViewRegistry view_registry;
-	private Dragonstone.Registry.ViewRegistry source_view_registry;
 	
 	public Tab(Dragonstone.ResourceStore store, string uri, Gtk.Window parent_window, Dragonstone.SuperRegistry super_registry){
 		Object(
@@ -33,11 +32,11 @@ public class Dragonstone.Tab : Gtk.Bin {
 			super_registry: super_registry
 		);
 		this.view_registry = (super_registry.retrieve("gtk.views") as Dragonstone.Registry.ViewRegistry);
-		this.source_view_registry = (super_registry.retrieve("gtk.source_views") as Dragonstone.Registry.ViewRegistry);
 		if (this.view_registry == null){
 			print("[tab] No view registry in super registry, falling back to default configuration!\n");
 			this.view_registry = new Dragonstone.Registry.ViewRegistry.default_configuration();
 		}
+		view_chooser = new Dragonstone.Registry.ViewRegistryViewChooser(view_registry);
 		this.translation = (super_registry.retrieve("localization.translation") as Dragonstone.Registry.TranslationRegistry);
 		if (this.translation == null){
 			print("[tab] No translation resgistry found, falling back to an empty one!\n");
@@ -131,18 +130,20 @@ public class Dragonstone.Tab : Gtk.Bin {
 			view.cleanup();
 			remove(view);
 		}
-		view = view_registry.get_view(request.status);
+		string? mimetype = null;
+		if(request.resource != null){
+			mimetype = request.resource.mimetype;
+		}
+		print("choose\n");
+		view_chooser.choose(request.status,mimetype,uri,view_flags.flags);
+		print("create view\n");
+		view = view_registry.get_view(view_chooser.best_match);
+		print("done\n");
 		//choose a new one
 		if (request.status == "success"){
 			request.resource.increment_users(resource_user_id); //TODO: move somewhere else
 			print(@"STATIC/DYNAMIC $(request.resource.mimetype)\n");
 			setTitle(uri);
-			if (prefer_source_view && source_view_registry != null){
-				view = source_view_registry.get_view(request.status,request.resource.mimetype);
-			}
-			if (view == null){
-				view = view_registry.get_view(request.status,request.resource.mimetype);
-			}
 		}else if(request.status == "loading" || request.status == "connecting" || request.status == "routing"){
 			setTitle(uri,true);
 			//view = new Dragonstone.View.Loading();

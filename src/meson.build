@@ -10,6 +10,7 @@ executable(
 	'request.vala',
 	'resource.vala',
 	'util/connectionHelper.vala',
+	'util/flaglist.vala',
 	'util/intparser.vala',
 	'util/messageViewFactory.vala',
 	'util/resourceFileHelper.vala',
