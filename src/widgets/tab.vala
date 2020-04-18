@@ -134,11 +134,8 @@ public class Dragonstone.Tab : Gtk.Bin {
 		if(request.resource != null){
 			mimetype = request.resource.mimetype;
 		}
-		print("choose\n");
 		view_chooser.choose(request.status,mimetype,uri,view_flags.flags);
-		print("create view\n");
 		view = view_registry.get_view(view_chooser.best_match);
-		print("done\n");
 		//choose a new one
 		if (request.status == "success"){
 			request.resource.increment_users(resource_user_id); //TODO: move somewhere else
