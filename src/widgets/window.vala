@@ -141,6 +141,11 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 			return true;
 		});
 		show_all();
+		
+		this.key_press_event.connect((event) => {
+			//print(@"Key pressed! $(event.keyval) $(event.str) $(event.is_modifier)\n");
+			return false;
+		});
 	}
 	
 	//fills out the destination with the default address
