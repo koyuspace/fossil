@@ -5,9 +5,10 @@ public class Dragonstone.Startup.Cache.Gtk {
 		var translation = (super_registry.retrieve("localization.translation") as Dragonstone.Registry.TranslationRegistry);
 		if ((view_registry != null) && (cache != null)){
 			print("[startup][cache] setup_views");
-			view_registry.add_view("interactive/cache",() => {
+			view_registry.add_view("dragonstone.cacheview",() => {
 				return new Dragonstone.View.Cache(cache,translation);
 			});
+			view_registry.add_rule(new Dragonstone.Registry.ViewRegistryRule("interactive/cache","dragonstone.cacheview"));
 		}
 	}
 	
