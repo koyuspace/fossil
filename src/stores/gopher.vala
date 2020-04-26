@@ -52,8 +52,12 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 		}
 		if(parsed_uri.path != null){
 			if(parsed_uri.path.has_prefix("/")){
-				query = Uri.unescape_string(parsed_uri.path.substring(2),"\n\r\0");
-				gophertype = parsed_uri.path.get(1);
+				if (parsed_uri.path.length > 2){
+					query = Uri.unescape_string(parsed_uri.path.substring(2),"\n\r\0");
+				}
+				if (parsed_uri.path.length > 1){
+					gophertype = parsed_uri.path.get(1);
+				}
 			}
 		}
 		
