@@ -7,7 +7,8 @@ public class Dragonstone.Tab : Gtk.Bin {
 		}}
 	public Dragonstone.IView view;
 	public Dragonstone.Request request;
-	public Dragonstone.ResourceStore store { get; set; }
+	//public Dragonstone.ResourceStore store { get; set; }
+	public Dragonstone.ISession session { get; set; }
 	public signal void uriChanged(string uri);
 	public Dragonstone.Util.Stack<string> history = new Dragonstone.Util.Stack<string>();
 	public Dragonstone.Util.Stack<string> forward = new Dragonstone.Util.Stack<string>();
@@ -28,7 +29,8 @@ public class Dragonstone.Tab : Gtk.Bin {
 	
 	public Tab(Dragonstone.ResourceStore store, string uri, Gtk.Window parent_window, Dragonstone.SuperRegistry super_registry){
 		Object(
-			store: store,
+			session: new Dragonstone.Session.Default(store),
+			//store: store,
 			super_registry: super_registry
 		);
 		this.view_registry = (super_registry.retrieve("gtk.views") as Dragonstone.Registry.ViewRegistry);
@@ -81,24 +83,24 @@ public class Dragonstone.Tab : Gtk.Bin {
 			if (request.resource != null){
 				request.resource.decrement_users(resource_user_id);
 			}
-			request.notify["status"].disconnect(on_status_update);
+			request.status_changed.disconnect(on_status_update);
 		}
 		setTitle(uri,true);
-		request = new Dragonstone.Request(uri,"",reload);
 		var rquri = this.uri;
 		var startoffragment = rquri.index_of_char('#');
 		if(startoffragment > 0){
 			rquri = rquri.substring(0,startoffragment);
 		}
-		store.request(request);
+		request = session.make_request(rquri,reload);
 		if (request != null){
-			request.notify["status"].connect(on_status_update);
+			request.status_changed.connect(on_status_update);
 		}
 		update_view();
 		uriChanged(this.uri);
 	}
 	
-	private void on_status_update(){
+	private void on_status_update(Dragonstone.Request rq){
+		print(@"[tab] on status update $(rq.status) | $(request.status)\n");
 		if(locked>0){ return; }
 		if (request.status.has_prefix("redirect")){ //autoredirect on small changes
 			if ((request.substatus == this.uri+"/" && !this.uri.has_suffix("//")) || (request.substatus+"/" == this.uri && this.uri.has_suffix("/"))){
@@ -201,7 +203,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 			if (request.resource != null){
 				request.resource.decrement_users(resource_user_id);
 			}
-			request.notify["status"].disconnect(on_status_update);
+			request.status_changed.disconnect(on_status_update);
 		}
 		on_cleanup();
 	}
