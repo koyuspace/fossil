@@ -26,8 +26,6 @@ public class Dragonstone.Startup.Gopher.Backend {
 			} else {
 				store = new Dragonstone.Store.Gopher.with_mimeguesser(mimeguesser,gopher_type_registry);
 			}
-			var cache = (super_registry.retrieve("core.stores.cache") as Dragonstone.Cache);
-			store.set_cache(cache);
 			store_registry.add_resource_store("gopher://",store);
 		}
 	}
