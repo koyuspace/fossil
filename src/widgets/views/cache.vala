@@ -2,15 +2,8 @@ public class Dragonstone.View.Cache : Gtk.Bin, Dragonstone.IView {
 	
 	private Dragonstone.Request? request = null;
 	private Dragonstone.Tab? tab = null;
-	Dragonstone.Registry.TranslationRegistry? translation = null;
-	
-	/*
-		Colums:
-		0: uri
-		1: filename
-		2: TTL as text
-		3: # of users as string
-	*/
+	private Dragonstone.Registry.TranslationRegistry? translation = null;
+	private Dragonstone.Widget.CacheView? cacheview = null;
 	
 	public Cache(Dragonstone.Registry.TranslationRegistry? translation){
 		this.translation = translation;
@@ -24,7 +17,8 @@ public class Dragonstone.View.Cache : Gtk.Bin, Dragonstone.IView {
 		var cache = tab.session.get_cache();
 		
 		if (icache != null){
-			add(new Dragonstone.Widget.CacheView(icache,tab,translation));
+			cacheview = new Dragonstone.Widget.CacheView(icache,tab,translation);
+			add(cacheview);
 		} else if (cache != null){
 			add(new Gtk.Label("This session has a cache, but this view currently has no way to show its content"));
 		} else {
@@ -42,7 +36,9 @@ public class Dragonstone.View.Cache : Gtk.Bin, Dragonstone.IView {
 	}
 	
 	public void cleanup(){
-		print("[cache.gtk] cleanup function called!\n");
+		if (cacheview != null){
+			cacheview.cleanup();
+		}
 	}
 	
 	

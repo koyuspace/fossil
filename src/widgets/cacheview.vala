@@ -114,7 +114,9 @@ public class Dragonstone.Widget.CacheView : Gtk.Box {
 		refresh_cache_items();
 		Timeout.add(1000,() => {
 			//print(@"[cache.gtk] refresh [$still_alive]\n");
-			refresh_cache_items();
+			if (still_alive){
+				refresh_cache_items();
+			}
 			return still_alive;
 		});
 	}

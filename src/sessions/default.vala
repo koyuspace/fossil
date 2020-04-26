@@ -24,7 +24,7 @@ public class Dragonstone.Session.Default : Dragonstone.ISession, Object {
 			if (make_request && (!reload)){
 				print("[session.default] checking cache\n");
 				if (cache.can_serve_request(request.uri)){
-					print(@"[switch] Serving from cache!\n");
+					print(@"[session.default] Serving from cache!\n");
 					cache.request(request);
 					return request;
 				}
@@ -42,10 +42,10 @@ public class Dragonstone.Session.Default : Dragonstone.ISession, Object {
 	}
 	
 	private void request_status_changed(Dragonstone.Request outrequest){
-		print(@"[session.default] status for $(outrequest.uri) changed to $(outrequest.status)\n");
+		//print(@"[session.default] status for $(outrequest.uri) changed to $(outrequest.status)\n");
 		bool remove = false;
 		if (outrequest.status == "routing" || outrequest.status == "connecting" || outrequest.status == "loading"){
-			print("[session.default] still working\n");
+			//print("[session.default] still working\n");
 		} else {
 			outrequest.status_changed.disconnect(request_status_changed);
 			outrequest.resource_changed.disconnect(reqest_reource_changed);
@@ -56,7 +56,7 @@ public class Dragonstone.Session.Default : Dragonstone.ISession, Object {
 		}
 		foreach (Dragonstone.Request request in requests) {
 			if (request.uri == outrequest.uri){
-				print("[session.default] setting status on resource\n");
+				//print("[session.default] setting status on resource\n");
 				request.setStatus(outrequest.status,outrequest.substatus);
 				if (remove) {
 					requests.remove(request);
@@ -66,7 +66,7 @@ public class Dragonstone.Session.Default : Dragonstone.ISession, Object {
 	}
 	
 	private void reqest_reource_changed(Dragonstone.Request outrequest){
-		print(@"[session.default] resource for $(outrequest.uri) changed\n");
+		//print(@"[session.default] resource for $(outrequest.uri) changed\n");
 		if (outrequest.resource != null){
 			if (outrequest.resource.valid_until != 0){
 				cache.put_resource(outrequest.resource);
@@ -89,7 +89,6 @@ public class Dragonstone.Session.Default : Dragonstone.ISession, Object {
 	}
 	
 	public override Dragonstone.Cache? get_cache() {
-		print("[session.default] get_cache() called\n");
 		return cache;
 	}
 	
