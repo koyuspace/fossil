@@ -2,6 +2,7 @@ public class Dragonstone.Session.Uncached : Dragonstone.ISession, Object {
 	private Dragonstone.ResourceStore backend;
 	private HashTable<string,Dragonstone.Request> outgoing_requests = new HashTable<string,Dragonstone.Request>(str_hash,str_equal);
 	private List<Dragonstone.Request> requests = new List<Dragonstone.Request>();
+	private string _name = "Uncached";
 	
 	public Uncached(Dragonstone.ResourceStore backend){
 		this.backend = backend;
@@ -67,5 +68,8 @@ public class Dragonstone.Session.Uncached : Dragonstone.ISession, Object {
 	public Dragonstone.ResourceStore? get_default_backend(){
 		return backend;
 	}
+	
+	public void set_name(string name){ _name = name; }
+	public string get_name(){ return _name; }
 	
 }

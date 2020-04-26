@@ -3,18 +3,32 @@ public class Dragonstone.Session.Default : Dragonstone.ISession, Object {
 	private Dragonstone.Store.Cache cache = new Dragonstone.Store.Cache();
 	private HashTable<string,Dragonstone.Request> outgoing_requests = new HashTable<string,Dragonstone.Request>(str_hash,str_equal);
 	private List<Dragonstone.Request> requests = new List<Dragonstone.Request>();
+	private string _name = "Default";
 	
 	public Default(Dragonstone.ResourceStore backend){
 		this.backend = backend;
 	}
 	
 	public Dragonstone.Request make_request(string uri, bool reload=false){
+		if (uri == "about:cache"){
+			var request = new Dragonstone.Request(uri,reload);
+			request.setStatus("interactive/cache");
+			return request;
+		}
 		lock (outgoing_requests) {
 			print(@"[session.default] making request to $uri\n");
 			Dragonstone.Request? request = outgoing_requests.get(uri);
 			bool make_request = request == null;
 			request = new Dragonstone.Request(uri,reload);
 			requests.append(request);
+			if (make_request && (!reload)){
+				print("[session.default] checking cache\n");
+				if (cache.can_serve_request(request.uri)){
+					print(@"[switch] Serving from cache!\n");
+					cache.request(request);
+					return request;
+				}
+			}
 			if (make_request){
 				print("[session.default] making request to outside world\n");
 				var outrequest = new Dragonstone.Request(uri,reload);
@@ -53,6 +67,11 @@ public class Dragonstone.Session.Default : Dragonstone.ISession, Object {
 	
 	private void reqest_reource_changed(Dragonstone.Request outrequest){
 		print(@"[session.default] resource for $(outrequest.uri) changed\n");
+		if (outrequest.resource != null){
+			if (outrequest.resource.valid_until != 0){
+				cache.put_resource(outrequest.resource);
+			}
+		}
 		foreach (Dragonstone.Request request in requests) {
 			if (request.uri == outrequest.uri){
 				request.setResource(outrequest.resource,outrequest.store,outrequest.status,outrequest.substatus);
@@ -72,5 +91,12 @@ public class Dragonstone.Session.Default : Dragonstone.ISession, Object {
 	public Dragonstone.Cache? get_cache() {
 		return cache;
 	}
+	
+	public void erase_cache() {
+		cache.erase();
+	}
+	
+	public void set_name(string name){ _name = name; }
+	public string get_name(){ return _name; }
 	
 }

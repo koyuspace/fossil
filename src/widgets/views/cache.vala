@@ -1,8 +1,8 @@
 public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 	
-	private Dragonstone.Request request = null;
-	private Dragonstone.Tab tab = null;
-	private Dragonstone.Store.Cache cache;
+	private Dragonstone.Request? request = null;
+	private Dragonstone.Tab? tab = null;
+	private Dragonstone.Store.Cache? cache = null;
 	private Gtk.ListStore liststore = new Gtk.ListStore(4,typeof(string),typeof(string),typeof(string),typeof(string));
 	private HashTable<string,Gtk.TreeIter?> displayed_uris = new HashTable<string,Gtk.TreeIter?>(str_hash, str_equal);
 	private Gtk.TreeModelFilter filterstore;
@@ -24,7 +24,7 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 		3: # of users as string
 	*/
 	
-	public Cache(Dragonstone.Store.Cache cache, Dragonstone.Registry.TranslationRegistry? itranslation){
+	public Cache(Dragonstone.Registry.TranslationRegistry? itranslation){
 		var translation = itranslation;
 		if(translation == null) {
 			var language = new Dragonstone.Registry.TranslationLanguageRegistry();
@@ -42,7 +42,6 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 		}
 		this.translation_forever = translation.localize("view.interactive/cache.duration.infinite");
 		this.translation_over_a_year = translation.localize("view.interactive/cache.duration.over_a_year");
-		this.cache = cache;
 		//init gui
 		expand = true;
 		orientation = Gtk.Orientation.VERTICAL;
@@ -53,7 +52,9 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 		erasebutton.get_style_context().add_class("destructive-action");
 		actionbar.pack_end(erasebutton);
 		erasebutton.clicked.connect(() => {
-			cache.erase();
+			if (cache != null){
+				cache.erase();
+			}
 		});
 		//search_entry
 		search_entry = new Gtk.Entry();
@@ -109,7 +110,6 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 		//show all
 		show_all();
 		controls.visible = false;
-		refresh_cache_items();
 		Timeout.add(1000,() => {
 			//print(@"[cache.gtk] refresh [$still_alive]\n");
 			refresh_cache_items();
@@ -118,6 +118,7 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 	}
 	
 	private void refresh_cache_items(){
+		if (cache == null){ return; }
 		//update existing
 		foreach (string uri in this.displayed_uris.get_keys()){
 			var resource = this.cache.cached_resources.get(uri);
@@ -251,7 +252,8 @@ public class Dragonstone.View.Cache : Gtk.Box, Dragonstone.IView {
 		if (!(request.status == "interactive/cache")) {return false;}
 		this.request = request;
 		this.tab = tab;
-		return true;
+		this.cache = tab.session.get_cache() as Dragonstone.Store.Cache;
+		return this.cache != null;
 	}
 	
 	public bool canHandleCurrentResource(){

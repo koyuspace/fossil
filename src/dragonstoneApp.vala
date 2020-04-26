@@ -14,6 +14,7 @@ public class Dragonstone.Application : Gtk.Application {
 		super_registry.store("core.mimeguesser",new Dragonstone.Registry.MimetypeGuesser.default_configuration());
 		super_registry.store("core.stores",new Dragonstone.Registry.StoreRegistry.default_configuration());
 		super_registry.store("core.uri_autoprefixer",new Dragonstone.Registry.UriAutoprefix());
+		super_registry.store("core.sessions",new Dragonstone.Registry.SessionRegistry());
 		//Initalize Cache
 		//Dragonstone.Startup.Cache.Backend.setup_store(super_registry); //register before switch
 		Dragonstone.Startup.About.Backend.setup_store(super_registry);
@@ -36,6 +37,8 @@ public class Dragonstone.Application : Gtk.Application {
 		Dragonstone.Startup.Finger.Backend.setup_store(super_registry);
 		Dragonstone.Startup.Finger.Backend.setup_uri_autocompletion(super_registry);
 		Dragonstone.Startup.StoreSwitch.setup_store(super_registry);
+		//Initalize sessions
+		Dragonstone.Startup.Sessions.register_core_sessions(super_registry);
 		//Initalize localization
 		Dragonstone.Startup.LocalizationRegistry.setup_translation_registry(super_registry);
 		Dragonstone.Startup.Localization.English.setup_language(super_registry);
@@ -62,6 +65,8 @@ public class Dragonstone.Application : Gtk.Application {
 	protected void on_shutdown() {
 		var cache = (super_registry.retrieve("core.stores.cache") as Dragonstone.Cache);
 		if (cache != null){ cache.erase(); }
+		var sessions = (super_registry.retrieve("core.sessions") as Dragonstone.Registry.SessionRegistry);
+		if (sessions != null){ sessions.erase_all_caches(); }
 	}
 	
 	private void build_window() {

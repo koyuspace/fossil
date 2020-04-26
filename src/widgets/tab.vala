@@ -7,7 +7,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		}}
 	public Dragonstone.IView view;
 	public Dragonstone.Request request;
-	//public Dragonstone.ResourceStore store { get; set; }
+	public Dragonstone.Registry.SessionRegistry session_registry { get; set; }
 	public Dragonstone.ISession session { get; set; }
 	public signal void uriChanged(string uri);
 	public Dragonstone.Util.Stack<string> history = new Dragonstone.Util.Stack<string>();
@@ -27,12 +27,21 @@ public class Dragonstone.Tab : Gtk.Bin {
 	
 	private Dragonstone.Registry.ViewRegistry view_registry;
 	
-	public Tab(Dragonstone.ResourceStore store, string uri, Gtk.Window parent_window, Dragonstone.SuperRegistry super_registry){
+	public Tab(string session_id, string uri, Gtk.Window parent_window, Dragonstone.SuperRegistry super_registry){
 		Object(
-			session: new Dragonstone.Session.Default(store),
 			//store: store,
 			super_registry: super_registry
 		);
+		this.session_registry = (super_registry.retrieve("core.sessions") as Dragonstone.Registry.SessionRegistry);
+		if (this.session_registry == null){
+			print("[tab][error]No sessionregistry found in spplyed superregistry, falling back to an empty one\n");
+			this.session_registry = new Dragonstone.Registry.SessionRegistry();
+		}
+		this.session = this.session_registry.get_session_by_id(session_id);
+		if (this.session == null){
+			print("[tab][error]Session not found in session registry, falling back to dummy session");
+			this.session = new Dragonstone.Session.Dummy();
+		}
 		this.view_registry = (super_registry.retrieve("gtk.views") as Dragonstone.Registry.ViewRegistry);
 		if (this.view_registry == null){
 			print("[tab] No view registry in super registry, falling back to default configuration!\n");
