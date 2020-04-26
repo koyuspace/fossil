@@ -5,11 +5,13 @@ class Dragonstone.Store.Switch : Object, Dragonstone.ResourceStore {
 	private Dragonstone.Cache? cache = null;
 	//private List<Dragonstone.Request> hooked_requests = new Listy<Dragonstone.Request>();
 	
-	public Switch(string cacheDirectory,Dragonstone.Registry.StoreRegistry storeRegistry,Dragonstone.Cache? cache = null){
+	public Switch(string? cacheDirectory,Dragonstone.Registry.StoreRegistry storeRegistry,Dragonstone.Cache? cache = null){
 		this.cache = cache;
 		this.storeRegistry = storeRegistry;
-		this.cacheDirectory = cacheDirectory;
-		GLib.DirUtils.create_with_parents(this.cacheDirectory,16832);
+		if (cacheDirectory != null){
+			this.cacheDirectory = cacheDirectory;
+			GLib.DirUtils.create_with_parents(this.cacheDirectory,16832);
+		}
 	}
 	
 	public Switch.default_configuration(){
