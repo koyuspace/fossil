@@ -132,6 +132,16 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 			headerbar.visible = true;
 			return true;
 		});
+		Gtk.accelerator_parse("F7",out key,out modifiers);
+		accelerator_group.connect(key,modifiers,Gtk.AccelFlags.VISIBLE,() => {
+			headerbar.current_tab.set_tab_session("core.uncached");
+			return true;
+		});
+		Gtk.accelerator_parse("F6",out key,out modifiers);
+		accelerator_group.connect(key,modifiers,Gtk.AccelFlags.VISIBLE,() => {
+			headerbar.current_tab.set_tab_session("core.default");
+			return true;
+		});
 		show_all();
 		
 		this.key_press_event.connect((event) => {

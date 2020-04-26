@@ -88,7 +88,8 @@ public class Dragonstone.Session.Default : Dragonstone.ISession, Object {
 		return backend;
 	}
 	
-	public Dragonstone.Cache? get_cache() {
+	public override Dragonstone.Cache? get_cache() {
+		print("[session.default] get_cache() called\n");
 		return cache;
 	}
 	

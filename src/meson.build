@@ -54,6 +54,7 @@ executable(
 	'startup/localization.english.vala',
 	'startup/sessions.vala',
 	'startup/store_switch.vala',
+	'widgets/cacheview.vala',
 	'widgets/menuEntrys.vala',
 	'widgets/window.vala',
 	'widgets/headerBar.vala',

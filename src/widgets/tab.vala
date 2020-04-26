@@ -189,6 +189,14 @@ public class Dragonstone.Tab : Gtk.Bin {
 		parent_window = window;
 	}
 	
+	public bool set_tab_session(string session_id){
+		var session = session_registry.get_session_by_id(session_id);
+		if (session == null) { return false; }
+		this.session = session;
+		load_uri(_uri);
+		return true;
+	}
+	
 	public void close(){
 		cleanup();
 		var window = (parent_window as Dragonstone.Window);
