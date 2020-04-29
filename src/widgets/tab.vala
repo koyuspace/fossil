@@ -7,7 +7,8 @@ public class Dragonstone.Tab : Gtk.Bin {
 		}}
 	public Dragonstone.IView view;
 	public Dragonstone.Request request;
-	public Dragonstone.ResourceStore store { get; set; }
+	public Dragonstone.Registry.SessionRegistry session_registry { get; set; }
+	public Dragonstone.ISession session { get; set; }
 	public signal void uriChanged(string uri);
 	public Dragonstone.Util.Stack<string> history = new Dragonstone.Util.Stack<string>();
 	public Dragonstone.Util.Stack<string> forward = new Dragonstone.Util.Stack<string>();
@@ -26,11 +27,21 @@ public class Dragonstone.Tab : Gtk.Bin {
 	
 	private Dragonstone.Registry.ViewRegistry view_registry;
 	
-	public Tab(Dragonstone.ResourceStore store, string uri, Gtk.Window parent_window, Dragonstone.SuperRegistry super_registry){
+	public Tab(string session_id, string uri, Gtk.Window parent_window, Dragonstone.SuperRegistry super_registry){
 		Object(
-			store: store,
+			//store: store,
 			super_registry: super_registry
 		);
+		this.session_registry = (super_registry.retrieve("core.sessions") as Dragonstone.Registry.SessionRegistry);
+		if (this.session_registry == null){
+			print("[tab][error]No sessionregistry found in spplyed superregistry, falling back to an empty one\n");
+			this.session_registry = new Dragonstone.Registry.SessionRegistry();
+		}
+		this.session = this.session_registry.get_session_by_id(session_id);
+		if (this.session == null){
+			print("[tab][error]Session not found in session registry, falling back to dummy session");
+			this.session = new Dragonstone.Session.Dummy();
+		}
 		this.view_registry = (super_registry.retrieve("gtk.views") as Dragonstone.Registry.ViewRegistry);
 		if (this.view_registry == null){
 			print("[tab] No view registry in super registry, falling back to default configuration!\n");
@@ -81,24 +92,24 @@ public class Dragonstone.Tab : Gtk.Bin {
 			if (request.resource != null){
 				request.resource.decrement_users(resource_user_id);
 			}
-			request.notify["status"].disconnect(on_status_update);
+			request.status_changed.disconnect(on_status_update);
 		}
 		setTitle(uri,true);
-		request = new Dragonstone.Request(uri,"",reload);
 		var rquri = this.uri;
 		var startoffragment = rquri.index_of_char('#');
 		if(startoffragment > 0){
 			rquri = rquri.substring(0,startoffragment);
 		}
-		store.request(request);
+		request = session.make_request(rquri,reload);
 		if (request != null){
-			request.notify["status"].connect(on_status_update);
+			request.status_changed.connect(on_status_update);
 		}
 		update_view();
 		uriChanged(this.uri);
 	}
 	
-	private void on_status_update(){
+	private void on_status_update(Dragonstone.Request rq){
+		print(@"[tab] on status update $(rq.status) | $(request.status)\n");
 		if(locked>0){ return; }
 		if (request.status.has_prefix("redirect")){ //autoredirect on small changes
 			if ((request.substatus == this.uri+"/" && !this.uri.has_suffix("//")) || (request.substatus+"/" == this.uri && this.uri.has_suffix("/"))){
@@ -178,6 +189,14 @@ public class Dragonstone.Tab : Gtk.Bin {
 		parent_window = window;
 	}
 	
+	public bool set_tab_session(string session_id){
+		var session = session_registry.get_session_by_id(session_id);
+		if (session == null) { return false; }
+		this.session = session;
+		load_uri(_uri);
+		return true;
+	}
+	
 	public void close(){
 		cleanup();
 		var window = (parent_window as Dragonstone.Window);
@@ -201,7 +220,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 			if (request.resource != null){
 				request.resource.decrement_users(resource_user_id);
 			}
-			request.notify["status"].disconnect(on_status_update);
+			request.status_changed.disconnect(on_status_update);
 		}
 		on_cleanup();
 	}

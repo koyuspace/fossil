@@ -1,34 +1,38 @@
 public class Dragonstone.Request : Object {
 	//request
 	public string uri { get; protected set; default = null;} //what exactly do you want?
-	public string queryMetadata { get; protected set; default = null;} //here, have a cookie, or a certificate, or a preferend mimetype ... //subject to change
-	public bool reload { get; set; default = false; } //if the resource should not be fetched from cache
+	public bool reload { get; protected set; default = false; } //if the resource should not be fetched from cache
 	//feedback
 	public string cacheId { get; set; default = null; } //use this to request it from the cache
 	public string status { get; protected set; default = "routing";} //how's it going?
 	public string substatus { get; protected set; default = "";} //what?
 	public string store { get; protected set; default = null;} //who processed the request?
 	public Dragonstone.Resource resource { get; protected set; default = null;} //what was the result?
+	public signal void status_changed(Dragonstone.Request request);
+	public signal void resource_changed(Dragonstone.Request request);
 	
+	//subject to change
 	public bool cancelled = false; //set to true to cancel download (no effect if resource was alredy fetched)
 	
-	public Request(string uri, string queryMetadata="", bool reload = false){
+	public Request(string uri, bool reload = false){
 		this.uri = uri;
-		this.queryMetadata = queryMetadata;
 		this.reload = reload;
 	}
 	
 	public void setStatus(string status, string substatus = ""){
+		if (status == null || substatus == null){
+			print(@"[request][error] status or substatus was attempted to be set to null (status==null=$(status==null)|substatus==null=$(substatus==null)) (status was not changed)");
+			return;
+		}
 		this.status = status;
 		this.substatus = substatus;
-		if (status == null || substatus == null){
-			print(@"[request][error] status or substatus was attempted to be set to null (status==null=$(status==null)|substatus==null=$(substatus==null))");
-		}
+		status_changed(this);
 	}
 	
 	public void setResource(Dragonstone.Resource resource, string store, string status = "success", string substatus = ""){
 		this.resource = resource;
 		this.store = store;
+		this.resource_changed(this);
 		this.setStatus(status,substatus);
 	}
 	

@@ -1,13 +1,7 @@
 public class Dragonstone.Store.Finger : Object, Dragonstone.ResourceStore {
 	
-	private Dragonstone.Cache? cache = null;
 	public int32 default_resource_lifetime = 1000*60*10; //10 minutes
 	public Dragonstone.Util.ConnectionHelper connection_helper = new Dragonstone.Util.ConnectionHelper();
-	
-	public void set_cache(Dragonstone.Cache? cache){
-		this.cache = cache;
-		print(@"Setting finger cache null:$(cache == null)\n");
-	}
 	
 	public void request(Dragonstone.Request request,string? filepath = null){
 		if (filepath == null){
@@ -39,7 +33,7 @@ public class Dragonstone.Store.Finger : Object, Dragonstone.ResourceStore {
 		//debugging information
 		print(@"Finger Request:\n  Host:  $host\n  Port:  $port\n  Query: $query\n");
 		var resource = new Dragonstone.Resource(request.uri,filepath,true);
-		var fetcher = new Dragonstone.FingerResourceFetcher(resource,request,host,port,query,"text/plain",cache);
+		var fetcher = new Dragonstone.FingerResourceFetcher(resource,request,host,port,query,"text/plain");
 		new Thread<int>(@"Finger resource fetcher $host:$port [$query]",() => {
 			fetcher.fetchResource(connection_helper, default_resource_lifetime);
 			return 0;
@@ -55,17 +49,15 @@ private class Dragonstone.FingerResourceFetcher : Object {
 	public string mimetype { get; construct; }
 	public Dragonstone.Resource resource { get; construct; }
 	public Dragonstone.Request request { get; construct; }
-	public Dragonstone.Cache? cache { get; construct; }
 	
-	public FingerResourceFetcher(Dragonstone.Resource resource,Dragonstone.Request request,string host,uint16 port,string query,string mimetype, Dragonstone.Cache? cache = null){
+	public FingerResourceFetcher(Dragonstone.Resource resource,Dragonstone.Request request,string host,uint16 port,string query,string mimetype){
 		Object(
 			resource: resource,
 			request: request,
 			host: host,
 			port: port,
 			query: query,
-			mimetype: mimetype,
-			cache: cache
+			mimetype: mimetype
 		);
 	}
 	
@@ -96,7 +88,6 @@ private class Dragonstone.FingerResourceFetcher : Object {
 			helper.close();
 			resource.valid_until = resource.timestamp+default_resource_lifetime;
 			request.setResource(resource,"finger");
-			if (cache != null){cache.put_resource(resource);}
 			return;
 		} catch (Error e) {
 				request.setStatus("error/gibberish");

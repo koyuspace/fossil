@@ -2,7 +2,6 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 	
 	private Dragonstone.Registry.MimetypeGuesser mimeguesser;
 	private Dragonstone.Registry.GopherTypeRegistry type_registry;
-	private Dragonstone.Cache? cache = null;
 	public int32 default_resource_lifetime = 1000*60*10; //10 minutes
 	public Dragonstone.Util.ConnectionHelper connection_helper = new Dragonstone.Util.ConnectionHelper();
 	
@@ -18,11 +17,6 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 		} else {
 			this.type_registry = new Dragonstone.Registry.GopherTypeRegistry.default_configuration();
 		}
-	}
-	
-	public void set_cache(Dragonstone.Cache? cache){
-		this.cache = cache;
-		print(@"Setting gopher cache null:$(cache == null)\n");
 	}
 	
 	public void request(Dragonstone.Request request,string? filepath = null){
@@ -52,8 +46,12 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 		}
 		if(parsed_uri.path != null){
 			if(parsed_uri.path.has_prefix("/")){
-				query = Uri.unescape_string(parsed_uri.path.substring(2),"\n\r\0");
-				gophertype = parsed_uri.path.get(1);
+				if (parsed_uri.path.length > 2){
+					query = Uri.unescape_string(parsed_uri.path.substring(2),"\n\r\0");
+				}
+				if (parsed_uri.path.length > 1){
+					gophertype = parsed_uri.path.get(1);
+				}
 			}
 		}
 		
@@ -72,7 +70,7 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 		//debugging information
 		print(@"Gopher Request:\n  Host:  $host\n  Port:  $port\n  Type:  $gophertype\n  Query: $query\n");
 		var resource = new Dragonstone.Resource(request.uri,filepath,true);
-		var fetcher = new Dragonstone.GopherResourceFetcher(resource,request,host,port,query,mimetype,cache);
+		var fetcher = new Dragonstone.GopherResourceFetcher(resource,request,host,port,query,mimetype);
 		new Thread<int>(@"Gopher resource fetcher $host:$port [$gophertype|$query]",() => {
 			fetcher.fetchResource(connection_helper, default_resource_lifetime);
 			return 0;
@@ -88,17 +86,15 @@ private class Dragonstone.GopherResourceFetcher : Object {
 	public string mimetype { get; construct; }
 	public Dragonstone.Resource resource { get; construct; }
 	public Dragonstone.Request request { get; construct; }
-	public Dragonstone.Cache? cache { get; construct; }
 	
-	public GopherResourceFetcher(Dragonstone.Resource resource,Dragonstone.Request request,string host,uint16 port,string query,string mimetype, Dragonstone.Cache? cache = null){
+	public GopherResourceFetcher(Dragonstone.Resource resource,Dragonstone.Request request,string host,uint16 port,string query,string mimetype){
 		Object(
 			resource: resource,
 			request: request,
 			host: host,
 			port: port,
 			query: query,
-			mimetype: mimetype,
-			cache: cache
+			mimetype: mimetype
 		);
 	}
 	
@@ -146,7 +142,6 @@ private class Dragonstone.GopherResourceFetcher : Object {
 			helper.close();
 			resource.valid_until = resource.timestamp+default_resource_lifetime;
 			request.setResource(resource,"gopher");
-			if (cache != null){cache.put_resource(resource);}
 			return;
 		} catch (Error e) {
 				request.setStatus("error/gibberish");

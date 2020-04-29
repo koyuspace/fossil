@@ -2,7 +2,6 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 	
 	public GLib.Settings settings;
 	public Gtk.Notebook tabs;
-	public Dragonstone.ResourceStore store;	
 	public Dragonstone.SuperRegistry super_registry { get; construct; }
 	public Dragonstone.Registry.TranslationRegistry translation;
 	private Dragonstone.Application app;
@@ -80,13 +79,6 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		
 		add(tabs);
 		
-		//initalize resource store
-		store = (super_registry.retrieve("core.stores.main") as Dragonstone.ResourceStore);
-		if (store == null) {
-			print("[window] no store in super registry at core.stores.main, fallung back to switch store default configuration\n");
-			store = new Dragonstone.Store.Switch.default_configuration();
-		}
-		
 		//header bar
 		var headerbar = new Dragonstone.HeaderBar(this);
 		set_titlebar (headerbar);
@@ -140,6 +132,16 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 			headerbar.visible = true;
 			return true;
 		});
+		Gtk.accelerator_parse("F7",out key,out modifiers);
+		accelerator_group.connect(key,modifiers,Gtk.AccelFlags.VISIBLE,() => {
+			headerbar.current_tab.set_tab_session("core.uncached");
+			return true;
+		});
+		Gtk.accelerator_parse("F6",out key,out modifiers);
+		accelerator_group.connect(key,modifiers,Gtk.AccelFlags.VISIBLE,() => {
+			headerbar.current_tab.set_tab_session("core.default");
+			return true;
+		});
 		show_all();
 		
 		this.key_press_event.connect((event) => {
@@ -154,7 +156,7 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 	}
 	
 	public void add_tab(string uri){
-		add_tab_object(new Dragonstone.Tab(store,uri,this,super_registry));
+		add_tab_object(new Dragonstone.Tab("core.default",uri,this,super_registry));
 	}
 	
 	public void add_tab_object(Dragonstone.Tab tab){
