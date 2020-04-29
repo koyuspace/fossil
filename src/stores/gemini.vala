@@ -129,7 +129,7 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 				}
 			}catch(Error e){
 				if (e.message == "TLS connection closed unexpectedly") {
-					request.setStatus("error/gibberish");
+					request.setStatus("error/gibberish","#TLS connection closed unexpectedly");
 				} else {
 					request.setStatus("error/internalError","Something with binary gemini:\n"+e.message);
 				}
