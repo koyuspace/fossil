@@ -35,10 +35,12 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("view.directory.path.placeholder","Relative filepath to root uri");
 		language.set_text("view.directory.column.uri.head","Uri");
 		language.set_text("view.directory.column.filename.head","Filename");
-		//Downloaded
+		//Download
 		language.set_text("view.dragonstone.download.title","Downloaded!");
 		language.set_text("view.dragonstone.download.save_button.label","Save");
 		language.set_text("view.dragonstone.download.open_button.label","Open in external viewer");
+		//Redirect
+		language.set_text("view.dragonstone.redirect.title","Redirect to");
 		//messages
 		language.set_text("view.error/internal.label","Hell just broke loose");
 		language.set_text("view.error/internal.sublabel","or maybe it was just a tiny bug?\nPlease report to the developer!");

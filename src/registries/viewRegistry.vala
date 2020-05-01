@@ -30,7 +30,7 @@ public class Dragonstone.Registry.ViewRegistry : Object {
 		}
 		print(@"$(translator != null)\n");
 		add_view("dragonstone.loading", () => { return new Dragonstone.View.Loading(); });
-		add_view("dragonstone.redirect", () => { return new Dragonstone.View.Redirect();});
+		add_view("dragonstone.redirect", () => { return new Dragonstone.View.Redirect(translator);});
 		var interal_error_view_factory = new Dragonstone.Util.MessageViewFactory("error/internal","dialog-warning-symbolic",translator);
 		add_view("dragonstone.error.internal", interal_error_view_factory.construct_view);
 		var gibberish_error_view_factory = new Dragonstone.Util.MessageViewFactory("error/gibberish","dialog-question-symbolic",translator);
