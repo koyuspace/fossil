@@ -35,7 +35,7 @@ public class Dragonstone.View.Cache : Gtk.Bin, Dragonstone.IView {
 		}
 	}
 	
-	public override void cleanup(){
+	public void cleanup(){
 		if (cacheview != null){
 			cacheview.cleanup();
 		}
