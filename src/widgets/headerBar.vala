@@ -14,6 +14,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 	private Gtk.Button savetodiskbutton;
 	private Gtk.Button downloadbutton;
 	private bool loadButtonReloadMode = false;
+	private bool switching_tab = false;
 	private Gtk.Image reloadIcon = new Gtk.Image.from_icon_name("view-refresh-symbolic",Gtk.IconSize.BUTTON);
 	private Gtk.Image goIcon = new Gtk.Image.from_icon_name("go-jump-symbolic",Gtk.IconSize.BUTTON);
 	public Gtk.Button menubutton = new Gtk.Button.from_icon_name("open-menu-symbolic");
@@ -183,7 +184,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 			}
 		});
 		prefer_source_view_switch.state_set.connect(e => {
-			if (current_tab != null) {
+			if (current_tab != null && !switching_tab) {
 				current_tab.view_flags.set_flag("sourceview",prefer_source_view_switch.state);
 				current_tab.update_view();
 				return false;
@@ -207,12 +208,16 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 	}
 	
 	private void onVisibleTabChanged(Gtk.Widget? tab){
+		switching_tab = true;
 		//disconnect old signals
 		if (current_tab != null) {
 			current_tab.uriChanged.disconnect(onUriChanged);
 		}
 		//set new tab
-		if (!(tab is Dragonstone.Tab || tab == null)) { return; }
+		if (!(tab is Dragonstone.Tab || tab == null)) {
+			switching_tab = false;
+			return;
+		}
 		current_tab = tab as Dragonstone.Tab;
 		view_chooser.use_tab(current_tab);
 		if (current_tab != null) {
@@ -220,10 +225,11 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 			current_tab.uriChanged.connect(onUriChanged);
 			//everything else
 			onUriChanged(current_tab.uri);
-			prefer_source_view_switch.state = current_tab.view_flags.has_flag("sourceview");
+			prefer_source_view_switch.active = current_tab.view_flags.has_flag("sourceview");
 		} else {
 			onUriChanged("");
 		}
+		switching_tab = false;
 	}
 	
 	private void onUriChanged(string uri){

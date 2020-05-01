@@ -2,6 +2,7 @@ public class Dragonstone.Widget.ViewChooser : Gtk.Bin {
 	private Gtk.ComboBoxText combo_box = new Gtk.ComboBoxText();
 	
 	private Dragonstone.Tab? tab = null;
+	private bool tab_changing = false;
 	
 	public ViewChooser(){
 		add(combo_box);
@@ -10,6 +11,7 @@ public class Dragonstone.Widget.ViewChooser : Gtk.Bin {
 	}
 	
 	public void use_tab(Dragonstone.Tab? tab){
+		tab_changing = true;
 		if (this.tab != null){
 			this.tab.view_chooser.scores_changed.disconnect(repopulate);
 			this.tab.on_view_update.disconnect(update_active_id);
@@ -22,6 +24,7 @@ public class Dragonstone.Widget.ViewChooser : Gtk.Bin {
 		} else {
 			combo_box.sensitive = false;
 		}
+		tab_changing = false;
 	}
 	
 	public void repopulate(){
@@ -44,7 +47,7 @@ public class Dragonstone.Widget.ViewChooser : Gtk.Bin {
 	}
 	
 	private void on_change(){
-		if (this.tab != null){
+		if (this.tab != null && !tab_changing){
 			string? id = combo_box.get_active_id();
 			if (id != null){
 				this.tab.update_view(id);
