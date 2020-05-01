@@ -2,6 +2,7 @@ public class Dragonstone.Widget.ViewChooser : Gtk.ComboBoxText {
 	
 	private Dragonstone.Tab? tab = null;
 	private bool tab_changing = false;
+	private bool id_changing = false;
 	
 	public ViewChooser(){
 		this.sensitive = false;
@@ -40,15 +41,17 @@ public class Dragonstone.Widget.ViewChooser : Gtk.ComboBoxText {
 	
 	public void update_active_id(){
 		if (this.tab != null){
+			id_changing = true;
 			this.set_active_id(this.tab.current_view_id);
+			id_changing = false;
 		}
 	}
 	
 	private void on_change(){
-		if (this.tab != null && !tab_changing){
+		if (this.tab != null && !tab_changing && !id_changing){
 			string? id = this.get_active_id();
 			if (id != null){
-				this.tab.update_view(id);
+				this.tab.update_view(id,"view chooser");
 			}
 		}
 	}

@@ -110,7 +110,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		if (request != null){
 			request.status_changed.connect(on_status_update);
 		}
-		update_view();
+		update_view(null,"load_uri");
 		uriChanged(this.uri);
 	}
 	
@@ -133,16 +133,16 @@ public class Dragonstone.Tab : Gtk.Bin {
 		if(locked>0){ return; }
 		print(@"check view -- $(request.status) -- $(request.substatus) --\n");
 		if (!view.canHandleCurrentResource() ) {
-			update_view();
+			update_view(null,"check_view");
 		}
 	}
 	
 	//update the view either beacause of a new Resource or beacause of a change of the current reource
 	//or update the view with a chosen one
-	public void update_view(string? view_id = null){
+	public void update_view(string? view_id = null,string reason = ""){
 		if(locked>1){ return; }
 		lock(current_view_id){
-			print(@"[tab] UPDATING view! [$(request.status)]\n");
+			print(@"[tab] UPDATING view! [$(request.status)] ($reason)\n");
 			Dragonstone.IView view;
 			if (view_id == null) {
 				string? mimetype = null;
@@ -162,12 +162,14 @@ public class Dragonstone.Tab : Gtk.Bin {
 				setTitle(uri);
 			}else if(request.status == "loading" || request.status == "connecting" || request.status == "routing"){
 				setTitle(uri,true);
-				//view = new Dragonstone.View.Loading();
 			}else if(request.status.has_prefix("redirect")){
 				setTitle(uri);
 				bool autoredirect = false;
 				if (autoredirect){
-					redirect(request.substatus);
+					Timeout.add(0,() => {
+						redirect(request.substatus);
+						return false;
+					},Priority.HIGH);
 				}
 			} else {
 				setTitle(uri);
@@ -195,15 +197,15 @@ public class Dragonstone.Tab : Gtk.Bin {
 		}
 	}
 	
-	private void use_view(owned Dragonstone.IView view){
+	private void use_view(owned Dragonstone.IView new_view){
 		lock(this.view){
 			//remove the old view
 			if (this.view is Gtk.Widget){
 				print("[tab] cleaning up old view\n");
-				view.cleanup();
+				this.view.cleanup();
 				remove(this.view);
 			}
-			this.view = (owned) view;
+			this.view = (owned) new_view;
 			add(this.view);
 		}
 	}
@@ -215,8 +217,10 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public bool set_tab_session(string session_id){
 		var session = session_registry.get_session_by_id(session_id);
 		if (session == null) { return false; }
+		print(@"[tab] using session $session_id\n");
+		this.current_session_id = session_id;
 		this.session = session;
-		load_uri(_uri);
+		reload();
 		return true;
 	}
 	
@@ -232,7 +236,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		if(locked>0){ return; }
 		locked++;
 		if (view != null){
-			print("[tab] cleaning up old view\n");
+			print("[tab] cleaning up old view - cleanup()\n");
 			view.cleanup();
 			remove(view);
 			view = null;

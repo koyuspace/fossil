@@ -46,7 +46,7 @@ public class Dragonstone.Widget.SessionChooser : Gtk.ComboBoxText {
 	private void on_change(){
 		if (this.tab != null && !tab_changing){
 			string? id = this.get_active_id();
-			if (id != null){
+			if (id != null && id != tab.current_session_id){
 				this.tab.set_tab_session(id);
 			}
 		}
