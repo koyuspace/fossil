@@ -17,6 +17,8 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("window.main_menu.close_tab.label","Close tab");
 		language.set_text("window.main_menu.open_uri_externally.label","Open in external browser");
 		language.set_text("window.main_menu.open_file_externally.label","Open in external viewer");
+		language.set_text("window.main_menu.choose_view.tooltip","Choose view");
+		language.set_text("window.main_menu.choose_session.tooltip","Choose a session for this tab");
 		//cache
 		language.set_text("view.interactive/cache.erase_cache","Erase cache");
 		language.set_text("view.interactive/cache.search.placeholder","Search for uri ...");

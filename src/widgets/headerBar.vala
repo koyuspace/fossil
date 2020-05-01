@@ -83,11 +83,15 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		mainmenubox.pack_start(prefer_source_view_widget);
 		//view chooser
 		view_chooser = new Dragonstone.Widget.ViewChooser();
+		var view_chooser_tooltip_localized = parent_window.translation.get_localized_string("window.main_menu.choose_view.tooltip");
+		view_chooser.set_tooltip_text(view_chooser_tooltip_localized);
 		mainmenubox.pack_start(view_chooser);
 		//seperator
 		mainmenubox.pack_start(new Gtk.Separator(Gtk.Orientation.HORIZONTAL));
 		//session chooser
 		session_chooser = new Dragonstone.Widget.SessionChooser();
+		var session_chooser_tooltip_localized = parent_window.translation.get_localized_string("window.main_menu.choose_session.tooltip");
+		session_chooser.set_tooltip_text(session_chooser_tooltip_localized);
 		mainmenubox.pack_start(session_chooser);
 		//seperator
 		mainmenubox.pack_start(new Gtk.Separator(Gtk.Orientation.HORIZONTAL));
