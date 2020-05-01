@@ -50,7 +50,7 @@ public class Dragonstone.Registry.ViewRegistry : Object {
 		add_view("dragonstone.error",() => { return new Dragonstone.View.Error.Generic(); });
 		add_view("dragonstone.text",() => { return new Dragonstone.View.Plaintext(); });
 		add_view("dragonstone.image",() => { return new Dragonstone.View.Image(); });
-		add_view("dragonstone.download",() => { return new Dragonstone.View.Download(); });
+		add_view("dragonstone.download",() => { return new Dragonstone.View.Download(translator); });
 		
 		//add rules
 		add_rule(new ViewRegistryRule("loading","dragonstone.loading"));
@@ -67,6 +67,8 @@ public class Dragonstone.Registry.ViewRegistry : Object {
 		add_rule(new ViewRegistryRule("error/uri/unknownScheme","dragonstone.meow").prefix("cat://"));
 		add_rule(new ViewRegistryRule("error","dragonstone.error"));
 		add_rule(new ViewRegistryRule.resource_view("text/","dragonstone.text").set_flag(ViewRegistryRule.FLAG_SOURCEVIEW));
+		add_rule(new ViewRegistryRule.resource_view("application/xml","dragonstone.text").set_flag(ViewRegistryRule.FLAG_SOURCEVIEW));
+		add_rule(new ViewRegistryRule.resource_view("application/json","dragonstone.text").set_flag(ViewRegistryRule.FLAG_SOURCEVIEW));
 		add_rule(new ViewRegistryRule.resource_view("image/","dragonstone.image"));
 		add_rule(new ViewRegistryRule.resource_view("","dragonstone.download"));
 	}
