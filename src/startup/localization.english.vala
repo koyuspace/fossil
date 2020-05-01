@@ -6,6 +6,8 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("action.cancel","Cancel");
 		language.set_text("action.download","Download");
 		language.set_text("action.open_in_new_tab","Open in new tab");
+		language.set_text("action.open_uri_externally","Open in external browser");
+		language.set_text("action.open_file_externally","Open in external viewer");
 		//Tabs
 		language.set_text("tab.error.no_view.message","I'm sorry, but I don't know how to show that to you\nPlease report this to the developer if this is a release version (or you think this really shouldn't have happened)!");
 		language.set_text("tab.error.wrong_view.message","I think i chose the wrong view ...\nPlease report this to the developer!");
@@ -41,6 +43,8 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("view.dragonstone.download.open_button.label","Open in external viewer");
 		//Redirect
 		language.set_text("view.dragonstone.redirect.title","Redirect to");
+		//linkbutton
+		language.set_text("linkbutton.resource_is_in_cache.tag","[cached]");
 		//messages
 		language.set_text("view.error/internal.label","Hell just broke loose");
 		language.set_text("view.error/internal.sublabel","or maybe it was just a tiny bug?\nPlease report to the developer!");

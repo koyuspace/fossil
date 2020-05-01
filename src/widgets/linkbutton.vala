@@ -121,8 +121,21 @@ public class Dragonstone.Widget.LinkButtonPopover : Gtk.Popover {
 		open_in_new_tab_button.clicked.connect(() => {
 			tab.open_uri_in_new_tab(uri);
 		});
+		var open_externally_button_label = tab.translation.localize("action.open_uri_externally");
+		var open_externally_button = new Gtk.Button.with_label(open_externally_button_label);
+		open_externally_button.set_relief(Gtk.ReliefStyle.NONE);
+		open_externally_button.clicked.connect(() => {
+			Dragonstone.External.open_uri(uri);
+		});
 		box.pack_start(uri_label);
 		box.pack_start(open_in_new_tab_button);
+		box.pack_start(open_externally_button);
+		var cache = tab.session.get_cache();
+		if (cache != null){
+			if(cache.can_serve_request(uri)){
+				box.pack_start(new Gtk.Label(tab.translation.localize("linkbutton.resource_is_in_cache.tag")));
+			}
+		}
 		add(box);
 		this.set_position(Gtk.PositionType.BOTTOM);
 	}
