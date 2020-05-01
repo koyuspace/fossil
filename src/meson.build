@@ -59,6 +59,7 @@ executable(
 	'widgets/window.vala',
 	'widgets/headerBar.vala',
 	'widgets/view.vala',
+	'widgets/viewChooser.vala',
 	'widgets/tab.vala',
 	'widgets/tabHead.vala',
 	'widgets/textContent.vala',

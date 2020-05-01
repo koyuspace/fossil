@@ -10,6 +10,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 	public Gtk.Button backbutton;
 	public Gtk.Button forwardbutton;
 	public Gtk.Button loadbutton;
+	private Dragonstone.Widget.ViewChooser view_chooser;
 	private Gtk.Button savetodiskbutton;
 	private Gtk.Button downloadbutton;
 	private bool loadButtonReloadMode = false;
@@ -70,6 +71,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		savetodiskbutton = new Gtk.ToggleButton();
 		var diskicon = new Gtk.Image.from_icon_name("drive-harddisk-symbolic",Gtk.IconSize.LARGE_TOOLBAR );
 		savetodiskbutton.add(diskicon);
+		savetodiskbutton.sensitive = false;
 		//savetodiskbutton.relief = Gtk.ReliefStyle.NONE;
 		mainmenuhbox.pack_start(savetodiskbutton);
 		//prefer_source_view
@@ -77,6 +79,9 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		var prefer_source_view_widget = new Dragonstone.Widget.MenuSwitch(view_source_localized);
 		prefer_source_view_switch = prefer_source_view_widget.switch_widget;
 		mainmenubox.pack_start(prefer_source_view_widget);
+		//view chooser
+		view_chooser = new Dragonstone.Widget.ViewChooser();
+		mainmenubox.pack_start(view_chooser);
 		//seperator
 		mainmenubox.pack_start(new Gtk.Separator(Gtk.Orientation.HORIZONTAL));
 		//open uri external
@@ -209,6 +214,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		//set new tab
 		if (!(tab is Dragonstone.Tab || tab == null)) { return; }
 		current_tab = tab as Dragonstone.Tab;
+		view_chooser.use_tab(current_tab);
 		if (current_tab != null) {
 			//connect new signal
 			current_tab.uriChanged.connect(onUriChanged);

@@ -22,6 +22,8 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public Dragonstone.Registry.ViewRegistryViewChooser view_chooser;
 	public signal void on_cleanup();
 	public signal void on_title_change();
+	public string current_view_id { get; protected set; }
+	public signal void on_view_update();
 	
 	private string resource_user_id = "tab_"+GLib.Uuid.string_random();
 	
@@ -32,6 +34,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 			//store: store,
 			super_registry: super_registry
 		);
+		this.current_view_id = "";
 		this.session_registry = (super_registry.retrieve("core.sessions") as Dragonstone.Registry.SessionRegistry);
 		if (this.session_registry == null){
 			print("[tab][error]No sessionregistry found in spplyed superregistry, falling back to an empty one\n");
@@ -132,59 +135,75 @@ public class Dragonstone.Tab : Gtk.Bin {
 	}
 	
 	//update the view either beacause of a new Resource or beacause of a change of the current reource
-	public void update_view(){
-		if(locked>0){ return; }
-		print(@"[tab] UPDATING view! [$(request.status)]\n");
-		//remove the old view
-		if (view != null){
-			print("[tab] cleaning up old view\n");
-			view.cleanup();
-			remove(view);
-		}
-		string? mimetype = null;
-		if(request.resource != null){
-			mimetype = request.resource.mimetype;
-		}
-		view_chooser.choose(request.status,mimetype,uri,view_flags.flags);
-		view = view_registry.get_view(view_chooser.best_match);
-		//choose a new one
-		if (request.status == "success"){
-			request.resource.increment_users(resource_user_id); //TODO: move somewhere else
-			print(@"STATIC/DYNAMIC $(request.resource.mimetype)\n");
-			setTitle(uri);
-		}else if(request.status == "loading" || request.status == "connecting" || request.status == "routing"){
-			setTitle(uri,true);
-			//view = new Dragonstone.View.Loading();
-		}else if(request.status.has_prefix("redirect")){
-			setTitle(uri);
-			bool autoredirect = false;
-			if (autoredirect){
-				redirect(request.substatus);
+	//or update the view with a chosen one
+	public void update_view(string? view_id = null){
+		if(locked>1){ return; }
+		lock(current_view_id){
+			print(@"[tab] UPDATING view! [$(request.status)]\n");
+			Dragonstone.IView view;
+			if (view_id == null) {
+				string? mimetype = null;
+				if(request.resource != null){
+					mimetype = request.resource.mimetype;
+				}
+				view_chooser.choose(request.status,mimetype,uri,view_flags.flags);
+				view = view_registry.get_view(view_chooser.best_match);
+				current_view_id = view_chooser.best_match;
+			} else {
+				view = view_registry.get_view(view_id);
+				current_view_id = view_id;
 			}
-		} else {
-			setTitle(uri);
-		}
-		if(request.status.has_prefix("error")){
-			setTitle("🔴 "+uri);
-		}
-		if (view != null){
-			if(view.displayResource(request,this)){
-				add(view);
+			//choose a new one
+			if (request.status == "success"){
+				request.resource.increment_users(resource_user_id); //TODO: move somewhere else
+				setTitle(uri);
+			}else if(request.status == "loading" || request.status == "connecting" || request.status == "routing"){
+				setTitle(uri,true);
+				//view = new Dragonstone.View.Loading();
+			}else if(request.status.has_prefix("redirect")){
+				setTitle(uri);
+				bool autoredirect = false;
+				if (autoredirect){
+					redirect(request.substatus);
+				}
+			} else {
+				setTitle(uri);
+			}
+			if(request.status.has_prefix("error")){
+				setTitle("🔴 "+uri);
+			}
+			if (view != null){
+				if(view.displayResource(request,this)){
+					use_view(view);
+				} else {
+					setTitle("🔴 "+uri);
+					var error_message_localized = translation.get_localized_string("tab.error.wrong_view.message");
+					view = new Dragonstone.View.Label(@"$error_message_localized\n$(request.status)\n$(request.substatus)");
+					use_view(view);
+				}
 			} else {
 				setTitle("🔴 "+uri);
-				var error_message_localized = translation.get_localized_string("tab.error.wrong_view.message");
+				var error_message_localized = translation.get_localized_string("tab.error.no_view.message");
 				view = new Dragonstone.View.Label(@"$error_message_localized\n$(request.status)\n$(request.substatus)");
-				add(view);
+				use_view(view);
 			}
-		} else {
-			setTitle("🔴 "+uri);
-			var error_message_localized = translation.get_localized_string("tab.error.no_view.message");
-			view = new Dragonstone.View.Label(@"$error_message_localized\n$(request.status)\n$(request.substatus)");
-			add(view);
+			show_all();
+			this.on_view_update();
 		}
-		show_all();
 	}
 	
+	private void use_view(owned Dragonstone.IView view){
+		lock(this.view){
+			//remove the old view
+			if (this.view is Gtk.Widget){
+				print("[tab] cleaning up old view\n");
+				view.cleanup();
+				remove(this.view);
+			}
+			this.view = (owned) view;
+			add(this.view);
+		}
+	}
 	public void set_tab_parent_window(Dragonstone.Window window){
 		parent_window = window;
 	}

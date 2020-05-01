@@ -100,6 +100,7 @@ public class Dragonstone.Registry.ViewRegistryViewChooser : Object {
 	public string? best_match = null; //may be overidden by i.e. user choice
 	public HashTable<string,uint32> matches = new HashTable<string,uint32>(str_hash, str_equal);
 	public ViewRegistry registry;
+	public signal void scores_changed();
 	
 	public ViewRegistryViewChooser(ViewRegistry registry){
 		this.registry = registry;
@@ -179,6 +180,7 @@ public class Dragonstone.Registry.ViewRegistryViewChooser : Object {
 			}
 		}
 		this.best_match = best_match;
+		scores_changed();
 	}
 	
 }
