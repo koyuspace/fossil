@@ -33,6 +33,10 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
         this.textview.buffer.text ="The cache file for this resource does not exist!\nReloading the page should help,\nif not please contact the developer!";
         return false;
     	}
+    	var cache = tab.session.get_cache();
+    	if (cache != null){
+    		this.cache = cache;
+    	}
     	try{
 				//parse text
 				unichar lasttype = '\0';
@@ -185,8 +189,6 @@ private class Dragonstone.View.GophertextUnknownItem : Gtk.Bin {
 	}
 }
 
-//gopher://khzae.net/1/poll/1556462960/vote?CARTOON NETWORK WEBSITE GOT HACKED??? NO!!!!!!!!!!!
-// /\ for testing putposes
 private class Dragonstone.View.GophertextIconLabel : Gtk.Bin {
 	public GophertextIconLabel(string text,string icon_name){
 		var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL,4);
