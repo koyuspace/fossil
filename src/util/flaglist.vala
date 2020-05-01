@@ -15,7 +15,7 @@ public class Dragonstone.Util.Flaglist : Object {
 	
 	public void clear_flag(string flag){
 		if (has_flag(flag)){
-			unowned var link = flags.find_custom(flag,(a,b) => {
+			unowned List<string>? link = flags.find_custom(flag,(a,b) => {
 				if(a==b){ return 0; }
 				return 1;
 			});
