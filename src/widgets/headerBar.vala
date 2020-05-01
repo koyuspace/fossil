@@ -11,6 +11,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 	public Gtk.Button forwardbutton;
 	public Gtk.Button loadbutton;
 	private Dragonstone.Widget.ViewChooser view_chooser;
+	private Dragonstone.Widget.SessionChooser session_chooser;
 	private Gtk.Button savetodiskbutton;
 	private Gtk.Button downloadbutton;
 	private bool loadButtonReloadMode = false;
@@ -83,6 +84,11 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		//view chooser
 		view_chooser = new Dragonstone.Widget.ViewChooser();
 		mainmenubox.pack_start(view_chooser);
+		//seperator
+		mainmenubox.pack_start(new Gtk.Separator(Gtk.Orientation.HORIZONTAL));
+		//session chooser
+		session_chooser = new Dragonstone.Widget.SessionChooser();
+		mainmenubox.pack_start(session_chooser);
 		//seperator
 		mainmenubox.pack_start(new Gtk.Separator(Gtk.Orientation.HORIZONTAL));
 		//open uri external
@@ -220,6 +226,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		}
 		current_tab = tab as Dragonstone.Tab;
 		view_chooser.use_tab(current_tab);
+		session_chooser.use_tab(current_tab);
 		if (current_tab != null) {
 			//connect new signal
 			current_tab.uriChanged.connect(onUriChanged);

@@ -1,9 +1,8 @@
-public class Dragonstone.Widget.ViewChooser : Gtk.ComboBoxText {
-	
+public class Dragonstone.Widget.SessionChooser : Gtk.ComboBoxText {
 	private Dragonstone.Tab? tab = null;
 	private bool tab_changing = false;
 	
-	public ViewChooser(){
+	public SessionChooser(){
 		this.sensitive = false;
 		this.changed.connect(on_change);
 	}
@@ -11,14 +10,12 @@ public class Dragonstone.Widget.ViewChooser : Gtk.ComboBoxText {
 	public void use_tab(Dragonstone.Tab? tab){
 		tab_changing = true;
 		if (this.tab != null){
-			this.tab.view_chooser.scores_changed.disconnect(repopulate);
-			this.tab.on_view_change.disconnect(update_active_id);
+			this.tab.on_session_change.disconnect(update_active_id);
 		}
 		this.tab = tab;
 		if (this.tab != null){
 			repopulate();
-			this.tab.view_chooser.scores_changed.connect(repopulate);
-			this.tab.on_view_change.connect(update_active_id);
+			this.tab.on_session_change.connect(update_active_id);
 		} else {
 			this.sensitive = false;
 		}
@@ -29,9 +26,11 @@ public class Dragonstone.Widget.ViewChooser : Gtk.ComboBoxText {
 		this.sensitive = false;
 		this.remove_all();
 		if (this.tab != null){
-			foreach (string key in this.tab.view_chooser.matches.get_keys()){
-				uint32 score = this.tab.view_chooser.matches.get(key);
-				this.append(key,@"$key [$score]");
+			foreach (string key in this.tab.session_registry.sessions.get_keys()){
+				Dragonstone.ISession? session = this.tab.session_registry.sessions.get(key);
+				if (session != null){
+					this.append(key,@"$(session.get_name()) [$key]");
+				}
 			}
 			update_active_id();
 			this.sensitive = true;
@@ -40,7 +39,7 @@ public class Dragonstone.Widget.ViewChooser : Gtk.ComboBoxText {
 	
 	public void update_active_id(){
 		if (this.tab != null){
-			this.set_active_id(this.tab.current_view_id);
+			this.set_active_id(this.tab.current_session_id);
 		}
 	}
 	
@@ -48,7 +47,7 @@ public class Dragonstone.Widget.ViewChooser : Gtk.ComboBoxText {
 		if (this.tab != null && !tab_changing){
 			string? id = this.get_active_id();
 			if (id != null){
-				this.tab.update_view(id);
+				this.tab.set_tab_session(id);
 			}
 		}
 	}

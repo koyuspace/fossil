@@ -8,7 +8,9 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public Dragonstone.IView view;
 	public Dragonstone.Request request;
 	public Dragonstone.Registry.SessionRegistry session_registry { get; set; }
-	public Dragonstone.ISession session { get; set; }
+	public Dragonstone.ISession session { get; protected set; }
+	public string current_session_id { get; protected set; }
+	public signal void on_session_change();	
 	public signal void uriChanged(string uri);
 	public Dragonstone.Util.Stack<string> history = new Dragonstone.Util.Stack<string>();
 	public Dragonstone.Util.Stack<string> forward = new Dragonstone.Util.Stack<string>();
@@ -23,7 +25,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public signal void on_cleanup();
 	public signal void on_title_change();
 	public string current_view_id { get; protected set; }
-	public signal void on_view_update();
+	public signal void on_view_change();
 	
 	private string resource_user_id = "tab_"+GLib.Uuid.string_random();
 	
@@ -35,6 +37,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 			super_registry: super_registry
 		);
 		this.current_view_id = "";
+		this.current_session_id = session_id;
 		this.session_registry = (super_registry.retrieve("core.sessions") as Dragonstone.Registry.SessionRegistry);
 		if (this.session_registry == null){
 			print("[tab][error]No sessionregistry found in spplyed superregistry, falling back to an empty one\n");
@@ -188,7 +191,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 				use_view(view);
 			}
 			show_all();
-			this.on_view_update();
+			this.on_view_change();
 		}
 	}
 	
@@ -204,6 +207,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 			add(this.view);
 		}
 	}
+	
 	public void set_tab_parent_window(Dragonstone.Window window){
 		parent_window = window;
 	}
