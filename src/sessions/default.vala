@@ -4,6 +4,7 @@ public class Dragonstone.Session.Default : Dragonstone.ISession, Object {
 	private HashTable<string,Dragonstone.Request> outgoing_requests = new HashTable<string,Dragonstone.Request>(str_hash,str_equal);
 	private List<Dragonstone.Request> requests = new List<Dragonstone.Request>();
 	private string _name = "Default";
+	public bool enable_request_cache = false;
 	
 	public Default(Dragonstone.ResourceStore backend){
 		this.backend = backend;
@@ -17,10 +18,16 @@ public class Dragonstone.Session.Default : Dragonstone.ISession, Object {
 		}
 		lock (outgoing_requests) {
 			print(@"[session.default] making request to $uri\n");
-			Dragonstone.Request? request = outgoing_requests.get(uri);
-			bool make_request = request == null;
-			request = new Dragonstone.Request(uri,reload);
-			requests.append(request);
+			Dragonstone.Request? request = null;
+			bool make_request = !enable_request_cache;
+			if (enable_request_cache) {			
+				request = outgoing_requests.get(uri);
+				make_request = request == null;
+				request = new Dragonstone.Request(uri,reload);
+				requests.append(request);
+			} else {
+				request = new Dragonstone.Request(uri,reload);
+			}
 			if (make_request && (!reload)){
 				print("[session.default] checking cache\n");
 				if (cache.can_serve_request(request.uri)){
@@ -31,11 +38,16 @@ public class Dragonstone.Session.Default : Dragonstone.ISession, Object {
 			}
 			if (make_request){
 				print("[session.default] making request to outside world\n");
-				var outrequest = new Dragonstone.Request(uri,reload);
-				outrequest.status_changed.connect(request_status_changed);
-				outrequest.resource_changed.connect(reqest_reource_changed);
-				outgoing_requests.set(uri,outrequest);
-				backend.request(outrequest);
+				if (enable_request_cache){
+					var outrequest = new Dragonstone.Request(uri,reload);
+					outrequest.status_changed.connect(request_status_changed);
+					outrequest.resource_changed.connect(reqest_reource_changed);
+					outgoing_requests.set(uri,outrequest);
+					backend.request(outrequest);
+				} else {
+					backend.request(request);
+					request.resource_changed.connect(reqest_reource_changed_cachehook);
+				}
 			}
 			return request;
 		}
@@ -76,6 +88,16 @@ public class Dragonstone.Session.Default : Dragonstone.ISession, Object {
 			if (request.uri == outrequest.uri){
 				request.setResource(outrequest.resource,outrequest.store,outrequest.status,outrequest.substatus);
 			}
+		}
+	}
+	
+	//used when requestcache is diabled
+	private void reqest_reource_changed_cachehook(Dragonstone.Request outrequest){
+		if (outrequest.resource != null){
+			if (outrequest.resource.valid_until != 0){
+				cache.put_resource(outrequest.resource);
+			}
+			outrequest.resource_changed.disconnect(reqest_reource_changed_cachehook);
 		}
 	}
 	
