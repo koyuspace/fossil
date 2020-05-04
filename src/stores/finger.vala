@@ -28,6 +28,10 @@ public class Dragonstone.Store.Finger : Object, Dragonstone.ResourceStore {
 		string query = "";
 		if(parsed_uri.username != null){
 			query = parsed_uri.username;
+		} else if (parsed_uri.path != null) {
+			if(parsed_uri.path.length > 1){
+				query = Uri.unescape_string(parsed_uri.path.substring(1),"\n\r\0");
+			}
 		}
 		
 		//debugging information
