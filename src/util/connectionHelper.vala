@@ -39,7 +39,7 @@ public class Dragonstone.Util.ConnectionHelper : Object {
 				client.timeout = default_timeout;
 				if (use_tls){
 					client.tls = true;
-					client.set_tls_validation_flags(GLib.TlsCertificateFlags.EXPIRED | GLib.TlsCertificateFlags.GENERIC_ERROR | GLib.TlsCertificateFlags.INSECURE | GLib.TlsCertificateFlags.NOT_ACTIVATED | GLib.TlsCertificateFlags.REVOKED);
+					client.set_tls_validation_flags(GLib.TlsCertificateFlags.GENERIC_ERROR | GLib.TlsCertificateFlags.INSECURE | GLib.TlsCertificateFlags.NOT_ACTIVATED | GLib.TlsCertificateFlags.REVOKED); // GLib.TlsCertificateFlags.EXPIRED |
 				}
 				print (@"[connection_helper] Connecting to $address ...\n");
 				var conn = client.connect (address);
