@@ -118,8 +118,11 @@ public class Dragonstone.Tab : Gtk.Bin {
 		print(@"[tab] on status update $(rq.status) | $(request.status)\n");
 		if(locked>0){ return; }
 		if (request.status.has_prefix("redirect")){ //autoredirect on small changes
-			if ((request.substatus == this.uri+"/" && !this.uri.has_suffix("//")) || (request.substatus+"/" == this.uri && this.uri.has_suffix("/"))){
-				redirect(request.substatus);
+			if (((request.substatus == this.uri+"/" || request.substatus == this.uri+"//") && !this.uri.has_suffix("///")) || (request.substatus+"/" == this.uri && this.uri.has_suffix("/"))){
+				Timeout.add(0,() => {
+					redirect(request.substatus);
+					return false;
+				},Priority.HIGH);
 			}
 		}
 		Timeout.add(0,() => {
