@@ -27,6 +27,9 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public string current_view_id { get; protected set; }
 	public signal void on_view_change();
 	
+	private bool redirecting = false;
+	private uint64 redirectcounter = 0;
+	
 	private string resource_user_id = "tab_"+GLib.Uuid.string_random();
 	
 	private Dragonstone.Registry.ViewRegistry view_registry;
@@ -88,6 +91,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		if(locked>0){ return; }
 		var joined_uri = Dragonstone.Util.Uri.join(_uri,uri);
 		if (joined_uri == null){joined_uri = uri;}
+		redirecting = true;
 		load_uri(joined_uri);
 	}
 	
@@ -99,6 +103,12 @@ public class Dragonstone.Tab : Gtk.Bin {
 				request.resource.decrement_users(resource_user_id);
 			}
 			request.status_changed.disconnect(on_status_update);
+		}
+		if (redirecting){
+			redirecting = false;
+			redirectcounter++;
+		} else {
+			redirectcounter = 0;
 		}
 		setTitle(uri,true);
 		var rquri = this.uri;
@@ -115,14 +125,16 @@ public class Dragonstone.Tab : Gtk.Bin {
 	}
 	
 	private void on_status_update(Dragonstone.Request rq){
-		print(@"[tab] on status update $(rq.status) | $(request.status)\n");
+		print(@"[tab] on status udate $(rq.status) | $(request.status) {$redirectcounter}\n");
 		if(locked>0){ return; }
 		if (request.status.has_prefix("redirect")){ //autoredirect on small changes
-			if (((request.substatus == this.uri+"/" || request.substatus == this.uri+"//") && !this.uri.has_suffix("///")) || (request.substatus+"/" == this.uri && this.uri.has_suffix("/"))){
-				Timeout.add(0,() => {
-					redirect(request.substatus);
-					return false;
-				},Priority.HIGH);
+			if (request.substatus == this.uri+"/" || request.substatus == this.uri+"//" || request.substatus+"/" == this.uri){
+				if(redirectcounter < 4){
+					Timeout.add(0,() => {
+						redirect(request.substatus);
+						return false;
+					},Priority.HIGH);
+				}
 			}
 		}
 		Timeout.add(0,() => {
