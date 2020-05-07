@@ -10,6 +10,8 @@ public class Dragonstone.Request : Object {
 	public Dragonstone.Resource resource { get; protected set; default = null;} //what was the result?
 	public signal void status_changed(Dragonstone.Request request);
 	public signal void resource_changed(Dragonstone.Request request);
+	//writing to this table after passing on the request will result in undefined bahaviour
+	public HashTable<string,string> arguments = new HashTable<string,string>(str_hash, str_equal);
 	
 	//subject to change
 	public bool cancelled = false; //set to true to cancel download (no effect if resource was alredy fetched)
