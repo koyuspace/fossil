@@ -1,10 +1,7 @@
 public class Dragonstone.Session.Default : Dragonstone.ISession, Object {
 	private Dragonstone.ResourceStore backend;
 	private Dragonstone.Store.Cache cache = new Dragonstone.Store.Cache();
-	private HashTable<string,Dragonstone.Request> outgoing_requests = new HashTable<string,Dragonstone.Request>(str_hash,str_equal);
-	private List<Dragonstone.Request> requests = new List<Dragonstone.Request>();
 	private string _name = "Default";
-	public bool enable_request_cache = false;
 	
 	public Default(Dragonstone.ResourceStore backend){
 		this.backend = backend;
@@ -16,79 +13,21 @@ public class Dragonstone.Session.Default : Dragonstone.ISession, Object {
 			request.setStatus("interactive/cache");
 			return request;
 		}
-		lock (outgoing_requests) {
-			print(@"[session.default] making request to $uri\n");
-			Dragonstone.Request? request = null;
-			bool make_request = !enable_request_cache;
-			if (enable_request_cache) {			
-				request = outgoing_requests.get(uri);
-				make_request = request == null;
-				request = new Dragonstone.Request(uri,reload);
-				requests.append(request);
-			} else {
-				request = new Dragonstone.Request(uri,reload);
-			}
-			if (make_request && (!reload)){
-				print("[session.default] checking cache\n");
-				if (cache.can_serve_request(request.uri)){
-					print(@"[session.default] Serving from cache!\n");
-					cache.request(request);
-					return request;
-				}
-			}
-			if (make_request){
-				print("[session.default] making request to outside world\n");
-				if (enable_request_cache){
-					var outrequest = new Dragonstone.Request(uri,reload);
-					outrequest.status_changed.connect(request_status_changed);
-					outrequest.resource_changed.connect(reqest_reource_changed);
-					outgoing_requests.set(uri,outrequest);
-					backend.request(outrequest);
-				} else {
-					backend.request(request);
-					request.resource_changed.connect(reqest_reource_changed_cachehook);
-				}
-			}
-			return request;
-		}
-	}
-	
-	private void request_status_changed(Dragonstone.Request outrequest){
-		//print(@"[session.default] status for $(outrequest.uri) changed to $(outrequest.status)\n");
-		bool remove = false;
-		if (outrequest.status == "routing" || outrequest.status == "connecting" || outrequest.status == "loading"){
-			//print("[session.default] still working\n");
-		} else {
-			outrequest.status_changed.disconnect(request_status_changed);
-			outrequest.resource_changed.disconnect(reqest_reource_changed);
-			lock (outgoing_requests) {
-				outgoing_requests.remove(outrequest.uri);
-			}
-			remove = true;
-		}
-		foreach (Dragonstone.Request request in requests) {
-			if (request.uri == outrequest.uri){
-				//print("[session.default] setting status on resource\n");
-				request.setStatus(outrequest.status,outrequest.substatus);
-				if (remove) {
-					requests.remove(request);
-				}
+		print(@"[session.default] making request to $uri\n");
+		Dragonstone.Request? request = null;
+		request = new Dragonstone.Request(uri,reload);
+		if (!reload){
+			print("[session.default] checking cache\n");
+			if (cache.can_serve_request(request.uri)){
+				print(@"[session.default] Serving from cache!\n");
+				cache.request(request);
+				return request;
 			}
 		}
-	}
-	
-	private void reqest_reource_changed(Dragonstone.Request outrequest){
-		//print(@"[session.default] resource for $(outrequest.uri) changed\n");
-		if (outrequest.resource != null){
-			if (outrequest.resource.valid_until != 0){
-				cache.put_resource(outrequest.resource);
-			}
-		}
-		foreach (Dragonstone.Request request in requests) {
-			if (request.uri == outrequest.uri){
-				request.setResource(outrequest.resource,outrequest.store,outrequest.status,outrequest.substatus);
-			}
-		}
+		print("[session.default] making request to outside world\n");
+		backend.request(request);
+		request.resource_changed.connect(reqest_reource_changed_cachehook);
+		return request;
 	}
 	
 	//used when requestcache is diabled
