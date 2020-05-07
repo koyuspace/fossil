@@ -9,7 +9,7 @@ public class Dragonstone.Util.TlsCertficateGenerator {
 	public static GnuTLS.X509.Certificate? generate_client_certificate(GnuTLS.X509.PrivateKey key){
 		var certificate = GnuTLS.X509.Certificate.create();
 		var activation_time = new DateTime.now_local();
-		var expiration_time = activation_time.add_years(100);
+		var expiration_time = activation_time.add_years(15);
 		
 		certificate.set_key(key);
 		certificate.set_version(1);
