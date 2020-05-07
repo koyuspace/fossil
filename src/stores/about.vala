@@ -27,9 +27,9 @@ public class Dragonstone.Store.About : Object, Dragonstone.ResourceStore {
 
 public class Dragonstone.Store.AboutStore.FixedText : Object, Dragonstone.ResourceStore {
 	
-	string text;
-	string mimetype;
-	string name;
+	public string text;
+	public string mimetype;
+	public string name;
 	
 	public FixedText(string text, string mimetype = "text/plain", string name = ""){
 		this.text = text;
@@ -55,8 +55,8 @@ public class Dragonstone.Store.AboutStore.FixedText : Object, Dragonstone.Resour
 
 public class Dragonstone.Store.AboutStore.FixedStatus : Object, Dragonstone.ResourceStore {
 	
-	string status;
-	string substatus;
+	public string status;
+	public string substatus;
 	
 	public FixedStatus(string status, string substatus = ""){
 		this.status = status;

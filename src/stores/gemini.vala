@@ -43,7 +43,6 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 	
 	public string host { get; construct; }
 	public uint16 port { get; construct; }
-	//public string query { get; construct; }
 	public string uri { get; construct; }
 	public Dragonstone.Resource resource { get; construct; }
 	public Dragonstone.Request request { get; construct; }
@@ -54,7 +53,6 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 			request: request,
 			host: host,
 			port: port,
-			//query: query,
 			uri: request.uri
 		);
 	}

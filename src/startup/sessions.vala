@@ -13,5 +13,6 @@ public class Dragonstone.Startup.Sessions {
 		}
 		session_registry.register_session("core.default",new Dragonstone.Session.Default(main_store));
 		session_registry.register_session("core.uncached",new Dragonstone.Session.Uncached(main_store));
+		session_registry.register_session("test.tls_0",new Dragonstone.Session.Tls(main_store));
 	}
 }

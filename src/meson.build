@@ -16,6 +16,7 @@ executable(
 	'util/messageViewFactory.vala',
 	'util/resourceFileHelper.vala',
 	'util/stack.vala',
+	'util/tlsCertificateGenerator.vala',
 	'util/uri.vala',
 	#'registries/bookmarks.vala',
 	'registries/gopher.vala',
@@ -28,6 +29,7 @@ executable(
 	'registries/viewRegistry.vala',
 	'sessions/default.vala',
 	'sessions/dummy.vala',
+	'sessions/tls.vala',
 	'sessions/uncached.vala',
 	'stores/about.vala',
 	#'stores/bookmarks.vala',
@@ -83,7 +85,8 @@ executable(
 	'widgets/views/redirect.vala',
 	
 	dependencies: [
-		dependency('gtk+-3.0')
+		dependency('gtk+-3.0'),
+		dependency('gnutls'),
 	],
 	install: true
 )
