@@ -1,4 +1,4 @@
-public class Dragonstone.Startup.Sessions {
+public class Dragonstone.Startup.Sessions.Backend {
 	public static void register_core_sessions(Dragonstone.SuperRegistry super_registry){
 		print("[startup][sessions] Adding core sessions... \n");
 		var session_registry = (super_registry.retrieve("core.sessions") as Dragonstone.Registry.SessionRegistry);

@@ -54,7 +54,8 @@ executable(
 	'startup/gopher.gtk.vala',
 	'startup/localization.vala',
 	'startup/localization.english.vala',
-	'startup/sessions.vala',
+	'startup/sessions.backend.vala',
+	'startup/sessions.gtk.vala',
 	'startup/store_switch.vala',
 	'widgets/cacheview.vala',
 	'widgets/menuEntrys.vala',
@@ -82,6 +83,7 @@ executable(
 	'widgets/views/uriErrorGeneric.vala',
 	'widgets/views/errorGeneric.vala',
 	'widgets/views/image.vala',
+	'widgets/views/tlsSession.vala',
 	'widgets/views/redirect.vala',
 	
 	dependencies: [
