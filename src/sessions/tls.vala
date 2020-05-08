@@ -16,6 +16,10 @@ public class Dragonstone.Session.Tls : Dragonstone.ISession, Object {
 			request.setStatus("interactive/cache");
 			return request;
 		}
+		if (uri == "session://"){
+			request.setStatus("interactive/tls_session");
+			return request;
+		}
 		if (uri.has_prefix("session://upload_certificate_pem?")){
 			var parsed_uri = new Dragonstone.Util.ParsedUri(uri);
 			this.tls_certificate_pems = Uri.unescape_string(parsed_uri.query);
