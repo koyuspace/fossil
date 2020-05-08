@@ -43,7 +43,7 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("view.session.tls.get_pem.label","Display certificate");
 		language.set_text("view.session.tls.set_pem.label","Use certificate");
 		language.set_text("view.session.tls.no_certificate.placeholder","NO CERTIFICATE");
-		language.set_text("view.session.tls.pemview.label","Paste a PEM encoded certificate below to add it");
+		language.set_text("view.session.tls.pemview.label","Paste a PEM encoded certificate below to use it");
 		//directory
 		language.set_text("view.directory.search.placeholder","Search ...");
 		language.set_text("view.directory.path.placeholder","Relative filepath to root uri");
@@ -72,8 +72,10 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("view.error/resourceUnwavaiable/temporary.sublabel","Should be back soon™️");
 		language.set_text("view.error/uri/unknownScheme.label","Unknown uri scheme");
 		language.set_text("view.error/uri/unknownScheme.sublabel","No I don't support cat:// uris!");
-		language.set_text("view.error/uri/unknownSchem.label","Meow!");
-		language.set_text("view.error/uri/unknownSchem.sublabel","");
+		language.set_text("view.meow.label","Meow!");
+		language.set_text("view.meow.sublabel","");
+		language.set_text("view.no_session_panel.label","No Session Panel");
+		language.set_text("view.no_session_panel.sublabel","\"Works without configuration\"");
 		//done
 		super_registry.store("localization.translation.english",language);
 		var multiplexer = (super_registry.retrieve("localization.translation") as Dragonstone.Registry.TranslationMultiplexerRegistry);

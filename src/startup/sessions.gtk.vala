@@ -7,7 +7,11 @@ public class Dragonstone.Startup.Sessions.Gtk {
 			view_registry.add_view("dragonstone.tls_session",() => {
 				return new Dragonstone.View.TlsSession(translation);
 			});
+			var no_session_configuration_view_factory = new Dragonstone.Util.MessageViewFactory("error/uri/unknownScheme","action-unavailable-symbolic",translation,"view.no_session_panel.label","view.no_session_panel.sublabel");
+			view_registry.add_view("dragonstone.no_session_panel",no_session_configuration_view_factory.construct_view);
+			
 			view_registry.add_rule(new Dragonstone.Registry.ViewRegistryRule("interactive/tls_session","dragonstone.tls_session"));
+			view_registry.add_rule(new Dragonstone.Registry.ViewRegistryRule("error/uri/unknownScheme","dragonstone.no_session_panel").prefix("session://"));
 		}
 	}
 	
