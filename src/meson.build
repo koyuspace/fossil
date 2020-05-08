@@ -67,6 +67,7 @@ executable(
 	'widgets/view.vala',
 	'widgets/viewChooser.vala',
 	'widgets/textContent.vala',
+	'widgets/textEntry.vala',
 	'widgets/linkbutton.vala',
 	#'widgets/views/bookmarkFolders.vala',
 	#'widgets/views/bookmarks.vala',

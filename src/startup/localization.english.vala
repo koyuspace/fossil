@@ -15,6 +15,7 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("window.title","Project Dragonstone");
 		language.set_text("window.main_menu.prefer_source_view.label","View Page Source");
 		language.set_text("window.main_menu.cache.label","Cache");
+		language.set_text("window.main_menu.session.label","Session");
 		language.set_text("window.main_menu.settings.label","Settings");
 		language.set_text("window.main_menu.close_tab.label","Close tab");
 		language.set_text("window.main_menu.open_uri_externally.label","Open in external browser");
@@ -32,6 +33,17 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("view.interactive/cache.column.users.head","Users");
 		language.set_text("view.interactive/cache.duration.infinite","forever");
 		language.set_text("view.interactive/cache.duration.over_a_year","over a year");
+		//session
+		language.set_text("view.session.tls.title","Manage TLS Session");
+		language.set_text("view.session.tls.name_entry.placeholder","Put a session name here");
+		language.set_text("view.session.tls.cache_switch.label","Use Cache");
+		language.set_text("view.session.tls.view_cache.label","Manage cache content");
+		language.set_text("view.session.tls.generate_new_certificate.label","Generate certificate");
+		language.set_text("view.session.tls.clear_certificate.label","Clear certificate");
+		language.set_text("view.session.tls.get_pem.label","Display certificate");
+		language.set_text("view.session.tls.set_pem.label","Use certificate");
+		language.set_text("view.session.tls.no_certificate.placeholder","NO CERTIFICATE");
+		language.set_text("view.session.tls.pemview.label","Paste a PEM encoded certificate below to add it");
 		//directory
 		language.set_text("view.directory.search.placeholder","Search ...");
 		language.set_text("view.directory.path.placeholder","Relative filepath to root uri");

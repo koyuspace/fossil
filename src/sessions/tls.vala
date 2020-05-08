@@ -5,6 +5,7 @@ public class Dragonstone.Session.Tls : Dragonstone.ISession, Object {
 	
 	//key and certificate pems appended to reach other
 	public string? tls_certificate_pems = null;
+	public bool use_cache = true;
 	
 	public Tls(Dragonstone.ResourceStore backend){
 		this.backend = backend;
@@ -40,7 +41,7 @@ public class Dragonstone.Session.Tls : Dragonstone.ISession, Object {
 		if (this.tls_certificate_pems != null){
 			request.arguments.set("tls.client.certificate",this.tls_certificate_pems);
 		}
-		if (!reload){
+		if (!reload && use_cache){
 			print("[session.tls] checking cache\n");
 			if (cache.can_serve_request(request.uri)){
 				print(@"[session.tls] Serving from cache!\n");
@@ -50,7 +51,9 @@ public class Dragonstone.Session.Tls : Dragonstone.ISession, Object {
 		}
 		print("[session.tls] making request to outside world\n");
 		backend.request(request);
-		request.resource_changed.connect(reqest_reource_changed_cachehook);
+		if (use_cache){
+			request.resource_changed.connect(reqest_reource_changed_cachehook);
+		}
 		return request;
 	}
 	
