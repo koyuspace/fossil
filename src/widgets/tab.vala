@@ -304,10 +304,14 @@ public class Dragonstone.Tab : Gtk.Bin {
 		load_uri(urix,true);
 	}
 	
-	public void open_uri_in_new_tab(string uri){
+	public void open_uri_in_new_tab(string uri, bool is_absolute = false){
 		var window = (parent_window as Dragonstone.Window);
 		if (window != null){
-			window.add_tab(uri);
+			string uritogo = uri;
+			if (!is_absolute) {
+				uritogo = Dragonstone.Util.Uri.join(_uri,uri);
+			}
+			window.add_tab(uritogo,this.current_session_id);
 		}
 	}
 	

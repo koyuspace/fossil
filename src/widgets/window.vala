@@ -132,16 +132,6 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 			headerbar.visible = true;
 			return true;
 		});
-		Gtk.accelerator_parse("F7",out key,out modifiers);
-		accelerator_group.connect(key,modifiers,Gtk.AccelFlags.VISIBLE,() => {
-			headerbar.current_tab.set_tab_session("core.uncached");
-			return true;
-		});
-		Gtk.accelerator_parse("F6",out key,out modifiers);
-		accelerator_group.connect(key,modifiers,Gtk.AccelFlags.VISIBLE,() => {
-			headerbar.current_tab.set_tab_session("core.default");
-			return true;
-		});
 		show_all();
 		
 		this.key_press_event.connect((event) => {
@@ -155,8 +145,8 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		add_tab("test://");
 	}
 	
-	public void add_tab(string uri){
-		add_tab_object(new Dragonstone.Tab("core.default",uri,this,super_registry));
+	public void add_tab(string uri, string session_id = "core.default"){
+		add_tab_object(new Dragonstone.Tab(session_id,uri,this,super_registry));
 	}
 	
 	public void add_tab_object(Dragonstone.Tab tab){
