@@ -79,7 +79,19 @@ public class Dragonstone.Util.ConnectionHelper : Object {
 			} catch (Error e) {
 				print(@"[connection_helper] Something went wrong during TLS connection attempt: $(e.message)\n");
 				return null;
+				//return Dragonstone.Util.ConnectionHelperTlsConnection.error(e.message);
 			}
 		}
 	
+}
+
+public class Dragonstone.Util.ConnectionHelperTlsConnection : Object {
+	public TlsConnection? connection = null;
+	public TlsCertificateFlags? tls_errors = null;
+	public TlsCertificate? peer_certificate = null;
+	public string? error_message = null;
+	
+	public ConnectionHelperTlsConnection.error(string error_message){
+		this.error_message = error_message;
+	}
 }
