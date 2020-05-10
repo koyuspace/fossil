@@ -38,11 +38,11 @@ public class Dragonstone.Session.Tls : Dragonstone.ISession, Object {
 			}
 			return request;
 		}
+		*/
 		print(@"[session.tls] making request to $uri\n");
 		if (this.tls_certificate_pems != null){
 			request.arguments.set("tls.client.certificate",this.tls_certificate_pems);
 		}
-		*/
 		if (!reload && use_cache){
 			print("[session.tls] checking cache\n");
 			if (cache.can_serve_request(request.uri)){
