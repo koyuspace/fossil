@@ -72,6 +72,9 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 			var input_stream = new DataInputStream (conn.input_stream);
 			request.setStatus("loading");
 			
+			bool beyond_header = false;
+			Dragonstone.Util.ResourceFileWriteHelper? helper = null;
+			
 			try{
 				var statusline = input_stream.read_line(null);
 				while(statusline.has_suffix("\r") || statusline.has_suffix("\n")){
@@ -84,24 +87,27 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 				}
 				var statuscode = int.parse(statusline.substring(0,2));
 				var metaline = statusline.substring(3); //TODO: split on tab if the servers start including filesizes
+				request.arguments.set("gemini.statuscode",statusline.substring(0,2));
+				request.arguments.set("gemini.metaline",statusline.substring(3));
 				
 				if (statuscode/10==1){
-					var helper = new Dragonstone.Util.ResourceFileWriteHelper(request,resource.filepath,0);
+					helper = new Dragonstone.Util.ResourceFileWriteHelper(request,resource.filepath,0);
 					helper.appendString(metaline); //input prompt
 					resource.add_metadata("gemini/input",metaline);
 					if (helper.closed){return;} //error or cancelled
 					helper.close();
 					request.setResource(resource,"gemini");
 				} else if (statuscode/10==2){
-					var helper = new Dragonstone.Util.ResourceFileWriteHelper(request,resource.filepath,0);
-					readBytes(input_stream,helper);
 					if (metaline.strip() == ""){
 						metaline = "text/gemini";
 					}
 					resource.add_metadata(metaline/*mimetype*/,@"[gemini] $uri");
+					resource.valid_until = resource.timestamp+default_resource_lifetime;
+					helper = new Dragonstone.Util.ResourceFileWriteHelper(request,resource.filepath,0);
+					beyond_header = true;
+					readBytes(input_stream,helper);
 					if (helper.error){return;}
 					helper.close();
-					resource.valid_until = resource.timestamp+default_resource_lifetime;
 					request.setResource(resource,"gemini");
 				} else if (statuscode/10==3){
 					var joined_uri = Dragonstone.Util.Uri.join(uri,metaline);
@@ -118,7 +124,14 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 				}
 			}catch(Error e){
 				if (e.message == "TLS connection closed unexpectedly") {
-					request.setStatus("error/gibberish","#TLS connection closed unexpectedly");
+					if (beyond_header){
+						print("[gemini] rescuing data from terminated connection\n");
+						helper.close();
+						request.arguments.set("warning.tls.connection_got_terminated","true");
+						request.setResource(resource,"gemini");
+					} else {
+						request.setStatus("error/gibberish","TLS connection closed unexpectedly");
+					}
 				} else {
 					request.setStatus("error/internalError","Something with binary gemini:\n"+e.message);
 				}
