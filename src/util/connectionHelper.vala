@@ -192,7 +192,11 @@ public class Dragonstone.Util.ConnectionHelperTlsConnection : Object {
 	public void write_status(Dragonstone.Request request){
 		if (!success){
 			if (error_message != null){
-				request.setStatus("error/internal",error_message);
+				if (error_message == "Unacceptable TLS certificate"){
+					request.setStatus("error/tls/certificateRejected");
+				} else {
+					request.setStatus("error/internal",error_message);
+				}
 			}
 		}
 	}
