@@ -11,6 +11,8 @@ public class Dragonstone.View.Directory : Gtk.Box, Dragonstone.IView {
 	private Gtk.Button home_button;
 	private Gtk.Button parent_button;
 	private Gtk.TreeView treeview;
+	private Gtk.Box controls;
+	private Gtk.ToggleButton search_toggle;
 	private string? home_uri = null;
 	private string? root_uri = null;
 	private string? parent_uri = null;
@@ -40,32 +42,51 @@ public class Dragonstone.View.Directory : Gtk.Box, Dragonstone.IView {
 		orientation = Gtk.Orientation.VERTICAL;
 		var actionbar = new Gtk.ActionBar();
 		actionbar.expand = false;
+		controls = new Gtk.Box(Gtk.Orientation.HORIZONTAL,2);
 		//parent_button
 		parent_button = new Gtk.Button.from_icon_name("go-up-symbolic");
 		parent_button.clicked.connect(go_parent);
-		actionbar.pack_start(parent_button);
+		controls.pack_start(parent_button);
 		//home_button
 		home_button = new Gtk.Button.from_icon_name("user-home-symbolic");
 		home_button.clicked.connect(go_home);
-		actionbar.pack_start(home_button);
+		controls.pack_start(home_button);
 		//path_entry
 		path_entry = new Gtk.Entry();
 		path_entry.expand = true;
 		path_entry.placeholder_text = translation.localize("view.directory.path.placeholder");
 		path_entry.activate.connect(go_path);
-		actionbar.pack_start(path_entry);
+		controls.pack_start(path_entry);
+		//controls
+		controls.set_child_packing(parent_button,false,true,0,Gtk.PackType.START);
+		controls.set_child_packing(home_button,false,true,0,Gtk.PackType.START);
+		controls.set_child_packing(path_entry,true,true,0,Gtk.PackType.START);
+		actionbar.pack_start(controls);
 		//search_entry
 		search_entry = new Gtk.Entry();
 		search_entry.placeholder_text = translation.localize("view.directory.search.placeholder");
-		search_entry.width_chars = 35;
+		//search_entry.width_chars = 35;
 		search_entry.buffer.deleted_text.connect(() => {this.search_dirty = true;});
 		search_entry.buffer.inserted_text.connect(() => {this.search_dirty = true;});
+		search_entry.expand = true;
 		actionbar.pack_start(search_entry);
+		//search_toggle
+		search_toggle = new Gtk.ToggleButton();
+		var searchicon = new Gtk.Image.from_icon_name("system-search-symbolic",Gtk.IconSize.SMALL_TOOLBAR);
+		search_toggle.add(searchicon);
+		search_toggle.toggled.connect(() => {
+			controls.visible = !search_toggle.active;
+			search_entry.visible = search_toggle.active;
+			if (search_entry.visible){
+				search_entry.grab_focus_without_selecting();
+			}
+		});
+		actionbar.pack_start(search_toggle);
 		//stores
 		filterstore = new Gtk.TreeModelFilter((Gtk.TreeModel) liststore,null);
 		filterstore.set_visible_func(filter_visible_function);
 		sortedstore = new Gtk.TreeModelSort.with_model(filterstore);
-		sortedstore.set_sort_column_id (1, Gtk.SortType.ASCENDING); 
+		sortedstore.set_sort_column_id (1, Gtk.SortType.ASCENDING);
 		//treeview
 		treeview = new Gtk.TreeView();
 		treeview.get_selection().set_mode(Gtk.SelectionMode.SINGLE);
@@ -86,7 +107,7 @@ public class Dragonstone.View.Directory : Gtk.Box, Dragonstone.IView {
 		set_child_packing(scrolled_window,true,true,0,Gtk.PackType.START);
 		//show all
 		show_all();
-		//controls.visible = false;
+		search_entry.visible = false;
 		
 		Timeout.add(1000,() => {
 			if (search_dirty){
@@ -185,6 +206,9 @@ public class Dragonstone.View.Directory : Gtk.Box, Dragonstone.IView {
 		home_button.visible = this.home_uri != null;
 		if (this.home_uri != null){
 			home_button.set_tooltip_text(home_uri);
+			home_button.sensitive = this.home_uri != request.uri;
+		} else {
+			home_button.sensitive = true;
 		}
 	}
 	
