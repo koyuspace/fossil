@@ -33,7 +33,7 @@ public class Dragonstone.View.Image : Gtk.ScrolledWindow, Dragonstone.IView {
 			}
 			return false;
 		});
-		
+		show_all();
 		return true;
 	}
 	

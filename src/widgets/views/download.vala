@@ -43,6 +43,7 @@ public class Dragonstone.View.Download : Gtk.Bin, Dragonstone.IView {
 		open_button.clicked.connect(() => {
 			tab.open_resource_externally();
 		});
+		show_all();
 		return true;
 	}
 	

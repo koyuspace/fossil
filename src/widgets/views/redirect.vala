@@ -26,6 +26,7 @@ public class Dragonstone.View.Redirect : Gtk.Bin, Dragonstone.IView {
 		outerBox.pack_start(nameLabel);
 		var empty = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
 		outerBox.pack_end(empty);
+		show_all();
 		add(outerBox);
 	}
 	

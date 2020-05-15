@@ -23,7 +23,8 @@ public class Dragonstone.View.Cache : Gtk.Bin, Dragonstone.IView {
 			add(new Gtk.Label("This session has a cache, but this view currently has no way to show its content"));
 		} else {
 			add(new Gtk.Label("It seems like, this session does not have a cache.\nSession name: "+tab.session.get_name()));
-		}		
+		}
+		show_all();
 		return true;
 	}
 	

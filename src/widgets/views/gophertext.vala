@@ -115,6 +115,7 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
 		} else {
 			return false;
 		}
+		show_all();
 		this.request = request;
 		return true;
 	}

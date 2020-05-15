@@ -96,6 +96,7 @@ public class Dragonstone.View.TlsSession : Gtk.ScrolledWindow, Dragonstone.IView
 		
 		box.homogeneous = false;
 		add(box);
+		show_all();
 		return true;
 	}
 	

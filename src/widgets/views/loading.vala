@@ -25,6 +25,7 @@ public class Dragonstone.View.Loading : Gtk.Bin, Dragonstone.IView {
 		if (!(request.status == "loading" || request.status == "connecting" || request.status == "routing")) {return false;}
 		this.request = request;
 		this.request.notify["substatus"].connect(loadUpdatedTimeoutHack);
+		show_all();
 		return true;
 	}
 	

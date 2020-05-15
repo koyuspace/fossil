@@ -37,6 +37,7 @@ public class Dragonstone.View.UriError.Generic : Gtk.Bin, Dragonstone.IView {
 		this.request = request;
 		sublabel.label = @"Something went wrong parsing this uri...\nPlease speak loud and clear\ndon't makes grammar mistakes and\nno speling errors.";
 		//nameLabel.label = request.name;
+		show_all();
 		return true;
 	}
 	

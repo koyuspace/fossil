@@ -15,11 +15,7 @@ public class Dragonstone.View.Geminitext : Dragonstone.Widget.TextContent, Drago
 				//parse text
 				
 				data_input_stream = new DataInputStream (file.read ());
-				render_batch(300);
-				Timeout.add(1000,() => {
-					print("Rendering batch!\n");
-					return !render_batch(100);
-				});
+				render_batch(30000);
 				
 			}catch (GLib.Error e) {
 				this.appendWidget(new Gtk.Label("Error while rendering gemini content:\n"+e.message));
@@ -72,6 +68,7 @@ public class Dragonstone.View.Geminitext : Dragonstone.Widget.TextContent, Drago
 		}catch (GLib.Error e) {
 			this.appendWidget(new Gtk.Label("Error while rendering gemini content:\n"+e.message));
 		}
+		show_all();
 		return true;
 	}
 	

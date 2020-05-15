@@ -37,6 +37,7 @@ public class Dragonstone.View.Plaintext : Gtk.ScrolledWindow, Dragonstone.IView 
 			return false;
 		}
 		this.request = request;
+		show_all();
 		return true;
 	}
 	

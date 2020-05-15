@@ -207,7 +207,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 				view = new Dragonstone.View.Label(@"$error_message_localized\n$(request.status)\n$(request.substatus)");
 				use_view(view);
 			}
-			show_all();
+			show();
 			this.on_view_change();
 		}
 	}

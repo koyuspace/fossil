@@ -39,6 +39,7 @@ public class Dragonstone.View.Error.Generic : Gtk.Bin, Dragonstone.IView {
 		this.request = request;
 		sublabel.label = request.status+"\n"+request.substatus;
 		//nameLabel.label = request.name;
+		show_all();
 		return true;
 	}
 	
