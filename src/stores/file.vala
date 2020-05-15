@@ -42,13 +42,13 @@ public class Dragonstone.Store.File : Object, Dragonstone.ResourceStore {
 			try {
 				Dir dir = Dir.open (path, 0);
 				string? name = null;
-				helper.appendString("HOME\tfile://"+GLib.Uri.escape_string(Environment.get_home_dir(),"/")+"/\n");
+				helper.appendString("HOME\tfile://"+GLib.Uri.escape_string(Environment.get_home_dir(),"/")+"\n");
 				helper.appendString("ROOT\tfile:///\n");
 				helper.appendString("\n");
 				helper.appendString("THIS\t"+path+"\n");
 				var parent = file.get_parent();
 				if (parent != null){
-					helper.appendString("PARENT\t"+parent.get_uri()+"/\n");
+					helper.appendString("PARENT\t"+parent.get_uri()+"\n");
 				}
 				helper.appendString("\n");
 				while ((name = dir.read_name ()) != null) {
