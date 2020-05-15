@@ -1,10 +1,10 @@
 public class Dragonstone.Window : Gtk.ApplicationWindow {
 	
-	public GLib.Settings settings;
 	public Gtk.Notebook tabs;
 	public Dragonstone.SuperRegistry super_registry { get; construct; }
 	public Dragonstone.Registry.TranslationRegistry translation;
 	private Dragonstone.Application app;
+	private Dragonstone.Settings.KVSettings? settings = null;
 	
 	public Window(Dragonstone.Application application) {
 		Object(
@@ -43,7 +43,7 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		
 		set_events(Gdk.EventMask.ALL_EVENTS_MASK);
 		
-		//settings = new GLib.Settings("com.gitlab.baschdel.Dragonstone");
+		settings = super_registry.retrieve("settings.frontend") as Dragonstone.Settings.KVSettings;
 		
 		//place window where it has been bofore closing
 		//move(settings.get_int("main-window-pos-x"),settings.get_int("main-window-pos-y"));
@@ -140,9 +140,19 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		});
 	}
 	
+	private string get_settings_value(string key, string default_value){
+		if (settings != null){
+			var ret = settings.values.get(key);
+			if (ret != null){
+				return ret;
+			}
+		}
+		return default_value;
+	}
+	
 	//fills out the destination with the default address
 	public void add_new_tab(){
-		add_tab("test://");
+		add_tab(get_settings_value("new_tab_uri","about:blank"));
 	}
 	
 	public void add_tab(string uri, string session_id = "core.default"){

@@ -15,14 +15,18 @@ public class Dragonstone.Application : Gtk.Application {
 		super_registry.store("core.stores",new Dragonstone.Registry.StoreRegistry.default_configuration());
 		super_registry.store("core.uri_autoprefixer",new Dragonstone.Registry.UriAutoprefix());
 		super_registry.store("core.sessions",new Dragonstone.Registry.SessionRegistry());
+		super_registry.store("core.settings",new Dragonstone.Registry.SettingsRegistry());
+		//Initalize Settings providers
+		Dragonstone.Startup.Settings.Backend.setup_providers(super_registry);
+		//Set defaults
+		Dragonstone.Startup.Frontend.Settings.register_default_settings(super_registry);
+		//Initaize bridges
+		Dragonstone.Startup.Frontend.Settings.register_settings_object(super_registry);
+		//import settings
+		Dragonstone.Startup.Settings.Backend.import_all(super_registry);
 		//Initalize Cache
 		//Dragonstone.Startup.Cache.Backend.setup_store(super_registry); //register before switch
 		Dragonstone.Startup.About.Backend.setup_store(super_registry);
-		//Initalize Bookmarks
-		//Dragonstone.Startup.Bookmarks.Backend.setup_registry(super_registry);
-		//Dragonstone.Startup.Bookmarks.Backend.setup_default_folders(super_registry);
-		//Dragonstone.Startup.Bookmarks.Backend.setup_about_page(super_registry);
-		//Dragonstone.Startup.Bookmarks.Backend.setup_store(super_registry);
 		//Initalize backends
 		Dragonstone.Startup.Cache.Backend.setup_about_page(super_registry);
 		Dragonstone.Startup.Gopher.Backend.setup_gophertypes(super_registry);
@@ -49,7 +53,6 @@ public class Dragonstone.Application : Gtk.Application {
 		//Initalize frontends
 		Dragonstone.Startup.Cache.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Sessions.Gtk.setup_views(super_registry);
-		//Dragonstone.Startup.Bookmarks.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.File.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Gopher.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Gemini.Gtk.setup_views(super_registry);
