@@ -8,33 +8,28 @@ public class Dragonstone.Store.Test : Object, Dragonstone.ResourceStore {
 		if (request.uri == "test://") {
 			var helper = new Dragonstone.Util.ResourceFileWriteHelper(request,filepath,0);
 			helper.appendString("
-Hello. Welcome to the internet of Gopherholes and Geminisites*!
+Hello!
+Welcome to the internet of Gopherholes and Geminisites!
 
-Thank you for using the dragonstone browser to explore it, please note, that dragonstone is
-in no way finished, has problems that need fixing and is missing essential feataures.
-
-You can find the sourcecode over at
-=> https://gitlab.com/baschdel/dragonstone
+Please note that dragonstone is still prealpha and has some issues, that need fixing!
 
 Warning:
 Gemini is supposed to be more secure than gopher but beacause of the implementation,
-it cannot vertify a servers identity yet and therefore is as secure as gopher.
+it cannot vertify a servers identity yet and therefore is about as secure as gopher.
 
 To get started here are some links:
 => gopher://gopher.floodgap.com/1/v2 The Veronica-2 Gopher search engine
-=> gemini://gemini.conman.org/ The first ever gemini server (Also has links to other gemini servers)
+=> gemini://gus.guru/ The GUS search engine for gemini
+=> gemini://gemini.circumlunar.space/servers/ A list of all known gemini servers
 => gopher://khzae.net khzae has some gopher based services, that definitely deserve more attention
 
 => gopher://gopher.floodgap.com/1/gopher What is Gopher and why is it still relevant?
 => gopher://khzae.net/0/rfc1436.txt RFC1436 - The gopher specification
 => gopher://zaibatsu.circumlunar.space/1/~solderpunk/gemini The gemini specification
 
-Contributors:
-	Baschdel
-
+You can find the sourcecode over at
+=> https://gitlab.com/baschdel/dragonstone
 If you want to contribute just submit a pull request
-
-*If you know of an official name please let me know!
 			");
 			if (helper.error){return;}
 			helper.close();
