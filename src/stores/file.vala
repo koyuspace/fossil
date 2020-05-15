@@ -59,7 +59,6 @@ public class Dragonstone.Store.File : Object, Dragonstone.ResourceStore {
 					string fpath = Path.build_filename (path, name);
 					string type = "FILE";
 					if (FileUtils.test (fpath, FileTest.IS_DIR)) {
-						fpath = fpath+"/";
 						type = "DIRECTORY";
 					}
 					if (!name.has_prefix(".")){
