@@ -58,6 +58,8 @@ executable(
 	'startup/sessions.gtk.vala',
 	'startup/settings.backend.vala',
 	'startup/store_switch.vala',
+	'startup/utiltest.backend.vala',
+	'startup/utiltest.gtk.vala',
 	'widgets/cacheview.vala',
 	'widgets/menuEntrys.vala',
 	'widgets/window.vala',
@@ -85,6 +87,7 @@ executable(
 	'widgets/views/image.vala',
 	'widgets/views/tlsSession.vala',
 	'widgets/views/redirect.vala',
+	'widgets/views/uriMergeTest.vala',
 	
 	dependencies: [
 		dependency('gtk+-3.0'),

@@ -41,6 +41,7 @@ public class Dragonstone.Application : Gtk.Application {
 		Dragonstone.Startup.Finger.Backend.setup_store(super_registry);
 		Dragonstone.Startup.Finger.Backend.setup_uri_autocompletion(super_registry);
 		Dragonstone.Startup.StoreSwitch.setup_store(super_registry);
+		Dragonstone.Startup.Utiltest.Backend.setup_about_page(super_registry);
 		//Initalize sessions
 		Dragonstone.Startup.Sessions.Backend.register_core_sessions(super_registry);
 		//Initalize localization
@@ -56,6 +57,7 @@ public class Dragonstone.Application : Gtk.Application {
 		Dragonstone.Startup.File.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Gopher.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Gemini.Gtk.setup_views(super_registry);
+		Dragonstone.Startup.Utiltest.Gtk.setup_views(super_registry);
 	}
 	
 	protected override void activate() {
