@@ -74,6 +74,11 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		savetodiskbutton.add(diskicon);
 		savetodiskbutton.sensitive = false;
 		mainmenuhbox.pack_start(savetodiskbutton);
+		//show_tabs
+		var show_tabs_localized = parent_window.translation.get_localized_string("window.main_menu.show_tabs.label");
+		var show_tabs_widget = new Dragonstone.Widget.MenuSwitch(show_tabs_localized);
+		var show_tabs_switch = show_tabs_widget.switch_widget;
+		mainmenubox.pack_start(show_tabs_widget);
 		//prefer_source_view
 		var view_source_localized = parent_window.translation.get_localized_string("window.main_menu.prefer_source_view.label");
 		var prefer_source_view_widget = new Dragonstone.Widget.MenuSwitch(view_source_localized);
@@ -197,6 +202,11 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 				current_tab.close();
 			}
 		});
+		show_tabs_switch.state_set.connect(e => {
+			tabs.show_tabs = show_tabs_switch.state;
+			return true;
+		});
+		show_tabs_switch.state = true;
 		prefer_source_view_switch.state_set.connect(e => {
 			if (current_tab != null && !switching_tab) {
 				current_tab.view_flags.set_flag("sourceview",prefer_source_view_switch.state);

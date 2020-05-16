@@ -13,6 +13,7 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("tab.error.wrong_view.message","I think i chose the wrong view ...\nPlease report this to the developer!");
 		//window
 		language.set_text("window.title","Project Dragonstone");
+		language.set_text("window.main_menu.show_tabs.label","Show tabs");
 		language.set_text("window.main_menu.prefer_source_view.label","View Page Source");
 		language.set_text("window.main_menu.cache.label","Cache");
 		language.set_text("window.main_menu.session.label","Session");
