@@ -89,7 +89,7 @@ public class Dragonstone.Widget.CacheView : Gtk.Box {
 		//gotobutton
 		var gotobutton = new Gtk.Button.from_icon_name("go-jump-symbolic");
 		gotobutton.set_tooltip_text(translation.localize("view.interactive/cache.open_in_new_tab.tooltip"));
-		//controls.pack_start(gotobutton);
+		controls.pack_start(gotobutton);
 		gotobutton.clicked.connect(open_selected_in_new_tab);
 		//pinbutton
 		pinbutton = new Gtk.Button.from_icon_name("view-pin-symbolic");
