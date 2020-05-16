@@ -33,8 +33,8 @@ public class Dragonstone.View.Message : Gtk.Bin, Dragonstone.IView {
 		outerBox.pack_start(nameLabel);
 		var empty = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
 		outerBox.pack_end(empty);
-		show_all();
 		add(outerBox);
+		show_all();
 	}
 	
 	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
