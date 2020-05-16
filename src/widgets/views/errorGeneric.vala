@@ -1,15 +1,19 @@
-public class Dragonstone.View.Error.Generic : Gtk.Bin, Dragonstone.IView {
+public class Dragonstone.View.Error.Generic : Gtk.ScrolledWindow, Dragonstone.IView {
 	
 	private Dragonstone.Request request = null;
 	private Gtk.Label nameLabel = new Gtk.Label("");
 	private Gtk.Label sublabel; 
+	private Gtk.Label label;
 	private string view_status = null;
 	
 	construct {
 		nameLabel.valign = Gtk.Align.START;
 		var outerBox = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
 		var centerBox = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
-		var label = new Gtk.Label("Something went wrong ..."); //TOTRANSLATE
+		label = new Gtk.Label("ERROR"); //TOTRANSLATE
+		label.wrap_mode = Pango.WrapMode.WORD_CHAR;
+		label.wrap = true;
+		label.justify = Gtk.Justification.CENTER;
 		sublabel = new Gtk.Label("..."); //TOTRANSLATE
 		sublabel.justify = Gtk.Justification.CENTER;
 		var icon = new Gtk.Image.from_icon_name("dialog-error-symbolic",Gtk.IconSize.DIALOG);
@@ -37,6 +41,7 @@ public class Dragonstone.View.Error.Generic : Gtk.Bin, Dragonstone.IView {
 		if (!(request.status.has_prefix("error/"))) {return false;}
 		view_status = request.status;
 		this.request = request;
+		label.label = tab.translation.localize("view.error.label");
 		sublabel.label = request.status+"\n"+request.substatus;
 		//nameLabel.label = request.name;
 		show_all();

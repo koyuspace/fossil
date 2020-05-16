@@ -1,4 +1,4 @@
-public class Dragonstone.View.Message : Gtk.Bin, Dragonstone.IView {
+public class Dragonstone.View.Message : Gtk.ScrolledWindow, Dragonstone.IView {
 	
 	private Dragonstone.Request request = null;
 	private Gtk.Label nameLabel = new Gtk.Label("");
@@ -12,6 +12,9 @@ public class Dragonstone.View.Message : Gtk.Bin, Dragonstone.IView {
 		var outerBox = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
 		var centerBox = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
 		var label = new Gtk.Label(label_text);
+		label.wrap_mode = Pango.WrapMode.WORD_CHAR;
+		label.wrap = true;
+		label.justify = Gtk.Justification.CENTER;
 		sublabel = new Gtk.Label(sublabel_text);
 		sublabel.justify = Gtk.Justification.CENTER;
 		var icon = new Gtk.Image.from_icon_name(icon_name,Gtk.IconSize.DIALOG);

@@ -68,6 +68,7 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("view.error/noHost.sublabel","How about a game of hide and seek?");
 		language.set_text("view.error/resourceUnavaiable.label","Resource not found");
 		language.set_text("view.error/resourceUnavaiable.sublabel","No idea if there ever was or will be something ...");
+		language.set_text("view.error.label","Something went wrong ...");
 		language.set_text("view.error/resourceUnavaiable/temporary.label","Reource not found");
 		language.set_text("view.error/resourceUnwavaiable/temporary.sublabel","Should be back soon™️");
 		language.set_text("view.error/uri/unknownScheme.label","Unknown uri scheme");
