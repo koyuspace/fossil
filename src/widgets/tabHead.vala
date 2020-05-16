@@ -4,7 +4,7 @@ public class Dragonstone.Widget.TabHead : Gtk.Box {
 	private Gtk.Label title = new Gtk.Label("💫️ New Tab");
 	private Dragonstone.Tab tab;
 	private Gtk.Spinner spinner = new Gtk.Spinner();
-	private int title_chars = 40;
+	private int title_chars = 25;
 	
 	public TabHead(Dragonstone.Tab tab) {
 		closeButton = new Gtk.Button.from_icon_name("window-close-symbolic");
