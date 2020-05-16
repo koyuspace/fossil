@@ -10,11 +10,11 @@ public class Dragonstone.View.Error.Generic : Gtk.ScrolledWindow, Dragonstone.IV
 		nameLabel.valign = Gtk.Align.START;
 		var outerBox = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
 		var centerBox = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
-		label = new Gtk.Label("ERROR"); //TOTRANSLATE
+		label = new Gtk.Label("ERROR");
 		label.wrap_mode = Pango.WrapMode.WORD_CHAR;
 		label.wrap = true;
 		label.justify = Gtk.Justification.CENTER;
-		sublabel = new Gtk.Label("..."); //TOTRANSLATE
+		sublabel = new Gtk.Label("...");
 		sublabel.justify = Gtk.Justification.CENTER;
 		var icon = new Gtk.Image.from_icon_name("dialog-error-symbolic",Gtk.IconSize.DIALOG);
 		icon.icon_size=6;
