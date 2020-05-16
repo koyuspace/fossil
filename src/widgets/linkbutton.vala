@@ -2,6 +2,7 @@ public class Dragonstone.Widget.LinkButton : Gtk.Button {
 
 	string uri;	
 	private Dragonstone.Tab tab;
+	private Gtk.GestureLongPress long_press_gesture;
 	
 	public LinkButton(Dragonstone.Tab tab,string name,string uri,string? icon_name = null){
 		this.tab = tab;
@@ -34,6 +35,11 @@ public class Dragonstone.Widget.LinkButton : Gtk.Button {
 			label = @"$name";
 		}
 		set_tooltip_text(uri);
+		long_press_gesture = new Gtk.GestureLongPress(this);
+		long_press_gesture.set_propagation_phase(Gtk.PropagationPhase.TARGET);
+		long_press_gesture.pressed.connect((x,y) => {
+			show_popover();
+		});
 		button_press_event.connect(handle_button_press);
 		set_relief(Gtk.ReliefStyle.NONE);
 	}
@@ -44,14 +50,18 @@ public class Dragonstone.Widget.LinkButton : Gtk.Button {
 				tab.open_uri_in_new_tab(uri);
 				return true;
 			} else if (event.button == 3) { //right click
-				var popover = new Dragonstone.Widget.LinkButtonPopover(this.tab,uri);
-				popover.set_relative_to(this);
-				popover.popup();
-				popover.show_all();
+				show_popover();
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	private void show_popover(){
+		var popover = new Dragonstone.Widget.LinkButtonPopover(this.tab,uri);
+		popover.set_relative_to(this);
+		popover.popup();
+		popover.show_all();
 	}
 	
 	private string guessIconNameByUri(string uri){
