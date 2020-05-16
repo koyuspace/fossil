@@ -4,6 +4,7 @@ public class Dragonstone.Widget.TabHead : Gtk.Box {
 	private Gtk.Label title = new Gtk.Label("💫️ New Tab");
 	private Dragonstone.Tab tab;
 	private Gtk.Spinner spinner = new Gtk.Spinner();
+	private int title_chars = 40;
 	
 	public TabHead(Dragonstone.Tab tab) {
 		closeButton = new Gtk.Button.from_icon_name("window-close-symbolic");
@@ -27,9 +28,9 @@ public class Dragonstone.Widget.TabHead : Gtk.Box {
 		spinner.active = tab.loading;
 		spinner.visible = tab.loading;
 		string title = tab.title;
-		if (title.char_count() > 40){
-			var startcut = title.index_of_nth_char(20);
-			var endcut = title.index_of_nth_char(title.char_count()-20);
+		if (title.char_count() > title_chars){
+			var startcut = title.index_of_nth_char(title_chars/2);
+			var endcut = title.index_of_nth_char(title.char_count()-(title_chars/2));
 			title = title[0:startcut]+"…"+title.slice(endcut,title.length);
 		}
 		this.title.label = title;
