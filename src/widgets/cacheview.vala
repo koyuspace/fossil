@@ -9,6 +9,7 @@ public class Dragonstone.Widget.CacheView : Gtk.Box {
 	private Gtk.Box controls = new Gtk.Box(Gtk.Orientation.HORIZONTAL,0);
 	private Gtk.Button pinbutton;
 	private Gtk.TreeView treeview;
+	private Gtk.ToggleButton search_toggle;
 	private string? selected_uri = null;
 	private bool still_alive = true;
 	private bool search_dirty = true;
@@ -57,10 +58,23 @@ public class Dragonstone.Widget.CacheView : Gtk.Box {
 				cache.erase();
 			}
 		});
+		//search_toggle
+		search_toggle = new Gtk.ToggleButton();
+		var searchicon = new Gtk.Image.from_icon_name("system-search-symbolic",Gtk.IconSize.SMALL_TOOLBAR);
+		search_toggle.add(searchicon);
+		search_toggle.toggled.connect(() => {
+			erasebutton.visible = !search_toggle.active;
+			search_entry.visible = search_toggle.active;
+			if (search_entry.visible){
+				search_entry.grab_focus_without_selecting();
+			}
+		});
+		actionbar.pack_start(search_toggle);
 		//search_entry
 		search_entry = new Gtk.Entry();
 		search_entry.placeholder_text = translation.localize("view.interactive/cache.search.placeholder");
-		search_entry.width_chars = 35;
+		//search_entry.width_chars = 35;
+		search_entry.expand = true;
 		search_entry.buffer.deleted_text.connect(() => {this.search_dirty = true;});
 		search_entry.buffer.inserted_text.connect(() => {this.search_dirty = true;});
 		actionbar.pack_start(search_entry);
@@ -75,7 +89,7 @@ public class Dragonstone.Widget.CacheView : Gtk.Box {
 		//gotobutton
 		var gotobutton = new Gtk.Button.from_icon_name("go-jump-symbolic");
 		gotobutton.set_tooltip_text(translation.localize("view.interactive/cache.open_in_new_tab.tooltip"));
-		controls.pack_start(gotobutton);
+		//controls.pack_start(gotobutton);
 		gotobutton.clicked.connect(open_selected_in_new_tab);
 		//pinbutton
 		pinbutton = new Gtk.Button.from_icon_name("view-pin-symbolic");
@@ -111,6 +125,7 @@ public class Dragonstone.Widget.CacheView : Gtk.Box {
 		//show all
 		show_all();
 		controls.visible = false;
+		search_entry.visible = false;
 		refresh_cache_items();
 		Timeout.add(1000,() => {
 			//print(@"[cache.gtk] refresh [$still_alive]\n");
@@ -155,7 +170,7 @@ public class Dragonstone.Widget.CacheView : Gtk.Box {
 			search_dirty = false;
 			filterstore.refilter();
 		}
-		show_all();
+		//show_all();
 		update_selected_uri();
 	}
 	
