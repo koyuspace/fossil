@@ -18,7 +18,7 @@ public class Dragonstone.Store.Gemini : Object, Dragonstone.ResourceStore {
 		
 		string? host = parsed_uri.host;
 		if (host == "null"){
-			request.setStatus("error/uri/noHost","Finger needs a host");
+			request.setStatus("error/uri/noHost","Gemini needs a host");
 			return;
 		}
 		uint16? port = parsed_uri.get_port_number();
@@ -69,7 +69,7 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 			print ("Wrote request\n");
 			
 			// Receive response
-			var input_stream = new DataInputStream (conn.input_stream);
+			var input_stream = new DataInputStream(conn.input_stream);
 			request.setStatus("loading");
 			
 			bool beyond_header = false;
@@ -118,9 +118,14 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 				} else if (statuscode/10==5){ //permanently unavaiable
 					request.setStatus("error/resourceUnavaiable");
 				} else if (statuscode/10==6){
-					request.setStatus("error/sessionRequired");
+					request.setStatus("error/sessionRequired","tls");
 				} else {
 					request.setStatus("error/gibberish","#invalid status code");
+				}
+				try {
+					conn.close();
+				}catch(Error e){
+					//do nothing
 				}
 			}catch(Error e){
 				if (e.message == "TLS connection closed unexpectedly") {
