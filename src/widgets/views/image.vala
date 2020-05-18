@@ -27,9 +27,13 @@ public class Dragonstone.View.Image : Gtk.ScrolledWindow, Dragonstone.IView {
 		set_events(Gdk.EventMask.ALL_EVENTS_MASK);
 		
 		this.scroll_event.connect((event) => {
-			float new_factor = factor-((float) event.delta_y)/10;
-			if (new_factor > 0 && new_factor < 1000){
-				scale(new_factor);
+			if((event.state & Gdk.ModifierType.CONTROL_MASK) > 0){
+				float new_factor = factor-((float) event.delta_y)/10;
+				if (new_factor > 0 && new_factor < 1000){
+					scale(new_factor);
+					
+				}
+				return true;
 			}
 			return false;
 		});
