@@ -6,6 +6,8 @@ public class Dragonstone.View.Image : Gtk.ScrolledWindow, Dragonstone.IView {
 	
 	public float factor = 1;
 	
+	public bool autoscale = true;
+	
 	construct {}
 	
 	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
@@ -14,7 +16,7 @@ public class Dragonstone.View.Image : Gtk.ScrolledWindow, Dragonstone.IView {
 				pixbuf = new Gdk.Pixbuf.from_file(request.resource.filepath);
 				image = new Gtk.Image.from_pixbuf(pixbuf);
 				add(image);
-				size_allocate.connect(scaleToWindow);
+				size_allocate.connect(trigger_autoscale);
 			} catch (GLib.Error e) {
 				print(@"[image] Error while loading image ($(request.uri))\n$(e.message)");
 				return false;
@@ -27,9 +29,13 @@ public class Dragonstone.View.Image : Gtk.ScrolledWindow, Dragonstone.IView {
 		set_events(Gdk.EventMask.ALL_EVENTS_MASK);
 		
 		this.scroll_event.connect((event) => {
-			float new_factor = factor-((float) event.delta_y)/10;
-			if (new_factor > 0 && new_factor < 1000){
-				scale(new_factor);
+			if((event.state & Gdk.ModifierType.CONTROL_MASK) > 0){
+				float new_factor = factor-((float) event.delta_y)/10;
+				if (new_factor > 0 && new_factor < 1000){
+					scale(new_factor);
+				}
+				autoscale = false;
+				return true;
 			}
 			return false;
 		});
@@ -37,7 +43,13 @@ public class Dragonstone.View.Image : Gtk.ScrolledWindow, Dragonstone.IView {
 		return true;
 	}
 	
-	public void scaleToWindow(Gtk.Allocation rect){
+	public void trigger_autoscale(Gtk.Allocation rect){
+		if(autoscale){
+			scale_to_window(false);			
+		}
+	}
+	
+	public void scale_to_window(bool do_not_magnify = true){
 		float ph = pixbuf.get_height();
 		float pw = pixbuf.get_width();
 		float wh = get_allocated_height();
@@ -45,11 +57,11 @@ public class Dragonstone.View.Image : Gtk.ScrolledWindow, Dragonstone.IView {
 		float hr = ph/wh;
 		float wr = pw/ww;
 		float new_factor = factor;
-		if (hr > 1 || wr > 1){
+		if (hr > 1 || wr > 1 || !do_not_magnify){
 			new_factor = 1/float.max(hr,wr);
-			print(@"[image] rect.width=$(rect.width) rect.height=$(rect.height)\n");
-			print(@"[image] width: $pw,$ww rat: $wr | height: $ph,$wh rat: $hr\n");
-			print(@"[image] factor: $factor\n");
+			//print(@"[image] rect.width=$(rect.width) rect.height=$(rect.height)\n");
+			//print(@"[image] width: $pw,$ww rat: $wr | height: $ph,$wh rat: $hr\n");
+			//print(@"[image] factor: $factor\n");
 		}
 		scale(new_factor);
 	}
@@ -82,7 +94,7 @@ public class Dragonstone.View.Image : Gtk.ScrolledWindow, Dragonstone.IView {
 	
 	public void cleanup(){
 		this.image.clear();
-		size_allocate.disconnect(scaleToWindow);
+		size_allocate.disconnect(trigger_autoscale);
 	}
 	
 }
