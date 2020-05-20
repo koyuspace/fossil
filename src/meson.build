@@ -11,6 +11,7 @@ executable(
 	'session.vala',
 	'settings.vala',
 	'util/connectionHelper.vala',
+	'util/defaultGtkLinkIconLoader.vala',
 	'util/flaglist.vala',
 	'util/intparser.vala',
 	'util/messageViewFactory.vala',

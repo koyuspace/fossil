@@ -12,8 +12,14 @@ public class Dragonstone.Widget.HyperTextContent : Dragonstone.Widget.TextConten
 	public HyperTextContent(){
 		var buffer = textview.buffer;
 		link_tag = buffer.create_tag("link");
-		link_tag.underline = Pango.Underline.SINGLE;
+		//link_tag.underline = Pango.Underline.SINGLE;
 		link_tag.event.connect(on_link_tag_event);
+		link_tag.scale = 1.1;
+		link_tag.style = Pango.Style.ITALIC;
+		/*link_tag.pixels_above_lines = 5;
+		link_tag.pixels_above_lines_set = true;
+		link_tag.pixels_below_lines = 5;
+		link_tag.pixels_below_lines_set = true;*/
 		textview.has_tooltip = true;
 		textview.query_tooltip.connect(on_tooltip_query);
 		textview.button_press_event.connect(on_textview_button);
@@ -29,11 +35,34 @@ public class Dragonstone.Widget.HyperTextContent : Dragonstone.Widget.TextConten
 		});
 	}
 
-	public void append_link(string text, string uri){
+	public void append_link(string text, string uri, bool with_icon = true){
 		Gtk.TextIter end_iter;
+		//Insert Icon
+		if (with_icon){
+			var icon_name = Dragonstone.Util.DefaultGtkLinkIconLoader.guess_icon_name_for_uri(uri);
+			/*// Old Icon code, can only show icons at caracter size
+			var icon_theme = Gtk.IconTheme.get_for_screen(get_screen());
+			if (icon_theme.has_icon(icon_name)){
+				try{
+					var icon_pixbuf = icon_theme.load_icon(icon_name, (int) Gtk.IconSize.LARGE_TOOLBAR, 0);
+					if (icon_pixbuf != null){
+						textview.buffer.get_end_iter(out end_iter);
+						textview.buffer.insert_pixbuf(end_iter,icon_pixbuf);
+						append_text(" ");
+					}
+				} catch(Error e){
+					print(@"[hypertextcontent][error] error while loading icon $icon_name: $(e.message)\n");
+				}
+			}*/
+			var image = new Gtk.Image.from_icon_name(icon_name,Gtk.IconSize.LARGE_TOOLBAR);
+			append_widget_inline(image);
+			append_text(" ");
+		}
 		textview.buffer.get_end_iter(out end_iter);
+		//register uri
 		string index = @"$(end_iter.get_line())/$(end_iter.get_line_offset())";
 		uris.set(index,uri);
+		//insert link
 		textview.buffer.insert_with_tags(ref end_iter, text, text.length, link_tag);
 	}
 	
@@ -116,7 +145,9 @@ public class Dragonstone.Widget.HyperTextContent : Dragonstone.Widget.TextConten
 	}
 	
 	protected string? get_link_uri(Gtk.TextIter iter){
-		iter.backward_to_tag_toggle(link_tag);
+		if (!iter.starts_tag(link_tag)){
+			iter.backward_to_tag_toggle(link_tag);
+		}
 		if (iter.starts_tag(link_tag)){
 			string index = @"$(iter.get_line())/$(iter.get_line_offset())";
 			return uris.get(index);
