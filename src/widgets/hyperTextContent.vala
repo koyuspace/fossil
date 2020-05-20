@@ -23,6 +23,7 @@ public class Dragonstone.Widget.HyperTextContent : Dragonstone.Widget.TextConten
 		textview.has_tooltip = true;
 		textview.query_tooltip.connect(on_tooltip_query);
 		textview.button_press_event.connect(on_textview_button);
+		textview.touch_event.connect(on_textview_touch);
 		long_press_gesture = new Gtk.GestureLongPress(textview);
 		long_press_gesture.set_propagation_phase(Gtk.PropagationPhase.TARGET);
 		long_press_gesture.pressed.connect((x,y) => {
@@ -108,6 +109,22 @@ public class Dragonstone.Widget.HyperTextContent : Dragonstone.Widget.TextConten
 		return false;
 	}
 	
+	private bool on_textview_touch(Gdk.Event event){
+		if (event.get_event_type() == Gdk.EventType.TOUCH_END){
+			if (long_press) {
+				long_press = false;
+				return true;
+			}
+			string? uri = get_link_uri_at_window_location((int) event.touch.x, (int) event.touch.y);
+			if (uri == null){
+				print("[hypertextcontent][error] on_link_tag_event() no uri found\n");
+				return true;
+			}
+			go(uri,false);
+		}
+		return false;
+	}
+	
 	private bool on_link_tag_event(Object event_object, Gdk.Event event, Gtk.TextIter iter){
 		uint button;
 		if (event.get_button(out button) && event.get_event_type() == Gdk.EventType.BUTTON_RELEASE){
@@ -128,18 +145,6 @@ public class Dragonstone.Widget.HyperTextContent : Dragonstone.Widget.TextConten
 				go(uri,alt);
 				return true;
 			}
-		}
-		if (event.get_event_type() == Gdk.EventType.TOUCH_END){
-			if (long_press) {
-				long_press = false;
-				return true;
-			}
-			string? uri = get_link_uri(iter);
-			if (uri == null){
-				print("[hypertextcontent][error] on_link_tag_event() no uri found\n");
-				return true;
-			}
-			go(uri,false);
 		}
 		return false;
 	}
