@@ -54,7 +54,7 @@ public class Dragonstone.View.Geminitext : Dragonstone.Widget.TextContent, Drago
 					}
 					var widget = new Dragonstone.Widget.LinkButton(tab,htext,uri);
 					this.appendWidget(widget);
-					widget.show_all();
+					//widget.show_all();
 					isText = false;
 				}
 				if (isText){
