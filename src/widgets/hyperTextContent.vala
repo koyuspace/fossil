@@ -129,6 +129,18 @@ public class Dragonstone.Widget.HyperTextContent : Dragonstone.Widget.TextConten
 				return true;
 			}
 		}
+		if (event.get_event_type() == Gdk.EventType.TOUCH_END){
+			if (long_press) {
+				long_press = false;
+				return true;
+			}
+			string? uri = get_link_uri(iter);
+			if (uri == null){
+				print("[hypertextcontent][error] on_link_tag_event() no uri found\n");
+				return true;
+			}
+			go(uri,false);
+		}
 		return false;
 	}
 	
