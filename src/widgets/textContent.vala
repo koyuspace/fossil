@@ -10,18 +10,18 @@ public class Dragonstone.Widget.TextContent : Gtk.ScrolledWindow {
 		add(textview);
 	}
 	
-	public void appendText(string text){
+	public void append_text(string text){
 		Gtk.TextIter end_iter;
 		textview.buffer.get_end_iter(out end_iter);
 		textview.buffer.insert(ref end_iter,text,text.length);
 	}
 	
-	public void appendWidget(Gtk.Widget widget){
-		appendWidgetInline(widget);
-		appendText("\n");
+	public void append_widget(Gtk.Widget widget){
+		append_widget_inline(widget);
+		append_text("\n");
 	}
 	
-	public void appendWidgetInline(Gtk.Widget widget){
+	public void append_widget_inline(Gtk.Widget widget){
 		Gtk.TextIter end_iter;
 		textview.buffer.get_end_iter(out end_iter);
 		var anchor = textview.buffer.create_child_anchor(end_iter);

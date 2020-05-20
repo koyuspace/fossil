@@ -61,9 +61,9 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
 						}
 						var typeinfo = type_registry.get_entry_by_gophertype(gophertype);
 						if (typeinfo == null) {
-							appendWidget(new Dragonstone.View.GophertextUnknownItem(gophertype,htext,query,host,port));
+							append_widget(new Dragonstone.View.GophertextUnknownItem(gophertype,htext,query,host,port));
 						} else if (typeinfo.hint == Dragonstone.Registry.GopherTypeRegistryContentHint.TEXT){
-							appendText(htext+"\n");
+							append_text(htext+"\n");
 						}else if (typeinfo.hint == Dragonstone.Registry.GopherTypeRegistryContentHint.LINK || query.has_prefix("URL:")){
 							string? uri = null;
 							if (query.has_prefix("URL:")) {
@@ -80,7 +80,7 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
 									uri = @"gopher://$host/$gophertype$equery";
 								}
 							}
-							appendWidget(new Dragonstone.Widget.LinkButton(tab,htext,uri));
+							append_widget(new Dragonstone.Widget.LinkButton(tab,htext,uri));
 						} else if (typeinfo.hint == Dragonstone.Registry.GopherTypeRegistryContentHint.SEARCH){ //Search
 							string? uri = null;
 							var equery = Uri.escape_string(query,"/");
@@ -96,9 +96,9 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
 									cache.invalidate_for_uri(request.uri);
 								}
 							});
-							appendWidget(searchfield);
+							append_widget(searchfield);
 						} else if (typeinfo.hint == Dragonstone.Registry.GopherTypeRegistryContentHint.ERROR){ //Error
-							appendWidget(new Dragonstone.View.GophertextIconLabel(htext,"dialog-error-symbolic"));
+							append_widget(new Dragonstone.View.GophertextIconLabel(htext,"dialog-error-symbolic"));
 						}
 						lasttype = gophertype;
 					}else if(tokens.length == 0){ //empty line, ignore
