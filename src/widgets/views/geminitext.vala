@@ -6,6 +6,7 @@ public class Dragonstone.View.Geminitext : Dragonstone.Widget.HyperTextContent, 
 	
 	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
 		this.tab = tab;
+		this.link_popover = new Dragonstone.Widget.LinkButtonPopover(tab);
 		if (request.status == "success" && request.resource.mimetype.has_prefix("text/gemini")){
 			var file = File.new_for_path(request.resource.filepath);
 			if (!file.query_exists ()) {
@@ -24,6 +25,7 @@ public class Dragonstone.View.Geminitext : Dragonstone.Widget.HyperTextContent, 
 			return false;
 		}
 		this.request = request;
+		this.go.connect(on_go_event);
 		return true;
 	}
 	
@@ -76,6 +78,16 @@ public class Dragonstone.View.Geminitext : Dragonstone.Widget.HyperTextContent, 
 			return false;
 		}else{
 			return request.status == "success" && request.resource.mimetype.has_prefix("text/gemini");
+		}
+	}
+	
+	protected void on_go_event(string uri, bool alt){
+		if (this.tab != null){
+			if (alt){
+				tab.open_uri_in_new_tab(uri);
+			} else {
+				tab.go_to_uri(uri);
+			}
 		}
 	}
 	

@@ -13,12 +13,7 @@ public class Dragonstone.Widget.LinkButton : Gtk.Button {
 			//temporary
 			//open http(s) and mailto links with xdg to make dragonstone a bit more useable
 			if (uri.has_prefix("http://") || uri.has_prefix("https://") || uri.has_prefix("mailto:")){
-				try {
-					Pid child_pid;
-					GLib.Process.spawn_async (null, {"xdg-open",uri}, null, GLib.SpawnFlags.SEARCH_PATH, null, out child_pid);
-				} catch (Error e){
-					print(@"Error while spawing xdg-open: $(e.message)\n");
-				}
+				tab.open_uri_externally(this.uri);
 			}else{
 				tab.go_to_uri(this.uri);
 			}
@@ -119,34 +114,58 @@ public class Dragonstone.Widget.LinkButton : Gtk.Button {
 	}
 }
 
-public class Dragonstone.Widget.LinkButtonPopover : Gtk.Popover {
+public class Dragonstone.Widget.LinkButtonPopover : Dragonstone.Widget.LinkPopover,Gtk.Popover {
 	
-	public LinkButtonPopover(Dragonstone.Tab tab,string uri){
+	public Dragonstone.Tab tab;
+	public string? uri { get; set; }
+	
+	private Gtk.Label uri_label;
+	private Gtk.Button open_in_new_tab_button;
+	private Gtk.Button open_externally_button;
+	
+	public LinkButtonPopover(Dragonstone.Tab tab, string? uri = null){
+		this.tab = tab;
+		this.uri = null; //uri gets set below with use_uri(uri);
+		this.constrain_to = Gtk.PopoverConstraint.WINDOW;
 		var box = new Gtk.Box(Gtk.Orientation.VERTICAL,0);
-		var uri_label = new Gtk.Label(uri);
+		uri_label = new Gtk.Label("");
 		uri_label.selectable = true;
+		uri_label.wrap_mode = Pango.WrapMode.WORD_CHAR;
 		var open_in_new_tab_button_label = tab.translation.localize("action.open_in_new_tab");
-		var open_in_new_tab_button = new Gtk.Button.with_label(open_in_new_tab_button_label);
+		open_in_new_tab_button = new Gtk.Button.with_label(open_in_new_tab_button_label);
 		open_in_new_tab_button.set_relief(Gtk.ReliefStyle.NONE);
 		open_in_new_tab_button.clicked.connect(() => {
-			tab.open_uri_in_new_tab(uri);
+			if (this.uri != null){
+				this.tab.open_uri_in_new_tab(this.uri);
+			}
 		});
 		var open_externally_button_label = tab.translation.localize("action.open_uri_externally");
-		var open_externally_button = new Gtk.Button.with_label(open_externally_button_label);
+		open_externally_button = new Gtk.Button.with_label(open_externally_button_label);
 		open_externally_button.set_relief(Gtk.ReliefStyle.NONE);
 		open_externally_button.clicked.connect(() => {
-			Dragonstone.External.open_uri(uri);
+			if (this.uri != null){
+				this.tab.open_uri_externally(this.uri);
+			}
 		});
 		box.pack_start(uri_label);
 		box.pack_start(open_in_new_tab_button);
 		box.pack_start(open_externally_button);
-		var cache = tab.session.get_cache();
+		/*var cache = tab.session.get_cache();
 		if (cache != null){
 			if(cache.can_serve_request(uri)){
 				box.pack_start(new Gtk.Label(tab.translation.localize("linkbutton.resource_is_in_cache.tag")));
 			}
-		}
+		}*/
 		add(box);
 		this.set_position(Gtk.PositionType.BOTTOM);
+		if (uri != null){
+			use_uri(uri);
+		}
 	}
+	
+	public void use_uri(string uri){
+		this.uri = uri;
+		uri_label.label = uri;
+	}
+	
 }

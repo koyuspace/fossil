@@ -315,8 +315,12 @@ public class Dragonstone.Tab : Gtk.Bin {
 		}
 	}
 	
-	public void open_uri_externally(){
-		Dragonstone.External.open_uri(this.uri);
+	public void open_uri_externally(string? uri = null){
+		if(uri == null){
+			Dragonstone.External.open_uri(this.uri);
+		} else {
+			Dragonstone.External.open_uri(uri);
+		}
 	}
 	
 	public void open_resource_externally(){
