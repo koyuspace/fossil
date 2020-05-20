@@ -70,7 +70,7 @@ public class Dragonstone.Widget.HyperTextContent : Dragonstone.Widget.TextConten
 		if (link_popover != null){
 			link_popover.use_uri(uri);
 			link_popover.set_relative_to(textview);
-			var rect = Cairo.RectangleInt() {
+			var rect = Gdk.Rectangle() {
 				x = x,
 				y = y,
 				width = 1,
