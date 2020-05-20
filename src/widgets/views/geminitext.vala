@@ -1,4 +1,4 @@
-public class Dragonstone.View.Geminitext : Dragonstone.Widget.TextContent, Dragonstone.IView {
+public class Dragonstone.View.Geminitext : Dragonstone.Widget.HyperTextContent, Dragonstone.IView {
 	
 	private Dragonstone.Request request = null;
 	private DataInputStream data_input_stream;
@@ -52,9 +52,8 @@ public class Dragonstone.View.Geminitext : Dragonstone.Widget.TextContent, Drago
 						uri = uri_and_text.substring(0,spaceindex);
 						htext = uri_and_text.substring(spaceindex).strip();
 					}
-					var widget = new Dragonstone.Widget.LinkButton(tab,htext,uri);
-					this.append_widget(widget);
-					//widget.show_all();
+					this.append_link(htext,uri);
+					this.append_text("\n");
 					isText = false;
 				}
 				if (isText){
