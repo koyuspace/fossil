@@ -129,7 +129,10 @@ public class Dragonstone.Widget.HyperTextContent : Dragonstone.Widget.TextConten
 			}
 			if (last_touch_event_in_progress){
 				last_touch_event_in_progress = false;
-				int distance_squared = (int) ((event.touch.x*event.touch.x)+(event.touch.y*event.touch.y));
+				double dx = event.touch.x-last_touch_event_start_x;
+				double dy = event.touch.y-last_touch_event_start_y;
+				int distance_squared = (int) ((dx*dx)+(dy*dy));
+				print(@"D: $distance_squared\n");
 				if(distance_squared <= max_distance_for_touch_squared){
 					string? uri = get_link_uri_at_window_location((int) event.touch.x, (int) event.touch.y);
 					if (uri == null){
