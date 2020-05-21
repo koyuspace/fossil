@@ -109,18 +109,36 @@ public class Dragonstone.Widget.HyperTextContent : Dragonstone.Widget.TextConten
 		return false;
 	}
 	
+	
+	private int max_distance_for_touch_squared = 50;
+	private bool last_touch_event_in_progress = false;
+	private int last_touch_event_start_x = 0;
+	private int last_touch_event_start_y = 0;
+	
+	
 	private bool on_textview_touch(Gdk.Event event){
+		if (event.get_event_type() == Gdk.EventType.TOUCH_BEGIN){
+			last_touch_event_start_x = (int) event.touch.x;
+			last_touch_event_start_y = (int) event.touch.y;
+			last_touch_event_in_progress = true;
+		}
 		if (event.get_event_type() == Gdk.EventType.TOUCH_END){
 			if (long_press) {
 				long_press = false;
 				return true;
 			}
-			string? uri = get_link_uri_at_window_location((int) event.touch.x, (int) event.touch.y);
-			if (uri == null){
-				print("[hypertextcontent][error] on_link_tag_event() no uri found\n");
-				return true;
+			if (last_touch_event_in_progress){
+				last_touch_event_in_progress = false;
+				int distance_squared = (int) ((event.touch.x*event.touch.x)+(event.touch.y*event.touch.y));
+				if(distance_squared <= max_distance_for_touch_squared){
+					string? uri = get_link_uri_at_window_location((int) event.touch.x, (int) event.touch.y);
+					if (uri == null){
+						print("[hypertextcontent][error] on_link_tag_event() no uri found\n");
+						return true;
+					}
+					go(uri,false);
+				}
 			}
-			go(uri,false);
 		}
 		return false;
 	}
