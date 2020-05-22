@@ -48,10 +48,7 @@ public class Dragonstone.View.Geminitext : Dragonstone.Widget.HyperTextContent, 
 						if (line.has_prefix("```")){
 							if (alttext == null){
 								if (line.length > 3){
-									alttext = line.substring(3);
-									if (alttext.has_prefix(" ")){
-										alttext = alttext.substring(1);
-									}
+									alttext = line.substring(3).strip();
 									append_text(@" - $alttext -\n");
 									int altlen = alttext.length;
 									alttext = "";
@@ -66,6 +63,18 @@ public class Dragonstone.View.Geminitext : Dragonstone.Widget.HyperTextContent, 
 								alttext = null;
 							}
 							isText=false;
+						}
+						if (line.has_prefix("###") && isText){
+							this.append_h3(line.substring(3).strip()+"\n");
+							isText = false;
+						}
+						if (line.has_prefix("##") && isText){
+							this.append_h2(line.substring(2).strip()+"\n");
+							isText = false;
+						}
+						if (line.has_prefix("#") && isText){
+							this.append_h1(line.substring(1).strip()+"\n");
+							isText = false;
 						}
 						if (isText){
 							this.append_text(line+"\n");

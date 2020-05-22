@@ -5,6 +5,10 @@ public class Dragonstone.Widget.HyperTextContent : Dragonstone.Widget.TextConten
 
 	protected Dragonstone.Widget.LinkPopover? link_popover = null;	
 	protected Gtk.TextTag link_tag;
+	protected Gtk.TextTag link_hover_tag;
+	protected Gtk.TextTag h1_tag;
+	protected Gtk.TextTag h2_tag;
+	protected Gtk.TextTag h3_tag;
 	
 	private Gtk.GestureLongPress long_press_gesture;
 	private bool long_press = false;
@@ -12,14 +16,18 @@ public class Dragonstone.Widget.HyperTextContent : Dragonstone.Widget.TextConten
 	public HyperTextContent(){
 		var buffer = textview.buffer;
 		link_tag = buffer.create_tag("link");
-		//link_tag.underline = Pango.Underline.SINGLE;
+		link_hover_tag = buffer.create_tag("link_hover");
+		h1_tag = buffer.create_tag("h1");
+		h2_tag = buffer.create_tag("h2");
+		h3_tag = buffer.create_tag("h3");
+		link_hover_tag.underline = Pango.Underline.SINGLE;
+		link_tag.underline = Pango.Underline.NONE;
 		link_tag.event.connect(on_link_tag_event);
 		link_tag.scale = 1.1;
 		link_tag.style = Pango.Style.ITALIC;
-		/*link_tag.pixels_above_lines = 5;
-		link_tag.pixels_above_lines_set = true;
-		link_tag.pixels_below_lines = 5;
-		link_tag.pixels_below_lines_set = true;*/
+		h1_tag.scale = 1.7;
+		h2_tag.scale = 1.5;
+		h3_tag.scale = 1.2;
 		textview.has_tooltip = true;
 		textview.query_tooltip.connect(on_tooltip_query);
 		textview.button_press_event.connect(on_textview_button);
@@ -35,7 +43,25 @@ public class Dragonstone.Widget.HyperTextContent : Dragonstone.Widget.TextConten
 			}
 		});
 	}
-
+	
+	protected void append_with_tag(string text, Gtk.TextTag tag){
+		Gtk.TextIter end_iter;
+		textview.buffer.get_end_iter(out end_iter);
+		textview.buffer.insert_with_tags(ref end_iter, text, text.length, tag);
+	}
+	
+	public void append_h1(string text){
+		append_with_tag(text,h1_tag);
+	}
+	
+	public void append_h2(string text){
+		append_with_tag(text,h2_tag);
+	}
+	
+	public void append_h3(string text){
+		append_with_tag(text,h3_tag);
+	}
+	
 	public void append_link(string text, string uri, bool with_icon = true){
 		Gtk.TextIter end_iter;
 		//Insert Icon
@@ -83,17 +109,46 @@ public class Dragonstone.Widget.HyperTextContent : Dragonstone.Widget.TextConten
 		}
 	}
 	
+	private string? last_tooltip_uri = null;
+	private Gtk.TextIter? last_link_hover_start_iter = null;
+	private Gtk.TextIter? last_link_hover_end_iter = null;
+	
 	private bool on_tooltip_query(int x, int y, bool keyboard_tooltip, Gtk.Tooltip tooltip){
 		//print(@"tooltip $x $y $keyboard_tooltip\n");
-		string? uri = get_link_uri_at_window_location(x,y);
-		if (uri != null){
-			tooltip.set_text(uri);
-			//print(@"TOOLTIP: $buffer_y/$buffer_x $uri\n");
-			return true;
-		} else {
-			tooltip.set_text("");
+		Gtk.TextIter? start_iter;
+		Gtk.TextIter? end_iter;
+		if (get_link_iters_at_window_location(x,y,out start_iter,out end_iter)){
+			string? uri = get_link_uri(start_iter);
+			//will break,when there are two links to the same uri above each other, but tis is for now acceptable
+			//break means, it won't chane the highlighted uri
+			bool update = false;
+			if (uri != last_tooltip_uri){
+				last_tooltip_uri = uri;
+				update = true;
+			}
+			if (uri != null){
+				tooltip.set_text(uri);
+				if(update){
+					clear_last_hover();
+					textview.buffer.apply_tag(link_hover_tag,start_iter,end_iter);
+					last_link_hover_start_iter = start_iter;
+					last_link_hover_end_iter = end_iter;
+				}
+				//print(@"TOOLTIP: $buffer_y/$buffer_x $uri\n");
+				//link_tag.underline = Pango.Underline.SINGLE;
+				return true;
+			}
 		}
+		clear_last_hover();
+		last_tooltip_uri = null;
+		//link_tag.underline = Pango.Underline.NONE;
 		return false;
+	}
+	
+	private void clear_last_hover(){
+		if (last_link_hover_start_iter != null && last_link_hover_end_iter != null){
+			textview.buffer.remove_tag(link_hover_tag,last_link_hover_start_iter,last_link_hover_end_iter);
+		}
 	}
 	
 	private bool on_textview_button(Gdk.EventButton event){
@@ -165,6 +220,28 @@ public class Dragonstone.Widget.HyperTextContent : Dragonstone.Widget.TextConten
 				print(@"Clicked on $uri $alt\n");
 				go(uri,alt);
 				return true;
+			}
+		}
+		return false;
+	}
+	
+	//both iters are guaranteed to be non null if this returns true
+	protected bool get_link_iters_at_window_location(int x, int y, out Gtk.TextIter? start_iter, out Gtk.TextIter? end_iter){
+		start_iter = null;
+		end_iter = null;
+		int? buffer_x, buffer_y;
+		textview.window_to_buffer_coords(Gtk.TextWindowType.TEXT, x, y, out buffer_x, out buffer_y);
+		if (buffer_x != null && buffer_y != null){
+			if (textview.get_iter_at_location(out start_iter,buffer_x,buffer_y)){
+				if (!start_iter.starts_tag(link_tag)){
+					start_iter.backward_to_tag_toggle(link_tag);
+				}
+				if (start_iter.starts_tag(link_tag)){
+					end_iter = Gtk.TextIter();
+					end_iter.assign(start_iter);
+					end_iter.forward_to_tag_toggle(link_tag);
+					return true;
+				}
 			}
 		}
 		return false;
