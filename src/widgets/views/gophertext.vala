@@ -1,6 +1,7 @@
-public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Dragonstone.IView {
+public class Dragonstone.View.Gophertext : Dragonstone.Widget.HyperTextContent, Dragonstone.IView {
 	
 	private Dragonstone.Request request = null;
+	private Dragonstone.Tab tab;
 	
 	private Dragonstone.Registry.MimetypeGuesser mimeguesser;
 	private Dragonstone.Registry.GopherTypeRegistry type_registry;
@@ -27,6 +28,7 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
 	
 	
 	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
+		this.tab = tab;
 		if (request.status == "success" && request.resource.mimetype.has_prefix("text/gopher")){
 			var file = File.new_for_path(request.resource.filepath);
 			if (!file.query_exists ()) {
@@ -38,6 +40,7 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
     		this.cache = cache;
     	}
     	try{
+    		this.link_popover = new Dragonstone.Widget.LinkButtonPopover(tab);
 				//parse text
 				unichar lasttype = '\0';
 				var dis = new DataInputStream (file.read ());
@@ -80,7 +83,9 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
 									uri = @"gopher://$host/$gophertype$equery";
 								}
 							}
-							append_widget(new Dragonstone.Widget.LinkButton(tab,htext,uri));
+							//append_widget(new Dragonstone.Widget.LinkButton(tab,htext,uri));
+							append_link(htext,uri);
+							append_text("\n");
 						} else if (typeinfo.hint == Dragonstone.Registry.GopherTypeRegistryContentHint.SEARCH){ //Search
 							string? uri = null;
 							var equery = Uri.escape_string(query,"/");
@@ -117,6 +122,7 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
 		}
 		show_all();
 		this.request = request;
+		this.go.connect(on_go_event);
 		return true;
 	}
 	
@@ -125,6 +131,16 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.TextContent, Drago
 			return false;
 		}else{
 			return request.status == "success" && request.resource.mimetype.has_prefix("text/gopher");
+		}
+	}
+	
+	protected void on_go_event(string uri, bool alt){
+		if (this.tab != null){
+			if (alt){
+				tab.open_uri_in_new_tab(uri);
+			} else {
+				tab.go_to_uri(uri);
+			}
 		}
 	}
 	
