@@ -3,6 +3,7 @@ public class Dragonstone.View.Geminitext : Dragonstone.Widget.HyperTextContent, 
 	private Dragonstone.Request request = null;
 	private DataInputStream data_input_stream;
 	private Dragonstone.Tab tab;
+	private int maxlines = 30000;
 	
 	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
 		this.tab = tab;
@@ -16,7 +17,69 @@ public class Dragonstone.View.Geminitext : Dragonstone.Widget.HyperTextContent, 
 				//parse text
 				
 				data_input_stream = new DataInputStream (file.read ());
-				render_batch(30000);
+				try{
+					int linecounter = 0;
+					string line;
+					string? alttext = null;
+					while ((line = data_input_stream.read_line (null)) != null) {
+						//print(@"GEMINI: $line\n");
+						//parse geminis simple markup
+						bool isText = true;
+						if (line.has_prefix("=>")){
+							var uri = "";
+							var htext = "";
+							var uri_and_text = line.substring(2).strip();
+							var spaceindex = uri_and_text.index_of_char(' ');
+							var tabindex = uri_and_text.index_of_char('\t');
+							if (spaceindex < 0 && tabindex < 0){
+								uri = uri_and_text;
+								htext = uri_and_text;
+							} else if ((tabindex > 0 && tabindex < spaceindex) || spaceindex < 0){
+								uri = uri_and_text.substring(0,tabindex);
+								htext = uri_and_text.substring(tabindex).strip();
+							} else if ((spaceindex > 0 && spaceindex < tabindex) || tabindex < 0){
+								uri = uri_and_text.substring(0,spaceindex);
+								htext = uri_and_text.substring(spaceindex).strip();
+							}
+							this.append_link(htext,uri);
+							this.append_text("\n");
+							isText = false;
+						}
+						if (line.has_prefix("```")){
+							if (alttext == null){
+								if (line.length > 3){
+									alttext = line.substring(3);
+									if (alttext.has_prefix(" ")){
+										alttext = alttext.substring(1);
+									}
+									append_text(@" - $alttext -\n");
+									int altlen = alttext.length;
+									alttext = "";
+									for (int i = 0; i<altlen; i++){
+										alttext = alttext+"-";
+									}
+								} else {
+									alttext = "";
+								}
+							} else if (alttext != ""){
+								append_text(@" - $alttext -\n");
+								alttext = null;
+							}
+							isText=false;
+						}
+						if (isText){
+							this.append_text(line+"\n");
+						}
+						linecounter++;
+						if (linecounter >= maxlines){
+							return false;
+						}
+					}
+				}catch (GLib.Error e) {
+					this.append_widget(new Gtk.Label("Error while rendering gemini content:\n"+e.message));
+				}
+				show_all();
+				data_input_stream.close();
 				
 			}catch (GLib.Error e) {
 				this.append_widget(new Gtk.Label("Error while rendering gemini content:\n"+e.message));
@@ -26,50 +89,6 @@ public class Dragonstone.View.Geminitext : Dragonstone.Widget.HyperTextContent, 
 		}
 		this.request = request;
 		this.go.connect(on_go_event);
-		return true;
-	}
-	
-	//returns true when finished
-	private bool render_batch(int lines) {
-		try{
-			int linecounter = 0;
-			string line;
-			while ((line = data_input_stream.read_line (null)) != null) {
-				//print(@"GEMINI: $line\n");
-				//parse geminis simple markup
-				bool isText = true;
-				if (line.has_prefix("=>")){
-					var uri = "";
-					var htext = "";
-					var uri_and_text = line.substring(2).strip();
-					var spaceindex = uri_and_text.index_of_char(' ');
-					var tabindex = uri_and_text.index_of_char('\t');
-					if (spaceindex < 0 && tabindex < 0){
-						uri = uri_and_text;
-						htext = uri_and_text;
-					} else if ((tabindex > 0 && tabindex < spaceindex) || spaceindex < 0){
-						uri = uri_and_text.substring(0,tabindex);
-						htext = uri_and_text.substring(tabindex).strip();
-					} else if ((spaceindex > 0 && spaceindex < tabindex) || tabindex < 0){
-						uri = uri_and_text.substring(0,spaceindex);
-						htext = uri_and_text.substring(spaceindex).strip();
-					}
-					this.append_link(htext,uri);
-					this.append_text("\n");
-					isText = false;
-				}
-				if (isText){
-					this.append_text(line+"\n");
-				}
-				linecounter++;
-				if (linecounter >= lines){
-					return false;
-				}
-			}
-		}catch (GLib.Error e) {
-			this.append_widget(new Gtk.Label("Error while rendering gemini content:\n"+e.message));
-		}
-		show_all();
 		return true;
 	}
 	
