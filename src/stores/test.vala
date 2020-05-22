@@ -7,11 +7,9 @@ public class Dragonstone.Store.Test : Object, Dragonstone.ResourceStore {
 		}
 		if (request.uri == "test://") {
 			var helper = new Dragonstone.Util.ResourceFileWriteHelper(request,filepath,0);
-			helper.appendString("
-Hello!
-Welcome to the internet of Gopherholes and Geminisites!
+			helper.appendString("# Hello!
 
-Please note that dragonstone is still prealpha and has some issues, that need fixing!
+## Welcome to the internet of Gopherholes and Geminisites!
 
 Warning:
 Gemini is supposed to be more secure than gopher but beacause of the implementation,
@@ -20,7 +18,7 @@ it cannot vertify a servers identity yet and therefore is about as secure as gop
 To get started here are some links:
 => gopher://gopher.floodgap.com/1/v2 The Veronica-2 Gopher search engine
 => gemini://gus.guru/ The GUS search engine for gemini
-=> gemini://gemini.circumlunar.space/servers/ A list of all known gemini servers
+=> gemini://gemini.circumlunar.space/servers/ A list of the first known gemini servers
 => gopher://khzae.net khzae has some gopher based services, that definitely deserve more attention
 
 => gopher://gopher.floodgap.com/1/gopher What is Gopher and why is it still relevant?
