@@ -108,9 +108,9 @@ public class Dragonstone.Widget.CacheView : Gtk.Box {
 		treeview.get_selection().set_mode(Gtk.SelectionMode.SINGLE);
 		treeview.set_model(filterstore);
 		treeview.insert_column_with_attributes(-1,translation.localize("view.interactive/cache.column.users.head"), new Gtk.CellRendererText (), "text", 3);
+		treeview.insert_column_with_attributes(-1,translation.localize("view.interactive/cache.column.time_to_live.head"), new Gtk.CellRendererText (), "text", 2);
 		treeview.insert_column_with_attributes(-1,translation.localize("view.interactive/cache.column.uri.head"), new Gtk.CellRendererText (), "text", 0);
 		//treeview.insert_column_with_attributes(-1,"Filename", new Gtk.CellRendererText (), "text", 1);
-		treeview.insert_column_with_attributes(-1,translation.localize("view.interactive/cache.column.time_to_live.head"), new Gtk.CellRendererText (), "text", 2);
 		treeview.row_activated.connect(treeview_row_activated);
 		treeview.cursor_changed.connect(update_selected_uri);
 		//scrolled window
