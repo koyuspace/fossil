@@ -85,6 +85,7 @@ executable(
 	'widgets/views/loading.vala',
 	'widgets/views/label.vala',
 	'widgets/views/message.vala',
+	'widgets/views/unknownUriScheme.vala',
 	'widgets/views/uriErrorGeneric.vala',
 	'widgets/views/errorGeneric.vala',
 	'widgets/views/image.vala',

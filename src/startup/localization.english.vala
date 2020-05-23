@@ -72,8 +72,7 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("view.error.label","Something went wrong ...");
 		language.set_text("view.error/resourceUnavaiable/temporary.label","Reource not found");
 		language.set_text("view.error/resourceUnwavaiable/temporary.sublabel","Should be back soon™️");
-		language.set_text("view.error/uri/unknownScheme.label","Unknown uri scheme");
-		language.set_text("view.error/uri/unknownScheme.sublabel","No I don't support cat:// uris!");
+		language.set_text("view.dragonstone.unknown_uri_scheme.title","Unknown uri scheme");
 		language.set_text("view.meow.label","Meow!");
 		language.set_text("view.meow.sublabel","");
 		language.set_text("view.no_session_panel.label","No Session Panel");
