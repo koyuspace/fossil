@@ -2,7 +2,8 @@ public class Dragonstone.View.Redirect : Gtk.Bin, Dragonstone.IView {
 	
 	private Dragonstone.Request request = null;
 	private Gtk.Label nameLabel = new Gtk.Label("");
-	private Gtk.Button redirbutton = new Gtk.Button.with_label("");
+	private Gtk.Button redirbutton = new Gtk.Button();
+	private Gtk.Label buttonlabel = new Gtk.Label("");
 	private string title = "Redirect to";
 	
 	public Redirect(Dragonstone.Registry.TranslationRegistry? translation = null) {
@@ -10,7 +11,12 @@ public class Dragonstone.View.Redirect : Gtk.Bin, Dragonstone.IView {
 			this.title = translation.localize("view.dragonstone.redirect.title");
 		}
 		nameLabel.valign = Gtk.Align.START;
+		nameLabel.wrap_mode = Pango.WrapMode.WORD_CHAR;
+		nameLabel.wrap = true;
 		redirbutton.get_style_context().add_class("suggested-action");
+		redirbutton.add(buttonlabel);
+		buttonlabel.wrap_mode = Pango.WrapMode.WORD_CHAR;
+		buttonlabel.wrap = true;
 		var outerBox = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
 		var centerBox = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
 		var label = new Gtk.Label(title);
@@ -33,7 +39,7 @@ public class Dragonstone.View.Redirect : Gtk.Bin, Dragonstone.IView {
 	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
 		if (!(request.status.has_prefix("redirect"))) {return false;}
 		this.request = request;
-		redirbutton.label = request.substatus;
+		buttonlabel.label = request.substatus;
 		redirbutton.clicked.connect(() => {
 			tab.redirect(this.request.substatus);
 		});
