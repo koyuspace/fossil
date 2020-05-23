@@ -230,12 +230,15 @@ public class Dragonstone.Tab : Gtk.Bin {
 	}
 	
 	public bool set_tab_session(string session_id){
+		if(locked>0){ return false; }
 		var session = session_registry.get_session_by_id(session_id);
 		if (session == null) { return false; }
 		print(@"[tab] using session $session_id\n");
 		this.current_session_id = session_id;
 		this.session = session;
-		reload();
+		//reload from cache
+		string urix = uri;
+		load_uri(urix);
 		return true;
 	}
 	
