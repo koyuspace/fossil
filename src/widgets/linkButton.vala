@@ -24,7 +24,7 @@ public class Dragonstone.Widget.LinkButton : Gtk.Button {
 		always_show_image = true;
 		image = new Gtk.Image.from_icon_name(icon_name_,Gtk.IconSize.LARGE_TOOLBAR);
 		image_position = Gtk.PositionType.LEFT;
-		if (name == uri || name == ""){
+		if (name == ""){
 			label = @"$uri";
 		} else {
 			label = @"$name";
@@ -37,6 +37,22 @@ public class Dragonstone.Widget.LinkButton : Gtk.Button {
 		});
 		button_press_event.connect(handle_button_press);
 		set_relief(Gtk.ReliefStyle.NONE);
+	}
+	
+	public void use_uri(string uri, bool update_icon){
+		this.uri = uri;
+		if (update_icon){
+			var icon_name = Dragonstone.Util.DefaultGtkLinkIconLoader.guess_icon_name_for_uri(uri);
+			image = new Gtk.Image.from_icon_name(icon_name,Gtk.IconSize.LARGE_TOOLBAR);
+		}
+	}
+	
+	public void set_name(string name){
+		if (name == ""){
+			label = @"$uri";
+		} else {
+			label = @"$name";
+		}
 	}
 	
 	private bool handle_button_press(Gdk.EventButton event){
@@ -73,7 +89,7 @@ public class Dragonstone.Widget.LinkButtonPopover : Dragonstone.Widget.LinkPopov
 	public LinkButtonPopover(Dragonstone.Tab tab, string? uri = null){
 		this.tab = tab;
 		this.uri = null; //uri gets set below with use_uri(uri);
-		this.constrain_to = Gtk.PopoverConstraint.WINDOW;
+		//this.constrain_to = Gtk.PopoverConstraint.WINDOW;
 		var box = new Gtk.Box(Gtk.Orientation.VERTICAL,0);
 		uri_label = new Gtk.Label("");
 		uri_label.selectable = true;
