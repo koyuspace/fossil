@@ -6,7 +6,7 @@ public class Dragonstone.Widget.CacheView : Gtk.Box {
 	private HashTable<string,Gtk.TreeIter?> displayed_uris = new HashTable<string,Gtk.TreeIter?>(str_hash, str_equal);
 	private Gtk.TreeModelFilter filterstore;
 	private Gtk.Entry search_entry;
-	private Gtk.Box controls = new Gtk.Box(Gtk.Orientation.HORIZONTAL,0);
+	private Gtk.Box controls = new Gtk.Box(Gtk.Orientation.HORIZONTAL,1);
 	private Gtk.Button pinbutton;
 	private Gtk.TreeView treeview;
 	private Gtk.ToggleButton search_toggle;
