@@ -56,12 +56,21 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("view.dragonstone.download.open_button.label","Open in external viewer");
 		//Redirect
 		language.set_text("view.dragonstone.redirect.title","Redirect to");
+		//Bookmark view
+		language.set_text("view.boomarks.add.label","Add");
+		language.set_text("view.boomarks.editbutton.tooltip","Edit selected bookmark");
+		language.set_text("view.boomarks.open_in_new_tab.tooltip","Open selected bookmerk in new tab");
 		//linkbutton
 		language.set_text("linkbutton.resource_is_in_cache.tag","[cached]");
 		//bookmark adder widget
 		language.set_text("add_bookmark.add_bookmark.label","Add bookmark");
 		language.set_text("add_bookmark.name.placeholder","Bookmark Name");
 		language.set_text("add_bookmark.uri.placeholder","Bookmark Uri");
+		//bookmark edit widget
+		language.set_text("edit_bookmark.name.placeholder","Bookmark Name");
+		language.set_text("edit_bookmark.uri.placeholder","Bookmark Uri");
+		language.set_text("edit_bookmark.save_bookmark.label","Save");
+		language.set_text("edit_bookmark.delete_bookmark.label","Delete");
 		//messages
 		language.set_text("view.error/internal.label","Hell just broke loose");
 		language.set_text("view.error/internal.sublabel","or maybe it was just a tiny bug?\nPlease report to the developer!");
