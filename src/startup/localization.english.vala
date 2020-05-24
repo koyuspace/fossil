@@ -25,7 +25,7 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("window.main_menu.choose_session.tooltip","Choose a session for this tab");
 		//cache
 		language.set_text("view.interactive/cache.erase_cache","Erase cache");
-		language.set_text("view.interactive/cache.search.placeholder","Search for uri ...");
+		language.set_text("view.interactive/cache.search.placeholder","Search for uri …");
 		language.set_text("view.interactive/cache.remove.tooltip","Remove resource from cache");
 		language.set_text("view.interactive/cache.open_in_new_tab.tooltip","Open resource in new tab");
 		language.set_text("view.interactive/cache.pin.tooltip","Stop resource from expireing");
@@ -60,6 +60,9 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("view.boomarks.add.label","Add");
 		language.set_text("view.boomarks.editbutton.tooltip","Edit selected bookmark");
 		language.set_text("view.boomarks.open_in_new_tab.tooltip","Open selected bookmerk in new tab");
+		language.set_text("view.bookmarks.search.placeholder","Search for name or uri …");
+		language.set_text("view.bookmarks.column.name.head","Name");
+		language.set_text("view.bookmarks.column.uri.head","Uri");
 		//linkbutton
 		language.set_text("linkbutton.resource_is_in_cache.tag","[cached]");
 		//bookmark adder widget

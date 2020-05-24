@@ -124,8 +124,8 @@ public class Dragonstone.View.Bookmarks : Gtk.Box, Dragonstone.IView {
 		treeview = new Gtk.TreeView();
 		treeview.get_selection().set_mode(Gtk.SelectionMode.SINGLE);
 		treeview.set_model(filterstore);
-		treeview.insert_column_with_attributes(-1,translation.localize("view.interactive/bookmarks.column.name.head"), new Gtk.CellRendererText (), "text", 2);
-		treeview.insert_column_with_attributes(-1,translation.localize("view.interactive/bookmarks.column.uri.head"), new Gtk.CellRendererText (), "text", 1);
+		treeview.insert_column_with_attributes(-1,translation.localize("view.bookmarks.column.name.head"), new Gtk.CellRendererText (), "text", 2);
+		treeview.insert_column_with_attributes(-1,translation.localize("view.bookmarks.column.uri.head"), new Gtk.CellRendererText (), "text", 1);
 		//only needed for debugging
 		//treeview.insert_column_with_attributes(-1,translation.localize("view.interactive/bookmarks.column.uri.head"), new Gtk.CellRendererText (), "text", 0);
 		treeview.row_activated.connect(treeview_row_activated);
