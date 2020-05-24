@@ -67,6 +67,8 @@ executable(
 	'startup/store_switch.vala',
 	'startup/utiltest.backend.vala',
 	'startup/utiltest.gtk.vala',
+	'widgets/bookmarkAdder.vala',
+	'widgets/bookmarkEditor.vala',
 	'widgets/cacheview.vala',
 	'widgets/menuEntrys.vala',
 	'widgets/window.vala',
