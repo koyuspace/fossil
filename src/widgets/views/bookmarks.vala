@@ -6,10 +6,10 @@ public class Dragonstone.View.Bookmarks : Gtk.Box, Dragonstone.IView {
 	private Dragonstone.Registry.BookmarkRegistry bookmark_registry;
 	
 	private HashTable<string,Gtk.TreeIter?> displayed_uids = new HashTable<string,Gtk.TreeIter?>(str_hash, str_equal);
-	private bool search_dirty = true;
 	private Dragonstone.Registry.BookmarkRegistryEntry? selected_bookmark = null;
 	
 	private Gtk.ListStore liststore = new Gtk.ListStore(3,typeof(string),typeof(string),typeof(string));
+	private Gtk.TreeModelFilter filterstore;
 	
 	private Gtk.TreeView treeview;
 	private Gtk.Button addbutton = new Gtk.Button();
@@ -20,6 +20,8 @@ public class Dragonstone.View.Bookmarks : Gtk.Box, Dragonstone.IView {
 	private Gtk.Popover editpopover;
 	private Dragonstone.Widget.BookmarkEditor editwidget;
 	private Gtk.Button gotobutton = new Gtk.Button.from_icon_name("go-jump-symbolic");
+	private Gtk.ToggleButton search_toggle = new Gtk.ToggleButton();
+	private Gtk.Entry search_entry = new Gtk.Entry();
 	/*
 		Columns:
 		0: uid
@@ -28,6 +30,7 @@ public class Dragonstone.View.Bookmarks : Gtk.Box, Dragonstone.IView {
 	*/
 	
 	public Bookmarks(Dragonstone.Registry.BookmarkRegistry bookmark_registry, Dragonstone.Registry.TranslationRegistry? translation){
+		this.bookmark_registry = bookmark_registry;
 		this.translation = translation;
 		if (translation == null){
 			this.translation = new Dragonstone.Registry.TranslationLanguageRegistry();
@@ -73,8 +76,24 @@ public class Dragonstone.View.Bookmarks : Gtk.Box, Dragonstone.IView {
 		controls.pack_start(editbutton);
 		controls.pack_start(gotobutton);
 		controls.pack_start(new Gtk.Separator(Gtk.Orientation.VERTICAL));
-		
-		this.bookmark_registry = bookmark_registry;
+		//search_toggle
+		var searchicon = new Gtk.Image.from_icon_name("system-search-symbolic",Gtk.IconSize.SMALL_TOOLBAR);
+		search_toggle.add(searchicon);
+		search_toggle.toggled.connect(() => {
+			addbutton.visible = !search_toggle.active;
+			search_entry.visible = search_toggle.active;
+			if (search_entry.visible){
+				search_entry.grab_focus_without_selecting();
+			}
+		});
+		//search_entry
+		search_entry.placeholder_text = translation.localize("view.bookmarks.search.placeholder");
+		search_entry.expand = true;
+		search_entry.buffer.inserted_text.connect(on_search_dirty);
+		search_entry.buffer.deleted_text.connect(on_search_dirty);
+		//stores
+		filterstore = new Gtk.TreeModelFilter((Gtk.TreeModel) liststore,null);
+		filterstore.set_visible_func(filter_visible_function);
 	}
 	
 	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
@@ -90,6 +109,9 @@ public class Dragonstone.View.Bookmarks : Gtk.Box, Dragonstone.IView {
 		actionbar.pack_start(addbutton);
 		//controls
 		actionbar.pack_start(controls);
+		//search
+		actionbar.pack_end(search_toggle);
+		actionbar.pack_end(search_entry);
 		//add bookmarks
 		bookmark_registry.bookmark_added.connect(append_entry);
 		bookmark_registry.bookmark_modified.connect(update_entry);
@@ -101,10 +123,11 @@ public class Dragonstone.View.Bookmarks : Gtk.Box, Dragonstone.IView {
 		//treeview
 		treeview = new Gtk.TreeView();
 		treeview.get_selection().set_mode(Gtk.SelectionMode.SINGLE);
-		treeview.set_model(liststore);
+		treeview.set_model(filterstore);
 		treeview.insert_column_with_attributes(-1,translation.localize("view.interactive/bookmarks.column.name.head"), new Gtk.CellRendererText (), "text", 2);
 		treeview.insert_column_with_attributes(-1,translation.localize("view.interactive/bookmarks.column.uri.head"), new Gtk.CellRendererText (), "text", 1);
-		treeview.insert_column_with_attributes(-1,translation.localize("view.interactive/bookmarks.column.uri.head"), new Gtk.CellRendererText (), "text", 0);
+		//only needed for debugging
+		//treeview.insert_column_with_attributes(-1,translation.localize("view.interactive/bookmarks.column.uri.head"), new Gtk.CellRendererText (), "text", 0);
 		treeview.row_activated.connect(treeview_row_activated);
 		treeview.cursor_changed.connect(update_selected_bookmark);
 		//scrolled window
@@ -117,6 +140,7 @@ public class Dragonstone.View.Bookmarks : Gtk.Box, Dragonstone.IView {
 		set_child_packing(actionbar,false,true,0,Gtk.PackType.START);
 		set_child_packing(scrolled_window,true,true,0,Gtk.PackType.START);
 		this.show_all();
+		search_entry.hide();
 		update_controls();
 		return true;
 	}
@@ -128,7 +152,7 @@ public class Dragonstone.View.Bookmarks : Gtk.Box, Dragonstone.IView {
 				liststore.append (out iter);
 				liststore.set (iter, 0, entry.uid, 1, entry.uri, 2, entry.name);
 				displayed_uids.set(entry.uid, iter);
-				search_dirty = true;
+				on_search_dirty();
 			}
 		}
 	}
@@ -138,7 +162,7 @@ public class Dragonstone.View.Bookmarks : Gtk.Box, Dragonstone.IView {
 			var iter = displayed_uids.get(entry.uid); 
 			if (iter != null){
 				liststore.set (iter, 1, entry.uri, 2, entry.name);
-				search_dirty = true;
+				on_search_dirty();
 			}
 			//maybe add the entry, if its not in the table of displayed entrys
 		}
@@ -174,12 +198,35 @@ public class Dragonstone.View.Bookmarks : Gtk.Box, Dragonstone.IView {
 	
 	private void treeview_row_activated(Gtk.TreePath path, Gtk.TreeViewColumn column){
 		Gtk.TreeIter iter;
-		if(!liststore.get_iter(out iter,path)){
+		if(!filterstore.get_iter(out iter,path)){
 			return;
 		}
-		string uri = get_uri_from_model(liststore,iter);
+		string uri = get_uri_from_model(filterstore,iter);
 		if (uri != null && tab != null){
 			tab.go_to_uri(uri);
+		}
+	}
+	
+	private bool filter_visible_function(Gtk.TreeModel model, Gtk.TreeIter iter){
+		string uri = get_uri_from_model(model,iter);
+		string name = get_name_from_model(model,iter);
+		if (uri != null && name != null){
+			string searchquery = this.search_entry.buffer.text;
+			return uri.has_prefix(searchquery) || name.contains(searchquery);
+		} else {
+			return false;
+		}
+	}
+	
+	private bool timeout_running = false;
+	private void on_search_dirty(){
+		if (!timeout_running){
+			timeout_running = true;
+			Timeout.add(500,() => {
+				filterstore.refilter();
+				timeout_running = false;
+				return false;
+			},Priority.HIGH);
 		}
 	}
 	
@@ -193,6 +240,12 @@ public class Dragonstone.View.Bookmarks : Gtk.Box, Dragonstone.IView {
 		}else{
 			return request.status == "interactive/bookmarks";
 		}
+	}
+	
+	private string? get_name_from_model(Gtk.TreeModel model, Gtk.TreeIter iter){
+		Value nameval;
+		model.get_value(iter,1,out nameval);
+		return nameval.get_string();
 	}
 	
 	private string? get_uri_from_model(Gtk.TreeModel model, Gtk.TreeIter iter){
