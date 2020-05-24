@@ -10,8 +10,10 @@ public class Dragonstone.Startup.Settings.Backend {
 		var defult_settings = new Dragonstone.Settings.RamProvider();
 		settings_registry.add_provider(defult_settings);
 		super_registry.store("core.settings.default_provider",defult_settings);
-		//TODO: Replace with something truely persistant
-		var peristant_settings = new Dragonstone.Settings.RamProvider();
+		string settingsdir = GLib.Environment.get_user_config_dir();
+		settingsdir = settingsdir+"/dragonstone/";
+		GLib.DirUtils.create_with_parents(settingsdir,16832);
+		var peristant_settings = new Dragonstone.Settings.FileProvider(settingsdir,"settings.");
 		settings_registry.add_provider(peristant_settings);
 	}
 	

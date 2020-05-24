@@ -7,7 +7,7 @@ public class Dragonstone.Startup.Frontend.Settings {
 			print("[startup][frontend][settings][error] No settings registry found!\n");
 			return;
 		}
-		var settings_object = new Dragonstone.Settings.KVSettings("frontend.kv");
+		var settings_object = new Dragonstone.Settings.KVSettings("settings.frontend.kv");
 		settings_registry.add_bridge("frontend",settings_object);
 		super_registry.store("settings.frontend",settings_object);
 	}
@@ -19,7 +19,7 @@ public class Dragonstone.Startup.Frontend.Settings {
 			print("[startup][frontend][settings][error] No default settings provider found!\n");
 			return;
 		}
-		provider.upload_object("frontend.kv","
+		provider.upload_object("settings.frontend.kv","
 			new_tab_uri: test://
 		");
 	}

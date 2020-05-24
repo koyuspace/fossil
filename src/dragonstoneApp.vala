@@ -78,6 +78,8 @@ public class Dragonstone.Application : Gtk.Application {
 		if (cache != null){ cache.erase(); }
 		var sessions = (super_registry.retrieve("core.sessions") as Dragonstone.Registry.SessionRegistry);
 		if (sessions != null){ sessions.erase_all_caches(); }
+		var settings_registry = super_registry.retrieve("core.settings") as Dragonstone.Registry.SettingsRegistry;
+		if (settings_registry != null){ settings_registry.export_all(); }
 	}
 	
 	private void build_window() {

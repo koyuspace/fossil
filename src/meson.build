@@ -34,6 +34,7 @@ executable(
 	'sessions/tls.vala',
 	'sessions/uncached.vala',
 	'settings/bookmarkSettingsBridge.vala',
+	'settings/fileSettingsProvider.vala',
 	'settings/kvSettingsBridge.vala',
 	'settings/ramSettingsProvider.vala',
 	'stores/about.vala',

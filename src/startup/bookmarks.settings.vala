@@ -11,9 +11,8 @@ public class Dragonstone.Startup.Bookmarks.Settings {
 			print("[startup][bookmarks][settings][error] No bookmark registry found!\n");
 			return;
 		}
-		var settings_object = new Dragonstone.SettingsBridge.Bookmarks("bookmarks",bookmark_registry);
+		var settings_object = new Dragonstone.SettingsBridge.Bookmarks("settings.bookmarks",bookmark_registry);
 		settings_registry.add_bridge("bookmarks",settings_object);
-		super_registry.store("settings.bookmarks",settings_object);
 	}
 	
 	public static void register_default_settings(Dragonstone.SuperRegistry super_registry){
@@ -23,7 +22,7 @@ public class Dragonstone.Startup.Bookmarks.Settings {
 			print("[startup][bookmarks][settings][error] No default settings provider found!\n");
 			return;
 		}
-		provider.upload_object("bookmarks","
+		provider.upload_object("settings.bookmarks","
 			test://	The builtin Homepage
 			gemini://gemini.conman.org/	The first ever gemini server
 			gopher://khzae.net/	An awesome gopher server

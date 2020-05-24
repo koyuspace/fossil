@@ -64,7 +64,9 @@ public class Dragonstone.Registry.SettingsRegistry : Dragonstone.Settings.Provid
 		foreach(string name in bridges.get_keys()){
 			var bridge = bridges.get(name);
 			if (bridge != null){
-				bridge.export(this);
+				if (bridge.is_dirty()){
+					bridge.export(this);
+				}
 			}
 		}
 	}
