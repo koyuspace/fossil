@@ -31,6 +31,7 @@ public class Dragonstone.Widget.BookmarkAdder : Gtk.Box {
 		name_entry.buffer.inserted_text.connect(update_addbutton_sensitive);
 		uri_entry.buffer.deleted_text.connect(update_addbutton_sensitive);
 		uri_entry.buffer.inserted_text.connect(update_addbutton_sensitive);
+		set_values("","");
 	}
 	
 	public void update_addbutton_sensitive(){
