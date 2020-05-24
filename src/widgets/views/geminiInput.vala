@@ -87,7 +87,7 @@ private class Dragonstone.View.GeminiInputInput : Gtk.Bin {
 	
 	private void submit(){
 		if (entry.text != ""){
-			var searchstring = entry.text.replace("\t","%09").replace(" ","%20"); //TODO: prpoper url encode
+			var searchstring = Uri.escape_string(entry.text);
 			go(@"$base_uri?$searchstring");
 		}
 	}
