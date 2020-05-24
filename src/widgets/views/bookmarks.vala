@@ -208,14 +208,20 @@ public class Dragonstone.View.Bookmarks : Gtk.Box, Dragonstone.IView {
 	}
 	
 	private bool filter_visible_function(Gtk.TreeModel model, Gtk.TreeIter iter){
-		string uri = get_uri_from_model(model,iter);
-		string name = get_name_from_model(model,iter);
-		if (uri != null && name != null){
-			string searchquery = this.search_entry.buffer.text;
-			return uri.has_prefix(searchquery) || name.contains(searchquery);
-		} else {
-			return false;
+		string? uri = get_uri_from_model(model,iter);
+		string? name = get_name_from_model(model,iter);
+		string searchquery = this.search_entry.buffer.text;
+		if (uri != null){
+			if (uri.contains(searchquery)){
+				return true;
+			}
 		}
+		if (name != null){
+			if (name.contains(searchquery)){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	private bool timeout_running = false;
@@ -244,7 +250,7 @@ public class Dragonstone.View.Bookmarks : Gtk.Box, Dragonstone.IView {
 	
 	private string? get_name_from_model(Gtk.TreeModel model, Gtk.TreeIter iter){
 		Value nameval;
-		model.get_value(iter,1,out nameval);
+		model.get_value(iter,2,out nameval);
 		return nameval.get_string();
 	}
 	

@@ -177,7 +177,7 @@ public class Dragonstone.Widget.CacheView : Gtk.Box {
 	private bool filter_visible_function(Gtk.TreeModel model, Gtk.TreeIter iter){
 		string uri = get_uri_from_model(model,iter);
 		if (uri != null){
-			return uri.has_prefix(this.search_entry.buffer.text);
+			return uri.contains(this.search_entry.buffer.text);
 		} else {
 			return false;
 		}
