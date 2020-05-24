@@ -91,6 +91,7 @@ public class Dragonstone.Widget.LinkButtonPopover : Dragonstone.Widget.LinkPopov
 		this.uri = null; //uri gets set below with use_uri(uri);
 		//this.constrain_to = Gtk.PopoverConstraint.WINDOW;
 		var box = new Gtk.Box(Gtk.Orientation.VERTICAL,0);
+		box.margin = 4;
 		uri_label = new Gtk.Label("");
 		uri_label.selectable = true;
 		uri_label.wrap_mode = Pango.WrapMode.WORD_CHAR;
