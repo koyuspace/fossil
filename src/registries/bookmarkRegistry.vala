@@ -1,5 +1,8 @@
+//return true to keep going
+public delegate bool Dragonstone.Registry.BookmarkRegistryIterator(BookmarkRegistryEntry entry);
+
 public class Dragonstone.Registry.BookmarkRegistry : Object {
-	public List<BookmarkRegistryEntry> entrys = new List<BookmarkRegistryEntry>();
+	protected List<BookmarkRegistryEntry> entrys = new List<BookmarkRegistryEntry>();
 	
 	public signal void bookmark_added(BookmarkRegistryEntry bookmark);
 	public signal void bookmark_modified(BookmarkRegistryEntry bookmark);
@@ -27,6 +30,14 @@ public class Dragonstone.Registry.BookmarkRegistry : Object {
 	public void remove_bookmark(BookmarkRegistryEntry bookmark){
 		entrys.remove_all(bookmark);
 		bookmark_removed(bookmark);
+	}
+	
+	public void iterate_over_all_bookmarks(Dragonstone.Registry.BookmarkRegistryIterator callback){
+		foreach (var entry in entrys){
+			if (!callback(entry)){
+				break;
+			}
+		}
 	}
 	
 	public BookmarkRegistryEntry? get_bookmark_by_uid(string uid){

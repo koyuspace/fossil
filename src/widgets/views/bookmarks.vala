@@ -74,7 +74,6 @@ public class Dragonstone.View.Bookmarks : Gtk.Box, Dragonstone.IView {
 		controls.pack_start(gotobutton);
 		controls.pack_start(new Gtk.Separator(Gtk.Orientation.VERTICAL));
 		
-		
 		this.bookmark_registry = bookmark_registry;
 	}
 	
@@ -95,9 +94,10 @@ public class Dragonstone.View.Bookmarks : Gtk.Box, Dragonstone.IView {
 		bookmark_registry.bookmark_added.connect(append_entry);
 		bookmark_registry.bookmark_modified.connect(update_entry);
 		bookmark_registry.bookmark_removed.connect(remove_entry);
-		foreach (var entry in bookmark_registry.entrys){
+		bookmark_registry.iterate_over_all_bookmarks((entry) => {
 			append_entry(entry);
-		}
+			return true;
+		});
 		//treeview
 		treeview = new Gtk.TreeView();
 		treeview.get_selection().set_mode(Gtk.SelectionMode.SINGLE);
