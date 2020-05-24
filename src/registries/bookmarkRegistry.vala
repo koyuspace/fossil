@@ -8,14 +8,6 @@ public class Dragonstone.Registry.BookmarkRegistry : Object {
 	public signal void bookmark_modified(BookmarkRegistryEntry bookmark);
 	public signal void bookmark_removed(BookmarkRegistryEntry bookmark);
 	
-	construct {
-		//Add some examplebookmarks
-		add_bookmark("examplebookmark 1","test://");
-		add_bookmark("examplebookmark 2","gemini://gemini.conman.org");
-		add_bookmark("examplebookmark 3","gopher://g.vulpes.one");
-		
-	}
-	
 	public BookmarkRegistryEntry? add_bookmark(string name, string uri){
 		string uid = GLib.Uuid.string_random();
 		while (get_bookmark_by_uid(uid) != null){

@@ -21,8 +21,10 @@ public class Dragonstone.Application : Gtk.Application {
 		Dragonstone.Startup.Settings.Backend.setup_providers(super_registry);
 		//Set defaults
 		Dragonstone.Startup.Frontend.Settings.register_default_settings(super_registry);
+		Dragonstone.Startup.Bookmarks.Settings.register_default_settings(super_registry);
 		//Initaize bridges
 		Dragonstone.Startup.Frontend.Settings.register_settings_object(super_registry);
+		Dragonstone.Startup.Bookmarks.Settings.register_settings_bridge(super_registry);
 		//import settings
 		Dragonstone.Startup.Settings.Backend.import_all(super_registry);
 		//Initalize Cache
