@@ -25,7 +25,7 @@ public class Dragonstone.View.Geminitext : Dragonstone.Widget.HyperTextContent, 
 						//print(@"GEMINI: $line\n");
 						//parse geminis simple markup
 						bool isText = true;
-						if (line.has_prefix("=>")){
+						if (line.has_prefix("=>") && alttext == null){
 							var uri = "";
 							var htext = "";
 							var uri_and_text = line.substring(2).strip();
@@ -58,21 +58,23 @@ public class Dragonstone.View.Geminitext : Dragonstone.Widget.HyperTextContent, 
 								} else {
 									alttext = "";
 								}
-							} else if (alttext != ""){
-								append_text(@" - $alttext -\n");
+							} else {
+								if (alttext != ""){
+									append_text(@" - $alttext -\n");
+								}
 								alttext = null;
 							}
 							isText=false;
 						}
-						if (line.has_prefix("###") && isText){
+						if (line.has_prefix("###") && isText && alttext == null){
 							this.append_h3(line.substring(3).strip()+"\n");
 							isText = false;
 						}
-						if (line.has_prefix("##") && isText){
+						if (line.has_prefix("##") && isText && alttext == null){
 							this.append_h2(line.substring(2).strip()+"\n");
 							isText = false;
 						}
-						if (line.has_prefix("#") && isText){
+						if (line.has_prefix("#") && isText && alttext == null){
 							this.append_h1(line.substring(1).strip()+"\n");
 							isText = false;
 						}
