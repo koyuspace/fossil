@@ -2,8 +2,9 @@ public class Dragonstone.Startup.File.Backend {
 	
 	public static void setup_store(Dragonstone.SuperRegistry super_registry){
 		var store_registry = (super_registry.retrieve("core.stores") as Dragonstone.Registry.StoreRegistry);
+		var mimeguesser = (super_registry.retrieve("core.mimeguesser") as Dragonstone.Registry.MimetypeGuesser);
 		if (store_registry != null){
-			store_registry.add_resource_store("file://",new Dragonstone.Store.File());
+			store_registry.add_resource_store("file://",new Dragonstone.Store.File.with_mimeguesser(mimeguesser));
 		}
 	}
 	
