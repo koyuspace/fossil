@@ -67,23 +67,30 @@ public class Dragonstone.Widget.HyperTextContent : Dragonstone.Widget.TextConten
 		//Insert Icon
 		if (with_icon){
 			var icon_name = Dragonstone.Util.DefaultGtkLinkIconLoader.guess_icon_name_for_uri(uri);
-			/*// Old Icon code, can only show icons at caracter size
+			// Old Icon code, can only show icons at caracter size
 			var icon_theme = Gtk.IconTheme.get_for_screen(get_screen());
 			if (icon_theme.has_icon(icon_name)){
 				try{
-					var icon_pixbuf = icon_theme.load_icon(icon_name, (int) Gtk.IconSize.LARGE_TOOLBAR, 0);
+					var icon_pixbuf = icon_theme.load_icon(icon_name, (int) Gtk.IconSize.LARGE_TOOLBAR*2, Gtk.IconLookupFlags.FORCE_SYMBOLIC);
 					if (icon_pixbuf != null){
+						append_text(" ");
 						textview.buffer.get_end_iter(out end_iter);
 						textview.buffer.insert_pixbuf(end_iter,icon_pixbuf);
 						append_text(" ");
+						Gtk.TextIter pb_start_iter;
+						textview.buffer.get_end_iter(out pb_start_iter);
+						pb_start_iter.backward_chars(2);
+						Gtk.TextIter pb_end_iter;
+						textview.buffer.get_end_iter(out pb_end_iter);
+						textview.buffer.apply_tag(h2_tag,pb_start_iter,pb_end_iter);
 					}
 				} catch(Error e){
 					print(@"[hypertextcontent][error] error while loading icon $icon_name: $(e.message)\n");
 				}
-			}*/
-			var image = new Gtk.Image.from_icon_name(icon_name,Gtk.IconSize.LARGE_TOOLBAR);
-			append_widget_inline(image);
-			append_text(" ");
+			}
+			//var image = new Gtk.Image.from_icon_name(icon_name,Gtk.IconSize.LARGE_TOOLBAR);
+			//append_widget_inline(image);
+			//append_text(" ");
 		}
 		textview.buffer.get_end_iter(out end_iter);
 		//register uri
