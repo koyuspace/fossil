@@ -156,7 +156,7 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 					helper.cancel();
 					return;
 				}
-				var bytes = input_stream.read_bytes(1024*10);
+				var bytes = input_stream.read_bytes(1024*1024);
 				counter += bytes.length;
 				if (bytes.length == 0){
 					break;
