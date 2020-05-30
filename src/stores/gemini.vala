@@ -84,7 +84,7 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 				while(statusline.has_suffix("\r") || statusline.has_suffix("\n")){
 					statusline = statusline.substring(0,statusline.length-1);
 				}
-				print(@"< $(statusline.strip().length) '$statusline'\n");
+				print(@"[gemini][debug] statusline: $(statusline.strip().length) '$statusline'\n");
 				if (statusline.strip().length < 2){
 					request.setStatus("error/gibberish","#invalid status line");
 					return;
