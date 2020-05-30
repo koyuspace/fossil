@@ -13,6 +13,7 @@ public class Dragonstone.View.Geminitext : Dragonstone.Widget.HyperTextContent, 
 			if (!file.query_exists ()) {
         this.textview.buffer.text ="The cache file for this resource does not exist!\nReloading the page should help,\nif not please contact the developer!";
 			}
+			print("gemini: rendering content\n");
 			try{
 				//parse text
 				
@@ -25,65 +26,69 @@ public class Dragonstone.View.Geminitext : Dragonstone.Widget.HyperTextContent, 
 						//print(@"GEMINI: $line\n");
 						//parse geminis simple markup
 						bool isText = true;
-						if (line.has_prefix("=>") && alttext == null){
-							var uri = "";
-							var htext = "";
-							var uri_and_text = line.substring(2).strip();
-							var spaceindex = uri_and_text.index_of_char(' ');
-							var tabindex = uri_and_text.index_of_char('\t');
-							if (spaceindex < 0 && tabindex < 0){
-								uri = uri_and_text;
-								htext = uri_and_text;
-							} else if ((tabindex > 0 && tabindex < spaceindex) || spaceindex < 0){
-								uri = uri_and_text.substring(0,tabindex);
-								htext = uri_and_text.substring(tabindex).strip();
-							} else if ((spaceindex > 0 && spaceindex < tabindex) || tabindex < 0){
-								uri = uri_and_text.substring(0,spaceindex);
-								htext = uri_and_text.substring(spaceindex).strip();
-							}
-							this.append_link(htext,uri);
-							this.append_text("\n");
-							isText = false;
-						}
-						if (line.has_prefix("```")){
-							if (alttext == null){
-								if (line.length > 3){
-									alttext = line.substring(3).strip();
-									append_text(@" - $alttext -\n");
-									int altlen = alttext.length;
-									alttext = "";
-									for (int i = 0; i<altlen; i++){
-										alttext = alttext+"-";
+						if (line.validate(line.length)){
+							if (line.has_prefix("```")){
+								if (alttext == null){
+									if (line.length > 3){
+										alttext = line.substring(3).strip();
+										append_text(@" - $alttext -\n");
+										int altlen = alttext.length;
+										alttext = "";
+										for (int i = 0; i<altlen; i++){
+											alttext = alttext+"-";
+										}
+									} else {
+										alttext = "";
 									}
 								} else {
-									alttext = "";
+									if (alttext != ""){
+										append_text(@" - $alttext -\n");
+									}
+									alttext = null;
 								}
-							} else {
-								if (alttext != ""){
-									append_text(@" - $alttext -\n");
-								}
-								alttext = null;
+								isText=false;
 							}
-							isText=false;
-						}
-						if (line.has_prefix("###") && isText && alttext == null){
-							this.append_h3(line.substring(3).strip()+"\n");
-							isText = false;
-						}
-						if (line.has_prefix("##") && isText && alttext == null){
-							this.append_h2(line.substring(2).strip()+"\n");
-							isText = false;
-						}
-						if (line.has_prefix("#") && isText && alttext == null){
-							this.append_h1(line.substring(1).strip()+"\n");
-							isText = false;
-						}
-						if (isText){
-							this.append_text(line+"\n");
-						}
-						linecounter++;
-						if (linecounter >= maxlines){
-							return false;
+							if (alttext == null){
+								if (line.has_prefix("=>")){
+									var uri = "";
+									var htext = "";
+									var uri_and_text = line.substring(2).strip();
+									var spaceindex = uri_and_text.index_of_char(' ');
+									var tabindex = uri_and_text.index_of_char('\t');
+									if (spaceindex < 0 && tabindex < 0){
+										uri = uri_and_text;
+										htext = uri_and_text;
+									} else if ((tabindex > 0 && tabindex < spaceindex) || spaceindex < 0){
+										uri = uri_and_text.substring(0,tabindex);
+										htext = uri_and_text.substring(tabindex).strip();
+									} else if ((spaceindex > 0 && spaceindex < tabindex) || tabindex < 0){
+										uri = uri_and_text.substring(0,spaceindex);
+										htext = uri_and_text.substring(spaceindex).strip();
+									}
+									this.append_link(htext,uri);
+									this.append_text("\n");
+									isText = false;
+								}
+								if (line.has_prefix("###") && isText){
+									this.append_h3(line.substring(3).strip()+"\n");
+									isText = false;
+								}
+								if (line.has_prefix("##") && isText){
+									this.append_h2(line.substring(2).strip()+"\n");
+									isText = false;
+								}
+								if (line.has_prefix("#") && isText){
+									this.append_h1(line.substring(1).strip()+"\n");
+									isText = false;
+								}
+							}
+							if (isText){
+								this.append_text(line+"\n");
+							}
+							linecounter++;
+							if (linecounter >= maxlines){
+								return false;
+							}
 						}
 					}
 				}catch (GLib.Error e) {
