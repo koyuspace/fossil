@@ -77,6 +77,10 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 			
 			try{
 				var statusline = input_stream.read_line(null);
+				if (statusline == null){
+					request.setStatus("error/gibberish","#received a null statusline");
+					return;
+				}
 				while(statusline.has_suffix("\r") || statusline.has_suffix("\n")){
 					statusline = statusline.substring(0,statusline.length-1);
 				}
@@ -150,27 +154,31 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 	}
 	
 	public void readBytes(DataInputStream input_stream,Dragonstone.Util.ResourceFileWriteHelper helper) throws Error{
-			uint64 counter = 0;
-			while (true){
-				if(request.cancelled){
-					helper.cancel();
-					return;
-				}
-				var bytes = input_stream.read_bytes(1024*1024);
-				counter += bytes.length;
-				if (bytes.length == 0){
-					break;
-				} else {
-					helper.append(Bytes.unref_to_data(bytes));
-				}
-				//print(@"$counter: length: $(bytes.length)\n");
-				//teerminate early if file gets too big
-				if(counter > 1024*1024*1024*3){
-					print("GEMINI terminating file read early, beacause file is too big (>3GB)\n");
-					helper.cancel();
-					return;
-				}
+		//print("[debug] readbytes start\n");
+		uint64 counter = 0;
+		while (true){
+			if(request.cancelled){
+				helper.cancel();
+				//print("[debug] readbytes end (cancelled)\n");
+				return;
 			}
+			var bytes = input_stream.read_bytes(1024*1024);
+			counter += bytes.length;
+			if (bytes.length == 0){
+				break;
+			} else {
+				helper.append(Bytes.unref_to_data(bytes));
+			}
+			//print(@"$counter: length: $(bytes.length)\n");
+			//teerminate early if file gets too big
+			if(counter > 1024*1024*1024*3){
+				print("[gemini] terminating file read early, beacause file is too big (>3GB)\n");
+				helper.cancel();
+				//print("[debug] readbytes end (too big)\n");
+				return;
+			}
+		}
+		//print("[debug] readbytes end\n");
 	}
 	
 }
