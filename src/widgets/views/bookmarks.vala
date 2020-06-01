@@ -1,4 +1,4 @@
-public class Dragonstone.View.Bookmarks : Gtk.Box, Dragonstone.IView {
+public class Dragonstone.View.Bookmarks : Gtk.Stack, Dragonstone.IView {
 	
 	private Dragonstone.Request? request = null;
 	private Dragonstone.Tab? tab = null;
@@ -11,17 +11,26 @@ public class Dragonstone.View.Bookmarks : Gtk.Box, Dragonstone.IView {
 	private Gtk.ListStore liststore = new Gtk.ListStore(3,typeof(string),typeof(string),typeof(string));
 	private Gtk.TreeModelFilter filterstore;
 	
+	//bookmark list
+	private Gtk.Box view_list = new Gtk.Box(Gtk.Orientation.VERTICAL,0);
 	private Gtk.TreeView treeview;
 	private Gtk.Button addbutton = new Gtk.Button();
-	private Gtk.Popover addpopover;
-	private Dragonstone.Widget.BookmarkAdder addwidget;
+	//private Gtk.Popover addpopover;
 	private Gtk.Box controls = new Gtk.Box(Gtk.Orientation.HORIZONTAL,1);
 	private Gtk.Button editbutton = new Gtk.Button.from_icon_name("document-edit-symbolic");
-	private Gtk.Popover editpopover;
-	private Dragonstone.Widget.BookmarkEditor editwidget;
+	//private Gtk.Popover editpopover;
 	private Gtk.Button gotobutton = new Gtk.Button.from_icon_name("go-jump-symbolic");
 	private Gtk.ToggleButton search_toggle = new Gtk.ToggleButton();
 	private Gtk.Entry search_entry = new Gtk.Entry();
+	
+	//addview
+	private Dragonstone.Widget.SubviewBase subview_add = new Dragonstone.Widget.SubviewBase("temptitle: Add");
+	private Dragonstone.Widget.BookmarkAdder addwidget;
+		
+	//editview
+	private Dragonstone.Widget.SubviewBase subview_edit = new Dragonstone.Widget.SubviewBase("temptitle: Edit");
+	private Dragonstone.Widget.BookmarkEditor editwidget;
+	
 	/*
 		Columns:
 		0: uid
@@ -39,35 +48,65 @@ public class Dragonstone.View.Bookmarks : Gtk.Box, Dragonstone.IView {
 		addbutton.label = translation.localize("view.boomarks.add.label");
 		addwidget = new Dragonstone.Widget.BookmarkAdder(bookmark_registry);
 		addwidget.margin = 8;
-		addpopover = new Gtk.Popover(addbutton);
-		addpopover.add(addwidget);
+		subview_add.append_child(addwidget);
+		subview_add.set_title(translation.localize("view.boomarks.subview_add.title"));
+		/*addpopover = new Gtk.Popover(addbutton);
+		addpopover.add(subview_add);
 		addpopover.show_all();
-		addpopover.hide();
-		addbutton.clicked.connect(addpopover.popup);
-		addwidget.cancel_button.clicked.connect(addpopover.popdown);
+		addpopover.hide();*/
+		add_named(subview_add,"subview_add");
+		/*addbutton.clicked.connect(addpopover.popup);
+		addwidget.cancel_button.clicked.connect(addpopover.popdown);*/
+		addbutton.clicked.connect(() => {
+			this.set_visible_child_full("subview_add",Gtk.StackTransitionType.OVER_LEFT);
+			addwidget.uri_entry.grab_focus_without_selecting();
+		});
+		addwidget.cancel_button.clicked.connect(() => {
+			this.set_visible_child_full("view_list",Gtk.StackTransitionType.UNDER_RIGHT);
+		});
 		addwidget.localize(translation);
 		addwidget.bookmark_added.connect(() => {
-			addpopover.popdown();
+			//addpopover.popdown();
+			this.set_visible_child_full("view_list",Gtk.StackTransitionType.UNDER_RIGHT);
 			addwidget.set_values("","");
+		});
+		subview_add.backbutton.clicked.connect(() => {
+			this.set_visible_child_full("view_list",Gtk.StackTransitionType.UNDER_RIGHT);
 		});
 		//editbutton
 		editbutton.tooltip_text = translation.localize("view.boomarks.editbutton.tooltip");
 		editwidget = new Dragonstone.Widget.BookmarkEditor(bookmark_registry);
 		editwidget.margin = 8;
-		editpopover = new Gtk.Popover(editbutton);
-		editpopover.add(editwidget);
+		subview_edit.append_child(editwidget);
+		subview_edit.set_title(translation.localize("view.boomarks.subview_edit.title"));
+		/*editpopover = new Gtk.Popover(editbutton);
+		editpopover.add(subview_edit);
 		editpopover.show_all();
-		editpopover.hide();
+		editpopover.hide();*/
+		add_named(subview_edit,"subview_edit");
 		editbutton.clicked.connect(() => {
 			if (selected_bookmark != null){
 				editwidget.edit_bookmark(selected_bookmark);
-				editpopover.popup();
+				/*editpopover.popup();*/
+				this.set_visible_child_full("subview_edit",Gtk.StackTransitionType.OVER_LEFT);
 			}
 		});
-		editwidget.done_editing.connect(editpopover.popdown);
+		//editwidget.done_editing.connect(editpopover.popdown);
+		editwidget.done_editing.connect(() => {
+			this.set_visible_child_full("view_list",Gtk.StackTransitionType.UNDER_RIGHT);
+		});
+		subview_edit.backbutton.clicked.connect(() => {
+			this.set_visible_child_full("view_list",Gtk.StackTransitionType.UNDER_RIGHT);
+		});
 		editwidget.localize(translation);
-		editwidget.name_entry.activate.connect(editpopover.popdown);
-		editwidget.uri_entry.activate.connect(editpopover.popdown);
+		/*editwidget.name_entry.activate.connect(editpopover.popdown);
+		editwidget.uri_entry.activate.connect(editpopover.popdown);*/
+		editwidget.name_entry.activate.connect(() => {
+			this.set_visible_child_full("view_list",Gtk.StackTransitionType.UNDER_RIGHT);
+		});
+		editwidget.uri_entry.activate.connect(() => {
+			this.set_visible_child_full("view_list",Gtk.StackTransitionType.UNDER_RIGHT);
+		});
 		//gotobutton
 		gotobutton.clicked.connect(open_selected_in_new_tab);
 		gotobutton.tooltip_text = translation.localize("view.boomarks.open_in_new_tab.tooltip");
@@ -102,7 +141,6 @@ public class Dragonstone.View.Bookmarks : Gtk.Box, Dragonstone.IView {
 		this.tab = tab;
 		//init gui
 		expand = true;
-		orientation = Gtk.Orientation.VERTICAL;
 		var actionbar = new Gtk.ActionBar();
 		actionbar.expand = false;
 		//addbutton
@@ -135,11 +173,13 @@ public class Dragonstone.View.Bookmarks : Gtk.Box, Dragonstone.IView {
 		scrolled_window.add(treeview);
 		scrolled_window.expand = true;
 		//pack to root window
-		this.pack_start(actionbar);
-		pack_start(scrolled_window);
-		set_child_packing(actionbar,false,true,0,Gtk.PackType.START);
-		set_child_packing(scrolled_window,true,true,0,Gtk.PackType.START);
+		view_list.pack_start(actionbar);
+		view_list.pack_start(scrolled_window);
+		view_list.set_child_packing(actionbar,false,true,0,Gtk.PackType.START);
+		view_list.set_child_packing(scrolled_window,true,true,0,Gtk.PackType.START);
+		this.add_named(view_list,"view_list");
 		this.show_all();
+		this.set_visible_child(view_list);
 		search_entry.hide();
 		update_controls();
 		return true;
@@ -272,4 +312,29 @@ public class Dragonstone.View.Bookmarks : Gtk.Box, Dragonstone.IView {
 		bookmark_registry.bookmark_removed.disconnect(remove_entry);
 	}
 	
+}
+
+public class Dragonstone.Widget.SubviewBase : Gtk.Box {
+	
+	public Gtk.Button backbutton = new Gtk.Button.from_icon_name("go-previous-symbolic");
+	public Gtk.HeaderBar titlebar = new Gtk.HeaderBar();
+	
+	public SubviewBase (string title){
+		this.orientation = Gtk.Orientation.VERTICAL;
+		titlebar.title = title;
+		titlebar.show_close_button = false;
+		titlebar.has_subtitle = false;
+		titlebar.pack_start(backbutton);
+		this.pack_start(titlebar);
+		this.set_child_packing(titlebar,false,true,0,Gtk.PackType.START);
+	}
+	
+	public void append_child(Gtk.Widget widget){
+		this.pack_start(widget);
+		this.set_child_packing(widget,false,true,0,Gtk.PackType.START);
+	}
+	
+	public void set_title(string title){
+		titlebar.title = title;
+	}
 }

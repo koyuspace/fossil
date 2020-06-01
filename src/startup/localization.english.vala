@@ -63,6 +63,8 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("view.bookmarks.search.placeholder","Search for name or uri …");
 		language.set_text("view.bookmarks.column.name.head","Name");
 		language.set_text("view.bookmarks.column.uri.head","Uri");
+		language.set_text("view.boomarks.subview_add.title","Add Widget");
+		language.set_text("view.boomarks.subview_edit.title","Edit Widget");
 		//linkbutton
 		language.set_text("linkbutton.resource_is_in_cache.tag","[cached]");
 		//bookmark adder widget
