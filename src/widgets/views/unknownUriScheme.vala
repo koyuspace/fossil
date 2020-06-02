@@ -20,6 +20,8 @@ public class Dragonstone.View.UnknownUriScheme : Gtk.Bin, Dragonstone.IView {
 		var labelAttrList = new Pango.AttrList();
 		labelAttrList.insert(new Pango.AttrSize(48000));
 		label.attributes = labelAttrList;
+		label.wrap_mode = Pango.WrapMode.WORD_CHAR;
+		label.wrap = true;
 		centerBox.pack_start(icon);
 		centerBox.pack_start(label);
 		centerBox.pack_start(redirbutton);
