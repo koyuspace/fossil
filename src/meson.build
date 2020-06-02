@@ -75,6 +75,7 @@ executable(
 	'widgets/headerBar.vala',
 	'widgets/hyperTextContent.vala',
 	'widgets/sessionChooser.vala',
+	'widgets/subviewBase.vala',
 	'widgets/tab.vala',
 	'widgets/tabHead.vala',
 	'widgets/view.vala',
