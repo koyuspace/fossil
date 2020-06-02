@@ -130,6 +130,10 @@ public class Dragonstone.Tab : Gtk.Bin {
 	private void on_status_update(Dragonstone.Request rq){
 		print(@"[tab] on status udate $(rq.status) | $(request.status) {$redirectcounter}\n");
 		if(locked>0){ return; }
+		if (request.resource != null){
+			//only increments, if not already added
+			request.resource.increment_users(resource_user_id);
+		}
 		if (request.status.has_prefix("redirect")){ //autoredirect on small changes
 			if (request.substatus == this.uri+"/" || request.substatus == this.uri+"//" || request.substatus+"/" == this.uri){
 				if(redirectcounter < 4){
@@ -177,22 +181,10 @@ public class Dragonstone.Tab : Gtk.Bin {
 				view = view_registry.get_view(view_id);
 				current_view_id = view_id;
 			}
-			currently_displayed_page.view = view_id;
-			//choose a new one
-			if (request.status == "success"){
-				request.resource.increment_users(resource_user_id); //TODO: move somewhere else
-				setTitle(uri);
-			}else if(request.status == "loading" || request.status == "connecting" || request.status == "routing"){
+			currently_displayed_page.view = view_id; //null if automativ view determination
+			//do some status specific things
+			if(request.status == "loading" || request.status == "connecting" || request.status == "routing"){
 				setTitle(uri,true);
-			}else if(request.status.has_prefix("redirect")){
-				setTitle(uri);
-				bool autoredirect = false;
-				if (autoredirect){
-					Timeout.add(0,() => {
-						redirect(request.substatus);
-						return false;
-					},Priority.HIGH);
-				}
 			} else {
 				setTitle(uri);
 			}
@@ -204,6 +196,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 					use_view(view);
 				} else {
 					if (view_id != null){
+						print(@"[tab] manually chosen view '$current_view_id' cannot handle the resource!\n");
 						update_view(null,"view_did_not_work");
 						return;
 					} else {
