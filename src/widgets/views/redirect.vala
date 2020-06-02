@@ -1,7 +1,6 @@
-public class Dragonstone.View.Redirect : Gtk.Bin, Dragonstone.IView {
+public class Dragonstone.View.Redirect : Gtk.Box, Dragonstone.IView {
 	
 	private Dragonstone.Request request = null;
-	private Gtk.Label nameLabel = new Gtk.Label("");
 	private Gtk.Button redirbutton = new Gtk.Button();
 	private Gtk.Label buttonlabel = new Gtk.Label("");
 	private string title = "Redirect to";
@@ -10,29 +9,23 @@ public class Dragonstone.View.Redirect : Gtk.Bin, Dragonstone.IView {
 		if(translation != null){
 			this.title = translation.localize("view.dragonstone.redirect.title");
 		}
-		nameLabel.valign = Gtk.Align.START;
-		nameLabel.wrap_mode = Pango.WrapMode.WORD_CHAR;
-		nameLabel.wrap = true;
+		this.orientation = Gtk.Orientation.VERTICAL;
 		redirbutton.get_style_context().add_class("suggested-action");
 		redirbutton.add(buttonlabel);
 		buttonlabel.wrap_mode = Pango.WrapMode.WORD_CHAR;
 		buttonlabel.wrap = true;
-		var outerBox = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
-		var centerBox = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
+		var center_box = new Gtk.Box(Gtk.Orientation.VERTICAL,8);
+		center_box.margin = 16;
 		var label = new Gtk.Label(title);
 		var icon = new Gtk.Image.from_icon_name("media-playlist-shuffle-symbolic",Gtk.IconSize.DIALOG);
 		icon.icon_size=6;
-		var labelAttrList = new Pango.AttrList();
-		labelAttrList.insert(new Pango.AttrSize(48000));
-		label.attributes = labelAttrList;
-		centerBox.pack_start(icon);
-		centerBox.pack_start(label);
-		centerBox.pack_start(redirbutton);
-		outerBox.set_center_widget(centerBox);
-		outerBox.pack_start(nameLabel);
-		var empty = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
-		outerBox.pack_end(empty);
-		add(outerBox);
+		var label_attr_list = new Pango.AttrList();
+		label_attr_list.insert(new Pango.AttrSize(48000));
+		label.attributes = label_attr_list;
+		center_box.pack_start(icon);
+		center_box.pack_start(label);
+		center_box.pack_start(redirbutton);
+		this.set_center_widget(center_box);
 		show_all();
 	}
 	

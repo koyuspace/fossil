@@ -1,4 +1,4 @@
-public class Dragonstone.View.Download : Gtk.Bin, Dragonstone.IView {
+public class Dragonstone.View.Download : Gtk.Box, Dragonstone.IView {
 	
 	private Dragonstone.Request request = null;
 	private Gtk.Label name_label = new Gtk.Label("");
@@ -12,25 +12,25 @@ public class Dragonstone.View.Download : Gtk.Bin, Dragonstone.IView {
 			open_button.label = translation.localize("view.dragonstone.download.open_button.label");
 			this.title = translation.localize("view.dragonstone.download.title");
 		}
-		name_label.valign = Gtk.Align.START;
+		this.orientation = Gtk.Orientation.VERTICAL;
+		var name_attr_list = new Pango.AttrList();
+		name_attr_list.insert(new Pango.AttrSize(16000));
+		name_label.attributes = name_attr_list;
 		save_button.get_style_context().add_class("suggested-action");
-		var outerBox = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
-		var centerBox = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
+		var center_box = new Gtk.Box(Gtk.Orientation.VERTICAL,8);
+		center_box.margin = 16;
 		var label = new Gtk.Label(this.title); //TOTRANSLATE
 		var icon = new Gtk.Image.from_icon_name("document-save-symbolic",Gtk.IconSize.DIALOG);
 		icon.icon_size=6;
 		var labelAttrList = new Pango.AttrList();
 		labelAttrList.insert(new Pango.AttrSize(48000));
 		label.attributes = labelAttrList;
-		centerBox.pack_start(icon);
-		centerBox.pack_start(label);
-		centerBox.pack_start(name_label);
-		centerBox.pack_start(save_button);
-		centerBox.pack_start(open_button);
-		outerBox.set_center_widget(centerBox);
-		var empty = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
-		outerBox.pack_end(empty);
-		add(outerBox);
+		center_box.pack_start(icon);
+		center_box.pack_start(label);
+		center_box.pack_start(name_label);
+		center_box.pack_start(save_button);
+		center_box.pack_start(open_button);
+		this.set_center_widget(center_box);
 	}
 	
 	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
