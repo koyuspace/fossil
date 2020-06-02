@@ -1,30 +1,36 @@
-public class Dragonstone.View.GeminiInput : Gtk.Bin, Dragonstone.IView {
+public class Dragonstone.View.GeminiInput : Gtk.Box, Dragonstone.IView {
 	
 	private Dragonstone.Request request = null;
-	private Gtk.Box centerBox;
+	private Gtk.Box center_box;
 	
 	construct {
-		var outerBox = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
-		centerBox = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
-		centerBox.margin = 16;
+		this.orientation = Gtk.Orientation.VERTICAL;
+		center_box = new Gtk.Box(Gtk.Orientation.VERTICAL,8);
+		center_box.margin = 16;
 		var label = new Gtk.Label(">_"); //TOTRANSLATE
 		var labelAttrList = new Pango.AttrList();
 		labelAttrList.insert(new Pango.AttrSize(48000));
 		label.attributes = labelAttrList;
-		centerBox.pack_start(label);
-		outerBox.set_center_widget(centerBox);
-		add(outerBox);
+		center_box.pack_start(label);
+		set_center_widget(center_box);
 	}
 	
 	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
 		if (!(request.status == "success" && request.resource.mimetype == "gemini/input")) {return false;}
 		this.request = request;
-		centerBox.pack_start(new Gtk.Label(request.resource.name));
+		var prompt = new Gtk.Label(request.resource.name);
+		var prompt_attr_list = new Pango.AttrList();
+		prompt_attr_list.insert(new Pango.AttrSize(16000));
+		prompt.attributes = prompt_attr_list;
+		prompt.wrap_mode = Pango.WrapMode.WORD_CHAR;
+		prompt.wrap = true;
+		center_box.pack_start(prompt);
 		var input = new Dragonstone.View.GeminiInputInput("",tab.uri);
 		input.go.connect((s,uri) => {tab.go_to_uri(uri);});
-		centerBox.pack_start(input);
-		centerBox.set_child_packing(input,true,true,0,Gtk.PackType.START);
+		center_box.pack_start(input);
+		center_box.set_child_packing(input,true,true,0,Gtk.PackType.START);
 		show_all();
+		input.entry.grab_focus();
 		return true;
 	}
 	
@@ -42,7 +48,7 @@ private class Dragonstone.View.GeminiInputInput : Gtk.Box {
 
 	public signal void go(string uri);
 	private string base_uri;
-	private Gtk.Entry entry;
+	public Gtk.Entry entry;
 	
 	public GeminiInputInput(string htext,string uri){
 		var indexofqm = uri.index_of_char('?');
