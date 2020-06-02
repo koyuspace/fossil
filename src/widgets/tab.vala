@@ -12,8 +12,9 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public string current_session_id { get; protected set; }
 	public signal void on_session_change();	
 	public signal void uriChanged(string uri);
-	public Dragonstone.Util.Stack<string> history = new Dragonstone.Util.Stack<string>();
-	public Dragonstone.Util.Stack<string> forward = new Dragonstone.Util.Stack<string>();
+	public Dragonstone.Util.Stack<TabHistoryEntry> history = new Dragonstone.Util.Stack<TabHistoryEntry>();
+	public Dragonstone.Util.Stack<TabHistoryEntry> forward = new Dragonstone.Util.Stack<TabHistoryEntry>();
+	public Dragonstone.TabHistoryEntry currently_displayed_page = new Dragonstone.TabHistoryEntry();
 	public Dragonstone.SuperRegistry super_registry { get; construct; }
 	public Dragonstone.Registry.TranslationRegistry translation;
 	private Gtk.Window parent_window;
@@ -80,7 +81,8 @@ public class Dragonstone.Tab : Gtk.Bin {
 		if (uritogo == null){uritogo = uri;}
 		print(@"Going to uri: $uritogo\n");
 		//add to history
-		history.push(_uri);
+		history.push(currently_displayed_page);
+		currently_displayed_page = new Dragonstone.TabHistoryEntry();
 		forward.clear();
 		load_uri(uritogo);
 	}
@@ -95,9 +97,10 @@ public class Dragonstone.Tab : Gtk.Bin {
 		load_uri(joined_uri);
 	}
 	
-	private void load_uri(string uri,bool reload = false){
+	private void load_uri(string uri, bool reload = false, string? preferred_view = null){
 		if(locked>0){ return; }
 		_uri = uri;
+		currently_displayed_page.uri = uri;
 		if (request != null){
 			if (request.resource != null){
 				request.resource.decrement_users(resource_user_id);
@@ -120,7 +123,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		if (request != null){
 			request.status_changed.connect(on_status_update);
 		}
-		update_view(null,"load_uri");
+		update_view(preferred_view,"load_uri",true);
 		uriChanged(this.uri);
 	}
 	
@@ -154,23 +157,27 @@ public class Dragonstone.Tab : Gtk.Bin {
 	
 	//update the view either beacause of a new Resource or beacause of a change of the current reource
 	//or update the view with a chosen one
-	public void update_view(string? view_id = null,string reason = ""){
+	public void update_view(string? view_id = null, string reason = "", bool update_view_chooser = false){
+		update_view_chooser = update_view_chooser || (view_id == null);
 		if(locked>1){ return; }
 		lock(current_view_id){
 			print(@"[tab] UPDATING view! [$(request.status)] ($reason)\n");
 			Dragonstone.IView view;
-			if (view_id == null) {
+			if (update_view_chooser){
 				string? mimetype = null;
 				if(request.resource != null){
 					mimetype = request.resource.mimetype;
 				}
 				view_chooser.choose(request.status,mimetype,uri,view_flags.flags);
+			}
+			if (view_id == null) {
 				view = view_registry.get_view(view_chooser.best_match);
 				current_view_id = view_chooser.best_match;
 			} else {
 				view = view_registry.get_view(view_id);
 				current_view_id = view_id;
 			}
+			currently_displayed_page.view = view_id;
 			//choose a new one
 			if (request.status == "success"){
 				request.resource.increment_users(resource_user_id); //TODO: move somewhere else
@@ -196,10 +203,15 @@ public class Dragonstone.Tab : Gtk.Bin {
 				if(view.displayResource(request,this)){
 					use_view(view);
 				} else {
-					setTitle("🔴 "+uri);
-					var error_message_localized = translation.get_localized_string("tab.error.wrong_view.message");
-					view = new Dragonstone.View.Label(@"$error_message_localized\n$(request.status)\n$(request.substatus)");
-					use_view(view);
+					if (view_id != null){
+						update_view(null,"view_did_not_work");
+						return;
+					} else {
+						setTitle("🔴 "+uri);
+						var error_message_localized = translation.get_localized_string("tab.error.wrong_view.message");
+						view = new Dragonstone.View.Label(@"$error_message_localized\n$(request.status)\n$(request.substatus)");
+						use_view(view);
+					}
 				}
 			} else {
 				setTitle("🔴 "+uri);
@@ -274,20 +286,25 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public void go_back(){
 		if(locked>0){ return; }
 		if(!can_go_back()) return;
-		var uri = history.pop();
-		if (uri == null) { return; }
-		forward.push(_uri);
-		load_uri(uri);
+		var entry = history.pop();
+		if (entry == null) { return; }
+		forward.push(currently_displayed_page);
+		apply_tab_history_entry(entry);
 	}
 	
 	//forwardbuttonhandler
 	public void go_forward(){
 		if(locked>0){ return; }
 		if(!can_go_forward()) return;
-		var uri = forward.pop();
-		if (uri == null) { return; }
-		history.push(_uri);
-		load_uri(uri);
+		var entry = forward.pop();
+		if (entry == null) { return; }
+		history.push(currently_displayed_page);
+		apply_tab_history_entry(entry);
+	}
+	
+	public void apply_tab_history_entry(Dragonstone.TabHistoryEntry entry){
+		currently_displayed_page = entry;
+		load_uri(currently_displayed_page.uri,false,entry.view);
 	}
 	
 	public bool can_go_back(){
@@ -361,4 +378,9 @@ public class Dragonstone.Tab : Gtk.Bin {
 		this.on_title_change();
 	}
 	
+}
+
+public class Dragonstone.TabHistoryEntry : Object {
+	public string uri = "";
+	public string? view = null;
 }
