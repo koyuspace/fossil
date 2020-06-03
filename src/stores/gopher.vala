@@ -158,7 +158,7 @@ private class Dragonstone.GopherResourceFetcher : Object {
 			while (true){
 				line = input_stream.read_line(null);
 				if (line == null) break;
-				if (line.strip() == ".") break;
+				if (line == ".") break;
 				str = str+line+"\n";
 				counter = counter+line.length;
 				if (counter > 1024*1024*256){
