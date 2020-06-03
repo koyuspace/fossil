@@ -48,6 +48,7 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 		if (port == null){
 			port = 70;
 		}
+		
 		if(parsed_uri.path != null){
 			if(parsed_uri.path.has_prefix("/")){
 				if (parsed_uri.path.length > 2){

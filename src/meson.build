@@ -39,6 +39,7 @@ executable(
 	'settings/kvSettingsBridge.vala',
 	'settings/ramSettingsProvider.vala',
 	'stores/about.vala',
+	'stores/alexuploadgopher.vala',
 	'stores/cache.vala',
 	'stores/file.vala',
 	'stores/finger.vala',
