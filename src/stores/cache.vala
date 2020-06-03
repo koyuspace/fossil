@@ -11,7 +11,11 @@ public class Dragonstone.Store.Cache : Object, Dragonstone.ResourceStore, Dragon
 		},Priority.LOW);
 	}
 	
-	public void request(Dragonstone.Request request,string? filepath = null){
+	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
+		if (upload){
+			request.setStatus("error/noupload","Uploding not supported");
+			return;
+		}
 		var resource = cached_resources.get(request.uri); //let's hope this is threadsafe
 		if(resource == null) { request.setStatus("error/resourceUnavaiable"); }
 		request.setResource(resource,"cache");

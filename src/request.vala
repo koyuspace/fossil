@@ -8,6 +8,7 @@ public class Dragonstone.Request : Object {
 	public string substatus { get; protected set; default = "";} //what?
 	public string store { get; protected set; default = null;} //who processed the request?
 	public Dragonstone.Resource resource { get; protected set; default = null;} //what was the result?
+	public Dragonstone.Resource upload_resource { get; set; default = null;} //what was the result?
 	public signal void status_changed(Dragonstone.Request request);
 	public signal void resource_changed(Dragonstone.Request request);
 	//writing to this table after passing on the request will result in undefined bahaviour

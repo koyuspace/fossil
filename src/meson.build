@@ -8,6 +8,7 @@ executable(
 	'main.vala',
 	'request.vala',
 	'resource.vala',
+	'resourceStore.vala',
 	'session.vala',
 	'settings.vala',
 	'util/connectionHelper.vala',

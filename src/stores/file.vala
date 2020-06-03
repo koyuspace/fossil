@@ -11,8 +11,11 @@ public class Dragonstone.Store.File : Object, Dragonstone.ResourceStore {
 		this.mimeguesser = mimeguesser;
 	}
 	
-	public void request(Dragonstone.Request request,string? filepath = null){
-		
+	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
+		if (upload){
+			request.setStatus("error/noupload","Uploding not supported");
+			return;
+		}
 		string path = null;
 		// parse uri
 		if(request.uri.has_prefix("file://")){

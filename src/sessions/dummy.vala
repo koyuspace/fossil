@@ -1,10 +1,16 @@
 public class Dragonstone.Session.Dummy : Dragonstone.ISession, Object {
 	private string _name = "Dummy";
 	
-	public Dragonstone.Request make_request(string uri, bool reload=false){
+	public Dragonstone.Request make_download_request(string uri, bool reload=false){
 		var request = new Dragonstone.Request(uri,reload);
-			request.setStatus("error/dummySession");
-			return request;
+		request.setStatus("error/dummySession");
+		return request;
+	}
+	
+	public Dragonstone.Request make_upload_request(string uri, Dragonstone.Resource resource){
+		var request = new Dragonstone.Request(uri,false);
+		request.setStatus("error/dummySession");
+		return request;
 	}
 	
 	public bool set_default_backend(Dragonstone.ResourceStore store){

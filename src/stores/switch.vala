@@ -21,24 +21,25 @@ class Dragonstone.Store.Switch : Object, Dragonstone.ResourceStore {
 		GLib.DirUtils.create_with_parents(this.cacheDirectory,16832);
 	}
 	
-	public void request(Dragonstone.Request request,string? filepath = null){
+	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
 		print(@"[switch] Loading uri: '$(request.uri)'\n");
-		if (cache != null && (!request.reload)){
+		if (cache != null && (!request.reload) && (!upload)){
 			if (cache.can_serve_request(request.uri)){
 				print(@"[switch] Serving from cache!\n");
 				cache.request(request);
 				return;
 			}
 		}
-		load_from_store(request);
+		load_from_store(request, filepath, upload);
 	}
 	
-	private void load_from_store(Dragonstone.Request request,string? filepath = null){
-		string filepathx = filepath;
+	private void load_from_store(Dragonstone.Request request,string? filepath = null, bool upload = false){
 		var store = storeRegistry.get_closest_match(request.uri);
-		if (filepathx == null){filepathx=this.cacheDirectory+"/temp_"+GLib.Uuid.string_random();}
-		if (store != null){store.request(request,filepathx);}
-		else {
+		if (store != null){
+			string filepathx = filepath;
+			if (filepathx == null){filepathx=this.cacheDirectory+"/temp_"+GLib.Uuid.string_random();}
+			store.request(request,filepathx,upload);
+		} else {
 			request.setStatus("error/uri/unknownScheme");
 		}
 	}

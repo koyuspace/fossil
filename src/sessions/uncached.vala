@@ -6,10 +6,17 @@ public class Dragonstone.Session.Uncached : Dragonstone.ISession, Object {
 		this.backend = backend;
 	}
 	
-	public Dragonstone.Request make_request(string uri, bool reload=false){
+	public Dragonstone.Request make_download_request(string uri, bool reload=false){
 		print(@"[session.uncached] making request to $uri\n");
 		var request = new Dragonstone.Request(uri,reload);
 		backend.request(request);
+		return request;
+	}
+	
+	public Dragonstone.Request make_upload_request(string uri, Dragonstone.Resource resource){
+		var request = new Dragonstone.Request(uri,false);
+		request.upload_resource = resource;
+		backend.request(request,null,true);
 		return request;
 	}
 	

@@ -119,7 +119,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		if(startoffragment > 0){
 			rquri = rquri.substring(0,startoffragment);
 		}
-		request = session.make_request(rquri,reload);
+		request = session.make_download_request(rquri,reload);
 		if (request != null){
 			request.status_changed.connect(on_status_update);
 		}

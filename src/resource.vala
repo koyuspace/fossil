@@ -1,22 +1,3 @@
-public interface Dragonstone.ResourceStore : Object  {
-	// this thing has to be able to
-	// preload resources (basically put them in cache)
-	// handle errors (offline,unavaiable resources,authentication required)
-	// handle interactive resources (gopher searches,gemini forms,authentication)
-	//  possible solution: attach a context to the query
-	// save resources to a downloads directory
-	// handle multiple resources at the same address
-	//  provide some kind of directory with labled uris
-	// retrieve a list of all cached versions with information of when they were cached
-	// attach a unique identifier to all cached resources
-	//  access to cached resources should be implemented using the cache://<id> uri sceme
-	
-	//resource querys are handled with resource objects, that have a type attached
-	//views will be selected based on these types, also dynamic content can be handled quite easily with resource types
-	
-	public abstract void request(Dragonstone.Request request,string? filepath = null); //returns a resource object for the supplied uri
-}
-
 public class Dragonstone.Resource : Object {
 	//requester
 	public string uri { get; protected set; default = null;} //where did you find that one?

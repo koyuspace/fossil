@@ -11,7 +11,7 @@ public class Dragonstone.Session.Tls : Dragonstone.ISession, Object {
 		this.backend = backend;
 	}
 	
-	public Dragonstone.Request make_request(string uri, bool reload=false){
+	public Dragonstone.Request make_download_request(string uri, bool reload=false){
 		var request = new Dragonstone.Request(uri,reload);
 		if (uri == "about:cache"){
 			request.setStatus("interactive/cache");
@@ -56,6 +56,16 @@ public class Dragonstone.Session.Tls : Dragonstone.ISession, Object {
 		if (use_cache){
 			request.resource_changed.connect(reqest_reource_changed_cachehook);
 		}
+		return request;
+	}
+	
+	public Dragonstone.Request make_upload_request(string uri, Dragonstone.Resource resource){
+		var request = new Dragonstone.Request(uri,false);
+		request.upload_resource = resource;
+		if (this.tls_certificate_pems != null){
+			request.arguments.set("tls.client.certificate",this.tls_certificate_pems);
+		}
+		backend.request(request,null,true);
 		return request;
 	}
 	
