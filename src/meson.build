@@ -48,6 +48,7 @@ executable(
 	'stores/switch.vala',
 	'stores/test.vala',
 	'startup/about.backend.vala',
+	'startup/alexupload.backend.vala',
 	'startup/bookmarks.backend.vala',
 	'startup/bookmarks.gtk.vala',
 	'startup/bookmarks.settings.vala',

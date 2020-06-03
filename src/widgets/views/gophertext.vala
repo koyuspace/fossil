@@ -13,8 +13,12 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.HyperTextContent, 
 		type_registry = new Dragonstone.Registry.GopherTypeRegistry.default_configuration();
 	}
 	
-	public Gophertext.with_mimeguesser(Dragonstone.Registry.MimetypeGuesser mimeguesser,Dragonstone.Registry.GopherTypeRegistry? type_registry = null){
-		this.mimeguesser = mimeguesser;
+	public Gophertext.with_registries(Dragonstone.Registry.MimetypeGuesser? mimeguesser,Dragonstone.Registry.GopherTypeRegistry? type_registry = null){
+		if (mimeguesser != null){
+			this.mimeguesser = mimeguesser;
+		} else {
+			this.mimeguesser = new Dragonstone.Registry.MimetypeGuesser.default_configuration();
+		}
 		if (type_registry != null) {
 			this.type_registry = type_registry;
 		} else {
@@ -54,7 +58,7 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.HyperTextContent, 
 							gophertype = tokens[0].get(0);
 							htext = tokens[0].substring(1);//human text
 						}
-						var query = tokens[1].strip(); //look for url in here
+						var selector = tokens[1].strip(); //look for url in here
 						var host = tokens[2].strip();
 						var port = tokens[3].strip();
 						
@@ -64,36 +68,28 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.HyperTextContent, 
 						}
 						var typeinfo = type_registry.get_entry_by_gophertype(gophertype);
 						if (typeinfo == null) {
-							append_widget(new Dragonstone.View.GophertextUnknownItem(gophertype,htext,query,host,port));
+							append_widget(new Dragonstone.View.GophertextUnknownItem(gophertype,htext,selector,host,port));
 						} else if (typeinfo.hint == Dragonstone.Registry.GopherTypeRegistryContentHint.TEXT){
 							append_text(htext+"\n");
-						}else if (typeinfo.hint == Dragonstone.Registry.GopherTypeRegistryContentHint.LINK || query.has_prefix("URL:")){
+						}else if (typeinfo.hint == Dragonstone.Registry.GopherTypeRegistryContentHint.LINK || selector.has_prefix("URL:")){
 							string? uri = null;
-							if (query.has_prefix("URL:")) {
-								uri = query.substring(4);
-							} else if (query.has_prefix("/URL:")) { //pygopherd get your url right!
-								uri = query.substring(5);
-							} else if (query.has_prefix("url:")) { //It is bloody "URL:", it even is on wikipedia!
-								uri = query.substring(4);
+							if (selector.has_prefix("URL:")) {
+								uri = selector.substring(4);
+							} else if (selector.has_prefix("/URL:")) { //pygopherd get your url right!
+								uri = selector.substring(5);
+							} else if (selector.has_prefix("url:")) { //It is bloody "URL:", it even is on wikipedia!
+								uri = selector.substring(4);
 							} else {
-								var equery = Uri.escape_string(query,"/");
-								if ( port != "70" ) {
-									uri = @"gopher://$host:$port/$gophertype$equery";
-								} else {
-									uri = @"gopher://$host/$gophertype$equery";
-								}
+								var eselector = Uri.escape_string(selector,"/");
+								uri = typeinfo.get_uri(host,port,eselector);
 							}
 							//append_widget(new Dragonstone.Widget.LinkButton(tab,htext,uri));
 							append_link(htext,uri);
 							append_text("\n");
 						} else if (typeinfo.hint == Dragonstone.Registry.GopherTypeRegistryContentHint.SEARCH){ //Search
 							string? uri = null;
-							var equery = Uri.escape_string(query,"/");
-							if( port != "70" ){
-								uri = @"gopher://$host:$port/$gophertype$equery";
-							}else{
-								uri = @"gopher://$host/$gophertype$equery";
-							}
+							var eselector = Uri.escape_string(selector,"/");
+							uri = typeinfo.get_uri(host,port,eselector);
 							var searchfield = new Dragonstone.View.GophertextInlineSearch(htext,uri);
 							searchfield.go.connect((s,uri) => {
 								tab.go_to_uri(uri);

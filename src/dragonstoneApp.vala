@@ -22,7 +22,7 @@ public class Dragonstone.Application : Gtk.Application {
 		//Set defaults
 		Dragonstone.Startup.Frontend.Settings.register_default_settings(super_registry);
 		Dragonstone.Startup.Bookmarks.Settings.register_default_settings(super_registry);
-		//Initaize bridges
+		//Initaize settings bridges
 		Dragonstone.Startup.Frontend.Settings.register_settings_object(super_registry);
 		Dragonstone.Startup.Bookmarks.Settings.register_settings_bridge(super_registry);
 		//import settings
@@ -30,10 +30,13 @@ public class Dragonstone.Application : Gtk.Application {
 		//Initalize Cache
 		//Dragonstone.Startup.Cache.Backend.setup_store(super_registry); //register before switch
 		Dragonstone.Startup.About.Backend.setup_store(super_registry);
+		//register gophertypes
+		Dragonstone.Startup.Gopher.Backend.setup_gophertypes(super_registry);
+		Dragonstone.Startup.AlexUpload.Backend.setup_gophertypes(super_registry);
 		//Initalize backends
+		Dragonstone.Startup.AlexUpload.Backend.setup_store(super_registry);
 		Dragonstone.Startup.Bookmarks.Backend.setup_about_page(super_registry);
 		Dragonstone.Startup.Cache.Backend.setup_about_page(super_registry);
-		Dragonstone.Startup.Gopher.Backend.setup_gophertypes(super_registry);
 		Dragonstone.Startup.Gopher.Backend.setup_mimetypes(super_registry);
 		Dragonstone.Startup.Gopher.Backend.setup_store(super_registry);
 		Dragonstone.Startup.Gopher.Backend.setup_uri_autocompletion(super_registry);
