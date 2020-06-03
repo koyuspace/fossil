@@ -74,7 +74,7 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 		//debugging information
 		print(@"Gopher Request:\n  Host:  $host\n  Port:  $port\n  Type:  $gophertype\n  Query: $query\n");
 		var resource = new Dragonstone.Resource(request.uri,filepath,true);
-		var fetcher = new Dragonstone.GopherResourceFetcher(resource,request,host,port,query,mimetype);
+		var fetcher = new Dragonstone.Gopher.ResourceFetcher(resource,request,host,port,query,mimetype);
 		new Thread<int>(@"Gopher resource fetcher $host:$port [$gophertype|$query]",() => {
 			fetcher.fetchResource(connection_helper, default_resource_lifetime);
 			return 0;
@@ -82,7 +82,7 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 	}
 }
 
-private class Dragonstone.GopherResourceFetcher : Object {
+public class Dragonstone.Gopher.ResourceFetcher : Object {
 	
 	public string host { get; construct; }
 	public uint16 port { get; construct; }
@@ -91,7 +91,7 @@ private class Dragonstone.GopherResourceFetcher : Object {
 	public Dragonstone.Resource resource { get; construct; }
 	public Dragonstone.Request request { get; construct; }
 	
-	public GopherResourceFetcher(Dragonstone.Resource resource,Dragonstone.Request request,string host,uint16 port,string query,string mimetype){
+	public ResourceFetcher(Dragonstone.Resource resource,Dragonstone.Request request,string host,uint16 port,string query,string mimetype){
 		Object(
 			resource: resource,
 			request: request,
@@ -125,17 +125,15 @@ private class Dragonstone.GopherResourceFetcher : Object {
 			
 			if (mimetype.has_prefix("text/")){
 				// Receive text
-				var str = readText(input_stream);
-				if (str == null){
-					request.setStatus("error/gibberish");
-					return;
-				} else {
-					helper.appendString(str);
+				var success = readText(input_stream,helper,request);
+				if (success){
 					resource.add_metadata(mimetype,@"[gopher] $host:$port | $query");
+				} else {
+					return;
 				}
 			} else {
 				try{
-					readBytes(input_stream,helper);
+					readBytes(input_stream,helper,request);
 					resource.add_metadata(mimetype,@"[gopher] $host:$port | $query");
 				}catch(Error e){
 					request.setStatus("error/internal",e.message);
@@ -153,17 +151,20 @@ private class Dragonstone.GopherResourceFetcher : Object {
 		return;
 	}
 	
-	public string? readText(DataInputStream input_stream){
-		string str = "";
+	public static bool readText(DataInputStream input_stream,Dragonstone.Util.ResourceFileWriteHelper helper, Dragonstone.Request request){
 		uint64 counter = 0;
 		
 		try{
 			string line;
 			while (true){
+				if(request.cancelled){
+					helper.cancel();
+					return false;
+				}
 				line = input_stream.read_line(null);
 				if (line == null) break;
 				if (line == ".") break;
-				str = str+line+"\n";
+				helper.appendString(line+"\n");
 				counter = counter+line.length;
 				if (counter > 1024*1024*256){
 					print("[gopher][error] Text file is too large (>256MB) terminating read\n");
@@ -172,7 +173,8 @@ private class Dragonstone.GopherResourceFetcher : Object {
 			}
 		}catch (Error e){
 			print("[gopher][error] An error occourred while reding text from a connection to a gopher Server\n"+e.message+"\n");
-			return null;
+			request.setStatus("error/gibberish");
+			return false;
 		}
 		
 		print("[gopher] DONE reading!\n");
@@ -180,24 +182,24 @@ private class Dragonstone.GopherResourceFetcher : Object {
 		//print(str);
 		//print("\n");
 		
-		return str;
+		return true;
 	}
 	
-	public void readBytes(DataInputStream input_stream,Dragonstone.Util.ResourceFileWriteHelper helper) throws Error{
+	public void readBytes(DataInputStream input_stream, Dragonstone.Util.ResourceFileWriteHelper helper, Dragonstone.Request request) throws Error{
 			uint64 counter = 0;
 			while (true){
 				if(request.cancelled){
 					helper.cancel();
 					return;
 				}
-				var bytes = input_stream.read_bytes(1024);
+				var bytes = input_stream.read_bytes(1024*64);
 				counter += bytes.length;
 				if (bytes.length == 0){
 					break;
 				} else {
 					helper.append(Bytes.unref_to_data(bytes));
 				}
-				print(@"$counter: length: $(bytes.length)\n");
+				//print(@"$counter: length: $(bytes.length)\n");
 				//teerminate early if file gets too big
 				if(counter > 1024*1024*1024*3){
 					print("GOPHER terminating file read early, beacause file is too big (>3GB)\n");
