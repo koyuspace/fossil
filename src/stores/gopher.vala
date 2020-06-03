@@ -40,7 +40,7 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 		unichar gophertype = '1'; //directory
 		
 		string? host = parsed_uri.host;
-		if (host == "null"){
+		if (host == null){
 			request.setStatus("error/uri/noHost","Gopher needs a host");
 			return;
 		}

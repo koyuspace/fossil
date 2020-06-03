@@ -21,7 +21,7 @@ public class Dragonstone.Store.Gemini : Object, Dragonstone.ResourceStore {
 		}
 		
 		string? host = parsed_uri.host;
-		if (host == "null"){
+		if (host == null){
 			request.setStatus("error/uri/noHost","Gemini needs a host");
 			return;
 		}
