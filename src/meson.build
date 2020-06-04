@@ -73,6 +73,7 @@ executable(
 	'widgets/bookmarkAdder.vala',
 	'widgets/bookmarkEditor.vala',
 	'widgets/cacheview.vala',
+	'widgets/dialogViewBase.vala',
 	'widgets/menuEntrys.vala',
 	'widgets/window.vala',
 	'widgets/headerBar.vala',
