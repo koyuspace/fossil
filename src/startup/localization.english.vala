@@ -65,6 +65,17 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("view.bookmarks.column.uri.head","Uri");
 		language.set_text("view.boomarks.subview_add.title","Add Bookmark");
 		language.set_text("view.boomarks.subview_edit.title","Edit Bookmark");
+		//file upload view
+		language.set_text("view.upload_file.error.unknown_size","Unknown size");
+		language.set_text("view.upload_file.error.no_remote_files","Remote files are not supported");
+		language.set_text("view.upload_file.uploadbutton.label","Upload");
+		language.set_text("view.upload_file.title","Please select a file for uploading!");
+		language.set_text("view.upload_file.file_chooser.label","Choose a file");
+		//text upload view
+		language.set_text("view.upload_text.uploadbutton.label","Upload");
+		language.set_text("view.upload_text.openbutton.tooltip","Load a file");
+		language.set_text("view.upload_text.savebutton.tooltip","Download to a file");
+		language.set_text("view.upload_text.open_file_dialog.title","Load a file for uploading");
 		//linkbutton
 		language.set_text("linkbutton.resource_is_in_cache.tag","[cached]");
 		//bookmark adder widget

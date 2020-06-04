@@ -68,6 +68,7 @@ executable(
 	'startup/sessions.gtk.vala',
 	'startup/settings.backend.vala',
 	'startup/store_switch.vala',
+	'startup/upload.gtk.vala',
 	'startup/utiltest.backend.vala',
 	'startup/utiltest.gtk.vala',
 	'widgets/bookmarkAdder.vala',
@@ -105,6 +106,8 @@ executable(
 	'widgets/views/image.vala',
 	'widgets/views/tlsSession.vala',
 	'widgets/views/redirect.vala',
+	'widgets/views/uploadFile.vala',
+	'widgets/views/uploadText.vala',
 	'widgets/views/uriMergeTest.vala',
 	
 	dependencies: [

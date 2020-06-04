@@ -65,6 +65,7 @@ public class Dragonstone.Application : Gtk.Application {
 		Dragonstone.Startup.File.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Gopher.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Gemini.Gtk.setup_views(super_registry);
+		Dragonstone.Startup.Upload.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Utiltest.Gtk.setup_views(super_registry);
 	}
 	

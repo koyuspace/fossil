@@ -17,7 +17,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public Dragonstone.TabHistoryEntry currently_displayed_page = new Dragonstone.TabHistoryEntry();
 	public Dragonstone.SuperRegistry super_registry { get; construct; }
 	public Dragonstone.Registry.TranslationRegistry translation;
-	private Gtk.Window parent_window;
+	public Gtk.Window parent_window; //only for use with dialog windows
 	private int locked = 0;
 	public string title = "New Tab";
 	public bool loading = false; //changing this counts as a title change
@@ -88,8 +88,8 @@ public class Dragonstone.Tab : Gtk.Bin {
 		load_uri(uritogo);
 	}
 	
-	public void upload_to_uri(string uri,Dragonstone.Resource upload_resource){
-		if(locked>0){ return; }
+	public string? upload_to_uri(string uri,Dragonstone.Resource upload_resource){
+		if(locked>0){ return null; }
 		//add to history
 		history.push(currently_displayed_page);
 		currently_displayed_page = new Dragonstone.TabHistoryEntry();
@@ -103,6 +103,8 @@ public class Dragonstone.Tab : Gtk.Bin {
 		currently_displayed_page.uri = upload_urn;
 		_uri = upload_urn;
 		uriChanged(this.uri);
+		update_view(null,"upload_to_uri",true);
+		return upload_urn;
 	}
 	
 	//this will overwrite the last uri in the tab history
@@ -372,18 +374,18 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public void download(){
 		if(locked>0){ return; }
 		if (this.request.resource == null){
-			print("Can't download an non existant resource!");
+			print("[tab][error] Can't download an non existant resource!");
 			return;
 		}
 		var download_localized = translation.get_localized_string("action.download");
-		var filechooser = new Gtk.FileChooserNative(@"$download_localized - $uri",parent_window,Gtk.FileChooserAction.SAVE,download_localized,translation.get_localized_string("action.cancel")); //TOTRANSLATE
+		var filechooser = new Gtk.FileChooserNative(@"$download_localized - $uri",parent_window,Gtk.FileChooserAction.SAVE,download_localized,translation.get_localized_string("action.cancel"));
 		filechooser.set_current_name(Dragonstone.Util.Uri.get_filename(uri));
 		filechooser.set_current_folder(Environment.get_user_special_dir(UserDirectory.DOWNLOAD));
 		filechooser.set_select_multiple(false);
 		filechooser.run();
 		if (filechooser.get_filename() != null) {
 			var filepath = filechooser.get_filename();
-			print(@"Download: $uri -> $filepath [Currently disabled]\n");
+			print(@"[tab] Download: $uri ($(request.resource.filepath)) -> $filepath\n");
 			Dragonstone.Downloader.save_resource.begin(this.request.resource,filepath,(obj, res) => {;});
 		}
 	}

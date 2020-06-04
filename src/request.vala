@@ -1,14 +1,14 @@
 public class Dragonstone.Request : Object {
 	//request
-	public string uri { get; protected set; default = null;} //what exactly do you want?
+	public string uri { get; protected set; default = "";} //what exactly do you want?
 	public bool reload { get; protected set; default = false; } //if the resource should not be fetched from cache
 	//feedback
 	public string? upload_result_uri { get; protected set; default = null; } //use this to store the upload_result in cache
 	public string status { get; protected set; default = "routing";} //how's it going?
 	public string substatus { get; protected set; default = "";} //what?
 	public string? store { get; protected set; default = null;} //who processed the request?
-	public Dragonstone.Resource resource { get; protected set; default = null;} //what was the result?
-	public Dragonstone.Resource upload_resource { get; protected set; default = null;} //what was the result?
+	public Dragonstone.Resource? resource { get; protected set; default = null;} //what was the result?
+	public Dragonstone.Resource? upload_resource { get; protected set; default = null;} //what was the result?
 	public signal void status_changed(Dragonstone.Request request);
 	public signal void resource_changed(Dragonstone.Request request);
 	//writing to this table after passing on the request will result in undefined bahaviour

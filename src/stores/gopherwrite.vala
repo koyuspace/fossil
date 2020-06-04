@@ -37,8 +37,10 @@ public class Dragonstone.Store.GopherWrite : Object, Dragonstone.ResourceStore {
 		}
 		string query = "";
 		if (parsed_uri.path != null){
-			//dont unescape tabs, as these serve as delimiters for the filesize
-			query = Uri.unescape_string(parsed_uri.path,"\t\n\r\0"); 
+			if (parsed_uri.path.length > 1){
+				//dont unescape tabs, as these serve as delimiters for the filesize
+				query = Uri.unescape_string(parsed_uri.path.substring(1),"\t\n\r\0");
+			}
 		}
 		string? download_resource_uri = request.upload_result_uri;
 		if (download_resource_uri == null){

@@ -66,9 +66,13 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 			request.setStatus("error/gopher",@"Gophertype $gophertype not supported!");
 			return;
 		}
+		if (!typeinfo.uri_template.has_prefix("gopher://") || typeinfo.mimetype == null){
+			request.setStatus("error/gopher",@"Gophertype $gophertype not supported!");
+			return;
+		}
 		var stripped_uri = Dragonstone.Util.Uri.strip_querys(request.uri);
 		string? mimetype = typeinfo.mimetype;
-		if (typeinfo.mimeyte_is_suggestion) {
+		if (typeinfo.mimeyte_is_suggestion || mimetype == null) {
 			mimetype = mimeguesser.get_closest_match(stripped_uri,mimetype);
 		}
 		
