@@ -5,7 +5,7 @@ public interface Dragonstone.ISession : Object {
 	public abstract Dragonstone.ResourceStore? get_default_backend();
 	
 	public abstract Dragonstone.Request make_download_request(string uri, bool reload=false);
-	public abstract Dragonstone.Request make_upload_request(string uri, Dragonstone.Resource resource);
+	public abstract Dragonstone.Request make_upload_request(string uri, Dragonstone.Resource resource, out string upload_urn = null);
 	
 	public virtual void erase_cache() {}
 	

@@ -3,12 +3,12 @@ public class Dragonstone.Request : Object {
 	public string uri { get; protected set; default = null;} //what exactly do you want?
 	public bool reload { get; protected set; default = false; } //if the resource should not be fetched from cache
 	//feedback
-	public string cacheId { get; set; default = null; } //use this to request it from the cache
+	public string? upload_result_uri { get; protected set; default = null; } //use this to store the upload_result in cache
 	public string status { get; protected set; default = "routing";} //how's it going?
 	public string substatus { get; protected set; default = "";} //what?
-	public string store { get; protected set; default = null;} //who processed the request?
+	public string? store { get; protected set; default = null;} //who processed the request?
 	public Dragonstone.Resource resource { get; protected set; default = null;} //what was the result?
-	public Dragonstone.Resource upload_resource { get; set; default = null;} //what was the result?
+	public Dragonstone.Resource upload_resource { get; protected set; default = null;} //what was the result?
 	public signal void status_changed(Dragonstone.Request request);
 	public signal void resource_changed(Dragonstone.Request request);
 	//writing to this table after passing on the request will result in undefined bahaviour
@@ -20,6 +20,14 @@ public class Dragonstone.Request : Object {
 	public Request(string uri, bool reload = false){
 		this.uri = uri;
 		this.reload = reload;
+	}
+	
+	//turns this into an upload request
+	//returns itself for chaining it onto a constructor
+	public Request upload(Dragonstone.Resource upload_resource, string upload_result_uri){
+		this.upload_resource = upload_resource;
+		this.upload_result_uri = upload_result_uri;
+		return this;
 	}
 	
 	public void setStatus(string status, string substatus = ""){
@@ -58,6 +66,7 @@ public class Dragonstone.Request : Object {
 	            a downloaded size of 0 means unknown
 	            Example: 1FB/0 ; 78/2F0 ; 0/0 ; 0/28F
 	            Parsers should stop at a " " to leave space for future expansion
+	"uploading" - like loading, but indicates an upload
 	"success" - request completed, resource is not null and contains requested data
 	"cancelled" - request was cancelled before the download finished
 	"redirect/permanent" - permanent redirect, site moved, may ask user to update bookmarks etc.

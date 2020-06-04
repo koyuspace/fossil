@@ -38,8 +38,11 @@ public class Dragonstone.Store.AlexUploadGopher : Object, Dragonstone.ResourceSt
 			//dont unescape tabs, as these serve as delimiters for the filesize
 			query = Uri.unescape_string(parsed_uri.path,"\t\n\r\0"); 
 		}
-		
-		var download_resource = new Dragonstone.Resource(request.uri,filepath,true);
+		string? download_resource_uri = request.upload_result_uri;
+		if (download_resource_uri == null){
+			request.setStatus("error/internal","the download_resource_uri was null, but the upload_resource was set");
+		}
+		var download_resource = new Dragonstone.Resource(download_resource_uri,filepath,true);
 		var uploader = new Dragonstone.AlexUploadGopher.ResourceUploader(download_resource,request,host,port,query);
 		new Thread<int>(@"AlexUploadGopher resource uploader $host:$port [$query]",() => {
 			uploader.do_upload_resource(connection_helper, default_resource_lifetime,upload_text);

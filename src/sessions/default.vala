@@ -25,14 +25,15 @@ public class Dragonstone.Session.Default : Dragonstone.ISession, Object {
 			}
 		}
 		print("[session.default] making request to outside world\n");
-		backend.request(request);
 		request.resource_changed.connect(reqest_reource_changed_cachehook);
+		backend.request(request);
 		return request;
 	}
 	
-	public Dragonstone.Request make_upload_request(string uri, Dragonstone.Resource resource){
-		var request = new Dragonstone.Request(uri,false);
-		request.upload_resource = resource;
+	public Dragonstone.Request make_upload_request(string uri, Dragonstone.Resource resource, out string upload_urn = null){
+		upload_urn = "urn:upload:"+GLib.Uuid.string_random();
+		var request = new Dragonstone.Request(uri).upload(resource,upload_urn);
+		request.resource_changed.connect(reqest_reource_changed_cachehook);
 		backend.request(request,null,true);
 		return request;
 	}

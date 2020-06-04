@@ -80,11 +80,29 @@ public class Dragonstone.Tab : Gtk.Bin {
 		}
 		if (uritogo == null){uritogo = uri;}
 		print(@"Going to uri: $uritogo\n");
+		//add old page to history
+		history.push(currently_displayed_page);
+		currently_displayed_page = new Dragonstone.TabHistoryEntry();
+		forward.clear();
+		//load new uri
+		load_uri(uritogo);
+	}
+	
+	public void upload_to_uri(string uri,Dragonstone.Resource upload_resource){
+		if(locked>0){ return; }
 		//add to history
 		history.push(currently_displayed_page);
 		currently_displayed_page = new Dragonstone.TabHistoryEntry();
 		forward.clear();
-		load_uri(uritogo);
+		_uri = uri;
+		currently_displayed_page.upload = true;
+		currently_displayed_page.uploaded_to = uri;
+		string upload_urn;
+		var request = session.make_upload_request(uri, upload_resource, out upload_urn);
+		set_request(request);
+		currently_displayed_page.uri = upload_urn;
+		_uri = upload_urn;
+		uriChanged(this.uri);
 	}
 	
 	//this will overwrite the last uri in the tab history
@@ -101,12 +119,6 @@ public class Dragonstone.Tab : Gtk.Bin {
 		if(locked>0){ return; }
 		_uri = uri;
 		currently_displayed_page.uri = uri;
-		if (request != null){
-			if (request.resource != null){
-				request.resource.decrement_users(resource_user_id);
-			}
-			request.status_changed.disconnect(on_status_update);
-		}
 		if (redirecting){
 			redirecting = false;
 			redirectcounter++;
@@ -119,12 +131,23 @@ public class Dragonstone.Tab : Gtk.Bin {
 		if(startoffragment > 0){
 			rquri = rquri.substring(0,startoffragment);
 		}
-		request = session.make_download_request(rquri,reload);
+		var request = session.make_download_request(rquri,reload);
+		set_request(request);
+		update_view(preferred_view,"load_uri",true);
+		uriChanged(this.uri);
+	}
+	
+	private void set_request(Dragonstone.Request? rq){
+		if (request != null){
+			if (request.resource != null){
+				request.resource.decrement_users(resource_user_id);
+			}
+			request.status_changed.disconnect(on_status_update);
+		}
+		request = rq;
 		if (request != null){
 			request.status_changed.connect(on_status_update);
 		}
-		update_view(preferred_view,"load_uri",true);
-		uriChanged(this.uri);
 	}
 	
 	private void on_status_update(Dragonstone.Request rq){
@@ -376,4 +399,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 public class Dragonstone.TabHistoryEntry : Object {
 	public string uri = "";
 	public string? view = null;
+	//upload_informationf
+	public bool upload = false;
+	public string? uploaded_to = null;
 }

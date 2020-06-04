@@ -59,9 +59,9 @@ public class Dragonstone.Session.Tls : Dragonstone.ISession, Object {
 		return request;
 	}
 	
-	public Dragonstone.Request make_upload_request(string uri, Dragonstone.Resource resource){
-		var request = new Dragonstone.Request(uri,false);
-		request.upload_resource = resource;
+	public Dragonstone.Request make_upload_request(string uri, Dragonstone.Resource resource, out string upload_urn = null){
+		upload_urn = "urn:upload:"+GLib.Uuid.string_random();
+		var request = new Dragonstone.Request(uri).upload(resource,upload_urn);
 		if (this.tls_certificate_pems != null){
 			request.arguments.set("tls.client.certificate",this.tls_certificate_pems);
 		}
