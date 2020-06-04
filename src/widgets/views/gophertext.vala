@@ -251,7 +251,8 @@ private class Dragonstone.View.GophertextInlineSearchPostB64FilePopover : Gtk.Po
 	public GophertextInlineSearchPostB64FilePopover(Dragonstone.View.GophertextInlineSearch parent, string uri){
 		this.base_uri = uri;
 		this.parent_entry = parent;
-		var box = new Gtk.Box(Gtk.Orientation.VERTICAL,0);
+		var box = new Gtk.Box(Gtk.Orientation.VERTICAL,4);
+		box.margin = 8;
 		var title_label = new Gtk.Label("This will post a base64 encoded file with a space seperated comment appended to it to");
 		title_label.set_tooltip_text("This feataure is intended to work with the gopherboard over at gopher://khzae.net");
 		var uri_label = new Gtk.Label(uri);
