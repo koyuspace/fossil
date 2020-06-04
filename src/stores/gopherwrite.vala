@@ -1,20 +1,22 @@
-public class Dragonstone.Store.AlexUploadGopher : Object, Dragonstone.ResourceStore {
+public class Dragonstone.Store.GopherWrite : Object, Dragonstone.ResourceStore {
+	
+	//
 	
 	public int32 default_resource_lifetime = 1000*60*10; //10 minutes
 	public Dragonstone.Util.ConnectionHelper connection_helper = new Dragonstone.Util.ConnectionHelper();
 	
 	//uriformat:
-	//gopher+alexupload(t|f)://<server>[:<port>]/<encoded_selector>
+	//gopher+write(t|f)://<server>[:<port>]/<encoded_selector>
 	
 	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
 		// parse uri
 		var parsed_uri = new Dragonstone.Util.ParsedUri(request.uri,false);
-		if(!(parsed_uri.scheme == "gopher+alexuploadt" || parsed_uri.scheme == "gopher+alexuploadf")){
-			request.setStatus("error/uri/unknownScheme","Alexupload only knows gopher+alexuploadt:// and gopher+alexuploadf://");
+		if(!(parsed_uri.scheme == "gopher+writet" || parsed_uri.scheme == "gopher+writef")){
+			request.setStatus("error/uri/unknownScheme","gopherwrite only knows gopher+writet:// and gopher+writef://");
 			return;
 		}
 		if ((!upload) || request.upload_resource == null){
-			if (parsed_uri.scheme == "gopher+alexuploadt"){
+			if (parsed_uri.scheme == "gopher+writet"){
 				request.setStatus("interactive/upload/text");
 			} else {
 				request.setStatus("interactive/upload");
@@ -22,11 +24,11 @@ public class Dragonstone.Store.AlexUploadGopher : Object, Dragonstone.ResourceSt
 			return;
 		}
 		
-		bool upload_text = parsed_uri.scheme == "gopher+alexuploadt";
+		bool upload_text = parsed_uri.scheme == "gopher+writet";
 		
 		string? host = parsed_uri.host;
 		if (host == null){
-			request.setStatus("error/uri/noHost","Alexupload needs a host");
+			request.setStatus("error/uri/noHost","gopherwrite needs a host");
 			return;
 		}
 		uint16? port = parsed_uri.get_port_number();
@@ -42,11 +44,11 @@ public class Dragonstone.Store.AlexUploadGopher : Object, Dragonstone.ResourceSt
 		if (download_resource_uri == null){
 			request.setStatus("error/internal","the download_resource_uri was null, but the upload_resource was set");
 		}
-		string resource_user_id = "alexupload_"+GLib.Uuid.string_random();
+		string resource_user_id = "gopherwrite_"+GLib.Uuid.string_random();
 		request.upload_resource.increment_users(resource_user_id);
 		var download_resource = new Dragonstone.Resource(download_resource_uri,filepath,true);
-		var uploader = new Dragonstone.AlexUploadGopher.ResourceUploader(download_resource,request,host,port,query);
-		new Thread<int>(@"AlexUploadGopher resource uploader $host:$port [$query]",() => {
+		var uploader = new Dragonstone.gopherwriteGopher.ResourceUploader(download_resource,request,host,port,query);
+		new Thread<int>(@"gopherwriteGopher resource uploader $host:$port [$query]",() => {
 			uploader.do_upload_resource(connection_helper, default_resource_lifetime,upload_text);
 			request.upload_resource.decrement_users(resource_user_id);
 			return 0;
@@ -54,7 +56,7 @@ public class Dragonstone.Store.AlexUploadGopher : Object, Dragonstone.ResourceSt
 	}
 }
 
-public class Dragonstone.AlexUploadGopher.ResourceUploader : Object {
+public class Dragonstone.gopherwriteGopher.ResourceUploader : Object {
 	
 	public string host { get; construct; }
 	public uint16 port { get; construct; }
@@ -94,7 +96,7 @@ public class Dragonstone.AlexUploadGopher.ResourceUploader : Object {
 				var fileinfo = file.query_info(GLib.FileAttribute.STANDARD_SIZE,GLib.FileQueryInfoFlags.NONE);
 				size = fileinfo.get_size();
 			} catch(Error e) {
-				print(@"[alexupload][error] cannot determine filesize for $(request.resource.filepath)\n");
+				print(@"[gopherwrite][error] cannot determine filesize for $(request.resource.filepath)\n");
 			}
 			
 			string query = this.query;
@@ -103,7 +105,7 @@ public class Dragonstone.AlexUploadGopher.ResourceUploader : Object {
 				if (size != null){
 					query = query+"\t"+size.to_string("%d");
 				} else {
-					print("[alexupload][error] size is reuired for a binary upload!");
+					print("[gopherwrite][error] size is reuired for a binary upload!");
 					request.setStatus("error/internal","Cannot determine filesize  $(request.resource.filepath)");
 					return;
 				}
@@ -112,7 +114,7 @@ public class Dragonstone.AlexUploadGopher.ResourceUploader : Object {
 			//send gopher request
 			var message = @"$query\r\n";
 			conn.output_stream.write (message.data);
-			print ("[alexuploader] Wrote request\n");
+			print ("[gopherwrite] Wrote request\n");
 			
 			// upload resource
 			if (!file.query_exists ()) {
@@ -146,7 +148,7 @@ public class Dragonstone.AlexUploadGopher.ResourceUploader : Object {
 			// Receive text
 			success =  Dragonstone.Gopher.ResourceFetcher.readText(input_stream,helper,request);
 			if (success){
-				download_resource.add_metadata("text/gopher",@"[alexuploader] $host:$port | $query");
+				download_resource.add_metadata("text/gopher",@"[gopherwrite] $host:$port | $query");
 			} else {
 				return;
 			}
@@ -192,7 +194,7 @@ public class Dragonstone.AlexUploadGopher.ResourceUploader : Object {
 			return true;
 		} catch (GLib.Error e) {
 				request.setStatus("error/internal","Error while reading file:\n"+e.message);
-		    print("[alexuploader][error] Error while reading file:\n"+e.message);
+		    print("[gopherwrite][error] Error while reading file:\n"+e.message);
 		    return false;
 		}
 	}
@@ -223,7 +225,7 @@ public class Dragonstone.AlexUploadGopher.ResourceUploader : Object {
 			return true;
 		} catch (GLib.Error e) {
 			request.setStatus("error/internal","Error while reading file:\n"+e.message);
-		  print("[alexuploader][error] Error while reading file:\n"+e.message);
+		  print("[gopherwrite][error] Error while reading file:\n"+e.message);
 		  return false;
 		}
 	}

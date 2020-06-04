@@ -32,14 +32,14 @@ public class Dragonstone.Application : Gtk.Application {
 		Dragonstone.Startup.About.Backend.setup_store(super_registry);
 		//register gophertypes
 		Dragonstone.Startup.Gopher.Backend.setup_gophertypes(super_registry);
-		Dragonstone.Startup.AlexUpload.Backend.setup_gophertypes(super_registry);
+		Dragonstone.Startup.GopherWrite.Backend.setup_gophertypes(super_registry);
 		//Initalize backends
-		Dragonstone.Startup.AlexUpload.Backend.setup_store(super_registry);
 		Dragonstone.Startup.Bookmarks.Backend.setup_about_page(super_registry);
 		Dragonstone.Startup.Cache.Backend.setup_about_page(super_registry);
 		Dragonstone.Startup.Gopher.Backend.setup_mimetypes(super_registry);
 		Dragonstone.Startup.Gopher.Backend.setup_store(super_registry);
 		Dragonstone.Startup.Gopher.Backend.setup_uri_autocompletion(super_registry);
+		Dragonstone.Startup.GopherWrite.Backend.setup_store(super_registry);
 		Dragonstone.Startup.Gemini.Backend.setup_mimetypes(super_registry);
 		Dragonstone.Startup.Gemini.Backend.setup_store(super_registry);
 		Dragonstone.Startup.Gemini.Backend.setup_uri_autocompletion(super_registry);
