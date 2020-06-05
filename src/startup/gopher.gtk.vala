@@ -5,7 +5,6 @@ public class Dragonstone.Startup.Gopher.Gtk {
 			var cache = (super_registry.retrieve("core.stores.cache") as Dragonstone.Cache);
 			var gopher_type_registry = (super_registry.retrieve("gopher.types") as Dragonstone.Registry.GopherTypeRegistry);
 			var mimeguesser = (super_registry.retrieve("core.mimeguesser") as Dragonstone.Registry.MimetypeGuesser);
-			print(@"[setup][gtk][gopher][debug] gopher_type_registry:$(gopher_type_registry!=null) mimeguesser:$(mimeguesser!=null)\n");
 			view_registry.add_view("gpopher.map",() => {
 				var view = new Dragonstone.View.Gophertext.with_registries(mimeguesser,gopher_type_registry);
 				view.set_cache(cache);
