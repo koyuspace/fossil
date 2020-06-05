@@ -1,34 +1,19 @@
-public class Dragonstone.View.GeminiInput : Gtk.Box, Dragonstone.IView {
+public class Dragonstone.View.GeminiInput : Dragonstone.Widget.DialogViewBase, Dragonstone.IView {
 	
 	private Dragonstone.Request request = null;
-	private Gtk.Box center_box;
 	
 	construct {
-		this.orientation = Gtk.Orientation.VERTICAL;
-		center_box = new Gtk.Box(Gtk.Orientation.VERTICAL,8);
-		center_box.margin = 16;
-		var label = new Gtk.Label(">_"); //TOTRANSLATE
-		var labelAttrList = new Pango.AttrList();
-		labelAttrList.insert(new Pango.AttrSize(48000));
-		label.attributes = labelAttrList;
-		center_box.pack_start(label);
-		set_center_widget(center_box);
+		this.append_big_headline(">_");
 	}
 	
 	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
 		if (!(request.status == "success" && request.resource.mimetype == "gemini/input")) {return false;}
 		this.request = request;
-		var prompt = new Gtk.Label(request.resource.name);
-		var prompt_attr_list = new Pango.AttrList();
-		prompt_attr_list.insert(new Pango.AttrSize(16000));
-		prompt.attributes = prompt_attr_list;
-		prompt.wrap_mode = Pango.WrapMode.WORD_CHAR;
-		prompt.wrap = true;
-		center_box.pack_start(prompt);
+		this.append_small_headline(request.resource.name);
 		var input = new Dragonstone.View.GeminiInputInput("",tab.uri);
 		input.go.connect((s,uri) => {tab.go_to_uri(uri);});
-		center_box.pack_start(input);
-		center_box.set_child_packing(input,true,true,0,Gtk.PackType.START);
+		this.append_widget(input);
+		this.center_box.set_child_packing(input,true,true,0,Gtk.PackType.START);
 		show_all();
 		input.entry.grab_focus();
 		return true;

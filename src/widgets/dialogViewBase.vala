@@ -1,6 +1,6 @@
 public class Dragonstone.Widget.DialogViewBase : Gtk.ScrolledWindow {
 	protected Gtk.Box outer_box = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
-	protected Gtk.Box center_box = new Gtk.Box(Gtk.Orientation.VERTICAL,4);
+	protected Gtk.Box center_box = new Gtk.Box(Gtk.Orientation.VERTICAL,8);
 	
 	construct{
 		center_box.margin = 16;

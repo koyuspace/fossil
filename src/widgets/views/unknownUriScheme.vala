@@ -1,42 +1,27 @@
-public class Dragonstone.View.UnknownUriScheme : Gtk.Bin, Dragonstone.IView {
+public class Dragonstone.View.UnknownUriScheme : Dragonstone.Widget.DialogViewBase, Dragonstone.IView {
 	
 	private Dragonstone.Request request = null;
-	private Gtk.Label nameLabel = new Gtk.Label("");
-	private Gtk.Button redirbutton = new Gtk.Button.with_label("");
+	private Gtk.Button open_externally_button = new Gtk.Button.with_label("Open in external Browser");
 	private string title = "Unknown Uri Scheme";
 	
 	public UnknownUriScheme(Dragonstone.Registry.TranslationRegistry? translation = null) {
 		if(translation != null){
 			this.title = translation.localize("view.dragonstone.unknown_uri_scheme.title");
-			this.redirbutton.label = translation.localize("action.open_uri_externally");
+			this.open_externally_button.label = translation.localize("action.open_uri_externally");
 		}
-		nameLabel.valign = Gtk.Align.START;
-		redirbutton.get_style_context().add_class("suggested-action");
-		var outerBox = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
-		var centerBox = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
-		var label = new Gtk.Label(title);
-		var icon = new Gtk.Image.from_icon_name("dialog-question-symbolic",Gtk.IconSize.DIALOG);
-		icon.icon_size=6;
-		var labelAttrList = new Pango.AttrList();
-		labelAttrList.insert(new Pango.AttrSize(48000));
-		label.attributes = labelAttrList;
-		label.wrap_mode = Pango.WrapMode.WORD_CHAR;
-		label.wrap = true;
-		centerBox.pack_start(icon);
-		centerBox.pack_start(label);
-		centerBox.pack_start(redirbutton);
-		outerBox.set_center_widget(centerBox);
-		outerBox.pack_start(nameLabel);
-		var empty = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
-		outerBox.pack_end(empty);
-		add(outerBox);
+		open_externally_button.get_style_context().add_class("suggested-action");
+		
+		this.append_big_icon("dialog-question-symbolic");
+		this.append_big_headline(title);
+		this.append_widget(open_externally_button);
+		
 		show_all();
 	}
 	
 	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
 		if (request.status != "error/uri/unknownScheme") {return false;}
 		this.request = request;
-		redirbutton.clicked.connect(() => {
+		open_externally_button.clicked.connect(() => {
 			tab.open_uri_externally(this.request.uri);
 		});
 		return true;
