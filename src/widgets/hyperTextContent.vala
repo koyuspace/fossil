@@ -71,7 +71,7 @@ public class Dragonstone.Widget.HyperTextContent : Dragonstone.Widget.TextConten
 			var icon_theme = Gtk.IconTheme.get_for_screen(get_screen());
 			if (icon_theme.has_icon(icon_name)){
 				try{
-					var icon_pixbuf = icon_theme.load_icon(icon_name, (int) Gtk.IconSize.LARGE_TOOLBAR*2, Gtk.IconLookupFlags.FORCE_SYMBOLIC);
+					var icon_pixbuf = icon_theme.load_icon(icon_name, 20*this.scale_factor, Gtk.IconLookupFlags.FORCE_SYMBOLIC);
 					if (icon_pixbuf != null){
 						append_text(" ");
 						textview.buffer.get_end_iter(out end_iter);
