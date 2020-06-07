@@ -30,6 +30,10 @@ public class Dragonstone.View.UploadText : Gtk.Box, Dragonstone.IView {
 		var open_button_tooltip = translation.localize("view.upload_text.openbutton.tooltip");
 		var save_button_tooltip = translation.localize("view.upload_text.savebutton.tooltip");
 		open_file_localized = translation.localize("view.upload_text.open_file_dialog.title");
+		//setup textview
+		textview.wrap_mode = Gtk.WrapMode.WORD;
+		textview.set_monospace(true);
+		textview.set_left_margin(4);
 		//initalize actionsbar buttons
 		upload_button = new Gtk.Button.with_label(upload_button_label);
 		upload_button.get_style_context().add_class("suggested-action");
