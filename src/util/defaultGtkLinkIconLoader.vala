@@ -6,6 +6,10 @@ public class Dragonstone.Util.DefaultGtkLinkIconLoader {
 			return "text-html-symbolic";
 		} else if (uri.has_prefix("mailto:")){
 			return "mail-message-new-symbolic";
+		} else if (uri.has_prefix("gopher+writet://")){
+			return "document-edit-symbolic";
+		} else if (uri.has_prefix("gopher+writef://")){
+			return "document-open-symbolic";
 		} else if (uri.has_suffix("/")){
 			return "folder-symbolic";
 		} else if (uri.has_suffix(".txt")){
