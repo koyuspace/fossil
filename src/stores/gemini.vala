@@ -81,6 +81,7 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 			
 			try{
 				var statusline = input_stream.read_line(null);
+				beyond_header = true;
 				if (statusline == null){
 					request.setStatus("error/gibberish","#received a null statusline");
 					return;
@@ -112,7 +113,6 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 					resource.add_metadata(metaline/*mimetype*/,@"[gemini] $uri");
 					resource.valid_until = resource.timestamp+default_resource_lifetime;
 					helper = new Dragonstone.Util.ResourceFileWriteHelper(request,resource.filepath,0);
-					beyond_header = true;
 					readBytes(input_stream,helper);
 					if (helper.error){return;}
 					helper.close();
@@ -146,7 +146,7 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 						request.setStatus("error/gibberish","TLS connection closed unexpectedly");
 					}
 				} else {
-					request.setStatus("error/internalError","Something with binary gemini:\n"+e.message);
+					request.setStatus("error/internalError","Something with gemini:\n"+e.message);
 				}
 			}
 			
