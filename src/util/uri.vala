@@ -228,6 +228,9 @@ public class Dragonstone.Util.ParsedUri : Object {
 				this.host = this.authority.substring(0,index_of_colon);
 				print(@"host?: '$host'\n");
 				if (this.host.has_prefix("[") == this.host.has_suffix("]")){
+					if (this.host.has_prefix("[") && this.host.has_suffix("]")){
+						this.host = this.host.substring(1,host.length-2);
+					}
 					this.port = this.authority.substring(index_of_colon+1);
 					print(@"host: '$host'\n");
 					print(@"port: '$port'\n");
@@ -235,6 +238,9 @@ public class Dragonstone.Util.ParsedUri : Object {
 				}
 			}
 			host = this.authority;
+			if (this.host.has_prefix("[") && this.host.has_suffix("]")){
+				this.host = this.host.substring(1,host.length-2);
+			}
 			print(@"host: '$host'\n");
 		}
 		print("=== DONE ===\n");
