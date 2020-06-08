@@ -14,6 +14,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 	private Dragonstone.Widget.SessionChooser session_chooser;
 	private Gtk.Button savetodiskbutton;
 	private Gtk.Button downloadbutton;
+	private Gtk.Button bookmarkbutton;
 	private bool loadButtonReloadMode = false;
 	private bool switching_tab = false;
 	private Gtk.Image reloadIcon = new Gtk.Image.from_icon_name("view-refresh-symbolic",Gtk.IconSize.BUTTON);
@@ -69,6 +70,8 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		mainmenubox.pack_start(mainmenuhbox);
 		downloadbutton = new Gtk.Button.from_icon_name("document-save-symbolic",Gtk.IconSize.LARGE_TOOLBAR );
 		mainmenuhbox.pack_start(downloadbutton);
+		bookmarkbutton = new Gtk.Button.from_icon_name("user-bookmarks-symbolic",Gtk.IconSize.LARGE_TOOLBAR );
+		mainmenuhbox.pack_start(bookmarkbutton);
 		savetodiskbutton = new Gtk.ToggleButton();
 		var diskicon = new Gtk.Image.from_icon_name("drive-harddisk-symbolic",Gtk.IconSize.LARGE_TOOLBAR );
 		savetodiskbutton.add(diskicon);
@@ -134,9 +137,6 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		loadbutton.get_style_context().add_class("suggested-action");
 		pack_end(loadbutton);
 		
-		//bookmarksbutton [user-bookmark]
-		
-		
 		//connect ui signals
 		addressfield.activate.connect(() =>{
 			addressfield.text = tryUriCorrection(addressfield.text);
@@ -185,6 +185,11 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		downloadbutton.clicked.connect(e => {
 			if (current_tab != null) {
 				current_tab.download();
+			}
+		});
+		bookmarkbutton.clicked.connect(e => {
+			if (current_tab != null) {
+				current_tab.open_subview("dragonstone.bookmarks");
 			}
 		});
 		openfileexternllybutton.clicked.connect(e => {

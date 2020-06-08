@@ -31,7 +31,7 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.HyperTextContent, 
 	}
 	
 	
-	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
+	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
 		this.tab = tab;
 		if (request.status == "success" && request.resource.mimetype.has_prefix("text/gopher")){
 			var file = File.new_for_path(request.resource.filepath);

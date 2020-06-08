@@ -21,7 +21,7 @@ public class Dragonstone.View.Loading : Gtk.Bin, Dragonstone.IView {
 		add(outerBox);
 	}
 	
-	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
+	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
 		if (!(request.status == "loading" || request.status == "uploading" || request.status == "connecting" || request.status == "routing")) {return false;}
 		this.request = request;
 		this.request.notify["substatus"].connect(loadUpdatedTimeoutHack);

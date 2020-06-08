@@ -5,7 +5,7 @@ public class Dragonstone.View.Geminitext : Dragonstone.Widget.HyperTextContent, 
 	private Dragonstone.Tab tab;
 	private int maxlines = 30000;
 	
-	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
+	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
 		this.tab = tab;
 		this.link_popover = new Dragonstone.Widget.LinkButtonPopover(tab);
 		if (request.status == "success" && request.resource.mimetype.has_prefix("text/gemini")){

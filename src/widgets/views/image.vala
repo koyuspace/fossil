@@ -10,7 +10,7 @@ public class Dragonstone.View.Image : Gtk.ScrolledWindow, Dragonstone.IView {
 	
 	construct {}
 	
-	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
+	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
 		if ((request.status == "success") && request.resource.mimetype.has_prefix("image/")){
 			try {
 				pixbuf = new Gdk.Pixbuf.from_file(request.resource.filepath);

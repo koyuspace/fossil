@@ -18,7 +18,7 @@ public class Dragonstone.View.Error.Generic : Dragonstone.Widget.DialogViewBase,
 	
 	}
 	
-	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
+	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
 		if (!(request.status.has_prefix("error/"))) {return false;}
 		view_status = request.status;
 		this.request = request;

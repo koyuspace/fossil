@@ -5,7 +5,7 @@ public class Dragonstone.View.Label : Gtk.Bin, Dragonstone.IView {
 		show_all();
 	}
 
-	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
+	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
 		return true;
 	}
 	

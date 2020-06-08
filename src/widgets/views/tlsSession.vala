@@ -15,7 +15,7 @@ public class Dragonstone.View.TlsSession : Gtk.ScrolledWindow, Dragonstone.IView
 		this.translation = translation;
 	}
 	
-	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
+	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
 		if (!(request.status == "interactive/tls_session")) {return false;}
 		this.request = request;
 		this.tab = tab;

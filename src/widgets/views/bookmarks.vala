@@ -15,6 +15,7 @@ public class Dragonstone.View.Bookmarks : Gtk.Stack, Dragonstone.IView {
 	private Gtk.Box view_list = new Gtk.Box(Gtk.Orientation.VERTICAL,0);
 	private Gtk.TreeView treeview;
 	private Gtk.Button addbutton = new Gtk.Button();
+	public Gtk.Button backbutton = new Gtk.Button.from_icon_name("go-previous-symbolic");
 	//private Gtk.Popover addpopover;
 	private Gtk.Box controls = new Gtk.Box(Gtk.Orientation.HORIZONTAL,1);
 	private Gtk.Button editbutton = new Gtk.Button.from_icon_name("document-edit-symbolic");
@@ -44,6 +45,12 @@ public class Dragonstone.View.Bookmarks : Gtk.Stack, Dragonstone.IView {
 		if (translation == null){
 			this.translation = new Dragonstone.Registry.TranslationLanguageRegistry();
 		}
+		//backbutton
+		backbutton.clicked.connect(() => {
+			if (this.tab != null){
+				this.tab.go_back_subview();
+			}
+		});
 		//addbutton
 		addbutton.label = translation.localize("view.boomarks.add.label");
 		addwidget = new Dragonstone.Widget.BookmarkAdder(bookmark_registry);
@@ -120,6 +127,7 @@ public class Dragonstone.View.Bookmarks : Gtk.Stack, Dragonstone.IView {
 		search_toggle.add(searchicon);
 		search_toggle.toggled.connect(() => {
 			addbutton.visible = !search_toggle.active;
+			backbutton.visible = !search_toggle.active;
 			search_entry.visible = search_toggle.active;
 			if (search_entry.visible){
 				search_entry.grab_focus_without_selecting();
@@ -135,14 +143,16 @@ public class Dragonstone.View.Bookmarks : Gtk.Stack, Dragonstone.IView {
 		filterstore.set_visible_func(filter_visible_function);
 	}
 	
-	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
-		if (!(request.status == "interactive/bookmarks")) {return false;}
+	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab, bool as_subview){
+		if (!(request.status == "interactive/bookmarks" || as_subview)) { return false; }
 		this.request = request;
 		this.tab = tab;
 		//init gui
 		expand = true;
 		var actionbar = new Gtk.ActionBar();
 		actionbar.expand = false;
+		//backbutton
+		actionbar.pack_start(backbutton);
 		//addbutton
 		actionbar.pack_start(addbutton);
 		//controls
@@ -181,6 +191,9 @@ public class Dragonstone.View.Bookmarks : Gtk.Stack, Dragonstone.IView {
 		this.show_all();
 		this.set_visible_child(view_list);
 		search_entry.hide();
+		if (!as_subview){
+			backbutton.hide();
+		}
 		update_controls();
 		return true;
 	}
@@ -270,6 +283,7 @@ public class Dragonstone.View.Bookmarks : Gtk.Stack, Dragonstone.IView {
 			timeout_running = true;
 			Timeout.add(500,() => {
 				filterstore.refilter();
+				update_controls();
 				timeout_running = false;
 				return false;
 			},Priority.HIGH);

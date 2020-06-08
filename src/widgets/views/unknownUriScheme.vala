@@ -18,7 +18,7 @@ public class Dragonstone.View.UnknownUriScheme : Dragonstone.Widget.DialogViewBa
 		show_all();
 	}
 	
-	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
+	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
 		if (request.status != "error/uri/unknownScheme") {return false;}
 		this.request = request;
 		open_externally_button.clicked.connect(() => {

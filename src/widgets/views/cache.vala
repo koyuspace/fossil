@@ -9,7 +9,7 @@ public class Dragonstone.View.Cache : Gtk.Bin, Dragonstone.IView {
 		this.translation = translation;
 	}
 	
-	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
+	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
 		if (!(request.status == "interactive/cache")) {return false;}
 		this.request = request;
 		this.tab = tab;

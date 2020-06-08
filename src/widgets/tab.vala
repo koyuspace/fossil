@@ -186,10 +186,12 @@ public class Dragonstone.Tab : Gtk.Bin {
 	
 	//update the view either beacause of a new Resource or beacause of a change of the current reource
 	//or update the view with a chosen one
-	public void update_view(string? view_id = null, string reason = "", bool update_view_chooser = false){
-		update_view_chooser = update_view_chooser || (view_id == null);
+	public void update_view(string? view_id = null, string reason = "", bool update_view_chooser = false, bool as_subview = false){
 		if(locked>1){ return; }
+		update_view_chooser = update_view_chooser || (view_id == null);
 		lock(current_view_id){
+			bool currently_displayed_is_subview = currently_displayed_page.currently_displayed_subview != null;
+			bool do_update_view = currently_displayed_is_subview == as_subview;
 			print(@"[tab] UPDATING view! [$(request.status)] ($reason)\n");
 			Dragonstone.IView view;
 			if (update_view_chooser){
@@ -199,16 +201,11 @@ public class Dragonstone.Tab : Gtk.Bin {
 				}
 				view_chooser.choose(request.status,mimetype,uri,view_flags.flags);
 			}
-			if (view_id == null) {
-				view = view_registry.get_view(view_chooser.best_match);
-				current_view_id = view_chooser.best_match;
-			} else {
-				view = view_registry.get_view(view_id);
-				current_view_id = view_id;
+			if (!as_subview){
+				currently_displayed_page.view = view_id; //null if automatic view determination
 			}
-			currently_displayed_page.view = view_id; //null if automativ view determination
 			//do some status specific things
-			if(request.status == "loading" || request.status == "connecting" || request.status == "routing"){
+			if(request.status == "loading" || request.status == "uploading" || request.status == "connecting" || request.status == "routing"){
 				setTitle(uri,true);
 			} else {
 				setTitle(uri);
@@ -216,29 +213,38 @@ public class Dragonstone.Tab : Gtk.Bin {
 			if(request.status.has_prefix("error")){
 				setTitle("🔴 "+uri);
 			}
-			if (view != null){
-				if(view.displayResource(request,this)){
-					use_view(view);
+			if (do_update_view){
+				if (view_id == null) {
+					view = view_registry.get_view(view_chooser.best_match);
+					current_view_id = view_chooser.best_match;
 				} else {
-					if (view_id != null){
-						print(@"[tab] manually chosen view '$current_view_id' cannot handle the resource!\n");
-						update_view(null,"view_did_not_work");
-						return;
-					} else {
-						setTitle("🔴 "+uri);
-						var error_message_localized = translation.get_localized_string("tab.error.wrong_view.message");
-						view = new Dragonstone.View.Label(@"$error_message_localized\n$(request.status)\n$(request.substatus)");
-						use_view(view);
-					}
+					view = view_registry.get_view(view_id);
+					current_view_id = view_id;
 				}
-			} else {
-				setTitle("🔴 "+uri);
-				var error_message_localized = translation.get_localized_string("tab.error.no_view.message");
-				view = new Dragonstone.View.Label(@"$error_message_localized\n$(request.status)\n$(request.substatus)");
-				use_view(view);
+				if (view != null){
+					if(view.displayResource(request,this,as_subview)){
+						use_view(view);
+					} else {
+						if (view_id != null){
+							print(@"[tab] manually chosen view '$current_view_id' cannot handle the resource!\n");
+							update_view(null,"view_did_not_work");
+							return;
+						} else {
+							setTitle("🔴 "+uri);
+							var error_message_localized = translation.get_localized_string("tab.error.wrong_view.message");
+							view = new Dragonstone.View.Label(@"$error_message_localized\n$(request.status)\n$(request.substatus)");
+							use_view(view);
+						}
+					}
+				} else {
+					setTitle("🔴 "+uri);
+					var error_message_localized = translation.get_localized_string("tab.error.no_view.message");
+					view = new Dragonstone.View.Label(@"$error_message_localized\n$(request.status)\n$(request.substatus)");
+					use_view(view);
+				}
+				show();
+				this.on_view_change();
 			}
-			show();
-			this.on_view_change();
 		}
 	}
 	
@@ -253,6 +259,23 @@ public class Dragonstone.Tab : Gtk.Bin {
 			this.view = (owned) new_view;
 			add(this.view);
 		}
+	}
+	
+	public void open_subview(string view_id){
+		if (currently_displayed_page.currently_displayed_subview != null){
+			if(currently_displayed_page.currently_displayed_subview.view == view_id){
+				return;
+			}
+			currently_displayed_page.subview_history.push(currently_displayed_page.currently_displayed_subview);
+		}	
+		currently_displayed_page.currently_displayed_subview = new TabSubviewHistoryEntry();
+		currently_displayed_page.currently_displayed_subview.view = view_id;
+		update_view(view_id,"open_subview",false,true);
+	}
+	
+	public void go_back_subview(){
+		currently_displayed_page.currently_displayed_subview = currently_displayed_page.subview_history.pop();
+		apply_tab_history_entry(currently_displayed_page);
 	}
 	
 	public void set_tab_parent_window(Dragonstone.Window window){
@@ -323,6 +346,9 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public void apply_tab_history_entry(Dragonstone.TabHistoryEntry entry){
 		currently_displayed_page = entry;
 		load_uri(currently_displayed_page.uri,false,entry.view);
+		if (entry.currently_displayed_subview != null){
+			update_view(entry.currently_displayed_subview.view,"apply_tab_history_entry",false,true);
+		}
 	}
 	
 	public bool can_go_back(){
@@ -401,7 +427,14 @@ public class Dragonstone.Tab : Gtk.Bin {
 public class Dragonstone.TabHistoryEntry : Object {
 	public string uri = "";
 	public string? view = null;
-	//upload_informationf
+	//subview history
+	public Dragonstone.Util.Stack<TabSubviewHistoryEntry> subview_history = new Dragonstone.Util.Stack<TabSubviewHistoryEntry>();
+	public TabSubviewHistoryEntry? currently_displayed_subview = null;
+	//upload_information
 	public bool upload = false;
 	public string? uploaded_to = null;
+}
+
+public class Dragonstone.TabSubviewHistoryEntry : Object {
+	public string view;
 }

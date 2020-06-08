@@ -19,7 +19,7 @@ public class Dragonstone.View.Redirect : Dragonstone.Widget.DialogViewBase, Drag
 		show_all();
 	}
 	
-	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
+	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
 		if (!(request.status.has_prefix("redirect"))) {return false;}
 		this.request = request;
 		buttonlabel.label = request.substatus;

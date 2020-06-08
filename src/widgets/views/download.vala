@@ -21,7 +21,7 @@ public class Dragonstone.View.Download : Dragonstone.Widget.DialogViewBase, Drag
 		
 	}
 	
-	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
+	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
 		if (!(request.status == "success")) {return false;}
 		this.request = request;
 		name_label.label = Dragonstone.Util.Uri.get_filename(request.uri);

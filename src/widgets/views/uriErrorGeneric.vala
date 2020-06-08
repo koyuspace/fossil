@@ -15,7 +15,7 @@ public class Dragonstone.View.UriError.Generic : Dragonstone.Widget.DialogViewBa
 		show_all();
 	}
 	
-	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
+	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
 		if (!(request.status.has_prefix("error/uri"))) {return false;}
 		this.request = request;
 		show_all();

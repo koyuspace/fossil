@@ -13,7 +13,7 @@ public class Dragonstone.View.Message : Dragonstone.Widget.DialogViewBase, Drago
 		show_all();
 	}
 	
-	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
+	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
 		if (!(request.status.has_prefix(status))) {return false;}
 		this.request = request;
 		error_label.label = request.status+"\n"+request.substatus;

@@ -30,7 +30,7 @@ public class Dragonstone.View.UriMergeTest : Dragonstone.Widget.DialogViewBase, 
 		this.append_widget(new Gtk.Label(@"$baseuri + $relativeuri = $joined $res"));
 	}
 
-	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
+	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
 		return true;
 	}
 	

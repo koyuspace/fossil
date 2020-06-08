@@ -243,7 +243,7 @@ public class Dragonstone.View.Directory : Gtk.Box, Dragonstone.IView {
 		return urival.get_string();
 	}
 	
-	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab){
+	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
 		if (!(request.status == "success" && request.resource.mimetype == "text/dragonstone-directory")) {return false;}
 		this.request = request;
 		this.tab = tab;
