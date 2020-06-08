@@ -191,7 +191,10 @@ public class Dragonstone.View.Bookmarks : Gtk.Stack, Dragonstone.IView {
 		this.show_all();
 		this.set_visible_child(view_list);
 		search_entry.hide();
-		if (!as_subview){
+		if (as_subview){
+			search_entry.text = request.uri;
+			addwidget.uri_entry.text = request.uri;
+		} else {
 			backbutton.hide();
 		}
 		update_controls();
