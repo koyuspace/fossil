@@ -82,7 +82,7 @@ public class Dragonstone.Widget.LinkButtonPopover : Dragonstone.Widget.LinkPopov
 	public Dragonstone.Tab tab;
 	public string? uri { get; set; }
 	
-	private Gtk.Label uri_label;
+	private Gtk.TextView uri_display;
 	private Gtk.Button open_in_new_tab_button;
 	private Gtk.Button open_externally_button;
 	
@@ -90,11 +90,14 @@ public class Dragonstone.Widget.LinkButtonPopover : Dragonstone.Widget.LinkPopov
 		this.tab = tab;
 		this.uri = null; //uri gets set below with use_uri(uri);
 		//this.constrain_to = Gtk.PopoverConstraint.WINDOW;
-		var box = new Gtk.Box(Gtk.Orientation.VERTICAL,0);
+		var box = new Gtk.Box(Gtk.Orientation.VERTICAL,2);
 		box.margin = 4;
-		uri_label = new Gtk.Label("");
-		uri_label.selectable = true;
-		uri_label.wrap_mode = Pango.WrapMode.WORD_CHAR;
+		uri_display = new Gtk.TextView();
+		uri_display.wrap_mode = Gtk.WrapMode.WORD_CHAR;
+		uri_display.monospace = true;
+		uri_display.left_margin = 2;
+		uri_display.right_margin = 2;
+		uri_display.editable = false;
 		var open_in_new_tab_button_label = tab.translation.localize("action.open_in_new_tab");
 		open_in_new_tab_button = new Gtk.Button.with_label(open_in_new_tab_button_label);
 		open_in_new_tab_button.set_relief(Gtk.ReliefStyle.NONE);
@@ -111,7 +114,7 @@ public class Dragonstone.Widget.LinkButtonPopover : Dragonstone.Widget.LinkPopov
 				this.tab.open_uri_externally(this.uri);
 			}
 		});
-		box.pack_start(uri_label);
+		box.pack_start(uri_display);
 		box.pack_start(open_in_new_tab_button);
 		box.pack_start(open_externally_button);
 		/*var cache = tab.session.get_cache();
@@ -129,7 +132,7 @@ public class Dragonstone.Widget.LinkButtonPopover : Dragonstone.Widget.LinkPopov
 	
 	public void use_uri(string uri){
 		this.uri = uri;
-		uri_label.label = uri;
+		uri_display.buffer.text = uri;
 	}
 	
 }
