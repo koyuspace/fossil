@@ -71,6 +71,7 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("view.upload_file.uploadbutton.label","Upload");
 		language.set_text("view.upload_file.title","Please select a file for uploading!");
 		language.set_text("view.upload_file.file_chooser.label","Choose a file");
+		language.set_text("view.upload_file.upload_text.label","Write some text right now");
 		//text upload view
 		language.set_text("view.upload_text.uploadbutton.label","Upload");
 		language.set_text("view.upload_text.openbutton.tooltip","Load a file");

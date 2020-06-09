@@ -13,6 +13,7 @@ public class Dragonstone.View.UploadText : Gtk.Box, Dragonstone.IView {
 	private Gtk.ScrolledWindow scrolled_window = new Gtk.ScrolledWindow(null,null);
 	private Gtk.TextView textview = new Gtk.TextView();
 	
+	private Gtk.Button backbutton = new Gtk.Button.from_icon_name("go-previous-symbolic");
 	private Gtk.Button open_button = new Gtk.Button.from_icon_name("document-open-symbolic");
 	private Gtk.Button save_button = new Gtk.Button.from_icon_name("document-save-symbolic");
 	private Gtk.Button upload_button;
@@ -23,6 +24,12 @@ public class Dragonstone.View.UploadText : Gtk.Box, Dragonstone.IView {
 		} else {
 			this.mimeguesser = mimeguesser;
 		}
+		//backbutton
+		backbutton.clicked.connect(() => {
+			if (this.tab != null){
+				this.tab.go_back_subview();
+			}
+		});
 		this.tempfile = tempfile;
 		resource = new Dragonstone.Resource(null,tempfile,true,false);
 		resource.derive_uri_from_filepath();
@@ -41,6 +48,7 @@ public class Dragonstone.View.UploadText : Gtk.Box, Dragonstone.IView {
 		open_button.set_tooltip_text(open_button_tooltip);
 		save_button.set_tooltip_text(save_button_tooltip);
 		//put buttons on actionsbar
+		actionbar.pack_start(backbutton);
 		actionbar.pack_start(open_button);
 		actionbar.pack_start(save_button);
 		actionbar.pack_end(upload_button);
@@ -73,8 +81,10 @@ public class Dragonstone.View.UploadText : Gtk.Box, Dragonstone.IView {
 			upload_button.sensitive = !empty;
 			if (empty){
 				open_button.get_style_context().remove_class("destructive-action");
+				backbutton.get_style_context().remove_class("destructive-action");
 			} else {
 				open_button.get_style_context().add_class("destructive-action");
+				backbutton.get_style_context().add_class("destructive-action");
 			}
 		}
 	}
@@ -175,6 +185,9 @@ public class Dragonstone.View.UploadText : Gtk.Box, Dragonstone.IView {
 		this.request = request;
 		this.tab = tab;
 		request.setResource(resource, "text_upload_view", request.status, request.substatus);
+		if (!as_subview){
+			backbutton.hide();
+		}
 		return true;
 	}
 	
