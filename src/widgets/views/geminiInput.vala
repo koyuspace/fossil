@@ -12,6 +12,9 @@ public class Dragonstone.View.GeminiInput : Dragonstone.Widget.DialogViewBase, D
 		this.append_small_headline(request.resource.name);
 		var input = new Dragonstone.View.GeminiInputInput("",tab.uri);
 		input.go.connect((s,uri) => {tab.go_to_uri(uri);});
+		if (request.arguments.get("gemini.statuscode") == "11") {
+			input.entry.input_purpose = Gtk.InputPurpose.PASSWORD;
+		}
 		this.append_widget(input);
 		this.center_box.set_child_packing(input,true,true,0,Gtk.PackType.START);
 		show_all();
