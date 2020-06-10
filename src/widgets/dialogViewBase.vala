@@ -15,7 +15,7 @@ public class Dragonstone.Widget.DialogViewBase : Gtk.ScrolledWindow {
 	
 	public Gtk.Image append_big_icon(string icon_name){
 		var icon = new Gtk.Image.from_icon_name(icon_name,Gtk.IconSize.DIALOG);
-		icon.icon_size=6;
+		icon.set_pixel_size(icon.scale_factor*64);
 		append_widget(icon);
 		return icon;
 	}
