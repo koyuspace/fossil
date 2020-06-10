@@ -16,11 +16,11 @@ public class Dragonstone.Request : Object {
 	
 	
 	//advanced feedback
-	public bool done = { get; protected set; default = false;}
-	public bool cancelled = { get; protected set; default = false;} //set to true to cancel download  or upload(no effect if resource was alredy fetched)
+	public bool done { get; protected set; default = false;}
+	public bool cancelled { get; protected set; default = false;} //set to true to cancel download  or upload(no effect if resource was alredy fetched)
 	// sucess meaning no error (redirects and intentionally empty are a sucess)
-	public bool download_sucess = { get; protected set; default = false;}
-	public bool upload_sucess = { get; protected set; default = false;}
+	public bool download_sucess { get; protected set; default = false;}
+	public bool upload_sucess { get; protected set; default = false;}
 	
 	public signal void finished(Dragonstone.Request request);
 	
@@ -29,7 +29,7 @@ public class Dragonstone.Request : Object {
 		this.reload = reload;
 	}
 	
-	public void finish(bool download_sucess = false, bool upload_sucess = false;){
+	public void finish(bool download_sucess = false, bool upload_sucess = false){
 		lock (done) {
 			if (!done) {
 				this.download_sucess = download_sucess;
@@ -67,7 +67,7 @@ public class Dragonstone.Request : Object {
 		this.resource_changed(this);
 		this.setStatus(status,substatus);
 		if (finish){
-			finish(true);
+			this.finish(true);
 		}
 	}
 	
