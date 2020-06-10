@@ -11,6 +11,7 @@ public class Dragonstone.Util.ConnectionHelper : Object {
 				addresses = resolver.lookup_by_name (host, null);
 			} catch (Error e) {
 				request.setStatus("error/noHost");
+				request.finish();
 				return null;
 			}
 			
@@ -58,6 +59,7 @@ public class Dragonstone.Util.ConnectionHelper : Object {
 			}
 			if ( conn == null ){
 				request.setStatus("error/connectionRefused");
+				request.finish();
 				return null;
 			}
 			if (last_tls_attempt != null){
@@ -194,8 +196,10 @@ public class Dragonstone.Util.ConnectionHelperTlsConnection : Object {
 			if (error_message != null){
 				if (error_message == "Unacceptable TLS certificate"){
 					request.setStatus("error/tls/certificateRejected");
+					request.finish();
 				} else {
 					request.setStatus("error/internal",error_message);
+					request.finish();
 				}
 			}
 		}
