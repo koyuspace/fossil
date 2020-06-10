@@ -14,12 +14,30 @@ public class Dragonstone.Request : Object {
 	//writing to this table after passing on the request will result in undefined bahaviour
 	public HashTable<string,string> arguments = new HashTable<string,string>(str_hash, str_equal);
 	
-	//subject to change
-	public bool cancelled = false; //set to true to cancel download (no effect if resource was alredy fetched)
+	
+	//advanced feedback
+	public bool done = { get; protected set; default = false;}
+	public bool cancelled = { get; protected set; default = false;} //set to true to cancel download  or upload(no effect if resource was alredy fetched)
+	// sucess meaning no error (redirects and intentionally empty are a sucess)
+	public bool download_sucess = { get; protected set; default = false;}
+	public bool upload_sucess = { get; protected set; default = false;}
+	
+	public signal void finished(Dragonstone.Request request);
 	
 	public Request(string uri, bool reload = false){
 		this.uri = uri;
 		this.reload = reload;
+	}
+	
+	public void finish(bool download_sucess = false, bool upload_sucess = false;){
+		lock (done) {
+			if (!done) {
+				this.download_sucess = download_sucess;
+				this.upload_sucess = upload_sucess;
+				this.done = true;
+				this.finished(this);
+			}
+		}
 	}
 	
 	//turns this into an upload request
@@ -43,15 +61,22 @@ public class Dragonstone.Request : Object {
 		}
 	}
 	
-	public void setResource(Dragonstone.Resource resource, string store, string status = "success", string substatus = ""){
+	public void setResource(Dragonstone.Resource resource, string store, string status = "success", string substatus = "", bool finish = true){
 		this.resource = resource;
 		this.store = store;
 		this.resource_changed(this);
 		this.setStatus(status,substatus);
+		if (finish){
+			finish(true);
+		}
 	}
 	
 	public void cancel(){
-		cancelled = true;
+		lock (done) {
+			if (!done) {
+				cancelled = true;
+			}
+		}
 	}
 	
 }
