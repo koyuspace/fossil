@@ -13,6 +13,7 @@ public class Dragonstone.Store.GopherWrite : Object, Dragonstone.ResourceStore {
 		var parsed_uri = new Dragonstone.Util.ParsedUri(request.uri,false);
 		if(!(parsed_uri.scheme == "gopher+writet" || parsed_uri.scheme == "gopher+writef")){
 			request.setStatus("error/uri/unknownScheme","gopherwrite only knows gopher+writet:// and gopher+writef://");
+			request.finish();
 			return;
 		}
 		if ((!upload) || request.upload_resource == null){
@@ -30,6 +31,7 @@ public class Dragonstone.Store.GopherWrite : Object, Dragonstone.ResourceStore {
 		string? host = parsed_uri.host;
 		if (host == null){
 			request.setStatus("error/uri/noHost","gopherwrite needs a host");
+			request.finish();
 			return;
 		}
 		uint16? port = parsed_uri.get_port_number();
@@ -45,7 +47,8 @@ public class Dragonstone.Store.GopherWrite : Object, Dragonstone.ResourceStore {
 		}
 		string? download_resource_uri = request.upload_result_uri;
 		if (download_resource_uri == null){
-			request.setStatus("error/internal","the download_resource_uri was null, but the upload_resource was set");
+			request.setStatus("error/internal","the upload_result_uri was null, but the upload_resource was set");
+			request.finish();
 		}
 		string resource_user_id = "gopherwrite_"+GLib.Uuid.string_random();
 		request.upload_resource.increment_users(resource_user_id);

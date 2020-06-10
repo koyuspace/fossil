@@ -6,10 +6,12 @@ public class Dragonstone.Store.Finger : Object, Dragonstone.ResourceStore {
 	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
 		if (filepath == null){
 			request.setStatus("error/internal","Filepath required!");
+			request.finish();
 			return;
 		}
 		if (upload){
 			request.setStatus("error/noupload","Uploding not supported");
+			request.finish();
 			return;
 		}
 		// parse uri
@@ -17,12 +19,14 @@ public class Dragonstone.Store.Finger : Object, Dragonstone.ResourceStore {
 		
 		if(!(parsed_uri.scheme == "finger" || parsed_uri.scheme == null)){
 			request.setStatus("error/uri/unknownScheme","Finger only knows finger://");
+			request.finish();
 			return;
 		}
 		
 		string? host = parsed_uri.host;
 		if (host == "null"){
 			request.setStatus("error/uri/noHost","Finger needs a host");
+			request.finish();
 			return;
 		}
 		uint16? port = parsed_uri.get_port_number();
@@ -90,6 +94,7 @@ private class Dragonstone.FingerResourceFetcher : Object {
 				resource.add_metadata(mimetype,@"[finger] $host:$port | $query");
 			}catch(Error e){
 				request.setStatus("error/internal",e.message);
+				request.finish();
 				return;
 			}
 			if (helper.closed){return;} //error or cancelled
@@ -99,6 +104,7 @@ private class Dragonstone.FingerResourceFetcher : Object {
 			return;
 		} catch (Error e) {
 				request.setStatus("error/gibberish");
+				request.finish();
 		}
 		return;
 	}

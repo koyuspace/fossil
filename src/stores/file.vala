@@ -14,6 +14,7 @@ public class Dragonstone.Store.File : Object, Dragonstone.ResourceStore {
 	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
 		if (upload){
 			request.setStatus("error/noupload","Uploding not supported");
+			request.finish();
 			return;
 		}
 		string path = null;
@@ -24,6 +25,7 @@ public class Dragonstone.Store.File : Object, Dragonstone.ResourceStore {
 			path = request.uri;
 		} else {
 			request.setStatus("error/uri/unknownScheme","File only knows file:// or /");
+			request.finish();
 			return;
 		}
 		
@@ -34,6 +36,7 @@ public class Dragonstone.Store.File : Object, Dragonstone.ResourceStore {
 		var file = GLib.File.new_for_path(path);
 		if (!file.query_exists()){
 			request.setStatus("error/resourceUnavaiable","No Such File or directory");
+			request.finish();
 			return;
 		}
 		
@@ -71,6 +74,7 @@ public class Dragonstone.Store.File : Object, Dragonstone.ResourceStore {
 			} catch (FileError e) {
 				helper.cancel();
 				request.setStatus("error/internal",e.message);
+				request.finish();
 			}
 			if (helper.closed) { return; }
 			helper.close();

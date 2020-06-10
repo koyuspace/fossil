@@ -22,10 +22,12 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
 		if (filepath == null){
 			request.setStatus("error/internal","Filepath required!");
+			request.finish();
 			return;
 		}
 		if (upload){
 			request.setStatus("error/noupload","Uploding not supported");
+			request.finish();
 			return;
 		}
 		// parse uri
@@ -33,6 +35,7 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 		
 		if(!(parsed_uri.scheme == "gopher" || parsed_uri.scheme == null)){
 			request.setStatus("error/uri/unknownScheme","Gopher only knows gopher://");
+			request.finish();
 			return;
 		}
 		
@@ -42,6 +45,7 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 		string? host = parsed_uri.host;
 		if (host == null){
 			request.setStatus("error/uri/noHost","Gopher needs a host");
+			request.finish();
 			return;
 		}
 		uint16? port = parsed_uri.get_port_number();
@@ -64,10 +68,12 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 		var typeinfo = type_registry.get_entry_by_gophertype(gophertype);
 		if (typeinfo == null) {
 			request.setStatus("error/gopher",@"Gophertype $gophertype not supported!");
+			request.finish();
 			return;
 		}
 		if (!typeinfo.uri_template.has_prefix("gopher://") || typeinfo.mimetype == null){
 			request.setStatus("error/gopher",@"Gophertype $gophertype not supported!");
+			request.finish();
 			return;
 		}
 		var stripped_uri = Dragonstone.Util.Uri.strip_querys(request.uri);
@@ -142,6 +148,7 @@ public class Dragonstone.Gopher.ResourceFetcher : Object {
 					resource.add_metadata(mimetype,@"[gopher] $host:$port | $query");
 				}catch(Error e){
 					request.setStatus("error/internal",e.message);
+					request.finish();
 					return;
 				}
 			}
@@ -152,6 +159,7 @@ public class Dragonstone.Gopher.ResourceFetcher : Object {
 			return;
 		} catch (Error e) {
 				request.setStatus("error/gibberish");
+				request.finish();
 		}
 		return;
 	}
@@ -179,6 +187,7 @@ public class Dragonstone.Gopher.ResourceFetcher : Object {
 		}catch (Error e){
 			print("[gopher][error] An error occourred while reding text from a connection to a gopher Server\n"+e.message+"\n");
 			request.setStatus("error/gibberish");
+			request.finish();
 			return false;
 		}
 		
