@@ -15,10 +15,12 @@ public class Dragonstone.Session.Tls : Dragonstone.ISession, Object {
 		var request = new Dragonstone.Request(uri,reload);
 		if (uri == "about:cache"){
 			request.setStatus("interactive/cache");
+			request.finish();
 			return request;
 		}
 		if (uri == "session://"){
 			request.setStatus("interactive/tls_session");
+			request.finish();
 			return request;
 		}
 		/*
@@ -54,7 +56,7 @@ public class Dragonstone.Session.Tls : Dragonstone.ISession, Object {
 		print("[session.tls] making request to outside world\n");
 		backend.request(request);
 		if (use_cache){
-			request.resource_changed.connect(reqest_reource_changed_cachehook);
+			request.finished.connect(reqest_finished_cachehook);
 		}
 		return request;
 	}
@@ -65,17 +67,18 @@ public class Dragonstone.Session.Tls : Dragonstone.ISession, Object {
 		if (this.tls_certificate_pems != null){
 			request.arguments.set("tls.client.certificate",this.tls_certificate_pems);
 		}
+		request.finished.connect(reqest_finished_cachehook);
 		backend.request(request,null,true);
 		return request;
 	}
 	
 	//used when requestcache is diabled
-	private void reqest_reource_changed_cachehook(Dragonstone.Request outrequest){
+	private void reqest_finished_cachehook(Dragonstone.Request outrequest){
 		if (outrequest.resource != null){
 			if (outrequest.resource.valid_until != 0){
 				cache.put_resource(outrequest.resource);
 			}
-			outrequest.resource_changed.disconnect(reqest_reource_changed_cachehook);
+			outrequest.finished.disconnect(reqest_finished_cachehook);
 		}
 	}
 	
