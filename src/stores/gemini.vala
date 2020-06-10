@@ -6,10 +6,12 @@ public class Dragonstone.Store.Gemini : Object, Dragonstone.ResourceStore {
 	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
 		if (filepath == null){
 			request.setStatus("error/internal","Filepath required!");
+			request.finish();
 			return;
 		}
 		if (upload){
 			request.setStatus("error/noupload","Uploding not supported");
+			request.finish();
 			return;
 		}
 		// parse uri
@@ -17,12 +19,14 @@ public class Dragonstone.Store.Gemini : Object, Dragonstone.ResourceStore {
 		
 		if(!(parsed_uri.scheme == "gemini" || parsed_uri.scheme == null)){
 			request.setStatus("error/uri/unknownScheme","Gemini only knows gemini://");
+			request.finish();
 			return;
 		}
 		
 		string? host = parsed_uri.host;
 		if (host == null){
 			request.setStatus("error/uri/noHost","Gemini needs a host");
+			request.finish();
 			return;
 		}
 		uint16? port = parsed_uri.get_port_number();
@@ -63,6 +67,8 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 	
 	public void fetchResource(Dragonstone.Util.ConnectionHelper connection_helper, int32 default_resource_lifetime){
 		
+		request.setStatus("connecting");
+		
 		var conn = connection_helper.connect_to_server(host,port,request,true);
 		if (conn == null){ return; }
 		
@@ -84,6 +90,7 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 				beyond_header = true;
 				if (statusline == null){
 					request.setStatus("error/gibberish","#received a null statusline");
+					request.finish();
 					return;
 				}
 				while(statusline.has_suffix("\r") || statusline.has_suffix("\n")){
@@ -92,6 +99,7 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 				print(@"[gemini][debug] statusline: $(statusline.strip().length) '$statusline'\n");
 				if (statusline.strip().length < 2){
 					request.setStatus("error/gibberish","#invalid status line");
+					request.finish();
 					return;
 				}
 				var statuscode = int.parse(statusline.substring(0,2));
@@ -121,14 +129,19 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 					var joined_uri = Dragonstone.Util.Uri.join(uri,metaline);
 					if (joined_uri == null){joined_uri = uri;}
 					request.setStatus("redirect/temporary",joined_uri);
+					request.finish(true);
 				} else if (statuscode/10==4){ //temporarely unavaiable
 					request.setStatus("error/resourceUnavaiable");
+					request.finish();
 				} else if (statuscode/10==5){ //permanently unavaiable
 					request.setStatus("error/resourceUnavaiable");
+					request.finish();
 				} else if (statuscode/10==6){
 					request.setStatus("error/sessionRequired","tls");
+					request.finish();
 				} else {
 					request.setStatus("error/gibberish","#invalid status code");
+					request.finish();
 				}
 				try {
 					conn.close();
@@ -144,15 +157,18 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 						request.setResource(resource,"gemini");
 					} else {
 						request.setStatus("error/gibberish","TLS connection closed unexpectedly");
+						request.finish();
 					}
 				} else {
 					request.setStatus("error/internalError","Something with gemini:\n"+e.message);
+					request.finish();
 				}
 			}
 			
 
 		} catch (Error e) {
 				request.setStatus("error/gibberish");
+				request.finish();
 		}
 		return;
 	}
