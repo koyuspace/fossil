@@ -205,7 +205,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 				currently_displayed_page.view = view_id; //null if automatic view determination
 			}
 			//do some status specific things
-			if(request.status == "loading" || request.status == "uploading" || request.status == "connecting" || request.status == "routing"){
+			if(!request.done){
 				setTitle(uri,true);
 			} else {
 				setTitle(uri);
