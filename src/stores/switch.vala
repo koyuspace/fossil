@@ -41,6 +41,7 @@ class Dragonstone.Store.Switch : Object, Dragonstone.ResourceStore {
 			store.request(request,filepathx,upload);
 		} else {
 			request.setStatus("error/uri/unknownScheme");
+			request.finish();
 		}
 	}
 	

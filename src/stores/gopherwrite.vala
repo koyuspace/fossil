@@ -21,6 +21,7 @@ public class Dragonstone.Store.GopherWrite : Object, Dragonstone.ResourceStore {
 			} else {
 				request.setStatus("interactive/upload");
 			}
+			request.finish();
 			return;
 		}
 		
@@ -109,6 +110,7 @@ public class Dragonstone.gopherwriteGopher.ResourceUploader : Object {
 				} else {
 					print("[gopherwrite][error] size is reuired for a binary upload!");
 					request.setStatus("error/internal","Cannot determine filesize  $(request.resource.filepath)");
+					request.finish();
 					return;
 				}
 			}
@@ -121,6 +123,7 @@ public class Dragonstone.gopherwriteGopher.ResourceUploader : Object {
 			// upload resource
 			if (!file.query_exists ()) {
 				request.setStatus("error/noFileToUpload");
+				request.finish();
 				return;
 			}
 			bool success = false;

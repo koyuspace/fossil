@@ -12,6 +12,7 @@ public class Dragonstone.Store.About : Object, Dragonstone.ResourceStore {
 			substore.request(request,filepath,upload);
 		} else {
 			request.setStatus("error/resourceUnavaiable");
+			request.finish();
 		}
 	}
 	
@@ -40,10 +41,12 @@ public class Dragonstone.Store.AboutStore.FixedText : Object, Dragonstone.Resour
 	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
 		if (filepath == null){
 			request.setStatus("error/internal","Filepath required!");
+			request.finish();
 			return;
 		}
 		if (upload){
 			request.setStatus("error/noupload","Uploding not supported");
+			request.finish();
 			return;
 		}
 		var helper = new Dragonstone.Util.ResourceFileWriteHelper(request,filepath,0);
@@ -53,6 +56,7 @@ public class Dragonstone.Store.AboutStore.FixedText : Object, Dragonstone.Resour
 		var resource = new Dragonstone.Resource(request.uri,filepath,true);
 		resource.add_metadata(this.mimetype,this.name);
 		request.setResource(resource,"about");
+		request.finish(true);
 	}
 	
 }
@@ -62,13 +66,14 @@ public class Dragonstone.Store.AboutStore.FixedStatus : Object, Dragonstone.Reso
 	public string status;
 	public string substatus;
 	
-	public FixedStatus(string status, string substatus = ""){
+	public FixedStatus(string status, string substatus=""){
 		this.status = status;
 		this.substatus = substatus;
 	}
 	
 	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
 		request.setStatus(this.status,this.substatus);
+		request.finish();
 	}
 	
 }

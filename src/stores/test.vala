@@ -3,10 +3,12 @@ public class Dragonstone.Store.Test : Object, Dragonstone.ResourceStore {
 	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
 		if (filepath == null){
 			request.setStatus("error/internal","Filepath required!");
+			request.finish();
 			return;
 		}
 		if (upload){
 			request.setStatus("error/noupload","Uploding not supported");
+			request.finish();
 			return;
 		}
 		if (request.uri == "test://") {
@@ -70,16 +72,23 @@ Praesent metus quam, accumsan eget nunc a, pellentesque sodales velit. Aliquam u
 			request.setResource(resource,"test");
 		} else if (request.uri == "test://uri_error") {
 			request.setStatus("error/uri/unknownScheme");
+			request.finish();
 		} else if (request.uri == "test://loading") {
+			request.setStatus("loading");
+		} else if (request.uri == "test://uploading") {
 			request.setStatus("loading");
 		} else if (request.uri == "test://offline") {
 			request.setStatus("error/noHost");
+			request.finish();
 		} else if (request.uri == "test://error") {
 			request.setStatus("error");
+			request.finish();
 		} else if (request.uri == "test://gibberish") {
 			request.setStatus("error/gibberish");
+			request.finish();
 		} else {
 			request.setStatus("error/resourceUnavaiable");
+			request.finish();
 		}
 	}
 }
