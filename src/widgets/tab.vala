@@ -205,13 +205,9 @@ public class Dragonstone.Tab : Gtk.Bin {
 				currently_displayed_page.view = view_id; //null if automatic view determination
 			}
 			//do some status specific things
-			if(!request.done){
-				setTitle(uri,true);
-			} else {
-				setTitle(uri);
-			}
+			setTitle(uri,!request.done);
 			if(request.status.has_prefix("error")){
-				setTitle("🔴 "+uri);
+				setTitle("🔴 "+uri,!request.done);
 			}
 			if (do_update_view){
 				if (view_id == null) {
@@ -230,14 +226,14 @@ public class Dragonstone.Tab : Gtk.Bin {
 							update_view(null,"view_did_not_work");
 							return;
 						} else {
-							setTitle("🔴 "+uri);
+							setTitle("🔴 "+uri,!request.done);
 							var error_message_localized = translation.get_localized_string("tab.error.wrong_view.message");
 							view = new Dragonstone.View.Label(@"$error_message_localized\n$(request.status)\n$(request.substatus)");
 							use_view(view);
 						}
 					}
 				} else {
-					setTitle("🔴 "+uri);
+					setTitle("🔴 "+uri,!request.done);
 					var error_message_localized = translation.get_localized_string("tab.error.no_view.message");
 					view = new Dragonstone.View.Label(@"$error_message_localized\n$(request.status)\n$(request.substatus)");
 					use_view(view);
