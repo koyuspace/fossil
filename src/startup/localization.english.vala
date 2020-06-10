@@ -56,6 +56,11 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("view.dragonstone.download.open_button.label","Open in external viewer");
 		//Redirect
 		language.set_text("view.dragonstone.redirect.title","Redirect to");
+		//Loading view
+		language.set_text("view.loading.headline_default","LOADING");
+		language.set_text("view.loading.headline_connecting","CONNECTING");
+		language.set_text("view.loading.headline_download","DOWNLOADING");
+		language.set_text("view.loading.headline_upload","UPLOADING");
 		//Bookmark view
 		language.set_text("view.boomarks.add.label","Add");
 		language.set_text("view.boomarks.editbutton.tooltip","Edit selected bookmark");
