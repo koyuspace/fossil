@@ -130,15 +130,16 @@ public class Dragonstone.gopherwriteGopher.ResourceUploader : Object {
 				conn.output_stream.flush();
 			}else{
 				success = ResourceUploader.upload_blob(conn.output_stream,file,request,size);
-				
 			}
 			if (!success){
 				conn.close();
+				request.finish();
 				return;
 			}
 			if (download_resource == null){
 				conn.close();
 				request.setStatus("success");
+				request.finish(false,true);
 				return;
 			}
 			
@@ -152,6 +153,7 @@ public class Dragonstone.gopherwriteGopher.ResourceUploader : Object {
 			if (success){
 				download_resource.add_metadata("text/gopher",@"[gopherwrite] $host:$port | $query");
 			} else {
+				request.finish(false,true);
 				return;
 			}
 			
@@ -162,6 +164,7 @@ public class Dragonstone.gopherwriteGopher.ResourceUploader : Object {
 			return;
 		} catch (Error e) {
 				request.setStatus("error/gibberish",e.message);
+				request.finish();
 		}
 		return;
 	}
@@ -171,7 +174,7 @@ public class Dragonstone.gopherwriteGopher.ResourceUploader : Object {
 		try {
 			var fileinfo = file.query_info(GLib.FileAttribute.STANDARD_SIZE,GLib.FileQueryInfoFlags.NONE);
 			size = fileinfo.get_size();
-			var data_input_stream = new DataInputStream (file.read ());
+			var data_input_stream = new DataInputStream (file.read());
 			string line;
 			while ((line = data_input_stream.read_line (null)) != null) {
 				if(request.cancelled){
