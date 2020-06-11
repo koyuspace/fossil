@@ -24,8 +24,12 @@ public class Dragonstone.Widget.RequestArgumentItem : Gtk.Box {
 		var key_label = new Gtk.Label(key);
 		key_label.halign = Gtk.Align.END;
 		key_label.get_style_context().add_class("dim-label");
+		key_label.wrap_mode = Pango.WrapMode.WORD_CHAR;
+		key_label.wrap = true;
 		var value_label = new Gtk.Label(val);
 		value_label.halign = Gtk.Align.START;
+		value_label.wrap_mode = Pango.WrapMode.WORD_CHAR;
+		value_label.wrap = true;
 		this.pack_start(key_label);
 		this.pack_start(value_label);
 		this.show_all();

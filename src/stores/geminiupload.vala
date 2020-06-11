@@ -1,28 +1,26 @@
 public class Dragonstone.Store.GeminiUpload : Object, Dragonstone.ResourceStore {
 	
-	//
-	
-	public int32 default_resource_lifetime = 1000*60*10; //10 minutes
+	public int32 default_resource_lifetime = 1000*60*30; //30 minutes
 	public Dragonstone.Util.ConnectionHelper connection_helper = new Dragonstone.Util.ConnectionHelper();
-	
-	//uriformat:
-	//gopher+write(t|f)://<server>[:<port>]/<encoded_selector>
 	
 	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
 		// parse uri
 		var parsed_uri = new Dragonstone.Util.ParsedUri(request.uri,false);
 		if(!(parsed_uri.scheme == "gemini+upload")){
 			request.setStatus("error/uri/unknownScheme","geminiupload only knows gemini+upload://");
+			request.finish();
 			return;
 		}
 		if ((!upload) || request.upload_resource == null){
 			request.setStatus("interactive/upload");
+			request.finish();
 			return;
 		}
 		
 		string? host = parsed_uri.host;
 		if (host == null){
 			request.setStatus("error/uri/noHost","geminiupload needs a host");
+			request.finish();
 			return;
 		}
 		uint16? port = parsed_uri.get_port_number();
@@ -33,11 +31,13 @@ public class Dragonstone.Store.GeminiUpload : Object, Dragonstone.ResourceStore 
 		string? download_resource_uri = request.upload_result_uri;
 		if (download_resource_uri == null){
 			request.setStatus("error/internal","the download_resource_uri was null, but the upload_resource was set");
+			request.finish();
+			return;
 		}
 		string resource_user_id = "geminiupload_"+GLib.Uuid.string_random();
 		request.upload_resource.increment_users(resource_user_id);
 		var download_resource = new Dragonstone.Resource(download_resource_uri,filepath,true);
-		var uploader = new Dragonstone.geminiuploadGopher.ResourceUploader(download_resource,request,host,port);
+		var uploader = new Dragonstone.Geminiupload.ResourceUploader(download_resource,request,host,port);
 		new Thread<int>(@"geminiuploadGopher resource uploader $host:$port [$(request.uri)]",() => {
 			uploader.do_upload_resource(connection_helper, default_resource_lifetime);
 			request.upload_resource.decrement_users(resource_user_id);
@@ -60,17 +60,18 @@ public class Dragonstone.Geminiupload.ResourceUploader : Object {
 			download_resource: download_resource,
 			request: request,
 			host: host,
-			port: port,
+			port: port
 		);
 	}
 	
-	//upload_text id set to false, upload as blob
-	public void do_upload_resource(Dragonstone.Util.ConnectionHelper connection_helper, int32 default_resource_lifetime, bool upload_text){
+	public void do_upload_resource(Dragonstone.Util.ConnectionHelper connection_helper, int32 default_resource_lifetime){
 			
 		request.setStatus("connecting");
 		
 		var conn = connection_helper.connect_to_server(host,port,request,true);
 		if (conn == null){ return; }
+		
+		var input_stream = new DataInputStream(conn.input_stream);
 		
 		request.setStatus("uploading");
 		try {
@@ -82,11 +83,12 @@ public class Dragonstone.Geminiupload.ResourceUploader : Object {
 				size = fileinfo.get_size();
 			} catch(Error e) {
 				print(@"[geminiupload][error] cannot determine filesize for $(request.resource.filepath)\n");
-				request.setStatus("error/internal","Cannot determine filesize  $(request.resource.filepath)");
+				request.setStatus("error/internal",@"Cannot determine filesize  $(request.resource.filepath)");
+				request.finish();
 				return;
 			}
 			
-			string? mimetype = upload_resource.mimetype
+			string? mimetype = upload_resource.mimetype;
 			if (mimetype == null){
 				mimetype = "application/octet-stream";
 			}
@@ -97,33 +99,46 @@ public class Dragonstone.Geminiupload.ResourceUploader : Object {
 			
 			//await server response
 			var statusline = cleanup_statusline(input_stream.read_line(null));
-			if (statusline == null){
+			if (statusline == null || statusline.strip().length < 2){
 				request.setStatus("error/gibberish","#received an invalid statusline");
+				request.finish();
 				return;
 			}
 			string? responsecode = statusline.substring(0,2);
+			
+			request.arguments.set("gemini.statuscode",responsecode);
 			
 			if (responsecode == "WR"){
 				// upload resource
 				if (!file.query_exists ()) {
 					request.setStatus("error/noFileToUpload");
+					request.finish();
 					return;
 				}
 				bool success = ResourceUploader.upload_blob(conn.output_stream,file,request,size);
 				if (!success){
 					conn.close();
+					request.finish();
 					return;
 				}
-				
+								
 				statusline = cleanup_statusline(input_stream.read_line(null));
 				if (statusline == null){
 					request.setStatus("error/gibberish","#received an invalid statusline");
+					request.finish();
 					return;
 				}
 				responsecode = statusline.substring(0,2);
 			}
 			
-			var meta = statusline.substring(3);
+			var meta = "";
+			if (statusline.length > 3){
+				meta = statusline.substring(3);
+			}
+			
+			bool upload_success = responsecode == "OK";
+			
+			request.arguments.set("geminiupload.statuscode",responsecode);
 			
 			if (responsecode == "OK"){
 				request.arguments.set("upload.download_uri",meta);
@@ -137,6 +152,7 @@ public class Dragonstone.Geminiupload.ResourceUploader : Object {
 				request.arguments.set("error.upload.content_rejected",meta);
 			} else {
 				request.setStatus("error/gibberish","#received an invalid responsecode");
+				request.finish();
 				conn.close();
 				return;
 			}
@@ -145,47 +161,65 @@ public class Dragonstone.Geminiupload.ResourceUploader : Object {
 			if (download_resource == null){
 				conn.close();
 				request.setStatus("success/noResource","none");
+				request.finish(false,upload_success);
 				return;
 			}
 			
+			request.setStatus("loading");
+			
 			statusline = cleanup_statusline(input_stream.read_line(null));
-			if (statusline == null){
+			if (statusline == null || statusline.strip().length < 2){
 				request.setStatus("error/gibberish","#received an invalid statusline");
+				request.finish(false,upload_success);
 				return;
 			}
 			var statuscode = int.parse(statusline.substring(0,2));
-			var metaline = statusline.substring(3);
+			var metaline = "";
+			if (statusline.length > 3){
+				metaline = statusline.substring(3);
+			}
 			
 			request.arguments.set("gemini.statuscode",statusline.substring(0,2));
 			request.arguments.set("gemini.metaline",metaline);
 			
 			if (statuscode/10==1){
-				helper = new Dragonstone.Util.ResourceFileWriteHelper(request,download_resource.filepath,0);
+				var helper = new Dragonstone.Util.ResourceFileWriteHelper(request,download_resource.filepath,0);
 				helper.appendString(metaline); //input prompt
 				download_resource.add_metadata("gemini/input",metaline);
-				if (helper.closed){return;} //error or cancelled
+				if (helper.closed){
+					request.finish(false,upload_success);
+					return;
+				} //error or cancelled
 				helper.close();
-				request.setResource(download_resource,"gemini");
+				request.setResource(download_resource,"geminiupload","success","",false);
 			} else if (statuscode/10==2){
 				if (metaline.strip() == ""){
 					metaline = "text/gemini";
 				}
-				download_resource.add_metadata(metaline/*mimetype*/,@"[geminiupload] $uri");
+				download_resource.add_metadata(metaline/*mimetype*/,@"[geminiupload] $(request.uri)");
 				download_resource.valid_until = download_resource.timestamp+default_resource_lifetime;
-				helper = new Dragonstone.Util.ResourceFileWriteHelper(request,download_resource.filepath,0);
-				beyond_header = true;
-				readBytes(input_stream,helper);
-				if (helper.error){return;}
+				var helper = new Dragonstone.Util.ResourceFileWriteHelper(request,download_resource.filepath,0);
+				Dragonstone.GeminiResourceFetcher.read_bytes(input_stream,helper,request);
+				if (helper.error){
+					request.finish(false,upload_success);
+					return;
+				}
 				helper.close();
-				request.setResource(download_resource,"geminiupload");
+				request.setResource(download_resource,"geminiupload","success","",false);
 			} else if (statuscode/10==3){
-				var joined_uri = Dragonstone.Util.Uri.join(uri,metaline);
-				if (joined_uri == null){joined_uri = uri;}
+				var joined_uri = Dragonstone.Util.Uri.join(request.uri,metaline);
+				if (joined_uri == null){joined_uri = request.uri;}
 				request.setStatus("redirect/temporary",joined_uri);
 			} else if (statuscode == 40){
 				request.setStatus("success/noResource","none");
 			}
-			
+			request.finish(true,upload_success);
+		} catch(Error e) {
+			print(@"[geminiupload][error] $(e.message)\n");
+			request.setStatus("error/internal",@"Something went wrong while uploading to gemini\n$(e.message)");
+			request.finish();
+			return;
+		}
 	}
 	
 	//this assumes, that the filesize did not change, but this rarely should be an issue
@@ -222,12 +256,13 @@ public class Dragonstone.Geminiupload.ResourceUploader : Object {
 	
 	public static string? cleanup_statusline(string? statusline){
 		if (statusline == null){ return null; }
+		string _statusline = statusline;
 		while(statusline.has_suffix("\r") || statusline.has_suffix("\n")){
-			statusline = statusline.substring(0,statusline.length-1);
+			_statusline = _statusline.substring(0,statusline.length-1);
 		}
-		if (statusline.strip().length < 2){
+		if (_statusline.strip().length < 2){
 			return null;
 		}
-		return statusline;
+		return _statusline;
 	}
 }

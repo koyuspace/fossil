@@ -121,8 +121,11 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 					resource.add_metadata(metaline/*mimetype*/,@"[gemini] $uri");
 					resource.valid_until = resource.timestamp+default_resource_lifetime;
 					helper = new Dragonstone.Util.ResourceFileWriteHelper(request,resource.filepath,0);
-					readBytes(input_stream,helper);
-					if (helper.error){return;}
+					read_bytes(input_stream,helper,request);
+					if (helper.error){
+						request.finish();
+						return;
+					}
 					helper.close();
 					request.setResource(resource,"gemini");
 				} else if (statuscode/10==3){
@@ -173,7 +176,7 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 		return;
 	}
 	
-	public void readBytes(DataInputStream input_stream,Dragonstone.Util.ResourceFileWriteHelper helper) throws Error{
+	public static void read_bytes(DataInputStream input_stream, Dragonstone.Util.ResourceFileWriteHelper helper, Dragonstone.Request request) throws Error{
 		//print("[debug] readbytes start\n");
 		uint64 counter = 0;
 		while (true){
