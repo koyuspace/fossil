@@ -21,8 +21,11 @@ public class Dragonstone.View.Error.Generic : Dragonstone.Widget.DialogViewBase,
 		headline.label = tab.translation.localize("view.error.label");
 		statuslabel.label = request.status;
 		sublabel.label = request.substatus;
+		var argument_display = new Dragonstone.Widget.RequestArgumentDisplay(request);
+		append_widget(argument_display);
 		//nameLabel.label = request.name;
 		show_all();
+		if (as_subview){ use_as_subview(tab); }
 		return true;
 	}
 	
@@ -35,4 +38,3 @@ public class Dragonstone.View.Error.Generic : Dragonstone.Widget.DialogViewBase,
 	}
 	
 }
-

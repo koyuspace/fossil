@@ -3,7 +3,7 @@ public class Dragonstone.Widget.SubviewBase : Gtk.Box {
 	public Gtk.Button backbutton = new Gtk.Button.from_icon_name("go-previous-symbolic");
 	public Gtk.HeaderBar titlebar = new Gtk.HeaderBar();
 	
-	public SubviewBase (string title){
+	public SubviewBase (string title = ""){
 		this.orientation = Gtk.Orientation.VERTICAL;
 		titlebar.title = title;
 		titlebar.show_close_button = false;

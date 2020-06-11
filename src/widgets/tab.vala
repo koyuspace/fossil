@@ -145,11 +145,24 @@ public class Dragonstone.Tab : Gtk.Bin {
 				request.resource.decrement_users(resource_user_id);
 			}
 			request.status_changed.disconnect(on_status_update);
+			if (!request.done){
+				request.finished.disconnect(on_request_finished);
+				request.cancel();
+			}
 		}
 		request = rq;
 		if (request != null){
 			request.status_changed.connect(on_status_update);
+			request.finished.connect(on_request_finished);
 		}
+	}
+	
+	private void on_request_finished(Dragonstone.Request request){
+		Timeout.add(0,() => {
+			print("[tab][debug] on_request_finished()\n");
+			check_view(true);
+			return false;
+		},Priority.HIGH);
 	}
 	
 	private void on_status_update(Dragonstone.Request rq){
@@ -170,15 +183,31 @@ public class Dragonstone.Tab : Gtk.Bin {
 			}
 		}
 		Timeout.add(0,() => {
-			check_view();
+			check_view(false);
 			return false;
 		},Priority.HIGH);
 	}
 	
 	//check if the current view is still appropriate, and if not change it
-	public void check_view(){
+	public void check_view(bool finished){
 		if(locked>0){ return; }
-		print(@"check view -- $(request.status) -- $(request.substatus) --\n");
+		print(@"[tab] check view -- $(request.status) -- $(request.substatus) -- f: $finished\n");
+		if (finished){
+			//test for errors and warnings
+			bool has_warnings = false;
+			bool has_errors = false;
+			if (request.done){
+				foreach (string key in request.arguments.get_keys()){
+					has_warnings = has_warnings || key.has_prefix("warning");
+					has_errors = has_errors || key.has_prefix("error");
+				}
+			}
+			if (has_errors){
+				print("[tab] open error dialog\n");
+				open_subview("dragonstone.error");
+				return;
+			}
+		}
 		if (!view.canHandleCurrentResource() ) {
 			update_view(null,"check_view");
 		}
@@ -204,6 +233,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 			if (!as_subview){
 				currently_displayed_page.view = view_id; //null if automatic view determination
 			}
+			
 			//do some status specific things
 			setTitle(uri,!request.done);
 			if(request.status.has_prefix("error")){
@@ -271,7 +301,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	
 	public void go_back_subview(){
 		currently_displayed_page.currently_displayed_subview = currently_displayed_page.subview_history.pop();
-		apply_tab_history_entry(currently_displayed_page);
+		apply_tab_history_entry(null);
 	}
 	
 	public void set_tab_parent_window(Dragonstone.Window window){
@@ -339,11 +369,15 @@ public class Dragonstone.Tab : Gtk.Bin {
 		apply_tab_history_entry(entry);
 	}
 	
-	public void apply_tab_history_entry(Dragonstone.TabHistoryEntry entry){
-		currently_displayed_page = entry;
-		load_uri(currently_displayed_page.uri,false,entry.view);
-		if (entry.currently_displayed_subview != null){
-			update_view(entry.currently_displayed_subview.view,"apply_tab_history_entry",false,true);
+	public void apply_tab_history_entry(Dragonstone.TabHistoryEntry? entry){
+		if (entry != null){
+			currently_displayed_page = entry;
+			load_uri(currently_displayed_page.uri,false,entry.view);
+		}
+		if (currently_displayed_page.currently_displayed_subview != null){
+			update_view(currently_displayed_page.currently_displayed_subview.view,"apply_tab_history_entry",false,true);
+		} else {
+			update_view(currently_displayed_page.view,"apply_tab_history_entry",false,false);
 		}
 	}
 	

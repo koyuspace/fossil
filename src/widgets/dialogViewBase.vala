@@ -1,12 +1,34 @@
-public class Dragonstone.Widget.DialogViewBase : Gtk.ScrolledWindow {
+public class Dragonstone.Widget.DialogViewBase : Gtk.Box {
 	protected Gtk.Box outer_box = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
 	protected Gtk.Box center_box = new Gtk.Box(Gtk.Orientation.VERTICAL,8);
+	protected Gtk.ScrolledWindow scrolled_window = new Gtk.ScrolledWindow(null,null);
+	protected Gtk.Button backbutton = new Gtk.Button.from_icon_name("go-previous-symbolic");
+	protected Gtk.ActionBar actionbar = new Gtk.ActionBar();
 	
 	construct{
 		center_box.margin = 16;
+		this.orientation = Gtk.Orientation.VERTICAL;
 		outer_box.set_center_widget(center_box);
-		add(outer_box);
-		this.show_all();
+		scrolled_window.add(outer_box);
+		actionbar.pack_start(backbutton);
+		pack_start(actionbar);
+		pack_start(scrolled_window);
+		this.set_child_packing(actionbar,false,true,0,Gtk.PackType.START);
+		this.set_child_packing(scrolled_window,true,true,0,Gtk.PackType.START);
+		this.show();
+		this.scrolled_window.show_all();
+		this.actionbar.hide();
+		this.backbutton.hide();
+	}
+	
+	public void use_as_subview(Dragonstone.Tab tab){
+		this.actionbar.show();
+		this.backbutton.show();
+		this.backbutton.clicked.connect(tab.go_back_subview);
+	}
+	
+	public override void show_all(){
+		outer_box.show_all();
 	}
 	
 	public void append_widget(Gtk.Widget widget){

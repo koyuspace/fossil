@@ -79,8 +79,16 @@ Praesent metus quam, accumsan eget nunc a, pellentesque sodales velit. Aliquam u
 			request.setStatus("loading");
 		} else if (request.uri == "test://offline") {
 			request.setStatus("error/noHost");
-			request.finish();
+			Timeout.add(0,() => {
+				request.arguments.set("error.example.message","This is an example error");
+				request.finish();
+				return false;
+			},Priority.HIGH);
 		} else if (request.uri == "test://error") {
+			request.arguments.set("error.example.boolean","true");
+			request.arguments.set("error.example.message","This is an example error");
+			request.arguments.set("warning.example.boolean","true");
+			request.arguments.set("warning.example.message","This is an example warning");
 			request.setStatus("error");
 			request.finish();
 		} else if (request.uri == "test://gibberish") {

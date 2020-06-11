@@ -113,3 +113,10 @@ public class Dragonstone.Request : Object {
 	"error/sessionRequired" - The server expects some authentication
 	                          substatus contains the types of session, that are supported, seperated by a ";"
 */
+
+public enum Dragonstone.RequestArgumentSeverity {
+	UNKNOWN, //Use default
+	IGNORE,
+	WARNING,
+	ERROR
+}
