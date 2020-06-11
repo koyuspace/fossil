@@ -3,16 +3,12 @@ public class Dragonstone.View.Error.Generic : Dragonstone.Widget.DialogViewBase,
 	private Dragonstone.Request request = null;
 	private Gtk.Label statuslabel; 
 	private Gtk.Label sublabel;
+	private Gtk.Label headline;
 	private string view_status = null;
 	
-	public Generic(Dragonstone.Registry.TranslationRegistry? translation = null) {
-		string title = "ERROR";
-		if (translation != null){
-			title = translation.localize("view.error.title");
-		}
-		
-		this.append_big_icon("dialog-error-symbolic");
-		this.append_big_headline(title);
+	public Generic() {
+		//this.append_big_icon("dialog-error-symbolic");
+		headline = this.append_big_headline("- ERROR -");
 		statuslabel = this.append_small_headline("---");
 		sublabel = this.append_label("...");
 	
@@ -22,7 +18,7 @@ public class Dragonstone.View.Error.Generic : Dragonstone.Widget.DialogViewBase,
 		if (!(request.status.has_prefix("error/") || request.status == "error")) {return false;}
 		view_status = request.status;
 		this.request = request;
-		
+		headline.label = tab.translation.localize("view.error.label");
 		statuslabel.label = request.status;
 		sublabel.label = request.substatus;
 		//nameLabel.label = request.name;
