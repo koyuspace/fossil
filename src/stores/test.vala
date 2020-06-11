@@ -76,7 +76,7 @@ Praesent metus quam, accumsan eget nunc a, pellentesque sodales velit. Aliquam u
 		} else if (request.uri == "test://loading") {
 			request.setStatus("loading");
 		} else if (request.uri == "test://uploading") {
-			request.setStatus("loading");
+			request.setStatus("uploading");
 		} else if (request.uri == "test://offline") {
 			request.setStatus("error/noHost");
 			Timeout.add(0,() => {

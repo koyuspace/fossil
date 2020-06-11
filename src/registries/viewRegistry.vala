@@ -53,6 +53,7 @@ public class Dragonstone.Registry.ViewRegistry : Object {
 		
 		//add rules
 		add_rule(new ViewRegistryRule("loading","dragonstone.loading"));
+		add_rule(new ViewRegistryRule("uploading","dragonstone.loading"));
 		add_rule(new ViewRegistryRule("connecting","dragonstone.loading"));
 		add_rule(new ViewRegistryRule("routing","dragonstone.loading"));
 		add_rule(new ViewRegistryRule("redirect","dragonstone.redirect"));
