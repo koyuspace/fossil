@@ -94,8 +94,8 @@ public class Dragonstone.Geminiupload.ResourceUploader : Object {
 			}
 			string query = request.uri+"\t"+size.to_string("%d")+"\t"+mimetype+"\r\n";
 			
-			conn.output_stream.write (query.data);
-			print ("[geminiupload] Wrote request\n");
+			conn.output_stream.write(query.data);
+			print("[geminiupload] Wrote request\n");
 			
 			//await server response
 			var statusline = cleanup_statusline(input_stream.read_line(null));
@@ -212,6 +212,10 @@ public class Dragonstone.Geminiupload.ResourceUploader : Object {
 				request.setStatus("redirect/temporary",joined_uri);
 			} else if (statuscode == 40){
 				request.setStatus("success/noResource","none");
+			} else {
+				request.setStatus("error/gibberish","invalid responsecode");
+				request.finish(false,upload_success);
+				return;
 			}
 			request.finish(true,upload_success);
 		} catch(Error e) {
