@@ -90,6 +90,7 @@ public class Dragonstone.View.UploadFile : Dragonstone.Widget.DialogViewBase, Dr
 	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
 		if (!(request.status.has_prefix("interactive/upload"))) {return false;}
 		this.request = request;
+		this.upload_button.set_tooltip_text(request.uri);
 		this.tab = tab;
 		return true;
 	}

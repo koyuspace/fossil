@@ -185,6 +185,7 @@ public class Dragonstone.View.UploadText : Gtk.Box, Dragonstone.IView {
 		this.request = request;
 		this.tab = tab;
 		request.setResource(resource, "text_upload_view", request.status, request.substatus);
+		this.upload_button.set_tooltip_text(request.uri);
 		if (!as_subview){
 			backbutton.hide();
 		}
