@@ -261,7 +261,7 @@ public class Dragonstone.Geminiupload.ResourceUploader : Object {
 	public static string? cleanup_statusline(string? statusline){
 		if (statusline == null){ return null; }
 		string _statusline = statusline;
-		while(statusline.has_suffix("\r") || statusline.has_suffix("\n")){
+		while(_statusline.has_suffix("\r") || _statusline.has_suffix("\n")){
 			_statusline = _statusline.substring(0,statusline.length-1);
 		}
 		if (_statusline.strip().length < 2){
