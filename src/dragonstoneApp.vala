@@ -44,6 +44,7 @@ public class Dragonstone.Application : Gtk.Application {
 		Dragonstone.Startup.Gemini.Backend.setup_store(super_registry);
 		Dragonstone.Startup.Gemini.Backend.setup_uri_autocompletion(super_registry);
 		Dragonstone.Startup.GeminiUpload.Backend.setup_store(super_registry);
+		Dragonstone.Startup.GeminiWrite.Backend.setup_store(super_registry);
 		Dragonstone.Startup.File.Backend.setup_store(super_registry);
 		Dragonstone.Startup.File.Backend.setup_uri_autocompletion(super_registry);
 		Dragonstone.Startup.Finger.Backend.setup_store(super_registry);
