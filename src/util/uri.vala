@@ -94,10 +94,13 @@ public class Dragonstone.Util.Uri {
 		foreach(string token in pathtokens.list){
 			if (first){
 				first = false;
-				new_path = new_path+token;
+				new_path = token;
 			} else {
 				new_path = new_path+"/"+token;
 			} 
+		}
+		if (relativepath.has_suffix("/") && !new_path.has_suffix("/")){
+			new_path = new_path+"/";
 		}
 		return new_path;
 	}
