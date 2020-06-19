@@ -2,7 +2,7 @@ public class Dragonstone.Util.ConnectionHelper : Object {
 		
 		public uint default_timeout = 30;
 		
-		public GLib.IOStream? connect_to_server(string host, uint16 port, Dragonstone.Request request, bool use_tls){
+		public GLib.IOStream? connect_to_server(string host, uint16 port, Dragonstone.Request request, bool use_tls, SocketConnectable? _server_identity = null){
 			//make request
 			List<InetAddress> addresses;
 			try {
@@ -14,7 +14,10 @@ public class Dragonstone.Util.ConnectionHelper : Object {
 				request.finish();
 				return null;
 			}
-			
+			SocketConnectable? server_identity = _server_identity;
+			if (use_tls && server_identity == null){
+				server_identity = new NetworkAddress(host,port);
+			}
 			string? client_certificate = request.arguments.get("tls.client.certificate");
 			string? expected_server_certificate = request.arguments.get("tls.server.expected_certificate");
 			var tls_check_settings = new Dragonstone.Util.ConnectionHelperTlsCheckSettings().import_from_request(request);
@@ -26,7 +29,7 @@ public class Dragonstone.Util.ConnectionHelper : Object {
 					conn = try_connect(new InetSocketAddress (address, port));
 					if (conn != null){
 						if (use_tls){
-							last_tls_attempt = upgrade_to_tls_connection(conn,client_certificate,expected_server_certificate,tls_check_settings);
+							last_tls_attempt = upgrade_to_tls_connection(conn,client_certificate,expected_server_certificate,tls_check_settings,server_identity);
 							if(last_tls_attempt.success == true){
 								has_connection = true;
 								break;
@@ -45,7 +48,7 @@ public class Dragonstone.Util.ConnectionHelper : Object {
 					conn = try_connect(new InetSocketAddress (address, port));
 					if (conn != null){
 						if (use_tls){
-							last_tls_attempt = upgrade_to_tls_connection(conn,client_certificate,expected_server_certificate,tls_check_settings);
+							last_tls_attempt = upgrade_to_tls_connection(conn,client_certificate,expected_server_certificate,tls_check_settings,server_identity);
 							if(last_tls_attempt.success == true){
 								has_connection = true;
 								break;
@@ -89,12 +92,15 @@ public class Dragonstone.Util.ConnectionHelper : Object {
 			}
 		}
 		
-		public Dragonstone.Util.ConnectionHelperTlsConnection upgrade_to_tls_connection(SocketConnection socket, string? client_certificate_pem, string? expected_server_certificate_pem, Dragonstone.Util.ConnectionHelperTlsCheckSettings? check_settings = null){
+		public Dragonstone.Util.ConnectionHelperTlsConnection upgrade_to_tls_connection(SocketConnection socket, string? client_certificate_pem, string? expected_server_certificate_pem, Dragonstone.Util.ConnectionHelperTlsCheckSettings? check_settings = null, SocketConnectable? server_identity = null){
 			try {
 				print("[connection_helper] Upgrading to TLS connection\n");
+				if (server_identity != null){
+					print("[connection_helper] Server identity: "+server_identity.to_string()+"\n");
+				}
 				Dragonstone.Util.ConnectionHelperTlsConnection returninfo = new Dragonstone.Util.ConnectionHelperTlsConnection(check_settings);
 				returninfo.expected_server_certificate_pem = expected_server_certificate_pem;
-				returninfo.connection = TlsClientConnection.@new(socket,socket.get_remote_address());
+				returninfo.connection = TlsClientConnection.@new(socket,server_identity);
 				
 				if (client_certificate_pem != null){
 					print("[connection_helper] Using TLS client certificate\n");
