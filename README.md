@@ -2,6 +2,20 @@
 
 A simple GTK Gopher/Gemini client written in Vala, that will eventually support other protocols
 
+For the official release of a first stable version the project will drop its current codename in the favour of the permanent name "NightCat".
+
+Screenshots may be out of date (use the git timestamps and a bit of common sense)
+
+### Supported download protocols
+- gopher
+- (gemini)[gopher://zaibatsu.circumlunar.space/1/~solderpunk/gemini]
+- finger
+
+### Supported upload protocols
+- [gopher+write](https://alexschroeder.ch/wiki/2017-12-30_Gopher_Wiki) (used by the [oddmuse](https://oddmuse.org/) wiki engine)
+- [gemini+write](https://alexschroeder.ch/wiki/2020-06-04_Gemini_Upload) (used by the [oddmuse](https://oddmuse.org/) wiki engine)
+- [gemini+upload](https://alexschroeder.ch/wiki/Baschdels_spin_on_Gemini_uploading) (a protocol I made myself for uplaoding to gemini (no known server implementations))
+
 ### Noteworthy features
 - tabs (surprisingly uncommon feature)
 - bookmarks
@@ -11,7 +25,7 @@ A simple GTK Gopher/Gemini client written in Vala, that will eventually support 
 - per tab history
 - save to disk everything
 - cache
-- runs smoothly on an old Thikpad X31 with a slow HDD a pentium M @ 1.4GHz and 256MB RAM
+- runs smoothly on an old Thikpad X31 with a slow HDD, a pentium M @ 1.4GHz and 256MB RAM
 - works on linux based smartphones
 - trys to be as themeable as possible using GTK themes and icon packs (no guarantees except for obsidian2 and Numix because that's what I use on my development machines)
 - unfinished features and bugs (I try to keep them to a minimum)
