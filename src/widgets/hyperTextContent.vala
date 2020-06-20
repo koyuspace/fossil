@@ -28,6 +28,8 @@ public class Dragonstone.Widget.HyperTextContent : Dragonstone.Widget.TextConten
 		h1_tag.scale = 1.7;
 		h2_tag.scale = 1.5;
 		h3_tag.scale = 1.2;
+		textview.wrap_mode = Gtk.WrapMode.WORD_CHAR;
+		textview.right_margin = 8;
 		textview.has_tooltip = true;
 		textview.query_tooltip.connect(on_tooltip_query);
 		textview.button_press_event.connect(on_textview_button);
