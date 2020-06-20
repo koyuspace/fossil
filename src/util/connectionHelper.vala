@@ -108,6 +108,7 @@ public class Dragonstone.Util.ConnectionHelper : Object {
 					returninfo.connection.set_certificate(client_certificate);
 				}
 				returninfo.connection.accept_certificate.connect((peer_certificate, tls_errors) => {
+					//print(@"[connection_helper] Accept certificate? (null: $(peer_certificate==null), errors: $tls_errors)\n");
 					returninfo.tls_errors = tls_errors;
 					returninfo.peer_certificate = peer_certificate;
 					returninfo.check_server_cerificate();
@@ -240,12 +241,12 @@ public class Dragonstone.Util.ConnectionHelperTlsConnection : Object {
 		bool future_activation_date = ((tls_errors & GLib.TlsCertificateFlags.NOT_ACTIVATED) != 0);
 		bool revoked = ((tls_errors & GLib.TlsCertificateFlags.REVOKED) != 0);
 		bool may_connect = true;
-		may_connect = may_connect && ((!check_settings.identity_mismatch_critical) || identity_mismatch);
-		may_connect = may_connect && ((!check_settings.expired_critical) || expired);
-		may_connect = may_connect && ((!check_settings.unknown_error_critical) || unknown_error);
-		may_connect = may_connect && ((!check_settings.insecure_algorythm_critical) || insecure_algorythm);
-		may_connect = may_connect && ((!check_settings.future_activation_date_critical) || future_activation_date);
-		may_connect = may_connect && ((!check_settings.revoked_critical) || revoked);
+		may_connect = may_connect && !(check_settings.identity_mismatch_critical && identity_mismatch);
+		may_connect = may_connect && !(check_settings.expired_critical && expired);
+		may_connect = may_connect && !(check_settings.unknown_error_critical && unknown_error);
+		may_connect = may_connect && !(check_settings.insecure_algorythm_critical && insecure_algorythm);
+		may_connect = may_connect && !(check_settings.future_activation_date_critical && future_activation_date);
+		may_connect = may_connect && !(check_settings.revoked_critical && revoked);
 		return may_connect;
 	}
 	
