@@ -61,10 +61,11 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		pack_end(menubutton);
 		//mainmenu
 		mainmenu = new Gtk.Popover(menubutton);
-		var mainmenubox = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
+		var mainmenubox = new Gtk.Box(Gtk.Orientation.VERTICAL,4);
 		//top row
 		var mainmenuhbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL,0);
 		mainmenubox.margin = 8;
+		mainmenuhbox.margin_bottom = 4;
 		mainmenuhbox.get_style_context().add_class("linked");
 		mainmenuhbox.homogeneous = true;
 		mainmenubox.pack_start(mainmenuhbox);
@@ -77,6 +78,13 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		savetodiskbutton.add(diskicon);
 		savetodiskbutton.sensitive = false;
 		mainmenuhbox.pack_start(savetodiskbutton);
+		//dummy button and switch to fix a wired bug where they dont get stylized like we want them to be
+		var dummy_button = new Dragonstone.Widget.MenuButton("---");
+		mainmenubox.pack_start(dummy_button);
+		mainmenubox.remove(dummy_button);
+		var dummy_switch = new Dragonstone.Widget.MenuSwitch("---");
+		mainmenubox.pack_start(dummy_switch);
+		mainmenubox.remove(dummy_switch);
 		//show_tabs
 		var show_tabs_localized = parent_window.translation.get_localized_string("window.main_menu.show_tabs.label");
 		var show_tabs_widget = new Dragonstone.Widget.MenuSwitch(show_tabs_localized);
@@ -124,6 +132,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		//Settings
 		var view_settings_localized = parent_window.translation.get_localized_string("window.main_menu.settings.label");
 		var settingsbutton = new Dragonstone.Widget.MenuButton(view_settings_localized);
+		settingsbutton.sensitive = false;
 		mainmenubox.pack_start(settingsbutton);
 		//close tabs button
 		var close_tab_localized = parent_window.translation.get_localized_string("window.main_menu.close_tab.label");		

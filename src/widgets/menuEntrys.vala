@@ -6,6 +6,7 @@ public class Dragonstone.Widget.MenuButton : Gtk.Button {
 		label.halign = Gtk.Align.START;
 		halign = Gtk.Align.FILL;
 		add(label);
+		set_css_name("modelbutton");
 		get_style_context().add_class("flat");
 	}
 }
@@ -28,6 +29,7 @@ public class Dragonstone.Widget.MenuSwitch : Gtk.Button {
 		box.set_child_packing(switch_widget,false,true,0,Gtk.PackType.END);
 		add(box);
 		get_style_context().add_class("flat");
+		set_css_name("modelbutton");
 		this.clicked.connect(() => {
 			switch_widget.set_state(!switch_widget.get_state());
 		});
