@@ -44,7 +44,7 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
 		
 		string? host = parsed_uri.host;
 		if (host == null){
-			request.setStatus("error/uri/noHost","Gopher needs a host");
+			request.setStatus("error/uri/missing_field","host");
 			request.finish();
 			return;
 		}

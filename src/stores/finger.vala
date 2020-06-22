@@ -25,7 +25,7 @@ public class Dragonstone.Store.Finger : Object, Dragonstone.ResourceStore {
 		
 		string? host = parsed_uri.host;
 		if (host == "null"){
-			request.setStatus("error/uri/noHost","Finger needs a host");
+			request.setStatus("error/uri/missing_field","host");
 			request.finish();
 			return;
 		}

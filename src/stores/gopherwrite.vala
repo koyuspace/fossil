@@ -30,7 +30,7 @@ public class Dragonstone.Store.GopherWrite : Object, Dragonstone.ResourceStore {
 		
 		string? host = parsed_uri.host;
 		if (host == null){
-			request.setStatus("error/uri/noHost","gopherwrite needs a host");
+			request.setStatus("error/uri/missing_field","host");
 			request.finish();
 			return;
 		}
