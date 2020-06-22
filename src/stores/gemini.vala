@@ -23,12 +23,19 @@ public class Dragonstone.Store.Gemini : Object, Dragonstone.ResourceStore {
 			return;
 		}
 		
-		string? host = parsed_uri.host;
-		if (host == null){
-			request.setStatus("error/uri/noHost","Gemini needs a host");
+		if (parsed_uri.username != null){
+			request.setStatus("error/uri/illegal_field","username");
 			request.finish();
 			return;
 		}
+		
+		string? host = parsed_uri.host;
+		if (host == null){
+			request.setStatus("error/uri/missing_field","host");
+			request.finish();
+			return;
+		}
+		
 		uint16? port = parsed_uri.get_port_number();
 		if (port == null){
 			port = 1965;
