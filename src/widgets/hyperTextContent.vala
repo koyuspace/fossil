@@ -136,16 +136,17 @@ public class Dragonstone.Widget.HyperTextContent : Dragonstone.Widget.TextConten
 				update = true;
 			}
 			if (uri != null){
-				tooltip.set_text(uri);
 				if(update){
 					clear_last_hover();
 					textview.buffer.apply_tag(link_hover_tag,start_iter,end_iter);
 					last_link_hover_start_iter = start_iter;
 					last_link_hover_end_iter = end_iter;
+				} else {
+					tooltip.set_text(uri);
 				}
 				//print(@"TOOLTIP: $buffer_y/$buffer_x $uri\n");
 				//link_tag.underline = Pango.Underline.SINGLE;
-				return true;
+				return !update;
 			}
 		}
 		clear_last_hover();
