@@ -190,6 +190,7 @@ public class Dragonstone.Widget.HyperTextContent : Dragonstone.Widget.TextConten
 		if (event.get_event_type() == Gdk.EventType.TOUCH_END){
 			if (long_press) {
 				long_press = false;
+				last_touch_event_in_progress = false;
 				return true;
 			}
 			if (last_touch_event_in_progress){
@@ -201,7 +202,7 @@ public class Dragonstone.Widget.HyperTextContent : Dragonstone.Widget.TextConten
 				if(distance_squared <= max_distance_for_touch_squared){
 					string? uri = get_link_uri_at_window_location((int) event.touch.x, (int) event.touch.y);
 					if (uri == null){
-						print("[hypertextcontent][error] on_link_tag_event() no uri found\n");
+						print("[hypertextcontent][error] on_textview_touch() no uri found\n");
 						return true;
 					}
 					go(uri,false);
@@ -211,25 +212,43 @@ public class Dragonstone.Widget.HyperTextContent : Dragonstone.Widget.TextConten
 		return false;
 	}
 	
+	private int max_distance_for_button_squared = 50;
+	private bool last_button_event_in_progress = false;
+	private int last_button_event_start_x = 0;
+	private int last_button_event_start_y = 0;
+	
 	private bool on_link_tag_event(Object event_object, Gdk.Event event, Gtk.TextIter iter){
+		if (event.get_event_type() == Gdk.EventType.BUTTON_PRESS){
+			last_button_event_start_x = (int) event.button.x;
+			last_button_event_start_y = (int) event.button.y;
+			last_button_event_in_progress = true;
+		}
 		uint button;
 		if (event.get_button(out button) && event.get_event_type() == Gdk.EventType.BUTTON_RELEASE){
 			if (long_press) {
 				long_press = false;
+				last_button_event_in_progress = false;
 				return true;
 			}
 			//print(@"BUTTON: $button\n");
-			if (button == 1 || button == 2){
-				//link clicked
-				string? uri = get_link_uri(iter);
-				if (uri == null){
-					print("[hypertextcontent][error] on_link_tag_event() no uri found\n");
+			if (last_button_event_in_progress && (button == 1 || button == 2)){
+				last_button_event_in_progress = false;
+				double dx = event.button.x-last_button_event_start_x;
+				double dy = event.button.y-last_button_event_start_y;
+				int distance_squared = (int) ((dx*dx)+(dy*dy));
+				print(@"D_button: $distance_squared ($dx,$dx)\n");
+				if(distance_squared <= max_distance_for_button_squared){
+					//link clicked
+					string? uri = get_link_uri(iter);
+					if (uri == null){
+						print("[hypertextcontent][error] on_link_tag_event() no uri found\n");
+						return true;
+					}
+					bool alt = (button == 2) || ((event.button.state & Gdk.ModifierType.CONTROL_MASK) != 0);
+					print(@"Clicked on $uri $alt\n");
+					go(uri,alt);
 					return true;
 				}
-				bool alt = (button == 2) || ((event.button.state & Gdk.ModifierType.CONTROL_MASK) != 0);
-				print(@"Clicked on $uri $alt\n");
-				go(uri,alt);
-				return true;
 			}
 		}
 		return false;
