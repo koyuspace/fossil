@@ -82,7 +82,7 @@ public class Dragonstone.Widget.LinkButtonPopover : Dragonstone.Widget.LinkPopov
 	public Dragonstone.Tab tab;
 	public string? uri { get; set; }
 	
-	private Gtk.TextView uri_display;
+	private Dragonstone.Widget.MenuBigTextDisplay uri_display;
 	private Gtk.Button open_in_new_tab_button;
 	private Gtk.Button open_externally_button;
 	
@@ -92,14 +92,12 @@ public class Dragonstone.Widget.LinkButtonPopover : Dragonstone.Widget.LinkPopov
 		//this.constrain_to = Gtk.PopoverConstraint.WINDOW;
 		var box = new Gtk.Box(Gtk.Orientation.VERTICAL,2);
 		box.margin = 4;
-		uri_display = new Gtk.TextView();
-		uri_display.wrap_mode = Gtk.WrapMode.WORD_CHAR;
-		uri_display.monospace = true;
-		uri_display.left_margin = 2;
-		uri_display.right_margin = 2;
-		uri_display.editable = false;
+		var dummy_text_view = new Dragonstone.Widget.MenuBigTextDisplay("");
+		box.pack_start(dummy_text_view);
+		box.remove(dummy_text_view);
+		uri_display = new Dragonstone.Widget.MenuBigTextDisplay("");
 		var open_in_new_tab_button_label = tab.translation.localize("action.open_in_new_tab");
-		open_in_new_tab_button = new Gtk.Button.with_label(open_in_new_tab_button_label);
+		open_in_new_tab_button = new Dragonstone.Widget.MenuButton(open_in_new_tab_button_label);
 		open_in_new_tab_button.set_relief(Gtk.ReliefStyle.NONE);
 		open_in_new_tab_button.clicked.connect(() => {
 			if (this.uri != null){
@@ -107,16 +105,16 @@ public class Dragonstone.Widget.LinkButtonPopover : Dragonstone.Widget.LinkPopov
 			}
 		});
 		var open_externally_button_label = tab.translation.localize("action.open_uri_externally");
-		open_externally_button = new Gtk.Button.with_label(open_externally_button_label);
+		open_externally_button = new Dragonstone.Widget.MenuButton(open_externally_button_label);
 		open_externally_button.set_relief(Gtk.ReliefStyle.NONE);
 		open_externally_button.clicked.connect(() => {
 			if (this.uri != null){
 				this.tab.open_uri_externally(this.uri);
 			}
 		});
-		box.pack_start(uri_display);
 		box.pack_start(open_in_new_tab_button);
 		box.pack_start(open_externally_button);
+		box.pack_start(uri_display);
 		/*var cache = tab.session.get_cache();
 		if (cache != null){
 			if(cache.can_serve_request(uri)){
@@ -132,7 +130,7 @@ public class Dragonstone.Widget.LinkButtonPopover : Dragonstone.Widget.LinkPopov
 	
 	public void use_uri(string uri){
 		this.uri = uri;
-		uri_display.buffer.text = uri;
+		uri_display.text = uri;
 	}
 	
 }

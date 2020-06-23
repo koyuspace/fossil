@@ -35,3 +35,30 @@ public class Dragonstone.Widget.MenuSwitch : Gtk.Button {
 		});
 	}
 }
+
+public class Dragonstone.Widget.MenuBigTextDisplay : Gtk.Label {
+	
+	public string text {
+		get {
+			return this.label;
+		}
+		set {
+			this.label = value;
+		}
+	}
+	
+	public MenuBigTextDisplay(string text){
+		set_line_wrap(true);
+		wrap_mode = Pango.WrapMode.WORD_CHAR;
+		wrap = true;
+		max_width_chars = 40;
+		/*monospace = true;
+		left_margin = 2;
+		right_margin = 2;
+		editable = false;*/
+		selectable = true;
+		set_css_name("entry");
+		get_style_context().remove_class("view");
+		this.text = text;
+	}
+}
