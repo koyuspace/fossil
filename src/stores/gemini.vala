@@ -175,27 +175,24 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 					//do nothing
 				}
 			}catch(Error e){
-				if (e.message == "TLS connection closed unexpectedly" || e.message == "Socket I/O timed out") {
-					if (beyond_header){
-						print("[gemini] rescuing data from terminated or timed out connection\n");
-						helper.close();
-						if (e.message == "TLS connection closed unexpectedly"){
-							request.arguments.set("warning.tls.connection_got_terminated","true");
-						}
-						if (e.message == "Socket I/O timed out"){
-							request.arguments.set("warning.connection_timed_out","true");
-						}
-						request.setResource(resource,"gemini");
-					} else {
-						if (e.message == "Socket I/O timed out"){
-							request.setStatus("error/timeout");	
-						} else {
-							request.setStatus("error/gibberish","TLS connection closed unexpectedly");
-						}
-						request.finish();
+				if (beyond_header){
+					print("[gemini] rescuing data from terminated or timed out connection\n");
+					helper.close();
+					if (e.message == "TLS connection closed unexpectedly"){
+						request.arguments.set("warning.tls.connection_got_terminated","true");
 					}
+					if (e.message == "Socket I/O timed out"){
+						request.arguments.set("warning.connection_timed_out","true");
+					}
+					request.setResource(resource,"gemini");
 				} else {
-					request.setStatus("error/internalError","Something with gemini:\n"+e.message);
+					if (e.message == "Socket I/O timed out"){
+						request.setStatus("error/timeout");
+					} else if (e.message == "TLS connection closed unexpectedly"){
+						request.setStatus("error/gibberish","TLS connection closed unexpectedly");
+					} else {
+						request.setStatus("error/internalError","Something with gemini:\n"+e.message);
+					}
 					request.finish();
 				}
 			}
