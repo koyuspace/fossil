@@ -28,7 +28,7 @@ public class Dragonstone.Settings.FileProvider : Dragonstone.Settings.Provider, 
 			return false;
 		}
 	}
-	public string? get_object(string id){
+	public Dragonstone.Settings.Rom? get_object(string id){
 		var name = get_name(id);
 		if(name != null){
 			var file = File.new_for_path(basepath+name);
@@ -39,7 +39,10 @@ public class Dragonstone.Settings.FileProvider : Dragonstone.Settings.Provider, 
 				while ((line = data_input_stream.read_line_utf8(null)) != null) {
 					output = output+line+"\n";
 				}
-				return output;
+				//TODO use a file rom provider here, that can monitor the filesystem and automatically update
+				var rom_provider = new Dragonstone.Settings.RomProvider(output);
+				var rom = new Dragonstone.Settings.Rom(rom_provider);
+				return rom;
 			}catch (GLib.Error e) {
 				return null;
 			}

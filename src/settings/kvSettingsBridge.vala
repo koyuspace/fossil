@@ -13,8 +13,9 @@ public class Dragonstone.Settings.KVSettings : Dragonstone.Settings.Bridge, Obje
 	}
 	
 	public bool import(Dragonstone.Settings.Provider settings_provider){
-		string? input = settings_provider.get_object(id);
-		if (input == null){ return false; }
+		Dragonstone.Settings.Rom? rom = settings_provider.get_object(id);
+		if (rom == null){ return false; }
+		string input = rom.content;
 		string[] lines = input.split("\n");
 		foreach (string line in lines){
 			string[] tokens = line.strip().split(":",2);

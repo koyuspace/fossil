@@ -13,7 +13,8 @@ public class Dragonstone.Registry.SettingsRegistry : Dragonstone.Settings.Provid
 		}
 		return false;
 	}
-	public string? get_object(string id){
+	
+	public Dragonstone.Settings.Rom? get_object(string id){
 		foreach (var provider in providers){
 			var object = provider.get_object(id);
 			if (object != null){

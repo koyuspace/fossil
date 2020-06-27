@@ -15,7 +15,9 @@ public class Dragonstone.SettingsBridge.Bookmarks : Dragonstone.Settings.Bridge,
 	}
 	
 	public bool import(Dragonstone.Settings.Provider settings_provider){
-		string? input = settings_provider.get_object(id);
+		Dragonstone.Settings.Rom? rom = settings_provider.get_object(id);
+		if (rom == null){ return false; }
+		string input = rom.content;
 		if (input == null){ return false; }
 		string[] lines = input.split("\n");
 		foreach (string line in lines){
