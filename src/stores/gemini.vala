@@ -116,8 +116,8 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 					request.finish();
 					return;
 				}
-				
-				if (statusline.substring(2,1) != " "){
+				var seperator = statusline.substring(2,1);
+				if (!(seperator == " " || seperator == "\t")){
 					request.setStatus("error/gibberish","#too long statuscode or no space after it");
 					request.arguments.set("gemini.statusline",statusline);
 					request.finish();
