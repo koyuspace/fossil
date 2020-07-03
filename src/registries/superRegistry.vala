@@ -27,6 +27,7 @@ public class Dragonstone.SuperRegistry : Object, Dragonstone.Asm.ObjectProvider 
 	}
 }
 
+/*
 errordomain Dragonstone.SuperRegistryError {
     MISSING_ENTRY
-}
+}*/
