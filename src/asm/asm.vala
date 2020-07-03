@@ -1,5 +1,5 @@
 public interface Dragonstone.Asm.ObjectProvider : Object {
-	public abstract void foreach_asm_object(Func<string> cb); // iterates over all functions this object provides
+	public abstract void foreach_asm_object(HFunc<string,Dragonstone.Asm.AsmObject> cb); // iterates over all functions this object provides
 	public abstract Dragonstone.Asm.AsmObject? get_asm_object(string name);
 }
 
