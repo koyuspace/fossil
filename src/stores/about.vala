@@ -18,6 +18,7 @@ public class Dragonstone.Store.About : Object, Dragonstone.ResourceStore {
 	
 	public void set_sub_store(string about_what, Dragonstone.ResourceStore? substore){
 		if(substore != null) {
+			print("[about] registred about:"+about_what+"\n");
 			substores.set("about:"+about_what,substore);
 		} else {
 			substores.remove("about:"+about_what);
