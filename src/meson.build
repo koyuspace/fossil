@@ -11,6 +11,7 @@ executable(
 	'resourceStore.vala',
 	'session.vala',
 	'settings.vala',
+	'asm/asm.vala',
 	'util/connectionHelper.vala',
 	'util/defaultGtkLinkIconLoader.vala',
 	'util/flaglist.vala',
