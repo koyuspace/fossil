@@ -7,7 +7,7 @@ public interface Dragonstone.Asm.AsmObject : Object{
 	public abstract void foreach_asm_function(Func<string> cb);
 	//if returnvalue is null the command was executed successfully without anyreturn message
 	public abstract Dragonstone.Asm.Scriptreturn? exec(string method, string arg);
-	public abstract string? get_default_helptext(string method);
+	public abstract string? get_localizable_helptext(string method);
 	public abstract string? get_unlocalized_helptext(string method);
 }
 
@@ -29,6 +29,16 @@ public class Dragonstone.Asm.Scriptreturn : Object {
 	public Scriptreturn.unknown_function(string function_name = ""){
 		this.message_unlocalized = @"Unknown function: $function_name";
 		this.message_localizable = "asm.error.unknown_function";
+	}
+	
+	public Scriptreturn.missing_argument(){
+		this.message_unlocalized = @"Missing argument! (see help and documentation)";
+		this.message_localizable = "asm.error.missing_argument";
+	}
+	
+	public Scriptreturn.too_many_arguments(){
+		this.message_unlocalized = @"Too many argument! (see help and documentation)";
+		this.message_localizable = "asm.error.too_many_arguments";
 	}
 }
 

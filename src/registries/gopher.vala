@@ -98,12 +98,33 @@ public class Dragonstone.Registry.GopherTypeRegistry : Object, Dragonstone.Asm.A
 	}
 	
 	// ASM integration
-	public void foreach_asm_function(Func<string> cb){}
+	public Dragonstone.Asm.Scriptreturn? asm_add_entry(string arg){
+		var args = arg.split("\t");
+		if (args.length < 2){
+			return new Dragonstone.Asm.Scriptreturn.missing_argument();
+		} else if (args.length == 2){
+			return this.add_entry(args[0],args[1]);
+		} else if (args.length == 3){
+			return this.add_entry(args[0],args[1],args[2]);
+		} else {
+			return new Dragonstone.Asm.Scriptreturn.too_many_arguments();
+		}
+	}
+	
+	public void foreach_asm_function(Func<string> cb){
+		cb("ADD_ENTRY");
+	}
 	public Dragonstone.Asm.Scriptreturn? exec(string method, string arg){
 		return new Dragonstone.Asm.Scriptreturn.unknown_function(method);
 	}
-	public string? get_default_helptext(string method){return null;}
-	public string? get_unlocalized_helptext(string method){return null;}
+	public string? get_localizable_helptext(string method){
+		if(method == "ADD_ENTRY"){return "asm.help.registry.gopher_type_registry.add_entry";}
+		return null;
+	}
+	public string? get_unlocalized_helptext(string method){
+		if(method == "ADD_ENTRY"){return "ADD_ENTRY <gophertype> [~]<mimetype>[*] [<hint|uri_template>]";}
+		return null;
+	}
 	
 }
 
