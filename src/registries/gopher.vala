@@ -13,21 +13,21 @@ public class Dragonstone.Registry.GopherTypeRegistry : Object, Dragonstone.Asm.A
 	public GopherTypeRegistry.default_configuration(){
 		//fast
 		//add(new GopherTypeRegistryEntry('i',null,".",GopherTypeRegistryContentHint.TEXT));
-		add_entry("i","*","TEXT");
+		exec("ADD_ENTRY","i\t*\tTEXT");
 		//standardized
-		add_entry("0","text/*");
-		add_entry("1","text/gopher");
-		add_entry("2","*","CCSO://{host}:{port}/{selector}");
-		add_entry("3","*","ERROR");
-		add_entry("4","text/x-hex");
-		add_entry("5","~application/octet-stream");
-		add_entry("6","*");
-		add_entry("7","text/gopher","gopher://{host}:{port}/{type}{selector}%09{query}");
-		add_entry("8","*","telnet://{host}:{port}");
-		add_entry("9","~application/octet-stream");
-		add_entry("g","image/gif");
-		add_entry("I","image/*");
-		add_entry("T","*","telnet://{host}:{port}");
+		exec("ADD_ENTRY","0\ttext/*");
+		exec("ADD_ENTRY","1\ttext/gopher");
+		exec("ADD_ENTRY","2\t*\tCCSO://{host}:{port}/{selector}");
+		exec("ADD_ENTRY","3\t*\tERROR");
+		exec("ADD_ENTRY","4\ttext/x-hex");
+		exec("ADD_ENTRY","5\t~application/octet-stream");
+		exec("ADD_ENTRY","6\t*");
+		exec("ADD_ENTRY","7\ttext/gopher\tgopher://{host}:{port}/{type}{selector}%09{query}");
+		exec("ADD_ENTRY","8\t*\ttelnet://{host}:{port}");
+		exec("ADD_ENTRY","9\t~application/octet-stream");
+		exec("ADD_ENTRY","g\timage/gif");
+		exec("ADD_ENTRY","I\timage/*");
+		exec("ADD_ENTRY","T\t*\ttelnet://{host}:{port}");
 		/*
 		add(new GopherTypeRegistryEntry('0',"text/*"));
 		add(new GopherTypeRegistryEntry('1',"text/gopher"));
@@ -44,10 +44,10 @@ public class Dragonstone.Registry.GopherTypeRegistry : Object, Dragonstone.Asm.A
 		add(new GopherTypeRegistryEntry('T',null,"telnet://{host}:{port}"));
 		*/
 		//conventions
-		add_entry("h","text/html");
-		add_entry("p","image/png");
-		add_entry("P","application/pdf");
-		add_entry("s","audio/*");
+		exec("ADD_ENTRY","h\ttext/html");
+		exec("ADD_ENTRY","p\timage/png");
+		exec("ADD_ENTRY","P\tapplication/pdf");
+		exec("ADD_ENTRY","s\taudio/*");
 		/*
 		add(new GopherTypeRegistryEntry('h',"text/html"));
 		add(new GopherTypeRegistryEntry('p',"image/png"));
@@ -65,6 +65,7 @@ public class Dragonstone.Registry.GopherTypeRegistry : Object, Dragonstone.Asm.A
 	}
 	
 	public Dragonstone.Asm.Scriptreturn? add_entry(string _gophertype, string _mimetype, string hint = ""){
+		print(@"ADD_ENTRY $_gophertype $_mimetype $hint\n");
 		string? uri_template = null;
 		if (_gophertype.char_count() != 1){ //yes we use bytes here
 			return new Dragonstone.Asm.Scriptreturn(false,@"Argument[0]: Expected a unichar got $_gophertype");
@@ -99,6 +100,7 @@ public class Dragonstone.Registry.GopherTypeRegistry : Object, Dragonstone.Asm.A
 	
 	// ASM integration
 	public Dragonstone.Asm.Scriptreturn? asm_add_entry(string arg){
+		print("ASM: ADD_ENTRY "+arg+"\n");
 		var args = arg.split("\t");
 		if (args.length < 2){
 			return new Dragonstone.Asm.Scriptreturn.missing_argument();
@@ -115,6 +117,7 @@ public class Dragonstone.Registry.GopherTypeRegistry : Object, Dragonstone.Asm.A
 		cb("ADD_ENTRY");
 	}
 	public Dragonstone.Asm.Scriptreturn? exec(string method, string arg){
+		if(method == "ADD_ENTRY"){return asm_add_entry(arg);}
 		return new Dragonstone.Asm.Scriptreturn.unknown_function(method);
 	}
 	public string? get_localizable_helptext(string method){
