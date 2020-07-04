@@ -17,13 +17,18 @@ public class Dragonstone.Asm.Scriptreturn : Object {
 	public int line = 1;
 	public string? instruction = null;
 	public string? script_source = null;
-	public string? messsage_unlocalized = null;
-	public string? messsage_localizable = null;
+	public string? message_unlocalized = null;
+	public string? message_localizable = null;
 	
-	public Scriptreturn(bool success, string? messsage_unlocalized = null, string? messsage_localizable = null){
+	public Scriptreturn(bool success, string? message_unlocalized = null, string? message_localizable = null){
 		this.success = success;
-		this.messsage_unlocalized = messsage_unlocalized;
-		this.messsage_localizable = messsage_localizable;
+		this.message_unlocalized = message_unlocalized;
+		this.message_localizable = message_localizable;
+	}
+	
+	public Scriptreturn.unknown_function(string function_name = ""){
+		this.message_unlocalized = @"Unknown function: $function_name";
+		this.message_localizable = "asm.error.unknown_function";
 	}
 }
 

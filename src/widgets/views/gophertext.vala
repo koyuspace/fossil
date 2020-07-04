@@ -55,7 +55,7 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.HyperTextContent, 
 						unichar gophertype = 'i';
 						string htext = "";
 						if (tokens[0].length != 0){
-							gophertype = tokens[0].get(0);
+							gophertype = tokens[0].get_char(0);
 							htext = tokens[0].substring(1);//human text
 						}
 						var selector = tokens[1].strip(); //look for url in here
@@ -80,17 +80,13 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.HyperTextContent, 
 							} else if (selector.has_prefix("url:")) { //It is bloody "URL:", it even is on wikipedia!
 								uri = selector.substring(4);
 							} else {
-								var eselector = Uri.escape_string(selector,"/");
-								uri = typeinfo.get_uri(host,port,eselector);
+								uri = typeinfo.get_uri(host,port,selector);
 							}
 							//append_widget(new Dragonstone.Widget.LinkButton(tab,htext,uri));
 							append_link(htext,uri);
 							append_text("\n");
 						} else if (typeinfo.hint == Dragonstone.Registry.GopherTypeRegistryContentHint.SEARCH){ //Search
-							string? uri = null;
-							var eselector = Uri.escape_string(selector,"/");
-							uri = typeinfo.get_uri(host,port,eselector);
-							var searchfield = new Dragonstone.View.GophertextInlineSearch(htext,uri);
+							var searchfield = new Dragonstone.View.GophertextInlineSearch(htext,host,port,selector,typeinfo);
 							searchfield.go.connect((s,uri) => {
 								tab.go_to_uri(uri);
 								if (cache != null){
@@ -145,11 +141,17 @@ public class Dragonstone.View.Gophertext : Dragonstone.Widget.HyperTextContent, 
 private class Dragonstone.View.GophertextInlineSearch : Gtk.Bin {
 
 	public signal void go(string uri);
-	private string base_uri;
+	private string host;
+	private string port;
+	private string selector;
+	private Dragonstone.Registry.GopherTypeRegistryEntry typeinfo;
 	private Gtk.Entry entry;
 	
-	public GophertextInlineSearch(string htext,string uri){
-		base_uri = uri;
+	public GophertextInlineSearch(string htext, string host, string port, string selector, Dragonstone.Registry.GopherTypeRegistryEntry typeinfo){
+		this.host = host;
+		this.port = port;
+		this.selector = selector;
+		this.typeinfo = typeinfo;
 		var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL,4);
 		box.homogeneous = false;
 		box.margin_start = 4;
@@ -172,13 +174,13 @@ private class Dragonstone.View.GophertextInlineSearch : Gtk.Bin {
 		box.pack_start(button);
 		box.halign = Gtk.Align.FILL;
 		add(box);
-		set_tooltip_text(base_uri);
+		set_tooltip_text(typeinfo.get_uri(host,port,selector));
 	}
 	
 	private bool handle_button_press(Gdk.EventButton event){
 		if (event.type == BUTTON_PRESS){
-			if (event.button == 3 && base_uri.has_suffix("/postfile")) { //right click
-				var popover = new Dragonstone.View.GophertextInlineSearchPostB64FilePopover(this,base_uri+"b64");
+			if (event.button == 3 && selector.has_suffix("/postfile")) { //right click
+				var popover = new Dragonstone.View.GophertextInlineSearchPostB64FilePopover(this,typeinfo.get_uri(host,port,selector)+"b64");
 				popover.set_relative_to(this);
 				popover.popup();
 				popover.show_all();
@@ -190,8 +192,7 @@ private class Dragonstone.View.GophertextInlineSearch : Gtk.Bin {
 	
 	private void submit(){
 		if (entry.text != ""){
-			var searchstring = Uri.escape_string(entry.text);
-			go(@"$base_uri%09$searchstring");
+			go(typeinfo.get_uri(host,port,selector,entry.text));
 		}
 	}
 }
