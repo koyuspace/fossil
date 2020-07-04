@@ -15,7 +15,7 @@ public class Dragonstone.Util.TlsCertficateGenerator {
 		certificate.set_version(1);
 		certificate.set_activation_time((time_t) activation_time.to_unix());
 		certificate.set_expiration_time((time_t) expiration_time.to_unix());
-		uint32 serial = 0;
+		uint32 serial = (uint32) 0xFFFFFFFF;
 		certificate.set_serial(&serial, sizeof(uint32));
 		
 		var error = certificate.sign(certificate, key);
