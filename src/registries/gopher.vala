@@ -1,4 +1,4 @@
-public class Dragonstone.Registry.GopherTypeRegistry : Object, Dragonstone.Asm.AsmObject {
+public class Dragonstone.Registry.GopherTypeRegistry : Dragonstone.Asm.SimpleAsmObject, Dragonstone.Asm.AsmObject {
 	
 	private HashTable<unichar,Dragonstone.Registry.GopherTypeRegistryEntry> entrys = new HashTable<unichar,Dragonstone.Registry.GopherTypeRegistryEntry>(unichar_hash, unichar_equal);
 	
@@ -11,6 +11,7 @@ public class Dragonstone.Registry.GopherTypeRegistry : Object, Dragonstone.Asm.A
 	}
 	
 	public GopherTypeRegistry.default_configuration(){
+		initalize_asm();
 		//fast
 		//add(new GopherTypeRegistryEntry('i',null,".",GopherTypeRegistryContentHint.TEXT));
 		exec("ADD_ENTRY","i\t*\tTEXT");
@@ -80,7 +81,6 @@ public class Dragonstone.Registry.GopherTypeRegistry : Object, Dragonstone.Asm.A
 		} else if (hint == "LINK"){
 			content_hint = GopherTypeRegistryContentHint.LINK;
 		} else if (hint == "TEXT"){
-			print(@"hint: TEXT $gophertype\n");
 			content_hint = GopherTypeRegistryContentHint.TEXT;
 			uri_template = ".";
 		} else if (hint == "ERROR"){
@@ -99,34 +99,25 @@ public class Dragonstone.Registry.GopherTypeRegistry : Object, Dragonstone.Asm.A
 	}
 	
 	// ASM integration
-	public Dragonstone.Asm.Scriptreturn? asm_add_entry(string arg){
-		print("ASM: ADD_ENTRY "+arg+"\n");
-		var args = arg.split("\t");
-		if (args.length < 2){
+	public Dragonstone.Asm.Scriptreturn? asm_add_entry(string arg, Object? context = null){
+		var parsed_args = new Dragonstone.Asm.Argparse(arg);
+		if (!(parsed_args.verify_argument(0,Dragonstone.Asm.Argparse.TYPE_STRING) &&
+		      parsed_args.verify_argument(1,Dragonstone.Asm.Argparse.TYPE_STRING))){
 			return new Dragonstone.Asm.Scriptreturn.missing_argument();
-		} else if (args.length == 2){
-			return this.add_entry(args[0],args[1]);
-		} else if (args.length == 3){
-			return this.add_entry(args[0],args[1],args[2]);
-		} else {
+		}
+		if (!parsed_args.verify_argument(3,Dragonstone.Asm.Argparse.TYPE_NULL)){
 			return new Dragonstone.Asm.Scriptreturn.too_many_arguments();
 		}
+		return this.add_entry(parsed_args.get_string(0),parsed_args.get_string(1),parsed_args.get_string(2,""));
 	}
 	
-	public void foreach_asm_function(Func<string> cb){
-		cb("ADD_ENTRY");
-	}
-	public Dragonstone.Asm.Scriptreturn? exec(string method, string arg){
-		if(method == "ADD_ENTRY"){return asm_add_entry(arg);}
-		return new Dragonstone.Asm.Scriptreturn.unknown_function(method);
-	}
-	public string? get_localizable_helptext(string method){
-		if(method == "ADD_ENTRY"){return "asm.help.registry.gopher_type_registry.add_entry";}
-		return null;
-	}
-	public string? get_unlocalized_helptext(string method){
-		if(method == "ADD_ENTRY"){return "ADD_ENTRY <gophertype> [~]<mimetype>[*] [<hint|uri_template>]";}
-		return null;
+	private void initalize_asm(){
+		this.add_asm_function(new Dragonstone.Asm.FunctionDescriptor(
+			this.asm_add_entry,
+			"ADD_ENTRY",
+			"asm.help.registry.gopher_type_registry.add_entry",
+			"ADD_ENTRY <gophertype> [~]<mimetype>[*] [<hint|uri_template>]"
+		));
 	}
 	
 }

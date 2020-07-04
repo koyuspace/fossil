@@ -2,7 +2,7 @@ TODOLIST:
 [ ] intgrate ASM into everything that benefits from it
 	[ ] registrys
 		[X] gophertype registry
-		[…] mimegueser
+		[X] mimegueser
 		[X] super registry
 		[ ] session registry (make modular sessions first)
 		[ ] language registry

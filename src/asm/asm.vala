@@ -6,7 +6,7 @@ public interface Dragonstone.Asm.ObjectProvider : Object {
 public interface Dragonstone.Asm.AsmObject : Object{
 	public abstract void foreach_asm_function(Func<string> cb);
 	//if returnvalue is null the command was executed successfully without anyreturn message
-	public abstract Dragonstone.Asm.Scriptreturn? exec(string method, string arg);
+	public abstract Dragonstone.Asm.Scriptreturn? exec(string method, string arg, Object? context = null);
 	public abstract string? get_localizable_helptext(string method);
 	public abstract string? get_unlocalized_helptext(string method);
 }
@@ -50,7 +50,7 @@ public class Dragonstone.Asm.Scriptrunner : Object {
 	}
 	
 	//if returnvalue is null the command was executed successfully withou anyreturn message
-	public Dragonstone.Asm.Scriptreturn? exec_line(string _line){
+	public Dragonstone.Asm.Scriptreturn? exec_line(string _line, Object? context = null){
 		string line = _line.strip();
 		if (line.has_prefix("#") || line == ""){ return null; }
 		string[] split = line.split("\t",2);
@@ -75,18 +75,18 @@ public class Dragonstone.Asm.Scriptrunner : Object {
 			returnvalue.instruction = line;
 			return returnvalue;
 		}
-		var returnvalue = object.exec(function_name,args);
+		var returnvalue = object.exec(function_name,args,context);
 		if (returnvalue != null){
 			returnvalue.instruction = line;
 		}
 		return returnvalue;
 	}
 	
-	public Dragonstone.Asm.Scriptreturn? exec_script(string script){
+	public Dragonstone.Asm.Scriptreturn? exec_script(string script, Object? context = null){
 		int linenum = 0;
 		Dragonstone.Asm.Scriptreturn? returnval = null;
 		foreach(string line in script.split("\n")){
-			returnval = this.exec_line(line);
+			returnval = this.exec_line(line,context);
 			if (returnval != null){
 				if (!returnval.success){
 					return returnval;
@@ -95,5 +95,21 @@ public class Dragonstone.Asm.Scriptrunner : Object {
 			linenum++;
 		}
 		return returnval;
+	}
+}
+
+public delegate Dragonstone.Asm.Scriptreturn? Dragonstone.Asm.Function(string arg, Object? context = null);
+
+public class Dragonstone.Asm.FunctionDescriptor : Object {
+	public Dragonstone.Asm.Function callback;
+	public string name;
+	public string localizable_helptext;
+	public string unlocalized_helptext;
+	
+	public FunctionDescriptor(owned Dragonstone.Asm.Function callback, string name, string localizable_helptext, string unlocalized_helptext){
+		this.callback = (owned) callback;
+		this.name = name;
+		this.localizable_helptext = localizable_helptext;
+		this.unlocalized_helptext = unlocalized_helptext;
 	}
 }
