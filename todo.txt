@@ -1,0 +1,25 @@
+TODOLIST:
+[ ] intgrate ASM into everything that benefits from it
+	[ ] registrys
+		[X] gophertype registry
+		[…] mimegueser
+		[X] super registry
+		[ ] session registry (make modular sessions first)
+		[ ] language registry
+		[ ] translation registry
+		[ ] uri autocorrect registry
+		[ ] settings registry
+		[ ] store registry
+		[ ] bookmark registry (implement bookmark stores first)
+	[ ] switch the init functions to regitring constructors in an "init" simple asm object in the super registry
+	[ ] switch the startup sequence over to asm scripts
+		[ ] design the new startup sequence
+[ ] use bookmark stores as the bookmark registrys backend 
+[ ] modular sessions (sessions made of multiple components that take care of different tasks)
+[ ] proxys
+[ ] configurable settigns for everything
+[ ] native error messages in hyper text views
+[ ] inline links
+[ ] markdown support
+[ ] configurable icon loader
+[ ] no content page with error explanations
