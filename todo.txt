@@ -16,10 +16,23 @@ TODOLIST:
 		[ ] design the new startup sequence
 [ ] use bookmark stores as the bookmark registrys backend 
 [ ] modular sessions (sessions made of multiple components that take care of different tasks)
+	[ ] make session components
+		[ ] cache store component
+		[ ] cache load component
+		[ ] TLS TOFU component
+		[ ] TLS client certificate component
+		[ ] Token component
+	[ ] make a registry with session presets
 [ ] proxys
 [ ] configurable settigns for everything
 [ ] native error messages in hyper text views
 [ ] inline links
 [ ] markdown support
 [ ] configurable icon loader
-[ ] no content page with error explanations
+[ ] no-content-page with error explanations
+[ ] Implement support for the titan protocol
+[ ] Make the TLS certificate generation more flexible
+	[ ] Add the option for a common name
+	[ ] Add the option to use a custom keylength
+	[ ] Add the option to customize the certificates serial number
+[ ] Improve performance for image scaling by doing it in a sperate thread
