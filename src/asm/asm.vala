@@ -13,6 +13,7 @@ public interface Dragonstone.Asm.AsmObject : Object{
 
 public class Dragonstone.Asm.Scriptreturn : Object {
 	public bool success = false;
+	public bool stop = false; //if set the script is supposed to exit (independant of the success value)
 	public bool syntax_error = false;
 	public int line = 1;
 	public string? instruction = null;
@@ -22,8 +23,14 @@ public class Dragonstone.Asm.Scriptreturn : Object {
 	
 	public Scriptreturn(bool success, string? message_unlocalized = null, string? message_localizable = null){
 		this.success = success;
+		this.stop = !success;
 		this.message_unlocalized = message_unlocalized;
 		this.message_localizable = message_localizable;
+	}
+	
+	public Scriptreturn stop(){
+		this.stop = true;
+		return stop;
 	}
 	
 	public Scriptreturn.unknown_function(string function_name = ""){
@@ -88,7 +95,7 @@ public class Dragonstone.Asm.Scriptrunner : Object {
 		foreach(string line in script.split("\n")){
 			returnval = this.exec_line(line,context);
 			if (returnval != null){
-				if (!returnval.success){
+				if (!returnval.success || returnval.stop){
 					return returnval;
 				}
 			}
