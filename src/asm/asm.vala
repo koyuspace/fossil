@@ -28,9 +28,9 @@ public class Dragonstone.Asm.Scriptreturn : Object {
 		this.message_localizable = message_localizable;
 	}
 	
-	public Scriptreturn stop(){
+	public Scriptreturn stop_script(){
 		this.stop = true;
-		return stop;
+		return this;
 	}
 	
 	public Scriptreturn.unknown_function(string function_name = ""){
@@ -51,9 +51,11 @@ public class Dragonstone.Asm.Scriptreturn : Object {
 
 public class Dragonstone.Asm.Scriptrunner : Object {
 	public Dragonstone.Asm.ObjectProvider object_provider;
+	public Dragonstone.Asm.AsmObject? default_object = null;
 	
-	public Scriptrunner(Dragonstone.Asm.ObjectProvider object_provider){
+	public Scriptrunner(Dragonstone.Asm.ObjectProvider object_provider, Dragonstone.Asm.AsmObject? default_object = null){
 		this.object_provider;
+		this.default_object = null;
 	}
 	
 	//if returnvalue is null the command was executed successfully withou anyreturn message
@@ -68,19 +70,27 @@ public class Dragonstone.Asm.Scriptrunner : Object {
 			args = "";
 		}
 		string[] object_and_func = split[0].split(".",2);
+		Dragonstone.Asm.AsmObject? object = null;
+		string function_name = "";
 		if (object_and_func.length != 2){
-			var returnvalue = new Dragonstone.Asm.Scriptreturn(false,"No object specified!","asm.error.missing_object");
-			returnvalue.syntax_error = true;
-			returnvalue.instruction = line;
-			return returnvalue;
-		}
-		string object_name = object_and_func[0];
-		string function_name = object_and_func[1];
-		Dragonstone.Asm.AsmObject? object = object_provider.get_asm_object(object_name);
-		if (object == null){
-			var returnvalue = new Dragonstone.Asm.Scriptreturn(false,@"Object $object_name does not exist!","asm.error.null_object");
-			returnvalue.instruction = line;
-			return returnvalue;
+			if (default_object != null){
+				object = default_object;
+				function_name = object_and_func[0];
+			} else {
+				var returnvalue = new Dragonstone.Asm.Scriptreturn(false,"No object specified!","asm.error.missing_object");
+				returnvalue.syntax_error = true;
+				returnvalue.instruction = line;
+				return returnvalue;
+			}
+		} else {
+			string object_name = object_and_func[0];
+			function_name = object_and_func[1];
+			object = object_provider.get_asm_object(object_name);
+			if (object == null){
+				var returnvalue = new Dragonstone.Asm.Scriptreturn(false,@"Object $object_name does not exist!","asm.error.null_object");
+				returnvalue.instruction = line;
+				return returnvalue;
+			}
 		}
 		var returnvalue = object.exec(function_name,args,context);
 		if (returnvalue != null){
