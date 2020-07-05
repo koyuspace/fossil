@@ -47,6 +47,11 @@ public class Dragonstone.Asm.Scriptreturn : Object {
 		this.message_unlocalized = @"Too many argument! (see help and documentation)";
 		this.message_localizable = "asm.error.too_many_arguments";
 	}
+	
+	public Scriptreturn.wrong_context(string expected_context){
+		this.message_unlocalized = @"This function needs a $expected_context context to work";
+		this.message_localizable = "asm.error.wrong_context";
+	}
 }
 
 public class Dragonstone.Asm.Scriptrunner : Object {
@@ -58,7 +63,9 @@ public class Dragonstone.Asm.Scriptrunner : Object {
 		this.default_object = null;
 	}
 	
-	//if returnvalue is null the command was executed successfully withou anyreturn message
+	//if returnvalue is null the command was executed successfully without any return message
+	//[<object>:]<function>[<\t>arguments]
+	//#[<comment>]
 	public Dragonstone.Asm.Scriptreturn? exec_line(string _line, Object? context = null){
 		string line = _line.strip();
 		if (line.has_prefix("#") || line == ""){ return null; }
@@ -69,7 +76,7 @@ public class Dragonstone.Asm.Scriptrunner : Object {
 		} else {
 			args = "";
 		}
-		string[] object_and_func = split[0].split(".",2);
+		string[] object_and_func = split[0].split(":",2);
 		Dragonstone.Asm.AsmObject? object = null;
 		string function_name = "";
 		if (object_and_func.length != 2){
