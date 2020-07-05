@@ -11,6 +11,7 @@ TODOLIST:
 		[ ] settings registry
 		[ ] store registry
 		[ ] bookmark registry (implement bookmark stores first)
+		[ ] hypertext view
 	[ ] switch the init functions to regitring constructors in an "init" simple asm object in the super registry
 	[ ] switch the startup sequence over to asm scripts
 		[ ] design the new startup sequence
@@ -24,9 +25,14 @@ TODOLIST:
 		[ ] Token component
 	[ ] make a registry with session presets
 [ ] proxys
+	[ ] Allow specifying alternative hosts
+	[ ] Allow specifying alternative handlers
+	[ ] Proxy session module for proxying gopher over gemini using agena proxys
 [ ] configurable settigns for everything
-[ ] native error messages in hyper text views
-[ ] inline links
+	[ ] settings for hypertext view
+	[ ] settings for text view
+[ ] (UI) native error messages in hyper text views
+[ ] (UI) inline links
 [ ] markdown support
 [ ] configurable icon loader
 [ ] no-content-page with error explanations
@@ -36,3 +42,12 @@ TODOLIST:
 	[ ] Add the option to use a custom keylength
 	[ ] Add the option to customize the certificates serial number
 [ ] Improve performance for image scaling by doing it in a sperate thread
+[ ] Add option to not even attempt cleartext connections
+	[ ] Add session module to set this option
+[ ] Add callback to views to allow them to grab focus
+[ ] Add persistance to views (tab indentation based serialization format)
+	[ ] Make scroll position persistant for text and hypertext views
+	[ ] Make selection persistant for file upload view
+	[ ] Make content of text upload view persistant
+	[ ] Make search in bookmark view persistant
+[ ] Add configurable uri replacement facilitys to let users avoid some sites in favour of others
