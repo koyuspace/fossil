@@ -9,5 +9,6 @@ then
 fi
 
 cd "$builddir"
+rm -f "$output"
 ninja
 cp -f "$output" "../$dest"

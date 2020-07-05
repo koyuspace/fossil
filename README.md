@@ -48,14 +48,4 @@ the build folder, run ninja, and put the output in the projects root
 directory. The produced binary should be executable, now.
 
 To make development easy, the `run` script calls the `build.sh` script
-and then runs whatever is at the output.
-
-NOTE: if a build fails, but an earlier one succeeded, it will run the
-binary produced by the earlier build.
-
-## TODO:
-- Implement dynamic sessions
-- Persistant view scroll position, user supplyed content etc.
-- Implement a better error view that trys to give explanations for the errors
-- Improve the TLS sessions UI and functionality
-- Improve image display performance
+and then runs whatever is at the output (it will try and fail if there is none).
