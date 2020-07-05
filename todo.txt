@@ -23,6 +23,7 @@ TODOLIST:
 		[ ] TLS TOFU component
 		[ ] TLS client certificate component
 		[ ] Token component
+		[ ] component for setting arbitrary session arguments to arbitrary values (for development purposes and advanced feataures)
 	[ ] make a registry with session presets
 [ ] proxys
 	[ ] Allow specifying alternative hosts
