@@ -33,6 +33,22 @@ public class Dragonstone.Asm.Scriptreturn : Object {
 		return this;
 	}
 	
+	public string to_string(){
+		string output = "";
+		if (!success) {
+			output += @"Error [$line]";
+		} else {
+			output += @"Ok    [$line]";
+		}
+		if (instruction != null){
+			output+=@" | $instruction";
+		}
+		if (message_unlocalized != null){
+			output+=@" : $message_unlocalized";
+		}
+		return output+"\n";
+	}
+	
 	public Scriptreturn.unknown_function(string function_name = ""){
 		this.message_unlocalized = @"Unknown function: $function_name";
 		this.message_localizable = "asm.error.unknown_function";
@@ -59,7 +75,7 @@ public class Dragonstone.Asm.Scriptrunner : Object {
 	public Dragonstone.Asm.AsmObject? default_object = null;
 	
 	public Scriptrunner(Dragonstone.Asm.ObjectProvider object_provider, Dragonstone.Asm.AsmObject? default_object = null){
-		this.object_provider;
+		this.object_provider = object_provider;
 		this.default_object = null;
 	}
 	
@@ -125,10 +141,16 @@ public class Dragonstone.Asm.Scriptrunner : Object {
 public delegate Dragonstone.Asm.Scriptreturn? Dragonstone.Asm.Function(string arg, Object? context = null);
 
 public class Dragonstone.Asm.FunctionDescriptor : Object {
-	public Dragonstone.Asm.Function callback;
-	public string name;
-	public string localizable_helptext;
-	public string unlocalized_helptext;
+	public Dragonstone.Asm.Function callback = dummy_callback;
+	public string name = "";
+	public string localizable_helptext = "";
+	public string unlocalized_helptext = "";
+	
+	private static Dragonstone.Asm.Scriptreturn? dummy_callback(string arg, Object? context){
+		return null;
+	}
+	
+	public FunctionDescriptor.empty(){}
 	
 	public FunctionDescriptor(owned Dragonstone.Asm.Function callback, string name, string localizable_helptext, string unlocalized_helptext){
 		this.callback = (owned) callback;

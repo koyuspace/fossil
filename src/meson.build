@@ -16,7 +16,12 @@ executable(
 	'asm/asm.vala', #AUTOUPDATE_FILE
 	'asm/simpleAsmObject.vala', #AUTOUPDATE_FILE
 	'asm/superRegistryConstructorFunctionProvider.vala', #AUTOUPDATE_FILE
-	'asm_init/mimeguesser.vala', #AUTOUPDATE_FILE
+	'asm_init/bookmarks.registry.vala', #AUTOUPDATE_FILE
+	'asm_init/mimeguesser.registry.vala', #AUTOUPDATE_FILE
+	'asm_init/session.registry.vala', #AUTOUPDATE_FILE
+	'asm_init/settings.registry.vala', #AUTOUPDATE_FILE
+	'asm_init/store.registry.vala', #AUTOUPDATE_FILE
+	'asm_init/uri_autoprefix.registry.vala', #AUTOUPDATE_FILE
 	'registries/bookmarkRegistry.vala', #AUTOUPDATE_FILE
 	'registries/gopher.vala', #AUTOUPDATE_FILE
 	'registries/mimeguesser.vala', #AUTOUPDATE_FILE

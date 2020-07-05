@@ -10,13 +10,28 @@ public class Dragonstone.Application : Gtk.Application {
 		);
 		this.shutdown.connect(on_shutdown);
 		super_registry = new Dragonstone.SuperRegistry();
+		//Initalize ASM constructors
+		var init_object = new Dragonstone.Asm.SimpleAsmObject();
+		Dragonstone.AsmInit.Bookmarks.Registry.register_initalizer("bookmark_registry",init_object);
+		Dragonstone.AsmInit.Mimeguesser.Registry.register_initalizer("mimeguesser_registry",init_object);
+		Dragonstone.AsmInit.Session.Registry.register_initalizer("session_registry",init_object);
+		Dragonstone.AsmInit.Settings.Registry.register_initalizer("settings_registry",init_object);
+		Dragonstone.AsmInit.Store.Registry.register_initalizer("store_registry",init_object);
+		Dragonstone.AsmInit.UriAutoprefix.Registry.register_initalizer("uri_autoprefix_registry",init_object);
+		//make a scriptrunner
+		var scriptrunner = new Dragonstone.Asm.Scriptrunner(super_registry);
 		//Initalize core registries
+		super_registry.store("init",init_object);
 		super_registry.store("core.mimeguesser",new Dragonstone.Registry.MimetypeGuesser.default_configuration());
 		super_registry.store("core.stores",new Dragonstone.Registry.StoreRegistry.default_configuration());
-		super_registry.store("core.uri_autoprefixer",new Dragonstone.Registry.UriAutoprefix());
-		super_registry.store("core.sessions",new Dragonstone.Registry.SessionRegistry());
-		super_registry.store("core.settings",new Dragonstone.Registry.SettingsRegistry());
-		super_registry.store("core.bookmarks",new Dragonstone.Registry.BookmarkRegistry());
+		scriptrunner.exec_line("init:uri_autoprefix_registry\tcore.uri_autoprefixer",super_registry);
+		scriptrunner.exec_line("init:session_registry\tcore.sessions",super_registry);
+		scriptrunner.exec_line("init:settings_registry\tcore.settings",super_registry);
+		scriptrunner.exec_line("init:bookmark_registry\tcore.bookmarks",super_registry);
+		//super_registry.store("core.uri_autoprefixer",new Dragonstone.Registry.UriAutoprefix());
+		//super_registry.store("core.sessions",new Dragonstone.Registry.SessionRegistry());
+		//super_registry.store("core.settings",new Dragonstone.Registry.SettingsRegistry());
+		//super_registry.store("core.bookmarks",new Dragonstone.Registry.BookmarkRegistry());
 		//Initalize Settings providers
 		Dragonstone.Startup.Settings.Backend.setup_providers(super_registry);
 		//Set defaults
