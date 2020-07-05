@@ -1,0 +1,9 @@
+#!/bin/bash
+
+#This script automatically finds all .vala files in the src/ folder and adds them to the src/meson.build file
+#If you didn't add or (re)move files you don't need this script
+
+lua update_src_build_files.lua > src/meson.build.new
+mv -f src/meson.build src/meson.build.old
+mv -f src/meson.build.new src/meson.build
+
