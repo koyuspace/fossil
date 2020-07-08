@@ -81,9 +81,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		if (uritogo == null){uritogo = uri;}
 		print(@"Going to uri: $uritogo\n");
 		//add old page to history
-		history.push(currently_displayed_page);
-		currently_displayed_page = new Dragonstone.TabHistoryEntry();
-		forward.clear();
+		push_history();
 		//load new uri
 		load_uri(uritogo);
 	}
@@ -91,9 +89,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public string? upload_to_uri(string uri,Dragonstone.Resource upload_resource){
 		if(locked>0){ return null; }
 		//add to history
-		history.push(currently_displayed_page);
-		currently_displayed_page = new Dragonstone.TabHistoryEntry();
-		forward.clear();
+		push_history();
 		_uri = uri;
 		currently_displayed_page.upload = true;
 		currently_displayed_page.uploaded_to = uri;
@@ -213,6 +209,20 @@ public class Dragonstone.Tab : Gtk.Bin {
 		}
 	}
 	
+	public void export_view_data(){
+		if (view != null){
+			currently_displayed_page.persistance_values.set(this.current_view_id,view.export());
+			print(@"exported view data to $current_view_id\n");
+		}
+	}
+	
+	private void push_history(){
+		export_view_data();
+		history.push(currently_displayed_page);
+		currently_displayed_page = new Dragonstone.TabHistoryEntry();
+		forward.clear();
+	}
+	
 	//update the view either beacause of a new Resource or beacause of a change of the current reource
 	//or update the view with a chosen one
 	public void update_view(string? view_id = null, string reason = "", bool update_view_chooser = false, bool as_subview = false){
@@ -241,14 +251,21 @@ public class Dragonstone.Tab : Gtk.Bin {
 			}
 			if (do_update_view){
 				if (view_id == null) {
-					view = view_registry.get_view(view_chooser.best_match);
+					//view = view_registry.get_view(view_chooser.best_match);
 					current_view_id = view_chooser.best_match;
 				} else {
-					view = view_registry.get_view(view_id);
 					current_view_id = view_id;
 				}
+					view = view_registry.get_view(current_view_id);
 				if (view != null){
 					if(view.displayResource(request,this,as_subview)){
+						print(@"Trying to import view data $current_view_id\n");
+						string? data = currently_displayed_page.persistance_values.get(current_view_id);
+						if (data != null){
+							view.import(data);
+						} else {
+						
+						}
 						use_view(view);
 					} else {
 						if (view_id != null){
@@ -355,6 +372,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		if(!can_go_back()) return;
 		var entry = history.pop();
 		if (entry == null) { return; }
+		export_view_data();
 		forward.push(currently_displayed_page);
 		apply_tab_history_entry(entry);
 	}
@@ -365,6 +383,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		if(!can_go_forward()) return;
 		var entry = forward.pop();
 		if (entry == null) { return; }
+		export_view_data();
 		history.push(currently_displayed_page);
 		apply_tab_history_entry(entry);
 	}
@@ -373,11 +392,12 @@ public class Dragonstone.Tab : Gtk.Bin {
 		if (entry != null){
 			currently_displayed_page = entry;
 			load_uri(currently_displayed_page.uri,false,entry.view);
-		}
-		if (currently_displayed_page.currently_displayed_subview != null){
-			update_view(currently_displayed_page.currently_displayed_subview.view,"apply_tab_history_entry",false,true);
 		} else {
-			update_view(currently_displayed_page.view,"apply_tab_history_entry",false,false);
+			if (currently_displayed_page.currently_displayed_subview != null){
+				update_view(currently_displayed_page.currently_displayed_subview.view,"apply_tab_history_entry_subview",false,true);
+			} else {
+				update_view(currently_displayed_page.view,"apply_tab_history_entry",false,false);
+			}
 		}
 	}
 	
@@ -463,6 +483,12 @@ public class Dragonstone.TabHistoryEntry : Object {
 	//upload_information
 	public bool upload = false;
 	public string? uploaded_to = null;
+	//persistance data
+	public HashTable<string,string> persistance_values;
+	
+	construct {
+		this.persistance_values = new HashTable<string,string>(str_hash,str_equal);
+	}
 }
 
 public class Dragonstone.TabSubviewHistoryEntry : Object {
