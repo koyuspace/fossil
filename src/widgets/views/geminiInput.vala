@@ -2,6 +2,9 @@ public class Dragonstone.View.GeminiInput : Dragonstone.Widget.DialogViewBase, D
 	
 	private Dragonstone.Request request = null;
 	
+	private Dragonstone.View.GeminiInputInput? input = null;
+	private bool confidential = false;
+	
 	construct {
 		this.append_big_headline(">_");
 	}
@@ -10,9 +13,10 @@ public class Dragonstone.View.GeminiInput : Dragonstone.Widget.DialogViewBase, D
 		if (!(request.status == "success" && request.resource.mimetype == "gemini/input")) {return false;}
 		this.request = request;
 		this.append_small_headline(request.resource.name);
-		var input = new Dragonstone.View.GeminiInputInput("",tab.uri);
+		input = new Dragonstone.View.GeminiInputInput("",tab.uri);
 		input.go.connect((s,uri) => {tab.go_to_uri(uri);});
 		if (request.arguments.get("gemini.statuscode") == "11") {
+			confidential = true;
 			input.entry.input_purpose = Gtk.InputPurpose.PASSWORD;
 		}
 		this.append_widget(input);
@@ -28,6 +32,32 @@ public class Dragonstone.View.GeminiInput : Dragonstone.Widget.DialogViewBase, D
 		}else{
 			return (request.status == "success" && request.resource.mimetype == "gemini/input");
 		}
+	}
+	
+	public bool import(string data){
+		if (confidential || input == null){
+			return false;
+		}
+		var kv = new Dragonstone.Util.Kv();
+		kv.import(data);
+		if (kv.get_value("view_type") != "dragonstone.gemini_input.0"){
+			return false;
+		}
+		string? val = kv.get_value("input");
+		if (val != null){
+			input.entry.text = val;
+		}
+		return true;
+	}
+	
+	public string? export(){
+		if (confidential || input == null){
+			return null;
+		}
+		var kv = new Dragonstone.Util.Kv();
+		kv.set_value("view_type","dragonstone.gemini_input.0");
+		kv.set_value("input",input.entry.text);
+		return kv.export();
 	}
 	
 }
