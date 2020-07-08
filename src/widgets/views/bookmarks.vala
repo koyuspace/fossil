@@ -323,6 +323,29 @@ public class Dragonstone.View.Bookmarks : Gtk.Stack, Dragonstone.IView {
 		return uidval.get_string();
 	}
 	
+	public bool import(string data){
+		var kv = new Dragonstone.Util.Kv();
+		kv.import(data);
+		if (kv.get_value("view_type") != "dragonstone.bookmarks.0"){
+			return false;
+		}
+		string? val = kv.get_value("search");
+		if (val != null) {
+			this.search_entry.buffer.set_text(val.data);
+		}
+		return true;
+	}
+	
+	public string? export(){
+		var kv = new Dragonstone.Util.Kv();
+		kv.set_value("test","test");
+		kv.set_value("view_type","dragonstone.bookmarks.0");
+		if (this.search_entry.buffer.text != ""){
+			kv.set_value("search",this.search_entry.buffer.text);
+		}
+		return kv.export();
+	}
+	
 	public void cleanup(){
 		bookmark_registry.bookmark_added.disconnect(append_entry);
 		bookmark_registry.bookmark_modified.disconnect(update_entry);
