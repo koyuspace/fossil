@@ -392,6 +392,9 @@ public class Dragonstone.Tab : Gtk.Bin {
 		if (entry != null){
 			currently_displayed_page = entry;
 			load_uri(currently_displayed_page.uri,false,entry.view);
+			if (currently_displayed_page.currently_displayed_subview != null){
+				update_view(currently_displayed_page.currently_displayed_subview.view,"apply_tab_history_entry_subview",false,true);
+			}
 		} else {
 			if (currently_displayed_page.currently_displayed_subview != null){
 				update_view(currently_displayed_page.currently_displayed_subview.view,"apply_tab_history_entry_subview",false,true);
