@@ -415,6 +415,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		string urix = uri; //setting a variable to itself the complicatd way
 		print("reloading!\n");
 		print("URI: '"+urix+"'\n");
+		export_view_data();
 		load_uri(urix,true);
 	}
 	
