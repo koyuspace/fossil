@@ -2,7 +2,7 @@ public class Dragonstone.Util.Kv {
 	public HashTable<string,string> values = new HashTable<string,string>(str_hash,str_equal);
 	
 	public static bool is_valid_key(string key){
-		return !(key.contains("\n"));
+		return !(key.contains("\n") || key.has_prefix("\t"));
 	}
 	
 	public void import(string raw){
