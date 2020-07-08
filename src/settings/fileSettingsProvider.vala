@@ -61,7 +61,9 @@ public class Dragonstone.Settings.FileProvider : Dragonstone.Settings.Provider, 
 				try{
 					print(@"[settings][file settings provider] exporting $id to $basepath$name\n");
 					var file = File.new_for_path(basepath+name);
-					file.delete();
+					try {
+						file.delete();
+					} catch {}
 					var file_output_stream = file.create(FileCreateFlags.PRIVATE | FileCreateFlags.REPLACE_DESTINATION);
 					var data_output_stream = new DataOutputStream(file_output_stream);
 					data_output_stream.put_string(content);
