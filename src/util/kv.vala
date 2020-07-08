@@ -37,6 +37,9 @@ public class Dragonstone.Util.Kv {
 				}
 			}
 		}
+		if (multiline_value != null){
+			values.set(multiline_key,multiline_value);
+		}
 	}
 	
 	public string export(){
@@ -50,7 +53,6 @@ public class Dragonstone.Util.Kv {
 				}
 				export += key+"\n";
 				export += "\t"+val.replace("\n","\n\t");
-				export += "\n";
 			}
 		});
 		if (export == null){
@@ -74,7 +76,7 @@ public class Dragonstone.Util.Kv {
 		return true;
 	}
 	
-	public string? get_value(string key, string val){
+	public string? get_value(string key){
 		if (!is_valid_key(key)){ return null; }
 		return values.get(key);
 	}
