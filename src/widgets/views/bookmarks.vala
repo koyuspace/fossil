@@ -363,7 +363,6 @@ public class Dragonstone.View.Bookmarks : Gtk.Stack, Dragonstone.IView {
 	
 	public string? export(){
 		var kv = new Dragonstone.Util.Kv();
-		kv.set_value("test","test");
 		kv.set_value("view_type","dragonstone.bookmarks.0");
 		if (this.search_entry.text != ""){
 			kv.set_value("search.text",this.search_entry.text);
