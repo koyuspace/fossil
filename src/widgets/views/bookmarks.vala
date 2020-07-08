@@ -329,9 +329,34 @@ public class Dragonstone.View.Bookmarks : Gtk.Stack, Dragonstone.IView {
 		if (kv.get_value("view_type") != "dragonstone.bookmarks.0"){
 			return false;
 		}
-		string? val = kv.get_value("search");
+		string? val = kv.get_value("search.text");
 		if (val != null) {
-			this.search_entry.buffer.set_text(val.data);
+			this.search_entry.text = val;
+		}
+		if (kv.get_value("search_toggle.active") == "true"){
+			search_toggle.active = true;
+		}
+		val = kv.get_value("add_name_entry");
+		if (val != null){
+			this.addwidget.name_entry.text = val;
+		}
+		val = kv.get_value("add_uri_entry");
+		if (val != null){
+			this.addwidget.uri_entry.text = val;
+		}
+		val = kv.get_value("visible_view");
+		if (val == "add"){
+			this.set_visible_child_name("subview_add");
+		} else if (val == "edit"){
+			this.set_visible_child_name("subview_edit");
+			val = kv.get_value("edit_name_entry");
+			if (val != null){
+				this.editwidget.name_entry.text = val;
+			}
+			val = kv.get_value("edit_uri_entry");
+			if (val != null){
+				this.editwidget.uri_entry.text = val;
+			}
 		}
 		return true;
 	}
@@ -340,8 +365,21 @@ public class Dragonstone.View.Bookmarks : Gtk.Stack, Dragonstone.IView {
 		var kv = new Dragonstone.Util.Kv();
 		kv.set_value("test","test");
 		kv.set_value("view_type","dragonstone.bookmarks.0");
-		if (this.search_entry.buffer.text != ""){
-			kv.set_value("search",this.search_entry.buffer.text);
+		if (this.search_entry.text != ""){
+			kv.set_value("search.text",this.search_entry.text);
+		}
+		if (search_toggle.active){
+			kv.set_value("search_toggle.active","true");
+		}
+		if (this.visible_child_name == "subview_add"){
+			kv.set_value("visible_view","add");
+		}
+		kv.set_value("add_name_entry",this.addwidget.name_entry.text);
+		kv.set_value("add_uri_entry",this.addwidget.uri_entry.text);
+		if (this.visible_child_name == "subview_edit"){
+			kv.set_value("visible_view","edit");
+			kv.set_value("edit_name_entry",this.editwidget.name_entry.text);
+			kv.set_value("edit_uri_entry",this.editwidget.uri_entry.text);
 		}
 		return kv.export();
 	}
