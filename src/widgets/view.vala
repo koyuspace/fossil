@@ -9,3 +9,8 @@ public interface Dragonstone.IView : Gtk.Widget {
 	//and clean up after itself
 	public virtual void cleanup(){}
 }
+
+public interface Dragonstone.IViewPersistant : Object {
+	public abstract bool import(string data);
+	public abstract string? export();
+}

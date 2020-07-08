@@ -81,8 +81,10 @@ executable(
 	'util/defaultGtkLinkIconLoader.vala', #AUTOUPDATE_FILE
 	'util/flaglist.vala', #AUTOUPDATE_FILE
 	'util/intparser.vala', #AUTOUPDATE_FILE
+	'util/kv.vala', #AUTOUPDATE_FILE
 	'util/messageViewFactory.vala', #AUTOUPDATE_FILE
 	'util/resourceFileHelper.vala', #AUTOUPDATE_FILE
+	'util/settingsFetcher.vala', #AUTOUPDATE_FILE
 	'util/stack.vala', #AUTOUPDATE_FILE
 	'util/tlsCertificateGenerator.vala', #AUTOUPDATE_FILE
 	'util/uri.vala', #AUTOUPDATE_FILE
