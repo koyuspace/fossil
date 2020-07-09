@@ -46,9 +46,10 @@ TODOLIST:
 [ ] Add option to not even attempt cleartext connections
 	[ ] Add session module to set this option
 [ ] Add callback to views to allow them to grab focus
-[ ] Add persistance to views (tab indentation based serialization format)
-	[ ] Make scroll position persistant for text and hypertext views
+[X] Add persistance to views (tab indentation based serialization format)
+	[X] Make scroll position persistant for text and hypertext views
+		[ ] (move this to a utility file and reuse it where possible)
 	[ ] Make selection persistant for file upload view
 	[ ] Make content of text upload view persistant
-	[ ] Make search in bookmark view persistant
+	[X] Make search in bookmark view persistant
 [ ] Add configurable uri replacement facilitys to let users avoid some sites in favour of others

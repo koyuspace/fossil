@@ -80,6 +80,7 @@ executable(
 	'util/connectionHelper.vala', #AUTOUPDATE_FILE
 	'util/defaultGtkLinkIconLoader.vala', #AUTOUPDATE_FILE
 	'util/flaglist.vala', #AUTOUPDATE_FILE
+	'util/gtkScrollExport.vala', #AUTOUPDATE_FILE
 	'util/intparser.vala', #AUTOUPDATE_FILE
 	'util/kv.vala', #AUTOUPDATE_FILE
 	'util/messageViewFactory.vala', #AUTOUPDATE_FILE

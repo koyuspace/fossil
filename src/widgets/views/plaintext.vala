@@ -52,37 +52,20 @@ public class Dragonstone.View.Plaintext : Gtk.ScrolledWindow, Dragonstone.IView 
 	public bool import(string data){
 		var kv = new Dragonstone.Util.Kv();
 		kv.import(data);
-		if (kv.get_value("view_type") != "dragonstone.gemini_text.0"){
+		if (kv.get_value("view_type") != "dragonstone.plain_text.0"){
 			return false;
 		}
-		string? val = kv.get_value("vscroll");
+		string? val = kv.get_value("scroll");
 		if (val != null){
-			uint64 vscroll;
-			if (Dragonstone.Util.Intparser.try_parse_unsigned(val,out vscroll)){
-				Timeout.add(100,() => {
-					this.vadjustment.set_value(vscroll);
-					return false;
-				},Priority.HIGH);
-			}
-		}
-		val = kv.get_value("hscroll");
-		if (val != null){
-			uint64 hscroll;
-			if (Dragonstone.Util.Intparser.try_parse_unsigned(val,out hscroll)){
-				Timeout.add(100,() => {
-					this.hadjustment.set_value(hscroll);
-					return false;
-				},Priority.HIGH);
-			}
+			Dragonstone.Util.GtkScrollExport.import(this,val);
 		}
 		return true;
 	}
 	
 	public string? export(){
 		var kv = new Dragonstone.Util.Kv();
-		kv.set_value("view_type","dragonstone.gemini_text.0");
-		kv.set_value("vscroll",@"$(this.vadjustment.get_value())");
-		kv.set_value("hscroll",@"$(this.hadjustment.get_value())");
+		kv.set_value("view_type","dragonstone.plain_text.0");
+		kv.set_value("scroll",Dragonstone.Util.GtkScrollExport.export(this));
 		return kv.export();
 	}
 	
