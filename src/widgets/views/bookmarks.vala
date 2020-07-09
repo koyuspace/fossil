@@ -12,6 +12,7 @@ public class Dragonstone.View.Bookmarks : Gtk.Stack, Dragonstone.IView {
 	private Gtk.TreeModelFilter filterstore;
 	
 	//bookmark list
+	private Gtk.ScrolledWindow list_scroll;
 	private Gtk.Box view_list = new Gtk.Box(Gtk.Orientation.VERTICAL,0);
 	private Gtk.TreeView treeview;
 	private Gtk.Button addbutton = new Gtk.Button();
@@ -179,14 +180,14 @@ public class Dragonstone.View.Bookmarks : Gtk.Stack, Dragonstone.IView {
 		treeview.row_activated.connect(treeview_row_activated);
 		treeview.cursor_changed.connect(update_selected_bookmark);
 		//scrolled window
-		var scrolled_window = new Gtk.ScrolledWindow(null,null);
-		scrolled_window.add(treeview);
-		scrolled_window.expand = true;
+		list_scroll = new Gtk.ScrolledWindow(null,null);
+		list_scroll.add(treeview);
+		list_scroll.expand = true;
 		//pack to root window
 		view_list.pack_start(actionbar);
-		view_list.pack_start(scrolled_window);
+		view_list.pack_start(list_scroll);
 		view_list.set_child_packing(actionbar,false,true,0,Gtk.PackType.START);
-		view_list.set_child_packing(scrolled_window,true,true,0,Gtk.PackType.START);
+		view_list.set_child_packing(list_scroll,true,true,0,Gtk.PackType.START);
 		this.add_named(view_list,"view_list");
 		this.show_all();
 		this.set_visible_child(view_list);
@@ -358,6 +359,10 @@ public class Dragonstone.View.Bookmarks : Gtk.Stack, Dragonstone.IView {
 				this.editwidget.uri_entry.text = val;
 			}
 		}
+		val = kv.get_value("scroll");
+		if (val != null){
+			Dragonstone.Util.GtkScrollExport.import(this.list_scroll,val);
+		}
 		return true;
 	}
 	
@@ -380,6 +385,7 @@ public class Dragonstone.View.Bookmarks : Gtk.Stack, Dragonstone.IView {
 			kv.set_value("edit_name_entry",this.editwidget.name_entry.text);
 			kv.set_value("edit_uri_entry",this.editwidget.uri_entry.text);
 		}
+		kv.set_value("scroll",Dragonstone.Util.GtkScrollExport.export(this.list_scroll));
 		return kv.export();
 	}
 	
