@@ -16,11 +16,18 @@ executable(
 	'asm/asm.vala', #AUTOUPDATE_FILE
 	'asm/simpleAsmObject.vala', #AUTOUPDATE_FILE
 	'asm/superRegistryConstructorFunctionProvider.vala', #AUTOUPDATE_FILE
+	'asm_init/about.store.vala', #AUTOUPDATE_FILE
 	'asm_init/bookmarks.registry.vala', #AUTOUPDATE_FILE
+	'asm_init/file.store.vala', #AUTOUPDATE_FILE
+	'asm_init/finger.store.vala', #AUTOUPDATE_FILE
+	'asm_init/gemini.store.vala', #AUTOUPDATE_FILE
+	'asm_init/gopher.store.vala', #AUTOUPDATE_FILE
+	'asm_init/gopher.type.registry.vala', #AUTOUPDATE_FILE
 	'asm_init/mimeguesser.registry.vala', #AUTOUPDATE_FILE
 	'asm_init/session.registry.vala', #AUTOUPDATE_FILE
 	'asm_init/settings.registry.vala', #AUTOUPDATE_FILE
 	'asm_init/store.registry.vala', #AUTOUPDATE_FILE
+	'asm_init/switch.store.vala', #AUTOUPDATE_FILE
 	'asm_init/uri_autoprefix.registry.vala', #AUTOUPDATE_FILE
 	'registries/bookmarkRegistry.vala', #AUTOUPDATE_FILE
 	'registries/gopher.vala', #AUTOUPDATE_FILE
