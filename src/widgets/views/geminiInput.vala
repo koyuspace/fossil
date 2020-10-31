@@ -18,6 +18,7 @@ public class Dragonstone.View.GeminiInput : Dragonstone.Widget.DialogViewBase, D
 		if (request.arguments.get("gemini.statuscode") == "11") {
 			confidential = true;
 			input.entry.input_purpose = Gtk.InputPurpose.PASSWORD;
+			input.entry.set_visibility(false);
 		}
 		this.append_widget(input);
 		this.center_box.set_child_packing(input,true,true,0,Gtk.PackType.START);
