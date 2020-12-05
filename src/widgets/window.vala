@@ -14,10 +14,9 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		this.app = application;
 		load_translation();
 		initalize();
-		add_new_tab();
 	}
 	
-	public Window.from_dropped_tab(Dragonstone.Application application,int x,int y) {
+	public Window.from_dropped_tab(Dragonstone.Application application, int x, int y) {
 		Object(
 			application: application,
 			super_registry: application.super_registry

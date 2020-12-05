@@ -1,13 +1,17 @@
 
 public class Dragonstone.Application : Gtk.Application {
 	
-	public Dragonstone.SuperRegistry super_registry { get; protected set; }
+	public Dragonstone.SuperRegistry? super_registry { get; protected set; default=null; }
 	
 	public Application() {
 		Object (
 			application_id: "com.gitlab.baschdel.Dragonstone",
-			flags: ApplicationFlags.FLAGS_NONE
+			flags: ApplicationFlags.CAN_OVERRIDE_APP_ID | ApplicationFlags.HANDLES_COMMAND_LINE
 		);
+	}
+	
+	public void initalize() {
+		if (super_registry != null) { return; }
 		this.shutdown.connect(on_shutdown);
 		super_registry = new Dragonstone.SuperRegistry();
 		//Initalize ASM constructors
@@ -87,11 +91,56 @@ public class Dragonstone.Application : Gtk.Application {
 	}
 	
 	protected override void activate() {
+		initalize();
 		build_window();
 	}
 	
-	protected override void open(GLib.File[] files, string hint) {
-		build_window();
+	protected override int command_line(ApplicationCommandLine command_line) {
+		initalize();
+		Dragonstone.Window? window = (Dragonstone.Window) get_active_window();
+		bool new_window = false;
+		if (window == null) {
+			window = build_window();
+			new_window = true;
+		}
+		string session_id = "core.default";
+		bool next_is_sessionid = false;
+		bool firstarg = true;
+		bool uri_opened = false;
+		foreach (string arg in command_line.get_arguments()){
+			if (firstarg) {
+				firstarg = false;
+			} else if (next_is_sessionid) {
+				session_id = arg;
+			} else if (arg == "--new-window") {
+				if (!new_window) {
+					if (!uri_opened) {
+						window.add_new_tab();
+					}
+					uri_opened = false;
+					window = build_window();
+				}
+				new_window = false;
+			} else if (arg == "--session") {
+				next_is_sessionid = true;
+			} else {
+				string uri = arg;
+				var pwd = command_line.get_cwd();
+				if (pwd != null) {
+					if (!pwd.has_suffix("/")) {
+						pwd = pwd+"/";
+					}
+					uri = Dragonstone.Util.Uri.join("file://"+pwd, arg);
+				}
+				window.add_tab(uri,session_id);
+				uri_opened = true;
+				new_window = false;
+			}
+		}
+		if (!uri_opened) {
+			window.add_new_tab();
+		}
+		return 0;
 	}
 	
 	protected void on_shutdown() {
@@ -103,8 +152,9 @@ public class Dragonstone.Application : Gtk.Application {
 		if (settings_registry != null){ settings_registry.export_all(); }
 	}
 	
-	private void build_window() {
+	private Dragonstone.Window build_window() {
 		var window = new Dragonstone.Window(this);
 		add_window(window);
+		return window;
 	}
 }
