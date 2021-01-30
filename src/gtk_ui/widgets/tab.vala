@@ -22,7 +22,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public string title = "New Tab";
 	public bool loading = false; //changing this counts as a title change
 	public Dragonstone.Util.Flaglist view_flags = new Dragonstone.Util.Flaglist();
-	public Dragonstone.Registry.ViewRegistryViewChooser view_chooser;
+	public Dragonstone.GtkUi.ViewRegistryViewChooser view_chooser;
 	public signal void on_cleanup();
 	public signal void on_title_change();
 	public string current_view_id { get; protected set; }
@@ -33,7 +33,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	
 	private string resource_user_id = "tab_"+GLib.Uuid.string_random();
 	
-	private Dragonstone.Registry.ViewRegistry view_registry;
+	private Dragonstone.GtkUi.ViewRegistry view_registry;
 	
 	public Tab(string session_id, string uri, Gtk.Window parent_window, Dragonstone.SuperRegistry super_registry){
 		Object(
@@ -52,12 +52,12 @@ public class Dragonstone.Tab : Gtk.Bin {
 			print("[tab][error]Session not found in session registry, falling back to dummy session");
 			this.session = new Dragonstone.Session.Dummy();
 		}
-		this.view_registry = (super_registry.retrieve("gtk.views") as Dragonstone.Registry.ViewRegistry);
+		this.view_registry = (super_registry.retrieve("gtk.views") as Dragonstone.GtkUi.ViewRegistry);
 		if (this.view_registry == null){
 			print("[tab] No view registry in super registry, falling back to default configuration!\n");
-			this.view_registry = new Dragonstone.Registry.ViewRegistry.default_configuration();
+			this.view_registry = new Dragonstone.GtkUi.ViewRegistry.default_configuration();
 		}
-		view_chooser = new Dragonstone.Registry.ViewRegistryViewChooser(view_registry);
+		view_chooser = new Dragonstone.GtkUi.ViewRegistryViewChooser(view_registry);
 		this.translation = (super_registry.retrieve("localization.translation") as Dragonstone.Registry.TranslationRegistry);
 		if (this.translation == null){
 			print("[tab] No translation resgistry found, falling back to an empty one!\n");

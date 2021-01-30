@@ -29,6 +29,7 @@ executable(
 	'gtk_ui/util/default_gtk_link_icon_loader.vala', #AUTOUPDATE_FILE
 	'gtk_ui/util/gtk_scroll_export.vala', #AUTOUPDATE_FILE
 	'gtk_ui/util/message_view_factory.vala', #AUTOUPDATE_FILE
+	'gtk_ui/view_registry.vala', #AUTOUPDATE_FILE
 	'gtk_ui/views/bookmarks.vala', #AUTOUPDATE_FILE
 	'gtk_ui/views/cache.vala', #AUTOUPDATE_FILE
 	'gtk_ui/views/directory.vala', #AUTOUPDATE_FILE
@@ -74,16 +75,15 @@ executable(
 	'interface/settings/provider.i.vala', #AUTOUPDATE_FILE
 	'interface/settings/rom.vala', #AUTOUPDATE_FILE
 	'interface/settings/rom_provider.i.vala', #AUTOUPDATE_FILE
-	'registries/bookmarkRegistry.vala', #AUTOUPDATE_FILE
+	'registries/bookmark_registry.vala', #AUTOUPDATE_FILE
 	'registries/gopher.vala', #AUTOUPDATE_FILE
 	'registries/mimeguesser.vala', #AUTOUPDATE_FILE
-	'registries/sessionRegistry.vala', #AUTOUPDATE_FILE
-	'registries/settingsRegistry.vala', #AUTOUPDATE_FILE
-	'registries/storeRegistry.vala', #AUTOUPDATE_FILE
-	'registries/superRegistry.vala', #AUTOUPDATE_FILE
+	'registries/session_registry.vala', #AUTOUPDATE_FILE
+	'registries/settings_registry.vala', #AUTOUPDATE_FILE
+	'registries/store_registry.vala', #AUTOUPDATE_FILE
+	'registries/super_registry.vala', #AUTOUPDATE_FILE
 	'registries/translation.vala', #AUTOUPDATE_FILE
-	'registries/uriAutocorrect.vala', #AUTOUPDATE_FILE
-	'registries/viewRegistry.vala', #AUTOUPDATE_FILE
+	'registries/uri_autocorrect.vala', #AUTOUPDATE_FILE
 	'sessions/default.vala', #AUTOUPDATE_FILE
 	'sessions/dummy.vala', #AUTOUPDATE_FILE
 	'sessions/tls.vala', #AUTOUPDATE_FILE

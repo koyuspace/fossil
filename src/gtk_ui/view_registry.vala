@@ -1,6 +1,6 @@
-public delegate Dragonstone.GtkUi.Interface.View Dragonstone.Registry.ViewConstructor();
+public delegate Dragonstone.GtkUi.Interface.View Dragonstone.GtkUi.ViewConstructor();
 
-public class Dragonstone.Registry.ViewRegistry : Object {
+public class Dragonstone.GtkUi.ViewRegistry : Object {
 	
 	public HashTable<string,ViewRegistryEntry> views = new HashTable<string,ViewRegistryEntry>(str_hash, str_equal);
 	
@@ -73,7 +73,7 @@ public class Dragonstone.Registry.ViewRegistry : Object {
 		add_rule(new ViewRegistryRule.resource_view("","dragonstone.download"));
 	}
 	
-	public void add_view(string id,owned Dragonstone.Registry.ViewConstructor constructor){
+	public void add_view(string id,owned Dragonstone.GtkUi.ViewConstructor constructor){
 		views.set(id,new ViewRegistryEntry((owned) constructor));
 	}
 	
@@ -90,7 +90,7 @@ public class Dragonstone.Registry.ViewRegistry : Object {
 	}
 	
 	//View rule stuff
-	public List<Dragonstone.Registry.ViewRegistryRule> rules = new List<Dragonstone.Registry.ViewRegistryRule>();
+	public List<Dragonstone.GtkUi.ViewRegistryRule> rules = new List<Dragonstone.GtkUi.ViewRegistryRule>();
 	
 	
 	public void add_rule(ViewRegistryRule rule){
@@ -98,7 +98,7 @@ public class Dragonstone.Registry.ViewRegistry : Object {
 	}
 }
 
-public class Dragonstone.Registry.ViewRegistryViewChooser : Object {
+public class Dragonstone.GtkUi.ViewRegistryViewChooser : Object {
 	public string? best_match = null; //may be overidden by i.e. user choice
 	public HashTable<string,uint32> matches = new HashTable<string,uint32>(str_hash, str_equal);
 	public ViewRegistry registry;
@@ -126,7 +126,7 @@ public class Dragonstone.Registry.ViewRegistryViewChooser : Object {
 		this.reset();
 		string? best_match = null;
 		uint32 highscore = 0;
-		foreach (Dragonstone.Registry.ViewRegistryRule rule in registry.rules) {
+		foreach (Dragonstone.GtkUi.ViewRegistryRule rule in registry.rules) {
 			if (status.has_prefix(rule.status)){
 				//print(@"checking $(rule.view)\n");
 				bool exact_status_match = status == rule.status;
@@ -187,7 +187,7 @@ public class Dragonstone.Registry.ViewRegistryViewChooser : Object {
 	
 }
 
-public class Dragonstone.Registry.ViewRegistryRule : Object {
+public class Dragonstone.GtkUi.ViewRegistryRule : Object {
 	public string status;
 	public string view;
 	public string? mimetype = null;
@@ -246,11 +246,11 @@ public class Dragonstone.Registry.ViewRegistryRule : Object {
 	public const string FLAG_UPLOAD = "upload";
 }
 
-public class Dragonstone.Registry.ViewRegistryEntry : Object {
+public class Dragonstone.GtkUi.ViewRegistryEntry : Object {
 	
-	public Dragonstone.Registry.ViewConstructor constructor;
+	public Dragonstone.GtkUi.ViewConstructor constructor;
 	
-	public ViewRegistryEntry(owned Dragonstone.Registry.ViewConstructor constructor){
+	public ViewRegistryEntry(owned Dragonstone.GtkUi.ViewConstructor constructor){
 		this.constructor = (owned) constructor;
 	}
 }
