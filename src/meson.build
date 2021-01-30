@@ -129,6 +129,8 @@ executable(
 	'stores/gopherwrite.vala', #AUTOUPDATE_FILE
 	'stores/switch.vala', #AUTOUPDATE_FILE
 	'stores/test.vala', #AUTOUPDATE_FILE
+	'ui/tab.vala', #AUTOUPDATE_FILE
+	'ui/tab_display_state.vala', #AUTOUPDATE_FILE
 	'util/connection_helper.vala', #AUTOUPDATE_FILE
 	'util/flaglist.vala', #AUTOUPDATE_FILE
 	'util/intparser.vala', #AUTOUPDATE_FILE

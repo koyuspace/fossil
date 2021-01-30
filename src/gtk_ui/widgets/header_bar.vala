@@ -260,7 +260,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		switching_tab = true;
 		//disconnect old signals
 		if (current_tab != null) {
-			current_tab.uriChanged.disconnect(onUriChanged);
+			current_tab.uri_changed.disconnect(onUriChanged);
 		}
 		//set new tab
 		if (!(tab is Dragonstone.Tab || tab == null)) {
@@ -272,7 +272,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		session_chooser.use_tab(current_tab);
 		if (current_tab != null) {
 			//connect new signal
-			current_tab.uriChanged.connect(onUriChanged);
+			current_tab.uri_changed.connect(onUriChanged);
 			//everything else
 			onUriChanged(current_tab.uri);
 			prefer_source_view_switch.active = current_tab.view_flags.has_flag("sourceview");

@@ -11,7 +11,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public Dragonstone.Interface.Session session { get; protected set; }
 	public string current_session_id { get; protected set; }
 	public signal void on_session_change();	
-	public signal void uriChanged(string uri);
+	public signal void uri_changed(string uri);
 	public Dragonstone.Util.Stack<TabHistoryEntry> history = new Dragonstone.Util.Stack<TabHistoryEntry>();
 	public Dragonstone.Util.Stack<TabHistoryEntry> forward = new Dragonstone.Util.Stack<TabHistoryEntry>();
 	public Dragonstone.TabHistoryEntry currently_displayed_page = new Dragonstone.TabHistoryEntry();
@@ -20,11 +20,11 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public Gtk.Window parent_window; //only for use with dialog windows
 	private int locked = 0;
 	public string title = "New Tab";
-	public bool loading = false; //changing this counts as a title change
+	public Dragonstone.Ui.TabDisplayState display_state = Dragonstone.Ui.TabDisplayState.BLANK;
 	public Dragonstone.Util.Flaglist view_flags = new Dragonstone.Util.Flaglist();
 	public Dragonstone.GtkUi.ViewRegistryViewChooser view_chooser;
 	public signal void on_cleanup();
-	public signal void on_title_change();
+	public signal void on_title_change(string title, Dragonstone.Ui.TabDisplayState state);
 	public string current_view_id { get; protected set; }
 	public signal void on_view_change();
 	
@@ -98,7 +98,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		set_request(request);
 		currently_displayed_page.uri = upload_urn;
 		_uri = upload_urn;
-		uriChanged(this.uri);
+		uri_changed(this.uri);
 		update_view(null,"upload_to_uri",true);
 		return upload_urn;
 	}
@@ -123,7 +123,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		} else {
 			redirectcounter = 0;
 		}
-		setTitle(uri,true);
+		set_title(uri ,Dragonstone.Ui.TabDisplayState.LOADING);
 		var rquri = this.uri;
 		var startoffragment = rquri.index_of_char('#');
 		if(startoffragment > 0){
@@ -132,7 +132,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		var request = session.make_download_request(rquri,reload);
 		set_request(request);
 		update_view(preferred_view,"load_uri",true);
-		uriChanged(this.uri);
+		uri_changed(this.uri);
 	}
 	
 	private void set_request(Dragonstone.Request? rq){
@@ -245,10 +245,17 @@ public class Dragonstone.Tab : Gtk.Bin {
 			}
 			
 			//do some status specific things
-			setTitle(uri,!request.done);
-			if(request.status.has_prefix("error")){
-				setTitle("🔴 "+uri,!request.done);
+			Dragonstone.Ui.TabDisplayState new_state = Dragonstone.Ui.TabDisplayState.LOADING;
+			if (request.done) {
+				new_state = Dragonstone.Ui.TabDisplayState.CONTENT;
 			}
+			if (uri == "about:blank") {
+				new_state = Dragonstone.Ui.TabDisplayState.BLANK;
+			}
+			if (request.status.has_prefix("error")) {
+				new_state = Dragonstone.Ui.TabDisplayState.ERROR;
+			}
+			set_title(uri,new_state);
 			if (do_update_view){
 				if (view_id == null) {
 					//view = view_registry.get_view(view_chooser.best_match);
@@ -273,14 +280,14 @@ public class Dragonstone.Tab : Gtk.Bin {
 							update_view(null,"view_did_not_work");
 							return;
 						} else {
-							setTitle("🔴 "+uri,!request.done);
+							set_title(uri,Dragonstone.Ui.TabDisplayState.ERROR);
 							var error_message_localized = translation.get_localized_string("tab.error.wrong_view.message");
 							view = new Dragonstone.GtkUi.View.Label(@"$error_message_localized\n$(request.status)\n$(request.substatus)");
 							use_view(view);
 						}
 					}
 				} else {
-					setTitle("🔴 "+uri,!request.done);
+					set_title(uri,Dragonstone.Ui.TabDisplayState.ERROR);
 					var error_message_localized = translation.get_localized_string("tab.error.no_view.message");
 					view = new Dragonstone.GtkUi.View.Label(@"$error_message_localized\n$(request.status)\n$(request.substatus)");
 					use_view(view);
@@ -470,10 +477,10 @@ public class Dragonstone.Tab : Gtk.Bin {
 		}
 	}
 	
-	public void setTitle(string title,bool loading = false){
+	public void set_title(string title, Dragonstone.Ui.TabDisplayState state =  Dragonstone.Ui.TabDisplayState.CONTENT){
 		this.title = title;
-		this.loading = loading;
-		this.on_title_change();
+		this.display_state = state;
+		on_title_change(title,display_state);
 	}
 	
 }
