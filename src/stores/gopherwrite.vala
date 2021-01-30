@@ -1,4 +1,4 @@
-public class Dragonstone.Store.GopherWrite : Object, Dragonstone.ResourceStore {
+public class Dragonstone.Store.GopherWrite : Object, Dragonstone.Interface.ResourceStore {
 	
 	//
 	

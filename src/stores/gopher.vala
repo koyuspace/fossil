@@ -1,4 +1,4 @@
-public class Dragonstone.Store.Gopher : Object, Dragonstone.ResourceStore {
+public class Dragonstone.Store.Gopher : Object, Dragonstone.Interface.ResourceStore {
 	
 	private Dragonstone.Registry.MimetypeGuesser mimeguesser;
 	private Dragonstone.Registry.GopherTypeRegistry type_registry;

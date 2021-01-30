@@ -1,4 +1,4 @@
-public delegate Dragonstone.IView Dragonstone.Registry.ViewConstructor();
+public delegate Dragonstone.GtkUi.Interface.View Dragonstone.Registry.ViewConstructor();
 
 public class Dragonstone.Registry.ViewRegistry : Object {
 	
@@ -29,27 +29,27 @@ public class Dragonstone.Registry.ViewRegistry : Object {
 			translator = (owned) language;
 		}
 		print(@"$(translator != null)\n");
-		add_view("dragonstone.loading", () => { return new Dragonstone.View.Loading(); });
-		add_view("dragonstone.redirect", () => { return new Dragonstone.View.Redirect(translator);});
-		var interal_error_view_factory = new Dragonstone.Util.MessageViewFactory("error/internal","dialog-warning-symbolic",translator);
+		add_view("dragonstone.loading", () => { return new Dragonstone.GtkUi.View.Loading(); });
+		add_view("dragonstone.redirect", () => { return new Dragonstone.GtkUi.View.Redirect(translator);});
+		var interal_error_view_factory = new Dragonstone.GtkUi.Util.MessageViewFactory("error/internal","dialog-warning-symbolic",translator);
 		add_view("dragonstone.error.internal", interal_error_view_factory.construct_view);
-		var gibberish_error_view_factory = new Dragonstone.Util.MessageViewFactory("error/gibberish","dialog-question-symbolic",translator);
+		var gibberish_error_view_factory = new Dragonstone.GtkUi.Util.MessageViewFactory("error/gibberish","dialog-question-symbolic",translator);
 		add_view("dragonstone.error.gibberish", gibberish_error_view_factory.construct_view);
-		var connection_refused_error_view_factory = new Dragonstone.Util.MessageViewFactory("error/connectionRefused","action-unavailable-symbolic",translator);
+		var connection_refused_error_view_factory = new Dragonstone.GtkUi.Util.MessageViewFactory("error/connectionRefused","action-unavailable-symbolic",translator);
 		add_view("dragonstone.error.connectionRefused", connection_refused_error_view_factory.construct_view);
-		var no_host_error_view_factory = new Dragonstone.Util.MessageViewFactory("error/noHost","find-location-symbolic",translator);
+		var no_host_error_view_factory = new Dragonstone.GtkUi.Util.MessageViewFactory("error/noHost","find-location-symbolic",translator);
 		add_view("dragonstone.error.noHost", no_host_error_view_factory.construct_view);
-		var resource_unavaiable_error_view_factory = new Dragonstone.Util.MessageViewFactory("error/resourceUnavaiable","computer-fail-symbolic",translator);
+		var resource_unavaiable_error_view_factory = new Dragonstone.GtkUi.Util.MessageViewFactory("error/resourceUnavaiable","computer-fail-symbolic",translator);
 		add_view("dragonstone.error.resourceUnavaiable", resource_unavaiable_error_view_factory.construct_view);
-		var resource_unavaiable_temoprary_error_view_factory = new Dragonstone.Util.MessageViewFactory("error/resourceUnavaiable/temporary","computer-fail-symbolic",translator);
+		var resource_unavaiable_temoprary_error_view_factory = new Dragonstone.GtkUi.Util.MessageViewFactory("error/resourceUnavaiable/temporary","computer-fail-symbolic",translator);
 		add_view("dragonstone.error.resourceUnavaiable.temporary", resource_unavaiable_temoprary_error_view_factory.construct_view);
-		add_view("dragonstone.error.uri.unknownScheme", () => { return new Dragonstone.View.UnknownUriScheme(translator); });
-		var uri_unknown_scheme_error_cat_view_factory = new Dragonstone.Util.MessageViewFactory("error/uri/unknownScheme","user-available-symbolic",translator,"view.meow.label","view.meow.sublabel");
+		add_view("dragonstone.error.uri.unknownScheme", () => { return new Dragonstone.GtkUi.View.UnknownUriScheme(translator); });
+		var uri_unknown_scheme_error_cat_view_factory = new Dragonstone.GtkUi.Util.MessageViewFactory("error/uri/unknownScheme","user-available-symbolic",translator,"view.meow.label","view.meow.sublabel");
 		add_view("dragonstone.meow", uri_unknown_scheme_error_cat_view_factory.construct_view);
-		add_view("dragonstone.error",() => { return new Dragonstone.View.Error.Generic(); });
-		add_view("dragonstone.text",() => { return new Dragonstone.View.Plaintext(); });
-		add_view("dragonstone.image",() => { return new Dragonstone.View.Image(); });
-		add_view("dragonstone.download",() => { return new Dragonstone.View.Download(translator); });
+		add_view("dragonstone.error",() => { return new Dragonstone.GtkUi.View.Error.Generic(); });
+		add_view("dragonstone.text",() => { return new Dragonstone.GtkUi.View.Plaintext(); });
+		add_view("dragonstone.image",() => { return new Dragonstone.GtkUi.View.Image(); });
+		add_view("dragonstone.download",() => { return new Dragonstone.GtkUi.View.Download(translator); });
 		
 		//add rules
 		add_rule(new ViewRegistryRule("loading","dragonstone.loading"));
@@ -78,7 +78,7 @@ public class Dragonstone.Registry.ViewRegistry : Object {
 	}
 	
 	
-	public Dragonstone.IView? get_view(string? id){
+	public Dragonstone.GtkUi.Interface.View? get_view(string? id){
 		if(id == null){ return null; }
 		if (views.contains(id)){
 			var entry = views.get(id);

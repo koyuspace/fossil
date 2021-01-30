@@ -17,7 +17,7 @@ public class Dragonstone.Startup.Bookmarks.Settings {
 	
 	public static void register_default_settings(Dragonstone.SuperRegistry super_registry){
 		print("[startup][bookmarks][settings] register_default_settings()\n");
-		var provider = super_registry.retrieve("core.settings.default_provider") as Dragonstone.Settings.Provider;
+		var provider = super_registry.retrieve("core.settings.default_provider") as Dragonstone.Interface.Settings.Provider;
 		if (provider == null){
 			print("[startup][bookmarks][settings][error] No default settings provider found!\n");
 			return;

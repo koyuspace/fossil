@@ -1,5 +1,5 @@
-public class Dragonstone.Session.Tls : Dragonstone.ISession, Object {
-	private Dragonstone.ResourceStore backend;
+public class Dragonstone.Session.Tls : Dragonstone.Interface.Session, Object {
+	private Dragonstone.Interface.ResourceStore backend;
 	private Dragonstone.Store.Cache cache = new Dragonstone.Store.Cache();
 	private string _name = "Tls (experimental)";
 	
@@ -7,7 +7,7 @@ public class Dragonstone.Session.Tls : Dragonstone.ISession, Object {
 	public string? tls_certificate_pems = null;
 	public bool use_cache = true;
 	
-	public Tls(Dragonstone.ResourceStore backend){
+	public Tls(Dragonstone.Interface.ResourceStore backend){
 		this.backend = backend;
 	}
 	
@@ -82,16 +82,16 @@ public class Dragonstone.Session.Tls : Dragonstone.ISession, Object {
 		}
 	}
 	
-	public bool set_default_backend(Dragonstone.ResourceStore store){
+	public bool set_default_backend(Dragonstone.Interface.ResourceStore store){
 		backend = store;
 		return true;
 	}
 	
-	public Dragonstone.ResourceStore? get_default_backend(){
+	public Dragonstone.Interface.ResourceStore? get_default_backend(){
 		return backend;
 	}
 	
-	public Dragonstone.Cache? get_cache() {
+	public Dragonstone.Interface.Cache? get_cache() {
 		return cache;
 	}
 	

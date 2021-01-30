@@ -1,8 +1,8 @@
-public class Dragonstone.Session.Uncached : Dragonstone.ISession, Object {
-	private Dragonstone.ResourceStore backend;
+public class Dragonstone.Session.Uncached : Dragonstone.Interface.Session, Object {
+	private Dragonstone.Interface.ResourceStore backend;
 	private string _name = "Uncached";
 	
-	public Uncached(Dragonstone.ResourceStore backend){
+	public Uncached(Dragonstone.Interface.ResourceStore backend){
 		this.backend = backend;
 	}
 	
@@ -20,12 +20,12 @@ public class Dragonstone.Session.Uncached : Dragonstone.ISession, Object {
 		return request;
 	}
 	
-	public bool set_default_backend(Dragonstone.ResourceStore store){
+	public bool set_default_backend(Dragonstone.Interface.ResourceStore store){
 		backend = store;
 		return true;
 	}
 	
-	public Dragonstone.ResourceStore? get_default_backend(){
+	public Dragonstone.Interface.ResourceStore? get_default_backend(){
 		return backend;
 	}
 	

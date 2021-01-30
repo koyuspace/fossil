@@ -6,10 +6,10 @@ public class Dragonstone.Startup.Upload.Gtk {
 		var tempfilebase = GLib.Environment.get_tmp_dir()+"/";
 		if (view_registry != null && translation != null){
 			print("[startup][upload][gtk] setup_views()\n");
-			view_registry.add_view("upload.file",() => { return new Dragonstone.View.UploadFile(translation,mimeguesser); });
+			view_registry.add_view("upload.file",() => { return new Dragonstone.GtkUi.View.UploadFile(translation,mimeguesser); });
 			view_registry.add_view("upload.text",() => {
 				var tempfilepath = tempfilebase+"dragonstone_upload_"+GLib.Uuid.string_random();
-				return new Dragonstone.View.UploadText(tempfilepath,translation,mimeguesser);
+				return new Dragonstone.GtkUi.View.UploadText(tempfilepath,translation,mimeguesser);
 			});
 			view_registry.add_rule(new Dragonstone.Registry.ViewRegistryRule("interactive/upload","upload.file"));
 			view_registry.add_rule(new Dragonstone.Registry.ViewRegistryRule("interactive/upload/text","upload.text"));

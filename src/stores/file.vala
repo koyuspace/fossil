@@ -1,4 +1,4 @@
-public class Dragonstone.Store.File : Object, Dragonstone.ResourceStore {
+public class Dragonstone.Store.File : Object, Dragonstone.Interface.ResourceStore {
 	
 	public Dragonstone.Registry.MimetypeGuesser mimeguesser = null;
 	

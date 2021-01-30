@@ -1,11 +1,11 @@
-class Dragonstone.Store.Switch : Object, Dragonstone.ResourceStore {
+class Dragonstone.Store.Switch : Object, Dragonstone.Interface.ResourceStore {
 
 	private string cacheDirectory = "/tmp";
 	private Dragonstone.Registry.StoreRegistry storeRegistry;
-	private Dragonstone.Cache? cache = null;
+	private Dragonstone.Interface.Cache? cache = null;
 	//private List<Dragonstone.Request> hooked_requests = new Listy<Dragonstone.Request>();
 	
-	public Switch(string? cacheDirectory,Dragonstone.Registry.StoreRegistry storeRegistry,Dragonstone.Cache? cache = null){
+	public Switch(string? cacheDirectory,Dragonstone.Registry.StoreRegistry storeRegistry,Dragonstone.Interface.Cache? cache = null){
 		this.cache = cache;
 		this.storeRegistry = storeRegistry;
 		if (cacheDirectory != null){

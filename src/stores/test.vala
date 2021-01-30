@@ -1,4 +1,4 @@
-public class Dragonstone.Store.Test : Object, Dragonstone.ResourceStore {
+public class Dragonstone.Store.Test : Object, Dragonstone.Interface.ResourceStore {
 
 	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
 		if (filepath == null){

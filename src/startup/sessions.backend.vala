@@ -2,7 +2,7 @@ public class Dragonstone.Startup.Sessions.Backend {
 	public static void register_core_sessions(Dragonstone.SuperRegistry super_registry){
 		print("[startup][sessions] Adding core sessions... \n");
 		var session_registry = (super_registry.retrieve("core.sessions") as Dragonstone.Registry.SessionRegistry);
-		var main_store = (super_registry.retrieve("core.stores.main") as Dragonstone.ResourceStore);
+		var main_store = (super_registry.retrieve("core.stores.main") as Dragonstone.Interface.ResourceStore);
 		if (session_registry == null){
 			print("[startup][sessions][error] No session registry found ...\n");
 			return;

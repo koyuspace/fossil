@@ -5,7 +5,7 @@ public class Dragonstone.Startup.Cache.Gtk {
 		if (view_registry != null){
 			print("[startup][cache] setup_views\n");
 			view_registry.add_view("dragonstone.cacheview",() => {
-				return new Dragonstone.View.Cache(translation);
+				return new Dragonstone.GtkUi.View.Cache(translation);
 			});
 			view_registry.add_rule(new Dragonstone.Registry.ViewRegistryRule("interactive/cache","dragonstone.cacheview"));
 		}

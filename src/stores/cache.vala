@@ -1,4 +1,4 @@
-public class Dragonstone.Store.Cache : Object, Dragonstone.ResourceStore, Dragonstone.Cache{
+public class Dragonstone.Store.Cache : Object, Dragonstone.Interface.ResourceStore, Dragonstone.Interface.Cache{
 	
 	public HashTable<string,Dragonstone.Resource> cached_resources { get; protected set; }
 	

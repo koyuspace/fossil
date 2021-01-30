@@ -6,7 +6,7 @@ public class Dragonstone.Startup.Bookmarks.Gtk {
 		if (view_registry != null && bookmark_registry != null){
 			print("[startup][bookmarks] setup_views\n");
 			view_registry.add_view("dragonstone.bookmarks",() => {
-				return new Dragonstone.View.Bookmarks(bookmark_registry,translation);
+				return new Dragonstone.GtkUi.View.Bookmarks(bookmark_registry,translation);
 			});
 			view_registry.add_rule(new Dragonstone.Registry.ViewRegistryRule("interactive/bookmarks","dragonstone.bookmarks"));
 		}

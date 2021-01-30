@@ -1,4 +1,4 @@
-public class Dragonstone.Session.Dummy : Dragonstone.ISession, Object {
+public class Dragonstone.Session.Dummy : Dragonstone.Interface.Session, Object {
 	private string _name = "Dummy";
 	
 	public Dragonstone.Request make_download_request(string uri, bool reload=false){
@@ -14,15 +14,15 @@ public class Dragonstone.Session.Dummy : Dragonstone.ISession, Object {
 		return request;
 	}
 	
-	public bool set_default_backend(Dragonstone.ResourceStore store){
+	public bool set_default_backend(Dragonstone.Interface.ResourceStore store){
 		return false;
 	}
 	
-	public Dragonstone.ResourceStore? get_default_backend(){
+	public Dragonstone.Interface.ResourceStore? get_default_backend(){
 		return null;
 	}
 	
-	public Dragonstone.Cache? get_cache() {
+	public Dragonstone.Interface.Cache? get_cache() {
 		return null;
 	}
 	

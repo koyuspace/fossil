@@ -2,20 +2,15 @@ executable(
 	meson.project_name(),
 	
 	##_FILES_##
-	'cache.vala', #AUTOUPDATE_FILE
 	'downloader.vala', #AUTOUPDATE_FILE
-	'dragonstoneApp.vala', #AUTOUPDATE_FILE
 	'external.vala', #AUTOUPDATE_FILE
 	'main.vala', #AUTOUPDATE_FILE
 	'request.vala', #AUTOUPDATE_FILE
 	'resource.vala', #AUTOUPDATE_FILE
-	'resourceStore.vala', #AUTOUPDATE_FILE
-	'session.vala', #AUTOUPDATE_FILE
-	'settings.vala', #AUTOUPDATE_FILE
 	'asm/argparse.vala', #AUTOUPDATE_FILE
 	'asm/asm.vala', #AUTOUPDATE_FILE
-	'asm/simpleAsmObject.vala', #AUTOUPDATE_FILE
-	'asm/superRegistryConstructorFunctionProvider.vala', #AUTOUPDATE_FILE
+	'asm/simple_asmObject.vala', #AUTOUPDATE_FILE
+	'asm/super_registry_constructor_function_provider.vala', #AUTOUPDATE_FILE
 	'asm_init/about.store.vala', #AUTOUPDATE_FILE
 	'asm_init/bookmarks.registry.vala', #AUTOUPDATE_FILE
 	'asm_init/file.store.vala', #AUTOUPDATE_FILE
@@ -29,6 +24,56 @@ executable(
 	'asm_init/store.registry.vala', #AUTOUPDATE_FILE
 	'asm_init/switch.store.vala', #AUTOUPDATE_FILE
 	'asm_init/uri_autoprefix.registry.vala', #AUTOUPDATE_FILE
+	'gtk_ui/application.vala', #AUTOUPDATE_FILE
+	'gtk_ui/interface/view.vala', #AUTOUPDATE_FILE
+	'gtk_ui/util/default_gtk_link_icon_loader.vala', #AUTOUPDATE_FILE
+	'gtk_ui/util/gtk_scroll_export.vala', #AUTOUPDATE_FILE
+	'gtk_ui/util/message_view_factory.vala', #AUTOUPDATE_FILE
+	'gtk_ui/views/bookmarks.vala', #AUTOUPDATE_FILE
+	'gtk_ui/views/cache.vala', #AUTOUPDATE_FILE
+	'gtk_ui/views/directory.vala', #AUTOUPDATE_FILE
+	'gtk_ui/views/download.vala', #AUTOUPDATE_FILE
+	'gtk_ui/views/error_generic.vala', #AUTOUPDATE_FILE
+	'gtk_ui/views/geminiInput.vala', #AUTOUPDATE_FILE
+	'gtk_ui/views/geminitext.vala', #AUTOUPDATE_FILE
+	'gtk_ui/views/gophertext.vala', #AUTOUPDATE_FILE
+	'gtk_ui/views/image.vala', #AUTOUPDATE_FILE
+	'gtk_ui/views/label.vala', #AUTOUPDATE_FILE
+	'gtk_ui/views/loading.vala', #AUTOUPDATE_FILE
+	'gtk_ui/views/message.vala', #AUTOUPDATE_FILE
+	'gtk_ui/views/plaintext.vala', #AUTOUPDATE_FILE
+	'gtk_ui/views/redirect.vala', #AUTOUPDATE_FILE
+	'gtk_ui/views/tls_session.vala', #AUTOUPDATE_FILE
+	'gtk_ui/views/unknown_uri_scheme.vala', #AUTOUPDATE_FILE
+	'gtk_ui/views/upload_file.vala', #AUTOUPDATE_FILE
+	'gtk_ui/views/upload_text.vala', #AUTOUPDATE_FILE
+	'gtk_ui/views/uri_error_generic.vala', #AUTOUPDATE_FILE
+	'gtk_ui/views/uri_merge_test.vala', #AUTOUPDATE_FILE
+	'gtk_ui/widgets/bookmark_adder.vala', #AUTOUPDATE_FILE
+	'gtk_ui/widgets/bookmark_editor.vala', #AUTOUPDATE_FILE
+	'gtk_ui/widgets/cacheview.vala', #AUTOUPDATE_FILE
+	'gtk_ui/widgets/dialog_view_base.vala', #AUTOUPDATE_FILE
+	'gtk_ui/widgets/header_bar.vala', #AUTOUPDATE_FILE
+	'gtk_ui/widgets/hyper_text_content.vala', #AUTOUPDATE_FILE
+	'gtk_ui/widgets/link_button.vala', #AUTOUPDATE_FILE
+	'gtk_ui/widgets/link_popover.vala', #AUTOUPDATE_FILE
+	'gtk_ui/widgets/menu_entrys.vala', #AUTOUPDATE_FILE
+	'gtk_ui/widgets/request_argument_display.vala', #AUTOUPDATE_FILE
+	'gtk_ui/widgets/session_chooser.vala', #AUTOUPDATE_FILE
+	'gtk_ui/widgets/subview_base.vala', #AUTOUPDATE_FILE
+	'gtk_ui/widgets/tab.vala', #AUTOUPDATE_FILE
+	'gtk_ui/widgets/tab_head.vala', #AUTOUPDATE_FILE
+	'gtk_ui/widgets/text_content.vala', #AUTOUPDATE_FILE
+	'gtk_ui/widgets/text_entry.vala', #AUTOUPDATE_FILE
+	'gtk_ui/widgets/view_chooser.vala', #AUTOUPDATE_FILE
+	'gtk_ui/widgets/window.vala', #AUTOUPDATE_FILE
+	'interface/cache.i.vala', #AUTOUPDATE_FILE
+	'interface/resource_store.i.vala', #AUTOUPDATE_FILE
+	'interface/session.i.vala', #AUTOUPDATE_FILE
+	'interface/settings/bridge.i.vala', #AUTOUPDATE_FILE
+	'interface/settings/provider.i.vala', #AUTOUPDATE_FILE
+	'interface/settings/rom.vala', #AUTOUPDATE_FILE
+	'interface/settings/rom_provider.i.vala', #AUTOUPDATE_FILE
 	'registries/bookmarkRegistry.vala', #AUTOUPDATE_FILE
 	'registries/gopher.vala', #AUTOUPDATE_FILE
 	'registries/mimeguesser.vala', #AUTOUPDATE_FILE
@@ -43,10 +88,10 @@ executable(
 	'sessions/dummy.vala', #AUTOUPDATE_FILE
 	'sessions/tls.vala', #AUTOUPDATE_FILE
 	'sessions/uncached.vala', #AUTOUPDATE_FILE
-	'settings/bookmarkSettingsBridge.vala', #AUTOUPDATE_FILE
-	'settings/fileSettingsProvider.vala', #AUTOUPDATE_FILE
-	'settings/kvSettingsBridge.vala', #AUTOUPDATE_FILE
-	'settings/ramSettingsProvider.vala', #AUTOUPDATE_FILE
+	'settings/bookmark_settings_bridge.vala', #AUTOUPDATE_FILE
+	'settings/file_settings_provider.vala', #AUTOUPDATE_FILE
+	'settings/kv_settings_bridge.vala', #AUTOUPDATE_FILE
+	'settings/ram_settings_provider.vala', #AUTOUPDATE_FILE
 	'startup/about.backend.vala', #AUTOUPDATE_FILE
 	'startup/bookmarks.backend.vala', #AUTOUPDATE_FILE
 	'startup/bookmarks.gtk.vala', #AUTOUPDATE_FILE
@@ -84,57 +129,15 @@ executable(
 	'stores/gopherwrite.vala', #AUTOUPDATE_FILE
 	'stores/switch.vala', #AUTOUPDATE_FILE
 	'stores/test.vala', #AUTOUPDATE_FILE
-	'util/connectionHelper.vala', #AUTOUPDATE_FILE
-	'util/defaultGtkLinkIconLoader.vala', #AUTOUPDATE_FILE
+	'util/connection_helper.vala', #AUTOUPDATE_FILE
 	'util/flaglist.vala', #AUTOUPDATE_FILE
-	'util/gtkScrollExport.vala', #AUTOUPDATE_FILE
 	'util/intparser.vala', #AUTOUPDATE_FILE
 	'util/kv.vala', #AUTOUPDATE_FILE
-	'util/messageViewFactory.vala', #AUTOUPDATE_FILE
-	'util/resourceFileHelper.vala', #AUTOUPDATE_FILE
-	'util/settingsFetcher.vala', #AUTOUPDATE_FILE
+	'util/resource_file_helper.vala', #AUTOUPDATE_FILE
+	'util/settings_fetcher.vala', #AUTOUPDATE_FILE
 	'util/stack.vala', #AUTOUPDATE_FILE
-	'util/tlsCertificateGenerator.vala', #AUTOUPDATE_FILE
+	'util/tls_certificate_generator.vala', #AUTOUPDATE_FILE
 	'util/uri.vala', #AUTOUPDATE_FILE
-	'widgets/bookmarkAdder.vala', #AUTOUPDATE_FILE
-	'widgets/bookmarkEditor.vala', #AUTOUPDATE_FILE
-	'widgets/cacheview.vala', #AUTOUPDATE_FILE
-	'widgets/dialogViewBase.vala', #AUTOUPDATE_FILE
-	'widgets/headerBar.vala', #AUTOUPDATE_FILE
-	'widgets/hyperTextContent.vala', #AUTOUPDATE_FILE
-	'widgets/linkButton.vala', #AUTOUPDATE_FILE
-	'widgets/linkPopover.vala', #AUTOUPDATE_FILE
-	'widgets/menuEntrys.vala', #AUTOUPDATE_FILE
-	'widgets/requestArgumentDisplay.vala', #AUTOUPDATE_FILE
-	'widgets/sessionChooser.vala', #AUTOUPDATE_FILE
-	'widgets/subviewBase.vala', #AUTOUPDATE_FILE
-	'widgets/tab.vala', #AUTOUPDATE_FILE
-	'widgets/tabHead.vala', #AUTOUPDATE_FILE
-	'widgets/textContent.vala', #AUTOUPDATE_FILE
-	'widgets/textEntry.vala', #AUTOUPDATE_FILE
-	'widgets/view.vala', #AUTOUPDATE_FILE
-	'widgets/viewChooser.vala', #AUTOUPDATE_FILE
-	'widgets/views/bookmarks.vala', #AUTOUPDATE_FILE
-	'widgets/views/cache.vala', #AUTOUPDATE_FILE
-	'widgets/views/directory.vala', #AUTOUPDATE_FILE
-	'widgets/views/download.vala', #AUTOUPDATE_FILE
-	'widgets/views/errorGeneric.vala', #AUTOUPDATE_FILE
-	'widgets/views/geminiInput.vala', #AUTOUPDATE_FILE
-	'widgets/views/geminitext.vala', #AUTOUPDATE_FILE
-	'widgets/views/gophertext.vala', #AUTOUPDATE_FILE
-	'widgets/views/image.vala', #AUTOUPDATE_FILE
-	'widgets/views/label.vala', #AUTOUPDATE_FILE
-	'widgets/views/loading.vala', #AUTOUPDATE_FILE
-	'widgets/views/message.vala', #AUTOUPDATE_FILE
-	'widgets/views/plaintext.vala', #AUTOUPDATE_FILE
-	'widgets/views/redirect.vala', #AUTOUPDATE_FILE
-	'widgets/views/tlsSession.vala', #AUTOUPDATE_FILE
-	'widgets/views/unknownUriScheme.vala', #AUTOUPDATE_FILE
-	'widgets/views/uploadFile.vala', #AUTOUPDATE_FILE
-	'widgets/views/uploadText.vala', #AUTOUPDATE_FILE
-	'widgets/views/uriErrorGeneric.vala', #AUTOUPDATE_FILE
-	'widgets/views/uriMergeTest.vala', #AUTOUPDATE_FILE
-	'widgets/window.vala', #AUTOUPDATE_FILE
 	
 	dependencies: [
 		dependency('gtk+-3.0'),

@@ -1,4 +1,4 @@
-public class Dragonstone.Store.GeminiUpload : Object, Dragonstone.ResourceStore {
+public class Dragonstone.Store.GeminiUpload : Object, Dragonstone.Interface.ResourceStore {
 	
 	public int32 default_resource_lifetime = 1000*60*30; //30 minutes
 	public Dragonstone.Util.ConnectionHelper connection_helper = new Dragonstone.Util.ConnectionHelper();

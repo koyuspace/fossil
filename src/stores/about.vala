@@ -1,6 +1,6 @@
-public class Dragonstone.Store.About : Object, Dragonstone.ResourceStore {
+public class Dragonstone.Store.About : Object, Dragonstone.Interface.ResourceStore {
 	
-	private HashTable<string,Dragonstone.ResourceStore> substores = new HashTable<string,Dragonstone.ResourceStore>(str_hash, str_equal);
+	private HashTable<string,Dragonstone.Interface.ResourceStore> substores = new HashTable<string,Dragonstone.Interface.ResourceStore>(str_hash, str_equal);
 	
 	construct {
 		this.set_sub_store("blank",new Dragonstone.Store.AboutStore.FixedText(""));
@@ -16,7 +16,7 @@ public class Dragonstone.Store.About : Object, Dragonstone.ResourceStore {
 		}
 	}
 	
-	public void set_sub_store(string about_what, Dragonstone.ResourceStore? substore){
+	public void set_sub_store(string about_what, Dragonstone.Interface.ResourceStore? substore){
 		if(substore != null) {
 			print("[about] registred about:"+about_what+"\n");
 			substores.set("about:"+about_what,substore);
@@ -27,7 +27,7 @@ public class Dragonstone.Store.About : Object, Dragonstone.ResourceStore {
 	
 }
 
-public class Dragonstone.Store.AboutStore.FixedText : Object, Dragonstone.ResourceStore {
+public class Dragonstone.Store.AboutStore.FixedText : Object, Dragonstone.Interface.ResourceStore {
 	
 	public string text;
 	public string mimetype;
@@ -62,7 +62,7 @@ public class Dragonstone.Store.AboutStore.FixedText : Object, Dragonstone.Resour
 	
 }
 
-public class Dragonstone.Store.AboutStore.FixedStatus : Object, Dragonstone.ResourceStore {
+public class Dragonstone.Store.AboutStore.FixedStatus : Object, Dragonstone.Interface.ResourceStore {
 	
 	public string status;
 	public string substatus;

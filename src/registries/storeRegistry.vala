@@ -5,12 +5,12 @@ public class Dragonstone.Registry.StoreRegistry : Object {
 		this.add_resource_store("test://",new Dragonstone.Store.Test());
 	}
 	
-	public void add_resource_store(string prefix,Dragonstone.ResourceStore store){
+	public void add_resource_store(string prefix,Dragonstone.Interface.ResourceStore store){
 		stores.append(new Dragonstone.Registry.StoreRegistryEntry(prefix,store));
 	}
 	
-	public Dragonstone.ResourceStore? get_closest_match(string uri){
-		Dragonstone.ResourceStore best_match = null;
+	public Dragonstone.Interface.ResourceStore? get_closest_match(string uri){
+		Dragonstone.Interface.ResourceStore best_match = null;
 		uint closest_match_length = 0;
 		foreach(Dragonstone.Registry.StoreRegistryEntry entry in stores){
 			if (uri.has_prefix(entry.prefix) && entry.prefix.length > closest_match_length){
@@ -25,9 +25,9 @@ public class Dragonstone.Registry.StoreRegistry : Object {
 
 private class Dragonstone.Registry.StoreRegistryEntry {
 	public string prefix;
-	public Dragonstone.ResourceStore store;
+	public Dragonstone.Interface.ResourceStore store;
 	
-	public StoreRegistryEntry(string prefix,Dragonstone.ResourceStore store){
+	public StoreRegistryEntry(string prefix,Dragonstone.Interface.ResourceStore store){
 		this.prefix = prefix;
 		this.store = store;
 	}

@@ -1,4 +1,4 @@
-public class Dragonstone.Store.GeminiWrite : Object, Dragonstone.ResourceStore {
+public class Dragonstone.Store.GeminiWrite : Object, Dragonstone.Interface.ResourceStore {
 	
 	public int32 default_resource_lifetime = 1000*60*30; //30 minutes
 	public Dragonstone.Util.ConnectionHelper connection_helper = new Dragonstone.Util.ConnectionHelper();

@@ -1,7 +1,7 @@
-public class Dragonstone.Registry.SettingsRegistry : Dragonstone.Settings.Provider, Object {
-	public List<Dragonstone.Settings.Provider> providers = new List<Dragonstone.Settings.Provider>();
+public class Dragonstone.Registry.SettingsRegistry : Dragonstone.Interface.Settings.Provider, Object {
+	public List<Dragonstone.Interface.Settings.Provider> providers = new List<Dragonstone.Interface.Settings.Provider>();
 	
-	public void add_provider(Dragonstone.Settings.Provider provider){
+	public void add_provider(Dragonstone.Interface.Settings.Provider provider){
 		providers.prepend(provider);
 	}
 	
@@ -14,7 +14,7 @@ public class Dragonstone.Registry.SettingsRegistry : Dragonstone.Settings.Provid
 		return false;
 	}
 	
-	public Dragonstone.Settings.Rom? get_object(string id){
+	public Dragonstone.Interface.Settings.Rom? get_object(string id){
 		foreach (var provider in providers){
 			var object = provider.get_object(id);
 			if (object != null){
@@ -42,13 +42,13 @@ public class Dragonstone.Registry.SettingsRegistry : Dragonstone.Settings.Provid
 		return false;
 	}
 	
-	public HashTable<string,Dragonstone.Settings.Bridge> bridges = new HashTable<string,Dragonstone.Settings.Bridge>(str_hash, str_equal);
+	public HashTable<string,Dragonstone.Interface.Settings.Bridge> bridges = new HashTable<string,Dragonstone.Interface.Settings.Bridge>(str_hash, str_equal);
 	
-	public void add_bridge(string name, Dragonstone.Settings.Bridge bridge){
+	public void add_bridge(string name, Dragonstone.Interface.Settings.Bridge bridge){
 		bridges.set(name,bridge);
 	}
 	
-	public Dragonstone.Settings.Bridge? get_bridge(string name){
+	public Dragonstone.Interface.Settings.Bridge? get_bridge(string name){
 		return bridges.get(name);
 	}
 	
