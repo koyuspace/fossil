@@ -2,10 +2,10 @@ public class Dragonstone.GtkUi.View.Geminitext : Dragonstone.GtkUi.Widget.HyperT
 	
 	private Dragonstone.Request request = null;
 	private DataInputStream data_input_stream;
-	private Dragonstone.Tab tab;
+	private Dragonstone.GtkUi.Tab tab;
 	private int maxlines = 30000;
 	
-	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
+	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
 		this.tab = tab;
 		this.link_popover = new Dragonstone.GtkUi.Widget.LinkButtonPopover(tab);
 		if (request.status == "success" && request.resource.mimetype.has_prefix("text/gemini")){

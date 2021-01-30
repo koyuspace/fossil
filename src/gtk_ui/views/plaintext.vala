@@ -12,7 +12,7 @@ public class Dragonstone.GtkUi.View.Plaintext : Gtk.ScrolledWindow, Dragonstone.
 		add(textview);
 	}
 	
-	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
+	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
 		if ((request.status == "success") && request.resource.mimetype.has_prefix("text/")){
 			string text = "";
 			var file = File.new_for_path (request.resource.filepath);

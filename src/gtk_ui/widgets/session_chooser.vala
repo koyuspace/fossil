@@ -1,5 +1,5 @@
 public class Dragonstone.GtkUi.Widget.SessionChooser : Gtk.ComboBoxText {
-	private Dragonstone.Tab? tab = null;
+	private Dragonstone.GtkUi.Tab? tab = null;
 	private bool tab_changing = false;
 	
 	public SessionChooser(){
@@ -7,7 +7,7 @@ public class Dragonstone.GtkUi.Widget.SessionChooser : Gtk.ComboBoxText {
 		this.changed.connect(on_change);
 	}
 	
-	public void use_tab(Dragonstone.Tab? tab){
+	public void use_tab(Dragonstone.GtkUi.Tab? tab){
 		tab_changing = true;
 		if (this.tab != null){
 			this.tab.on_session_change.disconnect(update_active_id);

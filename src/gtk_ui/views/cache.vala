@@ -1,7 +1,7 @@
 public class Dragonstone.GtkUi.View.Cache : Gtk.Bin, Dragonstone.GtkUi.Interface.View {
 	
 	private Dragonstone.Request? request = null;
-	private Dragonstone.Tab? tab = null;
+	private Dragonstone.GtkUi.Tab? tab = null;
 	private Dragonstone.Registry.TranslationRegistry? translation = null;
 	private Dragonstone.GtkUi.Widget.CacheView? cacheview = null;
 	
@@ -9,7 +9,7 @@ public class Dragonstone.GtkUi.View.Cache : Gtk.Bin, Dragonstone.GtkUi.Interface
 		this.translation = translation;
 	}
 	
-	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
+	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
 		if (!(request.status == "interactive/cache")) {return false;}
 		this.request = request;
 		this.tab = tab;

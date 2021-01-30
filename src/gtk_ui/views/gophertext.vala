@@ -1,7 +1,7 @@
 public class Dragonstone.GtkUi.View.Gophertext : Dragonstone.GtkUi.Widget.HyperTextContent, Dragonstone.GtkUi.Interface.View {
 	
 	private Dragonstone.Request request = null;
-	private Dragonstone.Tab tab;
+	private Dragonstone.GtkUi.Tab tab;
 	
 	private Dragonstone.Registry.MimetypeGuesser mimeguesser;
 	private Dragonstone.Registry.GopherTypeRegistry type_registry;
@@ -31,7 +31,7 @@ public class Dragonstone.GtkUi.View.Gophertext : Dragonstone.GtkUi.Widget.HyperT
 	}
 	
 	
-	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
+	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
 		this.tab = tab;
 		if (request.status == "success" && request.resource.mimetype.has_prefix("text/gopher")){
 			var file = File.new_for_path(request.resource.filepath);

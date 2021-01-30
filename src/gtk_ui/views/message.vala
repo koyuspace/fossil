@@ -13,7 +13,7 @@ public class Dragonstone.GtkUi.View.Message : Dragonstone.GtkUi.Widget.DialogVie
 		show_all();
 	}
 	
-	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
+	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
 		if (!(request.status.has_prefix(status))) {return false;}
 		this.request = request;
 		error_label.label = request.status+"\n"+request.substatus;

@@ -1,6 +1,6 @@
 public class Dragonstone.GtkUi.Widget.ViewChooser : Gtk.ComboBoxText {
 	
-	private Dragonstone.Tab? tab = null;
+	private Dragonstone.GtkUi.Tab? tab = null;
 	private bool tab_changing = false;
 	private bool id_changing = false;
 	
@@ -9,7 +9,7 @@ public class Dragonstone.GtkUi.Widget.ViewChooser : Gtk.ComboBoxText {
 		this.changed.connect(on_change);
 	}
 	
-	public void use_tab(Dragonstone.Tab? tab){
+	public void use_tab(Dragonstone.GtkUi.Tab? tab){
 		tab_changing = true;
 		if (this.tab != null){
 			this.tab.view_chooser.scores_changed.disconnect(repopulate);

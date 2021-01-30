@@ -1,7 +1,7 @@
 public class Dragonstone.GtkUi.View.TlsSession : Gtk.ScrolledWindow, Dragonstone.GtkUi.Interface.View{
 
 	private Dragonstone.Request? request = null;
-	private Dragonstone.Tab? tab = null;
+	private Dragonstone.GtkUi.Tab? tab = null;
 	private Dragonstone.Registry.TranslationRegistry? translation = null;
 	private Dragonstone.Session.Tls? session = null;
 	
@@ -15,7 +15,7 @@ public class Dragonstone.GtkUi.View.TlsSession : Gtk.ScrolledWindow, Dragonstone
 		this.translation = translation;
 	}
 	
-	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
+	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
 		if (!(request.status == "interactive/tls_session")) {return false;}
 		this.request = request;
 		this.tab = tab;

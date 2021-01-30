@@ -1,7 +1,7 @@
 public class Dragonstone.GtkUi.View.Bookmarks : Gtk.Stack, Dragonstone.GtkUi.Interface.View {
 	
 	private Dragonstone.Request? request = null;
-	private Dragonstone.Tab? tab = null;
+	private Dragonstone.GtkUi.Tab? tab = null;
 	private Dragonstone.Registry.TranslationRegistry? translation = null;
 	private Dragonstone.Registry.BookmarkRegistry bookmark_registry;
 	
@@ -144,7 +144,7 @@ public class Dragonstone.GtkUi.View.Bookmarks : Gtk.Stack, Dragonstone.GtkUi.Int
 		filterstore.set_visible_func(filter_visible_function);
 	}
 	
-	public bool displayResource(Dragonstone.Request request,Dragonstone.Tab tab, bool as_subview){
+	public bool display_resource(Dragonstone.Request request,Dragonstone.GtkUi.Tab tab, bool as_subview){
 		if (!(request.status == "interactive/bookmarks" || as_subview)) { return false; }
 		this.request = request;
 		this.tab = tab;

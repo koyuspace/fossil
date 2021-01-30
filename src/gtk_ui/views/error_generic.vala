@@ -14,7 +14,7 @@ public class Dragonstone.GtkUi.View.Error.Generic : Dragonstone.GtkUi.Widget.Dia
 	
 	}
 	
-	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
+	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
 		//if (!(request.status.has_prefix("error/") || request.status == "error")) {return false;}
 		view_status = request.status;
 		this.request = request;

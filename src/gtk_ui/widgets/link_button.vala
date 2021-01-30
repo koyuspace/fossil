@@ -1,10 +1,10 @@
 public class Dragonstone.GtkUi.Widget.LinkButton : Gtk.Button {
 
 	string uri;	
-	private Dragonstone.Tab tab;
+	private Dragonstone.GtkUi.Tab tab;
 	private Gtk.GestureLongPress long_press_gesture;
 	
-	public LinkButton(Dragonstone.Tab tab,string name,string uri,string? icon_name = null){
+	public LinkButton(Dragonstone.GtkUi.Tab tab,string name,string uri,string? icon_name = null){
 		this.tab = tab;
 		var icon_name_ = icon_name;
 		halign = Gtk.Align.START;
@@ -79,14 +79,14 @@ public class Dragonstone.GtkUi.Widget.LinkButton : Gtk.Button {
 
 public class Dragonstone.GtkUi.Widget.LinkButtonPopover : Dragonstone.GtkUi.Widget.LinkPopover,Gtk.Popover {
 	
-	public Dragonstone.Tab tab;
+	public Dragonstone.GtkUi.Tab tab;
 	public string? uri { get; set; }
 	
 	private Dragonstone.GtkUi.Widget.MenuBigTextDisplay uri_display;
 	private Gtk.Button open_in_new_tab_button;
 	private Gtk.Button open_externally_button;
 	
-	public LinkButtonPopover(Dragonstone.Tab tab, string? uri = null){
+	public LinkButtonPopover(Dragonstone.GtkUi.Tab tab, string? uri = null){
 		this.tab = tab;
 		this.uri = null; //uri gets set below with use_uri(uri);
 		//this.constrain_to = Gtk.PopoverConstraint.WINDOW;

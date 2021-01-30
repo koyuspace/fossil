@@ -21,7 +21,7 @@ public class Dragonstone.GtkUi.Widget.DialogViewBase : Gtk.Box {
 		this.backbutton.hide();
 	}
 	
-	public void use_as_subview(Dragonstone.Tab tab){
+	public void use_as_subview(Dragonstone.GtkUi.Tab tab){
 		this.actionbar.show();
 		this.backbutton.show();
 		this.backbutton.clicked.connect(tab.go_back_subview);

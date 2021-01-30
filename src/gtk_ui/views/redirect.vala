@@ -19,7 +19,7 @@ public class Dragonstone.GtkUi.View.Redirect : Dragonstone.GtkUi.Widget.DialogVi
 		show_all();
 	}
 	
-	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
+	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
 		if (!(request.status.has_prefix("redirect"))) {return false;}
 		this.request = request;
 		buttonlabel.label = request.substatus;

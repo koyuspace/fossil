@@ -1,4 +1,4 @@
-public class Dragonstone.Tab : Gtk.Bin {
+public class Dragonstone.GtkUi.Tab : Gtk.Bin {
 	private string _uri = "";
 	public string uri {
 		get { return _uri; }
@@ -14,7 +14,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	public signal void uri_changed(string uri);
 	public Dragonstone.Util.Stack<TabHistoryEntry> history = new Dragonstone.Util.Stack<TabHistoryEntry>();
 	public Dragonstone.Util.Stack<TabHistoryEntry> forward = new Dragonstone.Util.Stack<TabHistoryEntry>();
-	public Dragonstone.TabHistoryEntry currently_displayed_page = new Dragonstone.TabHistoryEntry();
+	public Dragonstone.GtkUi.TabHistoryEntry currently_displayed_page = new Dragonstone.GtkUi.TabHistoryEntry();
 	public Dragonstone.SuperRegistry super_registry { get; construct; }
 	public Dragonstone.Registry.TranslationRegistry translation;
 	public Gtk.Window parent_window; //only for use with dialog windows
@@ -219,7 +219,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	private void push_history(){
 		export_view_data();
 		history.push(currently_displayed_page);
-		currently_displayed_page = new Dragonstone.TabHistoryEntry();
+		currently_displayed_page = new Dragonstone.GtkUi.TabHistoryEntry();
 		forward.clear();
 	}
 	
@@ -265,7 +265,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 				}
 					view = view_registry.get_view(current_view_id);
 				if (view != null){
-					if(view.displayResource(request,this,as_subview)){
+					if(view.display_resource(request,this,as_subview)){
 						print(@"Trying to import view data $current_view_id\n");
 						string? data = currently_displayed_page.persistance_values.get(current_view_id);
 						if (data != null){
@@ -395,7 +395,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 		apply_tab_history_entry(entry);
 	}
 	
-	public void apply_tab_history_entry(Dragonstone.TabHistoryEntry? entry){
+	public void apply_tab_history_entry(Dragonstone.GtkUi.TabHistoryEntry? entry){
 		if (entry != null){
 			currently_displayed_page = entry;
 			load_uri(currently_displayed_page.uri,false,entry.view);
@@ -485,7 +485,7 @@ public class Dragonstone.Tab : Gtk.Bin {
 	
 }
 
-public class Dragonstone.TabHistoryEntry : Object {
+public class Dragonstone.GtkUi.TabHistoryEntry : Object {
 	public string uri = "";
 	public string? view = null;
 	//subview history
@@ -502,6 +502,6 @@ public class Dragonstone.TabHistoryEntry : Object {
 	}
 }
 
-public class Dragonstone.TabSubviewHistoryEntry : Object {
+public class Dragonstone.GtkUi.TabSubviewHistoryEntry : Object {
 	public string view;
 }

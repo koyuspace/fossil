@@ -3,7 +3,7 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 	public Gtk.Notebook tabs { get; construct; }
 	public Dragonstone.Window parent_window { get; construct; }
 	public Dragonstone.SuperRegistry super_registry { get; construct; }
-	public Dragonstone.Tab current_tab { get; protected set; }
+	public Dragonstone.GtkUi.Tab current_tab { get; protected set; }
 	public Dragonstone.Registry.UriAutoprefix uri_autoprefixer;
 	
 	public Gtk.Entry addressfield;
@@ -263,11 +263,11 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 			current_tab.uri_changed.disconnect(onUriChanged);
 		}
 		//set new tab
-		if (!(tab is Dragonstone.Tab || tab == null)) {
+		if (!(tab is Dragonstone.GtkUi.Tab || tab == null)) {
 			switching_tab = false;
 			return;
 		}
-		current_tab = tab as Dragonstone.Tab;
+		current_tab = tab as Dragonstone.GtkUi.Tab;
 		view_chooser.use_tab(current_tab);
 		session_chooser.use_tab(current_tab);
 		if (current_tab != null) {

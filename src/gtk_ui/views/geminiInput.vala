@@ -9,7 +9,7 @@ public class Dragonstone.GtkUi.View.GeminiInput : Dragonstone.GtkUi.Widget.Dialo
 		this.append_big_headline(">_");
 	}
 	
-	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
+	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
 		if (!(request.status == "success" && request.resource.mimetype == "gemini/input")) {return false;}
 		this.request = request;
 		this.append_small_headline(request.resource.name);

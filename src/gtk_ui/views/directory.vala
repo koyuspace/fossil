@@ -1,7 +1,7 @@
 public class Dragonstone.GtkUi.View.Directory : Gtk.Box, Dragonstone.GtkUi.Interface.View {
 	
 	private Dragonstone.Request request = null;
-	private Dragonstone.Tab tab = null;
+	private Dragonstone.GtkUi.Tab tab = null;
 	private Gtk.ListStore liststore = new Gtk.ListStore(3,typeof(string),typeof(string),typeof(string));
 	private HashTable<string,Gtk.TreeIter?> displayed_uris = new HashTable<string,Gtk.TreeIter?>(str_hash, str_equal);
 	private Gtk.TreeModelFilter filterstore;
@@ -243,7 +243,7 @@ public class Dragonstone.GtkUi.View.Directory : Gtk.Box, Dragonstone.GtkUi.Inter
 		return urival.get_string();
 	}
 	
-	public bool displayResource(Dragonstone.Request request, Dragonstone.Tab tab, bool as_subview){
+	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
 		if (!(request.status == "success" && request.resource.mimetype == "text/dragonstone-directory")) {return false;}
 		this.request = request;
 		this.tab = tab;

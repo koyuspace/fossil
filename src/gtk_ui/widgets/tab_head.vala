@@ -2,12 +2,12 @@
 public class Dragonstone.GtkUi.Widget.TabHead : Gtk.Box {
 	private Gtk.Button close_button;
 	private Gtk.Label title = new Gtk.Label("💫️ New Tab");
-	private Dragonstone.Tab tab;
+	private Dragonstone.GtkUi.Tab tab;
 	private Gtk.Spinner spinner = new Gtk.Spinner();
 	private Gtk.Image error_icon = new Gtk.Image.from_icon_name("dialog-error", Gtk.IconSize.LARGE_TOOLBAR);
 	private int title_chars = 25;
 	
-	public TabHead(Dragonstone.Tab tab) {
+	public TabHead(Dragonstone.GtkUi.Tab tab) {
 		close_button = new Gtk.Button.from_icon_name("window-close-symbolic");
 		close_button.relief = Gtk.ReliefStyle.NONE;
 		this.orientation = Gtk.Orientation.HORIZONTAL;
