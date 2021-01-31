@@ -96,7 +96,8 @@ public class Dragonstone.Ui.Document.TokenParser.Gopher : Dragonstone.Interface.
 	
 	public void reset(){
 		this.input_stream = null;
-		lasttype = '\0';
+		this.lasttype = '\0';
+		this.last_was_text = false;
 	}
 
 }
