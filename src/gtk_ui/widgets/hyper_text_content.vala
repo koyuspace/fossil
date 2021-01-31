@@ -9,6 +9,13 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 	protected Gtk.TextTag h1_tag;
 	protected Gtk.TextTag h2_tag;
 	protected Gtk.TextTag h3_tag;
+	protected Gtk.TextTag quote_tag;
+	protected Gtk.TextTag list_item_tag;
+	protected Gtk.TextTag description_tag;
+	protected Gtk.TextTag preformatted_paragraph_tag;
+	protected Gtk.TextTag preformatted_tag;
+	protected Gtk.TextTag parser_error_tag;
+	protected Gtk.TextTag error_tag;
 	
 	private Gtk.GestureLongPress long_press_gesture;
 	private bool long_press = false;
@@ -20,6 +27,13 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 		h1_tag = buffer.create_tag("h1");
 		h2_tag = buffer.create_tag("h2");
 		h3_tag = buffer.create_tag("h3");
+		quote_tag = buffer.create_tag("quote");
+		list_item_tag = buffer.create_tag("list_item");
+		description_tag = buffer.create_tag("description");
+		preformatted_paragraph_tag = buffer.create_tag("preformatted_paragraph");
+		preformatted_tag = buffer.create_tag("preformatted");
+		parser_error_tag = buffer.create_tag("parser_error");
+		error_tag = buffer.create_tag("error");
 		link_hover_tag.underline = Pango.Underline.SINGLE;
 		link_tag.underline = Pango.Underline.NONE;
 		link_tag.event.connect(on_link_tag_event);
@@ -28,6 +42,15 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 		h1_tag.scale = 1.7;
 		h2_tag.scale = 1.5;
 		h3_tag.scale = 1.2;
+		quote_tag.style = Pango.Style.OBLIQUE;
+		description_tag.scale = 0.9;
+		description_tag.style = Pango.Style.ITALIC;
+		preformatted_paragraph_tag.wrap_mode = Gtk.WrapMode.NONE;
+		var error_color = Gdk.RGBA();
+		error_color.parse("#FB3934"); //Pretty sure sobody is using a red background anytime soon
+		error_tag.foreground_rgba = error_color;
+		parser_error_tag.foreground_rgba = error_color; 
+		parser_error_tag.style = Pango.Style.ITALIC;
 		textview.wrap_mode = Gtk.WrapMode.WORD_CHAR;
 		textview.right_margin = 8;
 		textview.has_tooltip = true;
@@ -46,28 +69,61 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 		});
 	}
 	
+	//TODO: implement theming and get rid of this
+	protected void hightlight_preformatted_paragraphs(){
+		preformatted_paragraph_tag.paragraph_background = "#191919";
+		preformatted_paragraph_tag.foreground = "#D3D7CF";
+	}
+	
 	  //////////////////////////////////////////////////
 	 // Dragonstone.Interface.Document.TokenRenderer //
 	//////////////////////////////////////////////////
 	
+	private bool last_had_newline = true;
+	
+	public void start_new_paragraph(){
+		if (!last_had_newline) {
+			append_text("\n");
+		}
+	}
+	
 	public void append_token(Dragonstone.Ui.Document.Token token){
-		//TODO: implement this stuff in a less ad hoc way (create tags, respect inlining)
 		switch(token.token_type){
 			case PARAGRAPH:
+				if (!token.inlined) { start_new_paragraph(); }
+				if (token.preformatted) {
+					append_with_tag(token.text, preformatted_paragraph_tag, true);
+				} else {
+					append_text(token.text);
+				}
+				break;
 			case DESCRIPTION:
-				append_text(token.text);
+				if (!token.inlined) { start_new_paragraph(); }
+				append_with_tag(token.text, description_tag, token.preformatted);
 				break;
 			case EMPTY_LINE:
+				if (!token.inlined) { start_new_paragraph(); }
 				append_text("\n");
 				break;
 			case LINK:
-				append_link(token.text,token.uri);
-				append_text("\n");
+				if (token.uri != null) {
+					if (token.inlined) {
+						append_link(token.text,token.uri, false);
+					} else {
+						start_new_paragraph();
+						append_link(token.text,token.uri);
+						append_text("\n");
+					}
+				} else {
+					append_with_tag("[PARSER MISTAKE] Link without uri: "+token.text, parser_error_tag, true);
+				}
 				break;
 			case ERROR:
-				append_text("ERROR: "+token.text);
+				if (!token.inlined) { start_new_paragraph(); }
+				append_with_tag(token.text, error_tag, token.preformatted);
 				break;
 			case TITLE:
+				start_new_paragraph();
 				switch (token.level) {
 					case 0:
 						append_h1(token.text+"\n");
@@ -81,22 +137,44 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 				}
 				break;
 			case SEARCH:
-				var searchfield = new Dragonstone.GtkUi.Widget.InlineSearch(token.text, token.uri);
-				searchfield.go.connect((s,uri) => {
-					go(uri, false);
-				});
-				append_widget(searchfield);
+				start_new_paragraph();
+				if (token.uri != null) {
+					var searchfield = new Dragonstone.GtkUi.Widget.InlineSearch(token.text, token.uri);
+					searchfield.go.connect((s,uri) => {
+						go(uri, false);
+					});
+					append_widget(searchfield);
+				} else {
+					append_with_tag("[PARSER MISTAKE] Search field without uri\n"+token.text+"\n", parser_error_tag, true);
+				}
 				break;
 			case LIST_ITEM:
-				append_text("▶ "+token.text+"\n");
+				start_new_paragraph();
+				append_with_tag("▶ "+token.text+"\n", list_item_tag, token.preformatted);
 				break;
 			case QUOTE:
-				append_text("| "+token.text+"\n");
+				if (!token.inlined) { start_new_paragraph(); }
+				append_with_tag(token.text, quote_tag, token.preformatted);
 				break;
 			case PARSER_ERROR:
-				append_text("[PARSER ERROR] "+token.text);
+				append_with_tag("[PARSER ERROR] "+token.text, parser_error_tag, true);
 				break;
 			default:
+				break;
+		}
+		switch (token.token_type) {
+			case LINK:
+				last_had_newline = (!token.inlined) || token.text.has_suffix("\n");
+				break;
+			case TITLE:
+			case QUOTE:
+			case LIST_ITEM:
+			case SEARCH:
+			case EMPTY_LINE:
+				last_had_newline = true;
+				break;
+			default:
+				last_had_newline = token.text.has_suffix("\n");
 				break;
 		}
 	}
@@ -109,10 +187,14 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 	 // Dragonstone.GtkUi.Widget.HyperTextContent //
 	///////////////////////////////////////////////
 	
-	protected void append_with_tag(string text, Gtk.TextTag tag){
+	protected void append_with_tag(string text, Gtk.TextTag tag, bool preformatted = false){
 		Gtk.TextIter end_iter;
 		textview.buffer.get_end_iter(out end_iter);
-		textview.buffer.insert_with_tags(ref end_iter, text, text.length, tag);
+		if (preformatted) {
+			textview.buffer.insert_with_tags(ref end_iter, text, text.length, tag);
+		} else {
+			textview.buffer.insert_with_tags(ref end_iter, text, text.length, preformatted_tag, tag);
+		}
 	}
 	
 	public void append_h1(string text){
