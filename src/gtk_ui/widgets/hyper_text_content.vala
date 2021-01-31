@@ -216,6 +216,9 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 			var icon_name = Dragonstone.GtkUi.Util.DefaultGtkLinkIconLoader.guess_icon_name_for_uri(uri);
 			// Old Icon code, can only show icons at caracter size
 			var icon_theme = Gtk.IconTheme.get_for_screen(get_screen());
+			if (!icon_theme.has_icon(icon_name)) {
+				icon_name = "go-jump-symbolic";
+			}
 			if (icon_theme.has_icon(icon_name)){
 				try{
 					var icon_pixbuf = icon_theme.load_icon(icon_name, 20*this.scale_factor, Gtk.IconLookupFlags.FORCE_SYMBOLIC);
