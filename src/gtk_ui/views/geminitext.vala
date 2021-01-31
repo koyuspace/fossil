@@ -14,7 +14,7 @@ public class Dragonstone.GtkUi.View.Geminitext : Dragonstone.GtkUi.Widget.HyperT
 			print("gemini: rendering content\n");
 			try{
 				//TODO: Use a general purpose token document view that utilizes a parser factory
-				hightlight_preformatted_paragraphs();
+				highlight_preformatted_paragraphs();
     		var parser = new Dragonstone.Ui.Document.TokenParser.Gemini();
     		parser.set_input_stream(file.read());
     		while (true) {

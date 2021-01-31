@@ -70,7 +70,7 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 	}
 	
 	//TODO: implement theming and get rid of this
-	protected void hightlight_preformatted_paragraphs(){
+	protected void highlight_preformatted_paragraphs(){
 		preformatted_paragraph_tag.paragraph_background = "#191919";
 		preformatted_paragraph_tag.foreground = "#D3D7CF";
 	}
