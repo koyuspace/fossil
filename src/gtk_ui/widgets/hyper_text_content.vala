@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widget.TextContent {
+public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widget.TextContent, Dragonstone.Interface.Document.TokenRenderer {
 	
 	public HashTable<string,string> uris = new HashTable<string,string>(str_hash,str_equal);
 	public signal void go(string uri, bool alt); //alt is true if the link was ctrl-clicked or middleclicked
@@ -45,6 +45,69 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 			}
 		});
 	}
+	
+	  //////////////////////////////////////////////////
+	 // Dragonstone.Interface.Document.TokenRenderer //
+	//////////////////////////////////////////////////
+	
+	public void append_token(Dragonstone.Ui.Document.Token token){
+		//TODO: implement this stuff in a less ad hoc way (create tags, respect inlining)
+		switch(token.token_type){
+			case PARAGRAPH:
+			case DESCRIPTION:
+				append_text(token.text);
+				break;
+			case EMPTY_LINE:
+				append_text("\n");
+				break;
+			case LINK:
+				append_link(token.text,token.uri);
+				append_text("\n");
+				break;
+			case ERROR:
+				append_text("ERROR: "+token.text);
+				break;
+			case TITLE:
+				switch (token.level) {
+					case 0:
+						append_h1(token.text+"\n");
+						break;
+					case 1:
+						append_h2(token.text+"\n");
+						break;
+					default:
+						append_h3(token.text+"\n");
+						break;
+				}
+				break;
+			case SEARCH:
+				var searchfield = new Dragonstone.GtkUi.Widget.InlineSearch(token.text, token.uri);
+				searchfield.go.connect((s,uri) => {
+					go(uri, false);
+				});
+				append_widget(searchfield);
+				break;
+			case LIST_ITEM:
+				append_text("▶ "+token.text+"\n");
+				break;
+			case QUOTE:
+				append_text("| "+token.text+"\n");
+				break;
+			case PARSER_ERROR:
+				append_text("[PARSER ERROR] "+token.text);
+				break;
+			default:
+				break;
+		}
+	}
+	
+	public void reset_renderer(){
+		this.textview.buffer.text = "";
+	}
+	
+	  ///////////////////////////////////////////////
+	 // Dragonstone.GtkUi.Widget.HyperTextContent //
+	///////////////////////////////////////////////
 	
 	protected void append_with_tag(string text, Gtk.TextTag tag){
 		Gtk.TextIter end_iter;

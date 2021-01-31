@@ -56,6 +56,8 @@ executable(
 	'gtk_ui/widgets/dialog_view_base.vala', #AUTOUPDATE_FILE
 	'gtk_ui/widgets/header_bar.vala', #AUTOUPDATE_FILE
 	'gtk_ui/widgets/hyper_text_content.vala', #AUTOUPDATE_FILE
+	'gtk_ui/widgets/inline_search.vala', #AUTOUPDATE_FILE
+	'gtk_ui/widgets/inline_search_post_b64_file_popover_easter_egg.vala', #AUTOUPDATE_FILE
 	'gtk_ui/widgets/link_button.vala', #AUTOUPDATE_FILE
 	'gtk_ui/widgets/link_popover.vala', #AUTOUPDATE_FILE
 	'gtk_ui/widgets/menu_entrys.vala', #AUTOUPDATE_FILE

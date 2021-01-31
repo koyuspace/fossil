@@ -76,14 +76,13 @@ public class Dragonstone.Ui.Document.TokenParser.Gopher : Dragonstone.Interface.
 					} else if (typeinfo.hint == Dragonstone.Registry.GopherTypeRegistryContentHint.SEARCH) { //Search
 						string uri = typeinfo.get_uri(host,port,selector);
 						token = new Dragonstone.Ui.Document.Token(SEARCH, 0, htext, uri, true);
-						print("gopher parser: searchfield!!!!!");
 						break;
 					} else if (typeinfo.hint == Dragonstone.Registry.GopherTypeRegistryContentHint.ERROR) { //Error
 						token = new Dragonstone.Ui.Document.Token(ERROR, 0, htext, null, true);
 						break;
 					}
 				} else if (tokens.length == 0) { //empty line, ignore
-				} else if (line == ".") { //end of file: ignore, because why not, there could be easter eggs or chocolate
+				} else if (line.strip() == ".") { //end of file: ignore, because why not, there could be easter eggs or chocolate
 				} else { //invalid line
 					return new Dragonstone.Ui.Document.Token.parser_error(0, @"Unknown Line type: $line");
 				}

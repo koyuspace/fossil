@@ -19,45 +19,7 @@ public class Dragonstone.GtkUi.View.Geminitext : Dragonstone.GtkUi.Widget.HyperT
     		while (true) {
     			var token = parser.next_token();
     			if (token == null) { break; }
-    			switch(token.token_type){
-    				case PARAGRAPH:
-    					append_text(token.text);
-    					break;
-    				case EMPTY_LINE:
-    					append_text("\n");
-    					break;
-    				case LINK:
-    					append_link(token.text,token.uri);
-    					append_text("\n");
-    					break;
-    				case ERROR:
-    					append_text("ERROR: "+token.text);
-    					break;
-    				case TITLE:
-    					switch (token.level) {
-    						case 0:
-    							append_h1(token.text+"\n");
-    							break;
-    						case 1:
-    							append_h2(token.text+"\n");
-    							break;
-    						default:
-    							append_h3(token.text+"\n");
-    							break;
-    					}
-    					break;
-    				case LIST_ITEM:
-    					append_text("▶ "+token.text+"\n");
-    					break;
-    				case QUOTE:
-    					append_text("| "+token.text+"\n");
-    					break;
-    				case PARSER_ERROR:
-    					append_text("[PARSER ERROR] "+token.text);
-    					break;
-    				default:
-	    				break;
-    			}
+    			append_token(token);
     		}
 			}catch (GLib.Error e) {
 				this.append_widget(new Gtk.Label("Error while rendering gemini content:\n"+e.message));
