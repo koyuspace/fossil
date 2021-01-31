@@ -44,49 +44,25 @@ public class Dragonstone.GtkUi.View.Gophertext : Dragonstone.GtkUi.Widget.HyperT
     		this.cache = cache;
     	}
     	try{
-    		this.link_popover = new Dragonstone.GtkUi.Widget.LinkButtonPopover(tab);
-				//parse text
-				unichar lasttype = '\0';
-				var dis = new DataInputStream (file.read ());
-        string line;
-				while ((line = dis.read_line (null)) != null) {
-					var tokens = line.split("\t");
-					if(tokens.length >= 4){//valid line, ignores gopher+ lines
-						unichar gophertype = 'i';
-						string htext = "";
-						if (tokens[0].length != 0){
-							gophertype = tokens[0].get_char(0);
-							htext = tokens[0].substring(1);//human text
-						}
-						var selector = tokens[1].strip(); //look for url in here
-						var host = tokens[2].strip();
-						var port = tokens[3].strip();
-						
-						//
-						if(gophertype == '+' && (type_registry.get_entry_by_gophertype(lasttype) != null)){
-							gophertype = lasttype;
-						}
-						var typeinfo = type_registry.get_entry_by_gophertype(gophertype);
-						if (typeinfo == null) {
-							append_widget(new Dragonstone.GtkUi.View.GophertextUnknownItem(gophertype,htext,selector,host,port));
-						} else if (typeinfo.hint == Dragonstone.Registry.GopherTypeRegistryContentHint.TEXT){
-							append_text(htext+"\n");
-						}else if (typeinfo.hint == Dragonstone.Registry.GopherTypeRegistryContentHint.LINK || selector.has_prefix("URL:")){
-							string? uri = null;
-							if (selector.has_prefix("URL:")) {
-								uri = selector.substring(4);
-							} else if (selector.has_prefix("/URL:")) { //pygopherd get your url right!
-								uri = selector.substring(5);
-							} else if (selector.has_prefix("url:")) { //It is bloody "URL:", it even is on wikipedia!
-								uri = selector.substring(4);
-							} else {
-								uri = typeinfo.get_uri(host,port,selector);
-							}
-							//append_widget(new Dragonstone.GtkUi.Widget.LinkButton(tab,htext,uri));
-							append_link(htext,uri);
-							append_text("\n");
-						} else if (typeinfo.hint == Dragonstone.Registry.GopherTypeRegistryContentHint.SEARCH){ //Search
-							var searchfield = new Dragonstone.GtkUi.View.GophertextInlineSearch(htext,host,port,selector,typeinfo);
+    		//TODO: Use a general purpose token document view that utilizes a parser factory
+    		var parser = new Dragonstone.Ui.Document.TokenParser.Gopher(type_registry);
+    		parser.set_input_stream(file.read());
+    		while (true) {
+    			var token = parser.next_token();
+    			if (token == null) { break; }
+    			switch(token.token_type){
+    				case PARAGRAPH:
+    					append_text(token.text);
+    					break;
+    				case EMPTY_LINE:
+    					append_text("");
+    					break;
+    				case LINK:
+    					append_link(token.text,token.uri);
+    					append_text("\n");
+    					break;
+    				case SEARCH:
+    					var searchfield = new Dragonstone.GtkUi.View.GophertextInlineSearch(token.text, token.uri);
 							searchfield.go.connect((s,uri) => {
 								tab.go_to_uri(uri);
 								if (cache != null){
@@ -94,15 +70,17 @@ public class Dragonstone.GtkUi.View.Gophertext : Dragonstone.GtkUi.Widget.HyperT
 								}
 							});
 							append_widget(searchfield);
-						} else if (typeinfo.hint == Dragonstone.Registry.GopherTypeRegistryContentHint.ERROR){ //Error
-							append_widget(new Dragonstone.GtkUi.View.GophertextIconLabel(htext,"dialog-error-symbolic"));
-						}
-						lasttype = gophertype;
-					}else if(tokens.length == 0){ //empty line, ignore
-					}else{ //invalid line
-					
-					}
-				}
+							break;
+    				case ERROR:
+    					append_text("ERROR: "+token.text);
+    					break;
+    				case PARSER_ERROR:
+    					append_text("[PARSER ERROR] "+token.text);
+    					break;
+    				default:
+	    				break;
+    			}
+    		}
 			}catch (GLib.Error e) {
 				Gtk.TextIter end_iter;
 				textview.buffer.get_end_iter(out end_iter);
@@ -161,17 +139,11 @@ public class Dragonstone.GtkUi.View.Gophertext : Dragonstone.GtkUi.Widget.HyperT
 private class Dragonstone.GtkUi.View.GophertextInlineSearch : Gtk.Bin {
 
 	public signal void go(string uri);
-	private string host;
-	private string port;
-	private string selector;
-	private Dragonstone.Registry.GopherTypeRegistryEntry typeinfo;
+	private string uri_template;
 	private Gtk.Entry entry;
 	
-	public GophertextInlineSearch(string htext, string host, string port, string selector, Dragonstone.Registry.GopherTypeRegistryEntry typeinfo){
-		this.host = host;
-		this.port = port;
-		this.selector = selector;
-		this.typeinfo = typeinfo;
+	public GophertextInlineSearch(string htext, string uri_template){
+		this.uri_template = uri_template;
 		var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL,4);
 		box.homogeneous = false;
 		box.margin_start = 4;
@@ -194,13 +166,13 @@ private class Dragonstone.GtkUi.View.GophertextInlineSearch : Gtk.Bin {
 		box.pack_start(button);
 		box.halign = Gtk.Align.FILL;
 		add(box);
-		set_tooltip_text(typeinfo.get_uri(host,port,selector));
+		set_tooltip_text(uri_template);
 	}
 	
 	private bool handle_button_press(Gdk.EventButton event){
 		if (event.type == BUTTON_PRESS){
-			if (event.button == 3 && selector.has_suffix("/postfile")) { //right click
-				var popover = new Dragonstone.GtkUi.View.GophertextInlineSearchPostB64FilePopover(this,typeinfo.get_uri(host,port,selector)+"b64");
+			if (event.button == 3 && uri_template.has_suffix("/postfile%09{search}")) { //right click
+				var popover = new Dragonstone.GtkUi.View.GophertextInlineSearchPostB64FilePopover(this,uri_template.substring(0,uri_template.length-11)+"b64");
 				popover.set_relative_to(this);
 				popover.popup();
 				popover.show_all();
@@ -212,48 +184,8 @@ private class Dragonstone.GtkUi.View.GophertextInlineSearch : Gtk.Bin {
 	
 	private void submit(){
 		if (entry.text != ""){
-			go(typeinfo.get_uri(host,port,selector,entry.text));
+			go(uri_template.replace("{search}",Uri.escape_string(entry.text)));
 		}
-	}
-}
-
-private class Dragonstone.GtkUi.View.GophertextUnknownItem : Gtk.Bin {
-	public GophertextUnknownItem(unichar gophertype,string htext,string query,string host,string port){
-		var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL,4);
-		box.homogeneous = false;
-		box.margin_start = 4;
-		var label = new Gtk.Label(@"Unknown Item Type: '$gophertype' -> $host:$port/$gophertype$query\n$htext");
-		label.selectable = true;
-		label.halign = Gtk.Align.START;
-		//var labelAttrList = new Pango.AttrList();
-		//labelAttrList.insert(new Pango.AttrSize(8000));
-		//label.attributes = labelAttrList;
-		var icon = new Gtk.Image.from_icon_name("dialog-question-symbolic",Gtk.IconSize.BUTTON);
-		icon.halign = Gtk.Align.START;
-		box.pack_start(icon);
-		box.pack_start(label);
-		box.halign = Gtk.Align.START;
-		add(box);
-	}
-}
-
-private class Dragonstone.GtkUi.View.GophertextIconLabel : Gtk.Bin {
-	public GophertextIconLabel(string text,string icon_name){
-		var box = new Gtk.Box(Gtk.Orientation.HORIZONTAL,4);
-		box.margin_start = 8; 
-		box.homogeneous = false;
-		var label = new Gtk.Label(text);
-		label.selectable = true;
-		label.halign = Gtk.Align.START;
-		var labelAttrList = new Pango.AttrList();
-		labelAttrList.insert(new Pango.AttrSize(10000));
-		label.attributes = labelAttrList;
-		var icon = new Gtk.Image.from_icon_name(icon_name,Gtk.IconSize.BUTTON);
-		icon.halign = Gtk.Align.START;
-		box.pack_start(icon);
-		box.pack_start(label);
-		box.halign = Gtk.Align.START;
-		add(box);
 	}
 }
 

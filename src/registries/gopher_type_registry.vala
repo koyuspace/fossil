@@ -23,7 +23,7 @@ public class Dragonstone.Registry.GopherTypeRegistry : Dragonstone.Asm.SimpleAsm
 		exec("ADD_ENTRY","4\ttext/x-hex");
 		exec("ADD_ENTRY","5\t~application/octet-stream");
 		exec("ADD_ENTRY","6\t*");
-		exec("ADD_ENTRY","7\ttext/gopher\tgopher://{host}:{port}/{type}{selector}%09{query}");
+		exec("ADD_ENTRY","7\ttext/gopher\tgopher://{host}:{port}/{type}{selector}%09{search}");
 		exec("ADD_ENTRY","8\t*\ttelnet://{host}:{port}");
 		exec("ADD_ENTRY","9\t~application/octet-stream");
 		exec("ADD_ENTRY","g\timage/gif");
@@ -89,7 +89,7 @@ public class Dragonstone.Registry.GopherTypeRegistry : Dragonstone.Asm.SimpleAsm
 		} else if (hint == "SEARCH"){
 			content_hint = GopherTypeRegistryContentHint.SEARCH;
 		} else {
-			if (hint.contains("{query}")){
+			if (hint.contains("{search}")){
 				content_hint = GopherTypeRegistryContentHint.SEARCH;
 			}
 			uri_template = hint;
@@ -156,7 +156,7 @@ public class Dragonstone.Registry.GopherTypeRegistryEntry {
 		return this;
 	}
 	
-	public string get_uri(string host, string port, string selector, string query = ""){
+	public string get_uri(string host, string port, string selector){
 		if (selector.has_prefix("URL:")) {
 			return selector.substring(4);
 		}
@@ -165,7 +165,6 @@ public class Dragonstone.Registry.GopherTypeRegistryEntry {
 		uri = uri.replace("{port}",port);
 		uri = uri.replace("{type}",@"$gophertype");
 		uri = uri.replace("{selector}",Uri.escape_string(selector,"/"));
-		uri = uri.replace("{query}",Uri.escape_string(query));
 		return uri;
 	}
 	

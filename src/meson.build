@@ -69,6 +69,9 @@ executable(
 	'gtk_ui/widgets/view_chooser.vala', #AUTOUPDATE_FILE
 	'gtk_ui/widgets/window.vala', #AUTOUPDATE_FILE
 	'interface/cache.i.vala', #AUTOUPDATE_FILE
+	'interface/document/token_parser.i.vala', #AUTOUPDATE_FILE
+	'interface/document/token_parser_factory.i.vala', #AUTOUPDATE_FILE
+	'interface/document/token_renderer.i.vala', #AUTOUPDATE_FILE
 	'interface/resource_store.i.vala', #AUTOUPDATE_FILE
 	'interface/session.i.vala', #AUTOUPDATE_FILE
 	'interface/settings/bridge.i.vala', #AUTOUPDATE_FILE
@@ -76,7 +79,7 @@ executable(
 	'interface/settings/rom.vala', #AUTOUPDATE_FILE
 	'interface/settings/rom_provider.i.vala', #AUTOUPDATE_FILE
 	'registries/bookmark_registry.vala', #AUTOUPDATE_FILE
-	'registries/gopher.vala', #AUTOUPDATE_FILE
+	'registries/gopher_type_registry.vala', #AUTOUPDATE_FILE
 	'registries/mimeguesser.vala', #AUTOUPDATE_FILE
 	'registries/session_registry.vala', #AUTOUPDATE_FILE
 	'registries/settings_registry.vala', #AUTOUPDATE_FILE
@@ -129,6 +132,9 @@ executable(
 	'stores/gopherwrite.vala', #AUTOUPDATE_FILE
 	'stores/switch.vala', #AUTOUPDATE_FILE
 	'stores/test.vala', #AUTOUPDATE_FILE
+	'ui/document/token.vala', #AUTOUPDATE_FILE
+	'ui/document/token_parser/gopher.vala', #AUTOUPDATE_FILE
+	'ui/document/token_type.vala', #AUTOUPDATE_FILE
 	'ui/tab.vala', #AUTOUPDATE_FILE
 	'ui/tab_display_state.vala', #AUTOUPDATE_FILE
 	'util/connection_helper.vala', #AUTOUPDATE_FILE
