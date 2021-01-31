@@ -1,9 +1,7 @@
 public class Dragonstone.GtkUi.View.Geminitext : Dragonstone.GtkUi.Widget.HyperTextContent, Dragonstone.GtkUi.Interface.View {
 	
 	private Dragonstone.Request request = null;
-	private DataInputStream data_input_stream;
 	private Dragonstone.GtkUi.Tab tab;
-	private int maxlines = 30000;
 	
 	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
 		this.tab = tab;
@@ -15,94 +13,59 @@ public class Dragonstone.GtkUi.View.Geminitext : Dragonstone.GtkUi.Widget.HyperT
 			}
 			print("gemini: rendering content\n");
 			try{
-				//parse text
-				
-				data_input_stream = new DataInputStream (file.read ());
-				try{
-					int linecounter = 0;
-					string line;
-					string? alttext = null;
-					while ((line = data_input_stream.read_line (null)) != null) {
-						//print(@"GEMINI: $line\n");
-						//parse geminis simple markup
-						bool isText = true;
-						if (line.validate(line.length)){
-							if (line.has_prefix("```")){
-								if (alttext == null){
-									if (line.length > 3){
-										alttext = line.substring(3).strip();
-										append_text(@" - $alttext -\n");
-										int altlen = alttext.length;
-										alttext = "";
-										for (int i = 0; i<altlen; i++){
-											alttext = alttext+"-";
-										}
-									} else {
-										alttext = "";
-									}
-								} else {
-									if (alttext != ""){
-										append_text(@" - $alttext -\n");
-									}
-									alttext = null;
-								}
-								isText=false;
-							}
-							if (alttext == null){
-								if (line.has_prefix("=>")){
-									var uri = "";
-									var htext = "";
-									var uri_and_text = line.substring(2).strip();
-									var spaceindex = uri_and_text.index_of_char(' ');
-									var tabindex = uri_and_text.index_of_char('\t');
-									if (spaceindex < 0 && tabindex < 0){
-										uri = uri_and_text;
-										htext = uri_and_text;
-									} else if ((tabindex > 0 && tabindex < spaceindex) || spaceindex < 0){
-										uri = uri_and_text.substring(0,tabindex);
-										htext = uri_and_text.substring(tabindex).strip();
-									} else if ((spaceindex > 0 && spaceindex < tabindex) || tabindex < 0){
-										uri = uri_and_text.substring(0,spaceindex);
-										htext = uri_and_text.substring(spaceindex).strip();
-									}
-									this.append_link(htext,uri);
-									this.append_text("\n");
-									isText = false;
-								}
-								if (line.has_prefix("###") && isText){
-									this.append_h3(line.substring(3).strip()+"\n");
-									isText = false;
-								}
-								if (line.has_prefix("##") && isText){
-									this.append_h2(line.substring(2).strip()+"\n");
-									isText = false;
-								}
-								if (line.has_prefix("#") && isText){
-									this.append_h1(line.substring(1).strip()+"\n");
-									isText = false;
-								}
-							}
-							if (isText){
-								this.append_text(line+"\n");
-							}
-							linecounter++;
-							if (linecounter >= maxlines){
-								return false;
-							}
-						}
-					}
-				}catch (GLib.Error e) {
-					this.append_widget(new Gtk.Label("Error while rendering gemini content:\n"+e.message));
-				}
-				show_all();
-				data_input_stream.close();
-				
+				//TODO: Use a general purpose token document view that utilizes a parser factory
+    		var parser = new Dragonstone.Ui.Document.TokenParser.Gemini();
+    		parser.set_input_stream(file.read());
+    		while (true) {
+    			var token = parser.next_token();
+    			if (token == null) { break; }
+    			switch(token.token_type){
+    				case PARAGRAPH:
+    					append_text(token.text);
+    					break;
+    				case EMPTY_LINE:
+    					append_text("\n");
+    					break;
+    				case LINK:
+    					append_link(token.text,token.uri);
+    					append_text("\n");
+    					break;
+    				case ERROR:
+    					append_text("ERROR: "+token.text);
+    					break;
+    				case TITLE:
+    					switch (token.level) {
+    						case 0:
+    							append_h1(token.text+"\n");
+    							break;
+    						case 1:
+    							append_h2(token.text+"\n");
+    							break;
+    						default:
+    							append_h3(token.text+"\n");
+    							break;
+    					}
+    					break;
+    				case LIST_ITEM:
+    					append_text("▶ "+token.text+"\n");
+    					break;
+    				case QUOTE:
+    					append_text("| "+token.text+"\n");
+    					break;
+    				case PARSER_ERROR:
+    					append_text("[PARSER ERROR] "+token.text);
+    					break;
+    				default:
+	    				break;
+    			}
+    		}
 			}catch (GLib.Error e) {
 				this.append_widget(new Gtk.Label("Error while rendering gemini content:\n"+e.message));
 			}
 		} else {
 			return false;
 		}
+		show_all();
 		this.request = request;
 		this.go.connect(on_go_event);
 		return true;

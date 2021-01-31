@@ -88,6 +88,9 @@ public class Dragonstone.Ui.Document.TokenParser.Gopher : Dragonstone.Interface.
 					return new Dragonstone.Ui.Document.Token.parser_error(0, @"Unknown Line type: $line");
 				}
 			}
+			if (token == null && input_stream != null) {
+				input_stream.close();
+			}	
 		} catch (Error e) {
 			return new Dragonstone.Ui.Document.Token.parser_error(0, e.message);
 		}
@@ -95,6 +98,13 @@ public class Dragonstone.Ui.Document.TokenParser.Gopher : Dragonstone.Interface.
 	}
 	
 	public void reset(){
+		if (input_stream != null) {
+			try {
+				input_stream.close();
+			} catch (Error e) {
+				//ignore
+			}
+		}
 		this.input_stream = null;
 		this.lasttype = '\0';
 		this.last_was_text = false;

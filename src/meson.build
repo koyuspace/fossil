@@ -133,6 +133,7 @@ executable(
 	'stores/switch.vala', #AUTOUPDATE_FILE
 	'stores/test.vala', #AUTOUPDATE_FILE
 	'ui/document/token.vala', #AUTOUPDATE_FILE
+	'ui/document/token_parser/gemini.vala', #AUTOUPDATE_FILE
 	'ui/document/token_parser/gopher.vala', #AUTOUPDATE_FILE
 	'ui/document/token_type.vala', #AUTOUPDATE_FILE
 	'ui/tab.vala', #AUTOUPDATE_FILE

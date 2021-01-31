@@ -55,7 +55,7 @@ public class Dragonstone.GtkUi.View.Gophertext : Dragonstone.GtkUi.Widget.HyperT
     					append_text(token.text);
     					break;
     				case EMPTY_LINE:
-    					append_text("");
+    					append_text("\n");
     					break;
     				case LINK:
     					append_link(token.text,token.uri);
