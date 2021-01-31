@@ -31,14 +31,15 @@ public class Dragonstone.Ui.Document.TokenParser.Gemini : Dragonstone.Interface.
 								alttext = line.substring(3).strip();
 							}
 						} else {
+							preformatted_block = false;
 							if (alttext != null && !preformatted_block_empty) {
 								token = new Dragonstone.Ui.Document.Token(DESCRIPTION, level, alttext);
+								alttext = null;
+								break;
 							}
 							alttext = null;
-							preformatted_block = false;
 						}
 						is_text=false;
-						break;
 					}
 					if (!preformatted_block){
 						if (line.has_prefix("###")) {
