@@ -1,5 +1,22 @@
 public class Dragonstone.Startup.Hypertext.Gtk {
 	
+	public static Dragonstone.GtkUi.Theming.HyperTextViewTheme? load_theme(string json){
+		try {
+			Json.Parser parser = new Json.Parser();
+			parser.load_from_data(json);
+			var root_node = parser.get_root();
+			if (root_node != null){
+				if (root_node.get_node_type() == OBJECT) {
+					var theme_object = root_node.get_object();
+					return Dragonstone.GtkUi.JsonIntegration.Theming.HyperTextViewTheme.hyper_text_view_theme_from_json(theme_object);
+				}
+			}
+		} catch (Error e) {
+			print("[startup][hypertext][gtk] Error while parsing theme json: "+e.message+"\n");
+		}
+		return null;
+	}
+	
 	public static void setup_views(Dragonstone.SuperRegistry super_registry){
 		print("[startup][hypertext][gtk] setup_views()\n");
 		string temporary_style_json = """
@@ -72,20 +89,17 @@ public class Dragonstone.Startup.Hypertext.Gtk {
 		var view_registry = (super_registry.retrieve("gtk.views") as Dragonstone.GtkUi.ViewRegistry);
 		if (view_registry != null){
 			Dragonstone.GtkUi.Theming.HyperTextViewTheme? theme = null;
-			try {
-				Json.Parser parser = new Json.Parser();
-				parser.load_from_data(temporary_style_json);
-				var root_node = parser.get_root();
-				if (root_node != null){
-					if (root_node.get_node_type() == OBJECT) {
-						var theme_object = root_node.get_object();
-						theme = Dragonstone.GtkUi.JsonIntegration.Theming.HyperTextViewTheme.hyper_text_view_theme_from_json(theme_object);
-					}
+			var settings_registry = super_registry.retrieve("core.settings") as Dragonstone.Registry.SettingsRegistry;
+			if (settings_registry != null){
+				var theme_rom = settings_registry.get_object("settings.theme.json");
+				if (theme_rom != null) {
+					theme = load_theme(theme_rom.content);
 				}
-			} catch (Error e) {
-				print("[startup][hypertext][gtk] Error while parsing theme json: "+e.message+"\n");
 			}
-			if(theme == null){ //fall back to an empty theme
+			if (theme == null) { //fall back to the theme above
+				theme = load_theme(temporary_style_json);
+			}
+			if(theme == null) { //fall back to an empty theme
 				theme = new Dragonstone.GtkUi.Theming.HyperTextViewTheme();
 			}
 			var theme_provider = new Dragonstone.GtkUi.Theming.DefaultHyperTextViewThemeProvider(theme);
