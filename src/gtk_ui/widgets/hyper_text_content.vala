@@ -3,7 +3,8 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 	public HashTable<string,string> uris = new HashTable<string,string>(str_hash,str_equal);
 	public signal void go(string uri, bool alt); //alt is true if the link was ctrl-clicked or middleclicked
 
-	protected Dragonstone.GtkUi.Widget.LinkPopover? link_popover = null;	
+	protected Dragonstone.GtkUi.Widget.LinkPopover? link_popover = null;
+	protected Gtk.TextTag default_tag;	
 	protected Gtk.TextTag link_tag;
 	protected Gtk.TextTag link_hover_tag;
 	protected Gtk.TextTag preformatted_tag;
@@ -58,11 +59,12 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 		},
 		"description":{
 			"scale":0.9,
-			"font":"italic",
+			"font":"NoGameNoLife",
+			"paragraph_background":"#111111",
 			"foreground":"#A1A49E"
 		},
 		"paragraph :preformatted":{
-			"wrap_mode":"word_char"
+			"wrap_mode":"none"
 		},
 		"error":{
 			"foreground":"#FB3934"
@@ -72,8 +74,17 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 			"font":"italic"
 		},
 		"*:preformatted":{
+			"font":"monospace",
 			"paragraph_background":"#191919",
 			"foreground":"#D3D7CF"
+		},
+		"*":{
+			"foreground":"#FCAF3E",
+			"paragraph_background":"#222222",
+			"wrap_mode":"word_char",
+			"font":"saoui",
+			"scale":1.5
+			
 		}
 	}
 }
@@ -99,7 +110,32 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 		if(theme == null){ //fall back to an empty theme
 			theme = new Dragonstone.GtkUi.Theming.HyperTextViewTheme();
 		}
-	
+		
+		//Register a custom style provider
+		
+		var default_tag_theme = theme.get_text_tag_theme("*");
+		if (default_tag_theme.paragraph_background_color != null || default_tag_theme.foreground_color != null){
+			try {
+				print("[hypertextcontent] Adding style provider\n");
+				var style_provider = new Gtk.CssProvider();
+				string css = ".hypertext text {\n";
+				if (default_tag_theme.foreground_color != null) {
+					css += @"color: $(default_tag_theme.foreground_color);\n";
+				}
+				if (default_tag_theme.paragraph_background_color != null) {
+					css += @"background-color: $(default_tag_theme.paragraph_background_color);\n";
+				}
+				css += "}";
+				print(@"$css\n");
+				style_provider.load_from_data(css);
+				textview.get_style_context().add_class("hypertext");
+				textview.get_style_context().add_provider(style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+			} catch (Error e) {
+				print("[hypertextcontent] Error while applying custom css: "+e.message+"\n");
+			}
+		}
+		
+		default_tag = get_themed_tag("*");
 		link_tag = get_themed_tag("*:link");
 		link_hover_tag = get_themed_tag("link :hover");
 		preformatted_tag = get_themed_tag("*:preformatted");
@@ -126,7 +162,11 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 		parser_error_tag.style = Pango.Style.ITALIC;
 		*/
 		
-		textview.wrap_mode = Gtk.WrapMode.WORD_CHAR;
+		if (default_tag.wrap_mode_set){
+			textview.wrap_mode = default_tag.wrap_mode;
+		} else {
+			textview.wrap_mode = Gtk.WrapMode.WORD_CHAR;
+		}
 		textview.right_margin = 8;
 		textview.has_tooltip = true;
 		textview.query_tooltip.connect(on_tooltip_query);
@@ -147,11 +187,13 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 	 // Theme integration
 	/////////////////////////////
 	
-	public Gtk.TextTag get_themed_tag_by_name(string tag_name, bool skip_lookup = false){
+	public Gtk.TextTag get_themed_tag_by_name(string tag_name, string? tag_table_name){
+		string? _tag_table_name = tag_table_name;
+		if (_tag_table_name == null) { _tag_table_name = tag_name; }
 		Gtk.TextTag? tag = null;
-		tag = textview.buffer.tag_table.lookup(tag_name);
+		tag = textview.buffer.tag_table.lookup(_tag_table_name);
 		if (tag == null) {
-			tag = textview.buffer.create_tag(tag_name);
+			tag = textview.buffer.create_tag(_tag_table_name);
 			var tag_theme = theme.get_text_tag_theme(tag_name);
 			if (tag_theme != null) {
 				tag_theme.apply_theme(tag);
@@ -165,7 +207,7 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 		if (tag == null) {
 			string tag_name = theme.get_best_matching_text_tag_theme_name(cache_key.split(" "));
 			print(@"[hypertextcontent] TAG $cache_key >>> $tag_name \n");
-			tag = get_themed_tag_by_name(tag_name);
+			tag = get_themed_tag_by_name(tag_name, (cache_key=="*:link"?cache_key:null));
 			text_tag_cache.set(cache_key, tag);
 		}
 		return tag;
@@ -315,6 +357,8 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 		start_iter.backward_chars(text.char_count());
 		if (preformatted) {
 			textview.buffer.apply_tag(preformatted_tag, start_iter, end_iter);
+		} else {
+			textview.buffer.apply_tag(default_tag, start_iter, end_iter);
 		}
 		if (uri != null){
 			textview.buffer.apply_tag(link_tag, start_iter, end_iter);
