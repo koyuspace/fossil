@@ -14,87 +14,13 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 	private bool long_press = false;
 	
 	public HashTable<string,Gtk.TextTag> text_tag_cache = new HashTable<string,Gtk.TextTag>(str_hash,str_equal);
-	private static string temporary_style_json = """
-{
-	"prefixes":{
-		"link":"-> ",
-		"link :inline":" ",
-		"list_item":"▶ ",
-		"parser_error":"[PARSER_ERROR] ",
-		"link_without_uri":"[PARSER MISTAKE] Link without uri: ",
-		"search_without_uri":"[PARSER MISTAKE] Search without uri: "
-	},
-	"tag_themes":{
-		"link":{
-			"scale":1.1,
-			"font":"italic"
-		},
-		"link :hover":{
-			"underline":"single",
-			"scale":1.15
-		},
-		"link :prefix":{
-			"scale":1.15,
-			"font":"bold",
-			"foreground":"#A1A49E"
-		},
-		"link_icon":{
-			"scale":1.5
-		},
-		"list_item :prefix":{
-			"foreground":"#4E9A06"
-		},
-		"title +0":{
-			"scale":1.7,
-			"foreground":"#CE5C00"
-		},
-		"title +1":{
-			"scale":1.5
-		},
-		"title":{
-			"scale":1.2
-		},
-		"quote":{
-			"font":"oblique"
-		},
-		"description":{
-			"scale":0.9,
-			"font":"NoGameNoLife",
-			"paragraph_background":"#111111",
-			"foreground":"#A1A49E",
-			"indent":10
-		},
-		"paragraph :preformatted":{
-			"wrap_mode":"none",
-			"indent":10
-		},
-		"error":{
-			"foreground":"#FB3934"
-		},
-		"parser_error":{
-			"foreground":"#FB3934",
-			"font":"italic"
-		},
-		"*:preformatted":{
-			"font":"monospace",
-			"paragraph_background":"#191919",
-			"foreground":"#D3D7CF"
-		},
-		"*":{
-			"foreground":"#FCAF3E",
-			"paragraph_background":"#222222",
-			"wrap_mode":"word_char",
-			"font":"saoui",
-			"scale":1.5
-			
-		}
-	}
-}
-	""";
 	
 	private Dragonstone.GtkUi.Interface.Theming.HyperTextViewTheme? theme = null;
 	
-	public HyperTextContent(){
+	public HyperTextContent(Dragonstone.GtkUi.Interface.Theming.HyperTextViewTheme? _theme = null, Dragonstone.GtkUi.Widget.LinkPopover? link_popover = null){
+		this.theme = _theme;
+		this.link_popover = link_popover;
+		/*
 		try {
 			Json.Parser parser = new Json.Parser();
 			parser.load_from_data(temporary_style_json);
@@ -108,6 +34,7 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 		} catch (Error e) {
 			print("[hypertextcontent] Error while parsing theme json: "+e.message+"\n");
 		}
+		*/
 		
 		if(theme == null){ //fall back to an empty theme
 			theme = new Dragonstone.GtkUi.Theming.HyperTextViewTheme();

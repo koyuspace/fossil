@@ -26,9 +26,11 @@ executable(
 	'asm_init/uri_autoprefix.registry.vala', #AUTOUPDATE_FILE
 	'gtk_ui/application.vala', #AUTOUPDATE_FILE
 	'gtk_ui/interface/theming/hyper_text_view_theme.vala', #AUTOUPDATE_FILE
+	'gtk_ui/interface/theming/hyper_text_view_theme_provider.vala', #AUTOUPDATE_FILE
 	'gtk_ui/interface/view.vala', #AUTOUPDATE_FILE
 	'gtk_ui/json_integration/theming/hyper_text_view_theme.vala', #AUTOUPDATE_FILE
 	'gtk_ui/json_integration/theming/text_tag_theme.vala', #AUTOUPDATE_FILE
+	'gtk_ui/theming/default_hyper_text_view_theme_provider.vala', #AUTOUPDATE_FILE
 	'gtk_ui/theming/hyper_text_view_theme.vala', #AUTOUPDATE_FILE
 	'gtk_ui/theming/text_tag_theme.vala', #AUTOUPDATE_FILE
 	'gtk_ui/util/default_gtk_link_icon_loader.vala', #AUTOUPDATE_FILE
@@ -41,8 +43,7 @@ executable(
 	'gtk_ui/views/download.vala', #AUTOUPDATE_FILE
 	'gtk_ui/views/error_generic.vala', #AUTOUPDATE_FILE
 	'gtk_ui/views/geminiInput.vala', #AUTOUPDATE_FILE
-	'gtk_ui/views/geminitext.vala', #AUTOUPDATE_FILE
-	'gtk_ui/views/gophertext.vala', #AUTOUPDATE_FILE
+	'gtk_ui/views/hypertext.vala', #AUTOUPDATE_FILE
 	'gtk_ui/views/image.vala', #AUTOUPDATE_FILE
 	'gtk_ui/views/label.vala', #AUTOUPDATE_FILE
 	'gtk_ui/views/loading.vala', #AUTOUPDATE_FILE
@@ -117,8 +118,8 @@ executable(
 	'startup/geminiupload.backend.vala', #AUTOUPDATE_FILE
 	'startup/geminiwrite.backend.vala', #AUTOUPDATE_FILE
 	'startup/gopher.backend.vala', #AUTOUPDATE_FILE
-	'startup/gopher.gtk.vala', #AUTOUPDATE_FILE
 	'startup/gopherwrite.backend.vala', #AUTOUPDATE_FILE
+	'startup/hypertext.gtk.vala', #AUTOUPDATE_FILE
 	'startup/localization.english.vala', #AUTOUPDATE_FILE
 	'startup/localization.vala', #AUTOUPDATE_FILE
 	'startup/sessions.backend.vala', #AUTOUPDATE_FILE
@@ -139,6 +140,7 @@ executable(
 	'stores/gopherwrite.vala', #AUTOUPDATE_FILE
 	'stores/switch.vala', #AUTOUPDATE_FILE
 	'stores/test.vala', #AUTOUPDATE_FILE
+	'ui/document/default_token_parser_factory.vala', #AUTOUPDATE_FILE
 	'ui/document/token.vala', #AUTOUPDATE_FILE
 	'ui/document/token_parser/gemini.vala', #AUTOUPDATE_FILE
 	'ui/document/token_parser/gopher.vala', #AUTOUPDATE_FILE

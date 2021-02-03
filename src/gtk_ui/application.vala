@@ -84,7 +84,7 @@ public class Dragonstone.GtkUi.Application : Gtk.Application {
 		Dragonstone.Startup.Cache.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Sessions.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.File.Gtk.setup_views(super_registry);
-		Dragonstone.Startup.Gopher.Gtk.setup_views(super_registry);
+		Dragonstone.Startup.Hypertext.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Gemini.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Upload.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Utiltest.Gtk.setup_views(super_registry);
