@@ -61,10 +61,12 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 			"scale":0.9,
 			"font":"NoGameNoLife",
 			"paragraph_background":"#111111",
-			"foreground":"#A1A49E"
+			"foreground":"#A1A49E",
+			"indent":10
 		},
 		"paragraph :preformatted":{
-			"wrap_mode":"none"
+			"wrap_mode":"none",
+			"indent":10
 		},
 		"error":{
 			"foreground":"#FB3934"
@@ -114,24 +116,26 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 		//Register a custom style provider
 		
 		var default_tag_theme = theme.get_text_tag_theme("*");
-		if (default_tag_theme.paragraph_background_color != null || default_tag_theme.foreground_color != null){
-			try {
-				print("[hypertextcontent] Adding style provider\n");
-				var style_provider = new Gtk.CssProvider();
-				string css = ".hypertext text {\n";
-				if (default_tag_theme.foreground_color != null) {
-					css += @"color: $(default_tag_theme.foreground_color);\n";
+		if (default_tag_theme != null) {
+			if (default_tag_theme.paragraph_background_color != null || default_tag_theme.foreground_color != null){
+				try {
+					print("[hypertextcontent] Adding style provider\n");
+					var style_provider = new Gtk.CssProvider();
+					string css = ".hypertext text {\n";
+					if (default_tag_theme.foreground_color != null) {
+						css += @"color: $(default_tag_theme.foreground_color);\n";
+					}
+					if (default_tag_theme.paragraph_background_color != null) {
+						css += @"background-color: $(default_tag_theme.paragraph_background_color);\n";
+					}
+					css += "}";
+					print(@"$css\n");
+					style_provider.load_from_data(css);
+					textview.get_style_context().add_class("hypertext");
+					textview.get_style_context().add_provider(style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+				} catch (Error e) {
+					print("[hypertextcontent] Error while applying custom css: "+e.message+"\n");
 				}
-				if (default_tag_theme.paragraph_background_color != null) {
-					css += @"background-color: $(default_tag_theme.paragraph_background_color);\n";
-				}
-				css += "}";
-				print(@"$css\n");
-				style_provider.load_from_data(css);
-				textview.get_style_context().add_class("hypertext");
-				textview.get_style_context().add_provider(style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
-			} catch (Error e) {
-				print("[hypertextcontent] Error while applying custom css: "+e.message+"\n");
 			}
 		}
 		
@@ -140,7 +144,7 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 		link_hover_tag = get_themed_tag("link :hover");
 		preformatted_tag = get_themed_tag("*:preformatted");
 		link_icon_tag = get_themed_tag("link_icon");
-
+		
 		link_tag.event.connect(on_link_tag_event);
 		
 		/* Old styling, only kept for debugging

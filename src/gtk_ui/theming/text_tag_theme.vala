@@ -6,6 +6,7 @@ public class Dragonstone.GtkUi.Theming.TextTagTheme : Object {
 	public Gdk.RGBA? underline_color = null;
 	
 	public double? scale = null;
+	public int? indent = null;
 	public Pango.FontDescription? font_description = null;
 	public Gtk.WrapMode? wrap_mode = null;
 	public Pango.Underline? underline = null;
@@ -17,6 +18,7 @@ public class Dragonstone.GtkUi.Theming.TextTagTheme : Object {
 		if (underline_color != null) { text_tag.underline_rgba = underline_color; }
 		
 		if (scale != null) { text_tag.scale = scale; }
+		if (indent != null) { text_tag.indent = indent; }
 		if (font_description != null) { text_tag.font_desc = font_description; }
 		if (wrap_mode != null) { text_tag.wrap_mode = wrap_mode; }
 		if (underline != null) { text_tag.underline = underline; }
@@ -29,6 +31,7 @@ public class Dragonstone.GtkUi.Theming.TextTagTheme : Object {
 		text_tag.underline_set = false;
 		text_tag.scale_set = false;
 		text_tag.wrap_mode_set = false;
+		text_tag.indent_set = false;
 		
 		text_tag.family_set = false;
 		text_tag.font_features_set = false;

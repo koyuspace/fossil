@@ -102,6 +102,9 @@ public class Dragonstone.GtkUi.JsonIntegration.Theming.TextTagTheme {
 		if (tag_theme.scale != null) {
 			object.set_double_member("scale", tag_theme.scale);
 		}
+		if (tag_theme.indent != null) {
+			object.set_int_member("indent", tag_theme.indent);
+		}
 		if (tag_theme.font_description != null) {
 			object.set_string_member("font", tag_theme.font_description.to_string());
 		}
@@ -137,6 +140,10 @@ public class Dragonstone.GtkUi.JsonIntegration.Theming.TextTagTheme {
 		double scale = object.get_double_member_with_default("scale",0);
 		if (scale > 1) {
 			tag_theme.scale = scale;
+		}
+		int indent = (int) object.get_int_member_with_default("indent",-1);
+		if (indent >= 1) {
+			tag_theme.indent = indent;
 		}
 		member = object.get_string_member_with_default("font","");
 		if (member != ""){
