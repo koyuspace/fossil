@@ -6,37 +6,110 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 	protected Dragonstone.GtkUi.Widget.LinkPopover? link_popover = null;	
 	protected Gtk.TextTag link_tag;
 	protected Gtk.TextTag link_hover_tag;
-	protected Gtk.TextTag h1_tag;
-	protected Gtk.TextTag h2_tag;
-	protected Gtk.TextTag h3_tag;
-	protected Gtk.TextTag quote_tag;
-	protected Gtk.TextTag list_item_tag;
-	protected Gtk.TextTag description_tag;
-	protected Gtk.TextTag preformatted_paragraph_tag;
 	protected Gtk.TextTag preformatted_tag;
-	protected Gtk.TextTag parser_error_tag;
-	protected Gtk.TextTag error_tag;
+	protected Gtk.TextTag link_icon_tag;
 	
 	private Gtk.GestureLongPress long_press_gesture;
 	private bool long_press = false;
 	
+	public HashTable<string,Gtk.TextTag> text_tag_cache = new HashTable<string,Gtk.TextTag>(str_hash,str_equal);
+	private static string temporary_style_json = """
+{
+	"prefixes":{
+		"link":"-> ",
+		"link :inline":" ",
+		"list_item":"▶ ",
+		"parser_error":"[PARSER_ERROR] ",
+		"link_without_uri":"[PARSER MISTAKE] Link without uri: ",
+		"search_without_uri":"[PARSER MISTAKE] Search without uri: "
+	},
+	"tag_themes":{
+		"link":{
+			"scale":1.1,
+			"font":"italic"
+		},
+		"link :hover":{
+			"underline":"single",
+			"scale":1.15
+		},
+		"link :prefix":{
+			"scale":1.15,
+			"font":"bold",
+			"foreground":"#A1A49E"
+		},
+		"link_icon":{
+			"scale":1.5
+		},
+		"list_item :prefix":{
+			"foreground":"#4E9A06"
+		},
+		"title +0":{
+			"scale":1.7,
+			"foreground":"#CE5C00"
+		},
+		"title +1":{
+			"scale":1.5
+		},
+		"title":{
+			"scale":1.2
+		},
+		"quote":{
+			"font":"oblique"
+		},
+		"description":{
+			"scale":0.9,
+			"font":"italic",
+			"foreground":"#A1A49E"
+		},
+		"paragraph :preformatted":{
+			"wrap_mode":"word_char"
+		},
+		"error":{
+			"foreground":"#FB3934"
+		},
+		"parser_error":{
+			"foreground":"#FB3934",
+			"font":"italic"
+		},
+		"*:preformatted":{
+			"paragraph_background":"#191919",
+			"foreground":"#D3D7CF"
+		}
+	}
+}
+	""";
+	
+	private Dragonstone.GtkUi.Interface.Theming.HyperTextViewTheme? theme = null;
+	
 	public HyperTextContent(){
-		var buffer = textview.buffer;
-		link_tag = buffer.create_tag("link");
-		link_hover_tag = buffer.create_tag("link_hover");
-		h1_tag = buffer.create_tag("h1");
-		h2_tag = buffer.create_tag("h2");
-		h3_tag = buffer.create_tag("h3");
-		quote_tag = buffer.create_tag("quote");
-		list_item_tag = buffer.create_tag("list_item");
-		description_tag = buffer.create_tag("description");
-		preformatted_paragraph_tag = buffer.create_tag("preformatted_paragraph");
-		preformatted_tag = buffer.create_tag("preformatted");
-		parser_error_tag = buffer.create_tag("parser_error");
-		error_tag = buffer.create_tag("error");
+		try {
+			Json.Parser parser = new Json.Parser();
+			parser.load_from_data(temporary_style_json);
+			var root_node = parser.get_root();
+			if (root_node != null){
+				if (root_node.get_node_type() == OBJECT) {
+					var theme_object = root_node.get_object();
+					theme = Dragonstone.GtkUi.JsonIntegration.Theming.HyperTextViewTheme.hyper_text_view_theme_from_json(theme_object);
+				}
+			}
+		} catch (Error e) {
+			print("[hypertextcontent] Error while parsing theme json: "+e.message+"\n");
+		}
+		
+		if(theme == null){ //fall back to an empty theme
+			theme = new Dragonstone.GtkUi.Theming.HyperTextViewTheme();
+		}
+	
+		link_tag = get_themed_tag("*:link");
+		link_hover_tag = get_themed_tag("link :hover");
+		preformatted_tag = get_themed_tag("*:preformatted");
+		link_icon_tag = get_themed_tag("link_icon");
+
+		link_tag.event.connect(on_link_tag_event);
+		
+		/* Old styling, only kept for debugging
 		link_hover_tag.underline = Pango.Underline.SINGLE;
 		link_tag.underline = Pango.Underline.NONE;
-		link_tag.event.connect(on_link_tag_event);
 		link_tag.scale = 1.1;
 		link_tag.style = Pango.Style.ITALIC;
 		h1_tag.scale = 1.7;
@@ -47,10 +120,12 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 		description_tag.style = Pango.Style.ITALIC;
 		preformatted_paragraph_tag.wrap_mode = Gtk.WrapMode.NONE;
 		var error_color = Gdk.RGBA();
-		error_color.parse("#FB3934"); //Pretty sure sobody is using a red background anytime soon
+		error_color.parse("#FB3934"); //Pretty sure nobody is using a red background anytime soon
 		error_tag.foreground_rgba = error_color;
 		parser_error_tag.foreground_rgba = error_color; 
 		parser_error_tag.style = Pango.Style.ITALIC;
+		*/
+		
 		textview.wrap_mode = Gtk.WrapMode.WORD_CHAR;
 		textview.right_margin = 8;
 		textview.has_tooltip = true;
@@ -69,10 +144,58 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 		});
 	}
 	
-	//TODO: implement theming and get rid of this
-	protected void highlight_preformatted_paragraphs(){
-		preformatted_paragraph_tag.paragraph_background = "#191919";
-		preformatted_paragraph_tag.foreground = "#D3D7CF";
+	 // Theme integration
+	/////////////////////////////
+	
+	public Gtk.TextTag get_themed_tag_by_name(string tag_name, bool skip_lookup = false){
+		Gtk.TextTag? tag = null;
+		tag = textview.buffer.tag_table.lookup(tag_name);
+		if (tag == null) {
+			tag = textview.buffer.create_tag(tag_name);
+			var tag_theme = theme.get_text_tag_theme(tag_name);
+			if (tag_theme != null) {
+				tag_theme.apply_theme(tag);
+			}
+		}
+		return tag;
+	}
+	
+	public Gtk.TextTag get_themed_tag(string cache_key){
+		Gtk.TextTag? tag = text_tag_cache.get(cache_key);
+		if (tag == null) {
+			string tag_name = theme.get_best_matching_text_tag_theme_name(cache_key.split(" "));
+			print(@"[hypertextcontent] TAG $cache_key >>> $tag_name \n");
+			tag = get_themed_tag_by_name(tag_name);
+			text_tag_cache.set(cache_key, tag);
+		}
+		return tag;
+	}
+	
+	public void append_styled_text(string text, string class_name, bool preformatted, bool inlined, uint level, string? uri = null){
+		if (text == "") { return; }
+		string preformatted_variant = preformatted?":preformatted":":not_preformatted";
+		string inline_variant = inlined?":inline":":paragraph";
+		string theme_cache_key = @"$class_name $preformatted_variant $inline_variant +$level";
+		string prefix_theme_cache_key = @"$theme_cache_key :prefix";
+		string? prefix = null;
+		if (inlined) {
+			prefix = theme.get_prefix(class_name+" :inline");
+		}
+		if (prefix == null) {
+			prefix = theme.get_prefix(class_name);
+		}
+		if (prefix == "{{{link_icon}}}") {
+			if (uri != null){
+				append_link_icon(uri);
+			} else {
+				append_link_icon(""); //dhould fail all tests and just display an arrow
+			}
+		} else if (prefix != null && prefix != ""){
+			var prefix_tag = get_themed_tag(prefix_theme_cache_key);
+			append_with_tag(prefix, prefix_tag, preformatted);
+		}
+		var text_tag = get_themed_tag(theme_cache_key);
+		append_with_tag(text, text_tag, preformatted, uri);
 	}
 	
 	  //////////////////////////////////////////////////
@@ -81,63 +204,40 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 	
 	private bool last_had_newline = true;
 	
-	public void start_new_paragraph(){
+	public void end_last_paragraph(){
 		if (!last_had_newline) {
 			append_text("\n");
+			last_had_newline = true;
 		}
 	}
 	
 	public void append_token(Dragonstone.Ui.Document.Token token){
+		if (!token.text.validate(token.text.length)) {
+			append_styled_text("", "invalid_utf_8", token.preformatted, token.inlined, token.level);
+		}
+		bool inlined = token.inlined;
+		bool preformatted = token.preformatted;
+		string text = token.text;
+		string class_name = "*";
+		bool use_styled_text = true;
 		switch(token.token_type){
-			case PARAGRAPH:
-				if (!token.inlined) { start_new_paragraph(); }
-				if (token.preformatted) {
-					append_with_tag(token.text, preformatted_paragraph_tag, true);
-				} else {
-					append_text(token.text);
-				}
-				break;
-			case DESCRIPTION:
-				if (!token.inlined) { start_new_paragraph(); }
-				append_with_tag(token.text, description_tag, token.preformatted);
-				break;
 			case EMPTY_LINE:
-				if (!token.inlined) { start_new_paragraph(); }
-				append_text("\n");
+				text = "\n";
+				class_name = "empty_line";
+				inlined = false;
+				preformatted = false;
 				break;
 			case LINK:
-				if (token.uri != null) {
-					if (token.inlined) {
-						append_link(token.text,token.uri, false);
-					} else {
-						start_new_paragraph();
-						append_link(token.text,token.uri);
-						append_text("\n");
-					}
+				if (token.uri == null) {
+					use_styled_text = false;
+					append_styled_text(token.text, "link_without_uri", true, false, token.level);
 				} else {
-					append_with_tag("[PARSER MISTAKE] Link without uri: "+token.text, parser_error_tag, true);
-				}
-				break;
-			case ERROR:
-				if (!token.inlined) { start_new_paragraph(); }
-				append_with_tag(token.text, error_tag, token.preformatted);
-				break;
-			case TITLE:
-				start_new_paragraph();
-				switch (token.level) {
-					case 0:
-						append_h1(token.text+"\n");
-						break;
-					case 1:
-						append_h2(token.text+"\n");
-						break;
-					default:
-						append_h3(token.text+"\n");
-						break;
+					class_name = "link";
 				}
 				break;
 			case SEARCH:
-				start_new_paragraph();
+				use_styled_text = false;
+				end_last_paragraph();
 				if (token.uri != null) {
 					var searchfield = new Dragonstone.GtkUi.Widget.InlineSearch(token.text, token.uri);
 					searchfield.go.connect((s,uri) => {
@@ -145,34 +245,52 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 					});
 					append_widget(searchfield);
 				} else {
-					append_with_tag("[PARSER MISTAKE] Search field without uri\n"+token.text+"\n", parser_error_tag, true);
+					append_styled_text(token.text, "link_without_uri", true, false, token.level);
 				}
 				break;
+			case PARAGRAPH:
+				class_name = "paragraph";
+				break;
+			case DESCRIPTION:
+				class_name = "description";
+				break;
+			case ERROR:
+				class_name = "error";
+				break;
+			case TITLE:
+				class_name = "title";
+				inlined = false;
+				break;
 			case LIST_ITEM:
-				start_new_paragraph();
-				append_with_tag("▶ "+token.text+"\n", list_item_tag, token.preformatted);
+				class_name = "list_item";
+				inlined = false;
 				break;
 			case QUOTE:
-				if (!token.inlined) { start_new_paragraph(); }
-				append_with_tag(token.text, quote_tag, token.preformatted);
+				class_name = "quote";
 				break;
 			case PARSER_ERROR:
-				append_with_tag("[PARSER ERROR] "+token.text, parser_error_tag, true);
+				class_name = "parser_error";
+				preformatted = true;
 				break;
 			default:
 				break;
 		}
+		if (use_styled_text) {
+			if (!inlined) { end_last_paragraph(); }
+			append_styled_text(text, class_name, preformatted, inlined, token.level, token.uri);
+		}
 		switch (token.token_type) {
 			case LINK:
+				if (!token.inlined) { append_text("\n"); }
 				last_had_newline = (!token.inlined) || token.text.has_suffix("\n");
 				break;
-			case TITLE:
-			case QUOTE:
-			case LIST_ITEM:
 			case SEARCH:
 			case EMPTY_LINE:
 				last_had_newline = true;
 				break;
+			case LIST_ITEM:
+			case QUOTE:
+			case TITLE:
 			default:
 				last_had_newline = token.text.has_suffix("\n");
 				break;
@@ -183,71 +301,56 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 		this.textview.buffer.text = "";
 	}
 	
+	
 	  ///////////////////////////////////////////////
 	 // Dragonstone.GtkUi.Widget.HyperTextContent //
 	///////////////////////////////////////////////
 	
-	protected void append_with_tag(string text, Gtk.TextTag tag, bool preformatted = false){
+	protected void append_with_tag(string text, Gtk.TextTag tag, bool preformatted, string? uri = null){
+		Gtk.TextIter start_iter;
+		textview.buffer.get_end_iter(out start_iter);
+		textview.buffer.insert_with_tags(ref start_iter, text, text.length, tag);
 		Gtk.TextIter end_iter;
 		textview.buffer.get_end_iter(out end_iter);
+		start_iter.backward_chars(text.char_count());
 		if (preformatted) {
-			textview.buffer.insert_with_tags(ref end_iter, text, text.length, tag);
-		} else {
-			textview.buffer.insert_with_tags(ref end_iter, text, text.length, preformatted_tag, tag);
+			textview.buffer.apply_tag(preformatted_tag, start_iter, end_iter);
+		}
+		if (uri != null){
+			textview.buffer.apply_tag(link_tag, start_iter, end_iter);
+			//register uri
+			string index = @"$(start_iter.get_line())/$(start_iter.get_line_offset())";
+			print(@"Adding link: $index $uri $text\n");
+			uris.set(index,uri);
 		}
 	}
 	
-	public void append_h1(string text){
-		append_with_tag(text,h1_tag);
-	}
-	
-	public void append_h2(string text){
-		append_with_tag(text,h2_tag);
-	}
-	
-	public void append_h3(string text){
-		append_with_tag(text,h3_tag);
-	}
-	
-	public void append_link(string text, string uri, bool with_icon = true){
+	public void append_link_icon(string uri){
 		Gtk.TextIter end_iter;
-		//Insert Icon
-		if (with_icon){
-			var icon_name = Dragonstone.GtkUi.Util.DefaultGtkLinkIconLoader.guess_icon_name_for_uri(uri);
-			// Old Icon code, can only show icons at caracter size
-			var icon_theme = Gtk.IconTheme.get_for_screen(get_screen());
-			if (!icon_theme.has_icon(icon_name)) {
-				icon_name = "go-jump-symbolic";
-			}
-			if (icon_theme.has_icon(icon_name)){
-				try{
-					var icon_pixbuf = icon_theme.load_icon(icon_name, 20*this.scale_factor, Gtk.IconLookupFlags.FORCE_SYMBOLIC);
-					if (icon_pixbuf != null){
-						append_text(" ");
-						textview.buffer.get_end_iter(out end_iter);
-						textview.buffer.insert_pixbuf(end_iter,icon_pixbuf);
-						append_text(" ");
-						Gtk.TextIter pb_start_iter;
-						textview.buffer.get_end_iter(out pb_start_iter);
-						pb_start_iter.backward_chars(2);
-						Gtk.TextIter pb_end_iter;
-						textview.buffer.get_end_iter(out pb_end_iter);
-						textview.buffer.apply_tag(h2_tag,pb_start_iter,pb_end_iter);
-					}
-				} catch(Error e){
-					print(@"[hypertextcontent][error] error while loading icon $icon_name: $(e.message)\n");
-				}
-			}
-			//var image = new Gtk.Image.from_icon_name(icon_name,Gtk.IconSize.LARGE_TOOLBAR);
-			//append_widget_inline(image);
-			//append_text(" ");
+		var icon_name = Dragonstone.GtkUi.Util.DefaultGtkLinkIconLoader.guess_icon_name_for_uri(uri);
+		var icon_theme = Gtk.IconTheme.get_for_screen(get_screen());
+		if (!icon_theme.has_icon(icon_name)) {
+			icon_name = "go-jump-symbolic";
 		}
-		textview.buffer.get_end_iter(out end_iter);
-		//register uri
-		string index = @"$(end_iter.get_line())/$(end_iter.get_line_offset())";
-		uris.set(index,uri);
-		//insert link
-		textview.buffer.insert_with_tags(ref end_iter, text, text.length, link_tag);
+		if (icon_theme.has_icon(icon_name)){
+			try{
+				var icon_pixbuf = icon_theme.load_icon(icon_name, 20*this.scale_factor, Gtk.IconLookupFlags.FORCE_SYMBOLIC);
+				if (icon_pixbuf != null){
+					append_text(" ");
+					textview.buffer.get_end_iter(out end_iter);
+					textview.buffer.insert_pixbuf(end_iter,icon_pixbuf);
+					append_text(" ");
+					Gtk.TextIter pb_start_iter;
+					textview.buffer.get_end_iter(out pb_start_iter);
+					pb_start_iter.backward_chars(2);
+					Gtk.TextIter pb_end_iter;
+					textview.buffer.get_end_iter(out pb_end_iter);
+					textview.buffer.apply_tag(link_icon_tag, pb_start_iter, pb_end_iter);
+				}
+			} catch(Error e){
+				print(@"[hypertextcontent][error] error while loading icon $icon_name: $(e.message)\n");
+			}
+		}
 	}
 	
 	private void show_popover(int x, int y, string uri){
@@ -436,6 +539,7 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 		return null;
 	}
 	
+	//TODO: Fix a small bug where when a link follows an empty line and starts at the beginning of the line the coordineates are off by one line
 	protected string? get_link_uri(Gtk.TextIter iter){
 		if (!iter.starts_tag(link_tag)){
 			iter.backward_to_tag_toggle(link_tag);

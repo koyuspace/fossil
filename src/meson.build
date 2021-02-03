@@ -25,7 +25,12 @@ executable(
 	'asm_init/switch.store.vala', #AUTOUPDATE_FILE
 	'asm_init/uri_autoprefix.registry.vala', #AUTOUPDATE_FILE
 	'gtk_ui/application.vala', #AUTOUPDATE_FILE
+	'gtk_ui/interface/theming/hyper_text_view_theme.vala', #AUTOUPDATE_FILE
 	'gtk_ui/interface/view.vala', #AUTOUPDATE_FILE
+	'gtk_ui/json_integration/theming/hyper_text_view_theme.vala', #AUTOUPDATE_FILE
+	'gtk_ui/json_integration/theming/text_tag_theme.vala', #AUTOUPDATE_FILE
+	'gtk_ui/theming/hyper_text_view_theme.vala', #AUTOUPDATE_FILE
+	'gtk_ui/theming/text_tag_theme.vala', #AUTOUPDATE_FILE
 	'gtk_ui/util/default_gtk_link_icon_loader.vala', #AUTOUPDATE_FILE
 	'gtk_ui/util/gtk_scroll_export.vala', #AUTOUPDATE_FILE
 	'gtk_ui/util/message_view_factory.vala', #AUTOUPDATE_FILE
@@ -152,6 +157,7 @@ executable(
 	
 	dependencies: [
 		dependency('gtk+-3.0'),
+		dependency('json-glib-1.0'),
 		dependency('gnutls'),
 	],
 	install: true
