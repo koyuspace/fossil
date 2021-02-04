@@ -152,7 +152,13 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 		string prefix_theme_cache_key = @"$theme_cache_key :prefix";
 		string? prefix = null;
 		if (inlined) {
-			prefix = theme.get_prefix(class_name+" :inline");
+			prefix = theme.get_prefix(@"$class_name :inline +$level");
+			if (prefix == null) {
+				prefix = theme.get_prefix(@"$class_name :inline");
+			}
+		}
+		if (prefix == null) {
+			prefix = theme.get_prefix(@"$class_name +$level");
 		}
 		if (prefix == null) {
 			prefix = theme.get_prefix(class_name);
