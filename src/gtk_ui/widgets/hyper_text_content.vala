@@ -46,7 +46,7 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 		if (default_tag_theme != null) {
 			if (default_tag_theme.paragraph_background_color != null || default_tag_theme.foreground_color != null){
 				try {
-					print("[hypertextcontent] Adding style provider\n");
+					//print("[hypertextcontent] Adding style provider\n");
 					var style_provider = new Gtk.CssProvider();
 					string css = ".hypertext text {\n";
 					if (default_tag_theme.foreground_color != null) {
@@ -56,7 +56,7 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 						css += @"background-color: $(default_tag_theme.paragraph_background_color);\n";
 					}
 					css += "}";
-					print(@"$css\n");
+					//print(@"$css\n");
 					style_provider.load_from_data(css);
 					textview.get_style_context().add_class("hypertext");
 					textview.get_style_context().add_provider(style_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
@@ -137,7 +137,7 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 		Gtk.TextTag? tag = text_tag_cache.get(cache_key);
 		if (tag == null) {
 			string tag_name = theme.get_best_matching_text_tag_theme_name(cache_key.split(" "));
-			print(@"[hypertextcontent] TAG $cache_key >>> $tag_name \n");
+			//print(@"[hypertextcontent] TAG $cache_key >>> $tag_name \n");
 			tag = get_themed_tag_by_name(tag_name, (cache_key=="*:link"?cache_key:null));
 			text_tag_cache.set(cache_key, tag);
 		}
@@ -295,7 +295,7 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 			textview.buffer.apply_tag(link_tag, start_iter, end_iter);
 			//register uri
 			string index = @"$(start_iter.get_line())/$(start_iter.get_line_offset())";
-			print(@"Adding link: $index $uri $text\n");
+			//print(@"Adding link: $index $uri $text\n");
 			uris.set(index,uri);
 		}
 	}

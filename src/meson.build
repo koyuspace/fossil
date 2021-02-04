@@ -25,12 +25,18 @@ executable(
 	'asm_init/switch.store.vala', #AUTOUPDATE_FILE
 	'asm_init/uri_autoprefix.registry.vala', #AUTOUPDATE_FILE
 	'gtk_ui/application.vala', #AUTOUPDATE_FILE
+	'gtk_ui/interface/theming/hyper_text_theme_loader.i.vala', #AUTOUPDATE_FILE
 	'gtk_ui/interface/theming/hyper_text_view_theme.vala', #AUTOUPDATE_FILE
 	'gtk_ui/interface/theming/hyper_text_view_theme_provider.vala', #AUTOUPDATE_FILE
+	'gtk_ui/interface/theming/hypertext_theme_rule_provider.i.vala', #AUTOUPDATE_FILE
 	'gtk_ui/interface/view.vala', #AUTOUPDATE_FILE
 	'gtk_ui/json_integration/theming/hyper_text_view_theme.vala', #AUTOUPDATE_FILE
+	'gtk_ui/json_integration/theming/hypertext_theme_rule.vala', #AUTOUPDATE_FILE
 	'gtk_ui/json_integration/theming/text_tag_theme.vala', #AUTOUPDATE_FILE
+	'gtk_ui/settings_integration/settings_hypertext_json_theme_loader.vala', #AUTOUPDATE_FILE
+	'gtk_ui/settings_integration/settings_hypertext_json_theme_rule_provider.vala', #AUTOUPDATE_FILE
 	'gtk_ui/theming/default_hyper_text_view_theme_provider.vala', #AUTOUPDATE_FILE
+	'gtk_ui/theming/hyper_text_theme_rule.vala', #AUTOUPDATE_FILE
 	'gtk_ui/theming/hyper_text_view_theme.vala', #AUTOUPDATE_FILE
 	'gtk_ui/theming/text_tag_theme.vala', #AUTOUPDATE_FILE
 	'gtk_ui/util/default_gtk_link_icon_loader.vala', #AUTOUPDATE_FILE

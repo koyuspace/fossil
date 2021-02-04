@@ -12,9 +12,14 @@ public class Dragonstone.Startup.Settings.Backend {
 		super_registry.store("core.settings.default_provider",defult_settings);
 		string settingsdir = GLib.Environment.get_user_config_dir();
 		settingsdir = settingsdir+"/dragonstone/";
+		// Add base settings directory
 		GLib.DirUtils.create_with_parents(settingsdir,16832);
 		var peristant_settings = new Dragonstone.Settings.FileProvider(settingsdir,"settings.");
 		settings_registry.add_provider(peristant_settings);
+		//Add themes settings directory
+		GLib.DirUtils.create_with_parents(settingsdir+"themes/",16832);
+		var theme_settings = new Dragonstone.Settings.FileProvider(settingsdir+"themes/","settings.themes.");
+		settings_registry.add_provider(theme_settings);
 	}
 	
 	public static void import_all(Dragonstone.SuperRegistry super_registry){

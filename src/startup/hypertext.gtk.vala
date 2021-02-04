@@ -17,8 +17,7 @@ public class Dragonstone.Startup.Hypertext.Gtk {
 		return null;
 	}
 	
-	public static void setup_views(Dragonstone.SuperRegistry super_registry){
-		print("[startup][hypertext][gtk] setup_views()\n");
+	public static Dragonstone.GtkUi.Theming.HyperTextViewTheme get_default_theme(Dragonstone.Registry.SettingsRegistry? settings_registry){
 		string temporary_style_json = """
 {
 	"prefixes":{
@@ -85,29 +84,43 @@ public class Dragonstone.Startup.Hypertext.Gtk {
 		}
 	}
 }
-	""";
+		""";
+		Dragonstone.GtkUi.Theming.HyperTextViewTheme? default_theme = null;
+		if (settings_registry != null){
+			var theme_rom = settings_registry.get_object("settings.theme.json");
+			if (theme_rom != null) {
+				default_theme = load_theme(theme_rom.content);
+			}
+		}
+		if (default_theme == null) { //fall back to the theme above
+			default_theme = load_theme(temporary_style_json);
+		}
+		if(default_theme == null) { //fall back to an empty theme
+			default_theme = new Dragonstone.GtkUi.Theming.HyperTextViewTheme();
+		}
+		return default_theme;
+	}
+	
+	public static void setup_views(Dragonstone.SuperRegistry super_registry){
+		print("[startup][hypertext][gtk] setup_views()\n");
+		
 		var view_registry = (super_registry.retrieve("gtk.views") as Dragonstone.GtkUi.ViewRegistry);
 		if (view_registry != null){
-			Dragonstone.GtkUi.Theming.HyperTextViewTheme? theme = null;
 			var settings_registry = super_registry.retrieve("core.settings") as Dragonstone.Registry.SettingsRegistry;
-			if (settings_registry != null){
-				var theme_rom = settings_registry.get_object("settings.theme.json");
-				if (theme_rom != null) {
-					theme = load_theme(theme_rom.content);
-				}
-			}
-			if (theme == null) { //fall back to the theme above
-				theme = load_theme(temporary_style_json);
-			}
-			if(theme == null) { //fall back to an empty theme
-				theme = new Dragonstone.GtkUi.Theming.HyperTextViewTheme();
-			}
-			var theme_provider = new Dragonstone.GtkUi.Theming.DefaultHyperTextViewThemeProvider(theme);
+			// Get get all the theming stuff set up
+			Dragonstone.GtkUi.Theming.HyperTextViewTheme? default_theme = get_default_theme(settings_registry);
+			var theme_provider = new Dragonstone.GtkUi.Theming.DefaultHyperTextViewThemeProvider(default_theme);
+			var theme_loader = new Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeLoader(settings_registry, "settings.themes.");
+			var theme_rule_provider = new Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeRuleProvider(settings_registry, "settings.theme_rules.json");
+			theme_provider.set_theme_loader(theme_loader);
+			theme_provider.set_rule_provider(theme_rule_provider);
+			// Get a gophertype registry gfot the gopher token parser in the DefaultTokenParserFactory
 			var gopher_type_registry = (super_registry.retrieve("gopher.types") as Dragonstone.Registry.GopherTypeRegistry);
 			if (gopher_type_registry == null) {
 				gopher_type_registry = new Dragonstone.Registry.GopherTypeRegistry.default_configuration();
 			}
 			var parser_factory = new Dragonstone.Document.DefaultTokenParserFactory(gopher_type_registry);
+			//register the hypertext view
 			view_registry.add_view("hypertext",() => {	
 				return new Dragonstone.GtkUi.View.Hypertext(parser_factory, theme_provider);
 			});
