@@ -61,7 +61,9 @@
 			"font":"italic"
 		},
 		"*:preformatted":{
-			"font":"monospace"
+			"font":"monospace",
+			"paragraph_background":"#141414",
+			"foreground":"#D3D7CF"
 		},
 		"*":{
 			"foreground":"#D3D7CF",

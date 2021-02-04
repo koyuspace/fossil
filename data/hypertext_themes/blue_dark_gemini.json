@@ -11,7 +11,7 @@
 		"link":{
 			"scale":1.1,
 			"font":"italic",
-			"foreground":"#D7D1C4"
+			"foreground":"#C4CCD7"
 		},
 		"link :hover":{
 			"underline":"single",
@@ -26,11 +26,11 @@
 			"scale":1.5
 		},
 		"list_item :prefix":{
-			"foreground":"#A1A49E"
+			"foreground":"#3465A4"
 		},
 		"title +0":{
-			"scale":1.7,
-			"foreground":"#CE5C00"
+			"scale":1.9,
+			"foreground":"#144E94"
 		},
 		"title +1":{
 			"scale":1.5
@@ -61,7 +61,9 @@
 			"font":"italic"
 		},
 		"*:preformatted":{
-			"font":"monospace"
+			"font":"monospace",
+			"paragraph_background":"#141414",
+			"foreground":"#D3D7CF"
 		},
 		"*":{
 			"foreground":"#D3D7CF",

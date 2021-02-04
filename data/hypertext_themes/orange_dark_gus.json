@@ -1,8 +1,8 @@
 {
 	"prefixes":{
 		"link":"{{{link_icon}}}",
+		"link +1":"",
 		"link :inline":" ",
-		"list_item":"▶ ",
 		"parser_error":"[PARSER_ERROR] ",
 		"link_without_uri":"[PARSER MISTAKE] Link without uri: ",
 		"search_without_uri":"[PARSER MISTAKE] Search without uri: "
@@ -13,9 +13,14 @@
 			"font":"italic",
 			"foreground":"#D7D1C4"
 		},
+		"link +1":{
+			"scale":1.2,
+			"paragraph_background":"#111111",
+			"foreground":"#F57900",
+			"indent":10
+		},
 		"link :hover":{
-			"underline":"single",
-			"scale":1.11
+			"underline":"single"
 		},
 		"link :prefix":{
 			"scale":1.15,
@@ -24,9 +29,6 @@
 		},
 		"link_icon":{
 			"scale":1.5
-		},
-		"list_item :prefix":{
-			"foreground":"#A1A49E"
 		},
 		"title +0":{
 			"scale":1.7,
@@ -42,12 +44,12 @@
 			"font":"oblique",
 			"foreground":"#A1A49E"
 		},
-		"description":{
+		"list_item":{
 			"scale":0.9,
 			"font":"italic",
 			"paragraph_background":"#111111",
 			"foreground":"#A1A49E",
-			"indent":10
+			"indent":20
 		},
 		"paragraph :preformatted":{
 			"wrap_mode":"none",
@@ -61,7 +63,9 @@
 			"font":"italic"
 		},
 		"*:preformatted":{
-			"font":"monospace"
+			"font":"monospace",
+			"paragraph_background":"#141414",
+			"foreground":"#D3D7CF"
 		},
 		"*":{
 			"foreground":"#D3D7CF",
