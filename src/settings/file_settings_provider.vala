@@ -6,12 +6,39 @@ public class Dragonstone.Settings.FileProvider : Dragonstone.Interface.Settings.
 	public string module_name;
 	private string path_prefix;
 	private bool writable;
+	private FileMonitor? file_monitor = null;
 	
 	public FileProvider(string basepath, string module_name, string path_prefix = "", bool writable = true){
 		this.path_prefix = path_prefix;
 		this.module_name = module_name;
 		this.basepath = basepath;
 		this.writable = writable;
+		try {
+			var directory = File.new_for_path(basepath);
+			file_monitor = directory.monitor_directory(NONE);
+			file_monitor.changed.connect(on_file_changed);
+		} catch (Error e){
+			print("[settings.fileprovider] Error while setting up directory monitor: "+e.message);
+		}
+	}
+	
+	~FileProvider(){
+		if (file_monitor != null){
+			file_monitor.cancel();
+			file_monitor.changed.disconnect(on_file_changed);
+		}
+	}
+	
+	private void on_file_changed(File file, File? other_file, FileMonitorEvent event_type){
+		string? basename = file.get_basename();
+		if (basename != null) {
+			if (!basename.has_prefix(".")){
+				if (event_type != CHANGES_DONE_HINT) {
+					print(@"[settings][updated] $(path_prefix+basename.replace("/","."))\n");
+					this.settings_updated(path_prefix+basename.replace("/","."));
+				}
+			}
+		}
 	}
 	
 	public string? get_name(string path){
@@ -39,8 +66,8 @@ public class Dragonstone.Settings.FileProvider : Dragonstone.Interface.Settings.
 			}
 		}
 		try {
-			var dir = File.new_for_path(basepath);
-			var enumerator = dir.enumerate_children(FileAttribute.STANDARD_NAME, 0);
+			var directory = File.new_for_path(basepath);
+			var enumerator = directory.enumerate_children(FileAttribute.STANDARD_NAME, 0);
 			FileInfo file_info;
 			while ((file_info = enumerator.next_file()) != null) {
 				string path = this.path_prefix+file_info.get_name();
