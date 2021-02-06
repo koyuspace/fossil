@@ -70,15 +70,12 @@ public class Dragonstone.Settings.Context.Fallback : Dragonstone.Interface.Setti
 	}
 	
 	public string? read_object(string path){
-		print(@"Reading object $path … ");
 		foreach(Dragonstone.Interface.Settings.Provider provider in fallbacks){
 			string? content = provider.read_object(path);
 			if (content != null) {
-				print("success\n");
 				return content;
 			}
 		}
-		print("not found\n");
 		return null;
 	}
 	

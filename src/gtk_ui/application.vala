@@ -40,6 +40,13 @@ public class Dragonstone.GtkUi.Application : Gtk.Application {
 		core_settings_provider.add_fallback(persistant_settings_provider);
 		core_settings_provider.add_fallback(theme_settings_provider);
 		core_settings_provider.add_fallback(default_settings_provider);
+		//setup setting logging
+		core_settings_provider.submit_client_report.connect((report) => {
+			print(@"[settings][client]$report\n");
+		});
+		core_settings_provider.provider_report.connect((report) => {
+			print(@"[settings][provider]$report\n");
+		});
 		//Set defaults
 		Dragonstone.Startup.Hypertext.Settings.register_default_settings(default_settings_provider);
 		Dragonstone.Startup.Frontend.Settings.register_default_settings(default_settings_provider);

@@ -26,4 +26,21 @@ public class Dragonstone.Settings.Report : Object {
 		this.debug = report.debug;
 		this.timestamp = report.timestamp;
 	}
+	
+	public string to_string(){
+		string message = @"[$timestamp][$module_name]($path)";
+		if (error != null){
+			message += @" [ERROR] $error";
+		}
+		if (warning != null){
+			message += @" [WARNING] $warning";
+		}
+		if (info != null){
+			message += @" [INFO] $info";
+		}
+		if (debug != null){
+			message += @" [DEBUG] $debug";
+		}
+		return message;
+	}
 }
