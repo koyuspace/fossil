@@ -4,7 +4,7 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 	public Dragonstone.SuperRegistry super_registry { get; construct; }
 	public Dragonstone.Registry.TranslationRegistry translation;
 	private Dragonstone.GtkUi.Application app;
-	private Dragonstone.Settings.KVSettings? settings = null;
+	private Dragonstone.Settings.Bridge.KV? settings = null;
 	
 	public Window(Dragonstone.GtkUi.Application application) {
 		Object(
@@ -42,7 +42,7 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		
 		set_events(Gdk.EventMask.ALL_EVENTS_MASK);
 		
-		settings = super_registry.retrieve("settings.frontend") as Dragonstone.Settings.KVSettings;
+		settings = super_registry.retrieve("settings.frontend") as Dragonstone.Settings.Bridge.KV;
 		
 		//place window where it has been bofore closing
 		//move(settings.get_int("main-window-pos-x"),settings.get_int("main-window-pos-y"));

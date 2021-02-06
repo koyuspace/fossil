@@ -14,12 +14,13 @@ public class Dragonstone.GtkUi.Application : Gtk.Application {
 		if (super_registry != null) { return; }
 		this.shutdown.connect(on_shutdown);
 		super_registry = new Dragonstone.SuperRegistry();
+		//TODO: remove this asm thingy together with the super_registry, was a bad idea
+		//      integrate with settings (json) instead
 		//Initalize ASM constructors
 		var init_object = new Dragonstone.Asm.SimpleAsmObject();
 		Dragonstone.AsmInit.Bookmarks.Registry.register_initalizer("bookmark_registry",init_object);
 		Dragonstone.AsmInit.Mimeguesser.Registry.register_initalizer("mimeguesser_registry",init_object);
 		Dragonstone.AsmInit.Session.Registry.register_initalizer("session_registry",init_object);
-		Dragonstone.AsmInit.Settings.Registry.register_initalizer("settings_registry",init_object);
 		Dragonstone.AsmInit.Store.Registry.register_initalizer("store_registry",init_object);
 		Dragonstone.AsmInit.UriAutoprefix.Registry.register_initalizer("uri_autoprefix_registry",init_object);
 		//make a scriptrunner
@@ -30,22 +31,22 @@ public class Dragonstone.GtkUi.Application : Gtk.Application {
 		super_registry.store("core.stores",new Dragonstone.Registry.StoreRegistry.default_configuration());
 		scriptrunner.exec_line("init:uri_autoprefix_registry\tcore.uri_autoprefixer",super_registry);
 		scriptrunner.exec_line("init:session_registry\tcore.sessions",super_registry);
-		scriptrunner.exec_line("init:settings_registry\tcore.settings",super_registry);
 		scriptrunner.exec_line("init:bookmark_registry\tcore.bookmarks",super_registry);
-		//super_registry.store("core.uri_autoprefixer",new Dragonstone.Registry.UriAutoprefix());
-		//super_registry.store("core.sessions",new Dragonstone.Registry.SessionRegistry());
-		//super_registry.store("core.settings",new Dragonstone.Registry.SettingsRegistry());
-		//super_registry.store("core.bookmarks",new Dragonstone.Registry.BookmarkRegistry());
-		//Initalize Settings providers
-		Dragonstone.Startup.Settings.Backend.setup_providers(super_registry);
+		//initalize settings
+		var default_settings_provider = new Dragonstone.Settings.RamProvider();
+		var persistant_settings_provider = Dragonstone.Startup.Settings.Backend.get_file_settings_provider("","settings.", "persistant_settings_provider");
+		var theme_settings_provider = Dragonstone.Startup.Settings.Backend.get_file_settings_provider("themes/","themes.","theme_settings_provider");
+		var core_settings_provider = new Dragonstone.Settings.Context.Fallback();
+		core_settings_provider.add_fallback(persistant_settings_provider);
+		core_settings_provider.add_fallback(theme_settings_provider);
+		core_settings_provider.add_fallback(default_settings_provider);
 		//Set defaults
-		Dragonstone.Startup.Frontend.Settings.register_default_settings(super_registry);
-		Dragonstone.Startup.Bookmarks.Settings.register_default_settings(super_registry);
+		Dragonstone.Startup.Hypertext.Settings.register_default_settings(default_settings_provider);
+		Dragonstone.Startup.Frontend.Settings.register_default_settings(default_settings_provider);
+		Dragonstone.Startup.Bookmarks.Settings.register_default_settings(default_settings_provider);
 		//Initaize settings bridges
-		Dragonstone.Startup.Frontend.Settings.register_settings_object(super_registry);
-		Dragonstone.Startup.Bookmarks.Settings.register_settings_bridge(super_registry);
-		//import settings
-		Dragonstone.Startup.Settings.Backend.import_all(super_registry);
+		Dragonstone.Startup.Frontend.Settings.register_settings_object(super_registry, core_settings_provider);
+		Dragonstone.Startup.Bookmarks.Settings.register_settings_bridge(super_registry, core_settings_provider);
 		//Initalize Cache
 		//Dragonstone.Startup.Cache.Backend.setup_store(super_registry); //register before switch
 		Dragonstone.Startup.About.Backend.setup_store(super_registry);
@@ -84,7 +85,7 @@ public class Dragonstone.GtkUi.Application : Gtk.Application {
 		Dragonstone.Startup.Cache.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Sessions.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.File.Gtk.setup_views(super_registry);
-		Dragonstone.Startup.Hypertext.Gtk.setup_views(super_registry);
+		Dragonstone.Startup.Hypertext.Gtk.setup_views(super_registry, core_settings_provider);
 		Dragonstone.Startup.Gemini.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Upload.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Utiltest.Gtk.setup_views(super_registry);
@@ -148,8 +149,6 @@ public class Dragonstone.GtkUi.Application : Gtk.Application {
 		if (cache != null){ cache.erase(); }
 		var sessions = (super_registry.retrieve("core.sessions") as Dragonstone.Registry.SessionRegistry);
 		if (sessions != null){ sessions.erase_all_caches(); }
-		var settings_registry = super_registry.retrieve("core.settings") as Dragonstone.Registry.SettingsRegistry;
-		if (settings_registry != null){ settings_registry.export_all(); }
 	}
 	
 	private Dragonstone.Window build_window() {

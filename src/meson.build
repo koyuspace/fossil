@@ -20,7 +20,6 @@ executable(
 	'asm_init/gopher.type.registry.vala', #AUTOUPDATE_FILE
 	'asm_init/mimeguesser.registry.vala', #AUTOUPDATE_FILE
 	'asm_init/session.registry.vala', #AUTOUPDATE_FILE
-	'asm_init/settings.registry.vala', #AUTOUPDATE_FILE
 	'asm_init/store.registry.vala', #AUTOUPDATE_FILE
 	'asm_init/switch.store.vala', #AUTOUPDATE_FILE
 	'asm_init/uri_autoprefix.registry.vala', #AUTOUPDATE_FILE
@@ -88,15 +87,11 @@ executable(
 	'interface/document/token_renderer.i.vala', #AUTOUPDATE_FILE
 	'interface/resource_store.i.vala', #AUTOUPDATE_FILE
 	'interface/session.i.vala', #AUTOUPDATE_FILE
-	'interface/settings/bridge.i.vala', #AUTOUPDATE_FILE
 	'interface/settings/provider.i.vala', #AUTOUPDATE_FILE
-	'interface/settings/rom.vala', #AUTOUPDATE_FILE
-	'interface/settings/rom_provider.i.vala', #AUTOUPDATE_FILE
 	'registries/bookmark_registry.vala', #AUTOUPDATE_FILE
 	'registries/gopher_type_registry.vala', #AUTOUPDATE_FILE
 	'registries/mimeguesser.vala', #AUTOUPDATE_FILE
 	'registries/session_registry.vala', #AUTOUPDATE_FILE
-	'registries/settings_registry.vala', #AUTOUPDATE_FILE
 	'registries/store_registry.vala', #AUTOUPDATE_FILE
 	'registries/super_registry.vala', #AUTOUPDATE_FILE
 	'registries/translation.vala', #AUTOUPDATE_FILE
@@ -105,10 +100,13 @@ executable(
 	'sessions/dummy.vala', #AUTOUPDATE_FILE
 	'sessions/tls.vala', #AUTOUPDATE_FILE
 	'sessions/uncached.vala', #AUTOUPDATE_FILE
-	'settings/bookmark_settings_bridge.vala', #AUTOUPDATE_FILE
+	'settings/bridge/bookmark_settings_bridge.vala', #AUTOUPDATE_FILE
+	'settings/bridge/kv_settings_bridge.vala', #AUTOUPDATE_FILE
+	'settings/context/fallback.vala', #AUTOUPDATE_FILE
+	'settings/context/prefix.vala', #AUTOUPDATE_FILE
 	'settings/file_settings_provider.vala', #AUTOUPDATE_FILE
-	'settings/kv_settings_bridge.vala', #AUTOUPDATE_FILE
 	'settings/ram_settings_provider.vala', #AUTOUPDATE_FILE
+	'settings/report.vala', #AUTOUPDATE_FILE
 	'startup/about.backend.vala', #AUTOUPDATE_FILE
 	'startup/bookmarks.backend.vala', #AUTOUPDATE_FILE
 	'startup/bookmarks.gtk.vala', #AUTOUPDATE_FILE
@@ -126,6 +124,7 @@ executable(
 	'startup/gopher.backend.vala', #AUTOUPDATE_FILE
 	'startup/gopherwrite.backend.vala', #AUTOUPDATE_FILE
 	'startup/hypertext.gtk.vala', #AUTOUPDATE_FILE
+	'startup/hypertext.settings.vala', #AUTOUPDATE_FILE
 	'startup/localization.english.vala', #AUTOUPDATE_FILE
 	'startup/localization.vala', #AUTOUPDATE_FILE
 	'startup/sessions.backend.vala', #AUTOUPDATE_FILE
@@ -158,7 +157,6 @@ executable(
 	'util/intparser.vala', #AUTOUPDATE_FILE
 	'util/kv.vala', #AUTOUPDATE_FILE
 	'util/resource_file_helper.vala', #AUTOUPDATE_FILE
-	'util/settings_fetcher.vala', #AUTOUPDATE_FILE
 	'util/stack.vala', #AUTOUPDATE_FILE
 	'util/tls_certificate_generator.vala', #AUTOUPDATE_FILE
 	'util/uri.vala', #AUTOUPDATE_FILE

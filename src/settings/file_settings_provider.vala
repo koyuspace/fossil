@@ -3,24 +3,59 @@ public class Dragonstone.Settings.FileProvider : Dragonstone.Interface.Settings.
 	//the id, stripped of its prefix will be directly appendd to this
 	//this is done to make it possible to enforce filenames starting with a fixed prefix
 	private string basepath;
-	private string id_prefix;
+	public string module_name;
+	private string path_prefix;
 	private bool writable;
 	
-	public FileProvider(string basepath, string id_prefix = "", bool writable = true){
-		this.id_prefix = id_prefix;
+	public FileProvider(string basepath, string module_name, string path_prefix = "", bool writable = true){
+		this.path_prefix = path_prefix;
+		this.module_name = module_name;
 		this.basepath = basepath;
 		this.writable = writable;
 	}
 	
-	public string? get_name(string id){
-		if (id.has_prefix(id_prefix)){
-			return id.substring(id_prefix.length).replace("/",".");
+	public string? get_name(string path){
+		if (path.has_prefix(path_prefix)){
+			return path.substring(path_prefix.length).replace("/",".");
 		}
 		return null;
 	}
 	
-	public bool has_object(string id){
-		var name = get_name(id);
+	private void report(string path, string? error, string? warning, string? info, string? debug){
+		this.provider_report(new Dragonstone.Settings.Report(module_name, path, error, warning, info, debug));
+	}
+	  /////////////////////////////////////////////
+	 // Dragonstone.Interface.Settings.Provider //
+	/////////////////////////////////////////////
+	
+	public void request_index(string path_prefix, Func<string> cb){
+		if (path_prefix.length >= this.path_prefix.length) {
+			if (!path_prefix.has_prefix(this.path_prefix)) {
+				return;
+			}
+		} else if (this.path_prefix.length < path_prefix.length){
+			if (!this.path_prefix.has_prefix(path_prefix)) {
+				return;
+			}
+		}
+		try {
+			var dir = File.new_for_path(basepath);
+			var enumerator = dir.enumerate_children(FileAttribute.STANDARD_NAME, 0);
+			FileInfo file_info;
+			while ((file_info = enumerator.next_file()) != null) {
+				string path = this.path_prefix+file_info.get_name();
+				if (path.has_prefix(path_prefix)){
+					cb(path);
+				}
+			}
+		//currently does nothing
+		} catch (GLib.Error e) {
+			report(path_prefix, e.message, null, "request_index()", basepath);
+		}
+	}
+	
+	public bool has_object(string path){
+		var name = get_name(path);
 		if(name != null){
 			var file = File.new_for_path(basepath+name);
 			return file.query_exists();
@@ -28,8 +63,8 @@ public class Dragonstone.Settings.FileProvider : Dragonstone.Interface.Settings.
 			return false;
 		}
 	}
-	public Dragonstone.Interface.Settings.Rom? get_object(string id){
-		var name = get_name(id);
+	public string? read_object(string path){
+		var name = get_name(path);
 		if(name != null){
 			var file = File.new_for_path(basepath+name);
 			try{
@@ -39,11 +74,10 @@ public class Dragonstone.Settings.FileProvider : Dragonstone.Interface.Settings.
 				while ((line = data_input_stream.read_line_utf8(null)) != null) {
 					output = output+line+"\n";
 				}
-				//TODO use a file rom provider here, that can monitor the filesystem and automatically update
-				var rom_provider = new Dragonstone.Interface.Settings.RomProvider(output);
-				var rom = new Dragonstone.Interface.Settings.Rom(rom_provider);
-				return rom;
-			}catch (GLib.Error e) {
+				report(path, null, null, "successfully read file", basepath+name);
+				return output;
+			} catch (GLib.Error e) {
+				report(path, e.message, null, null, basepath+name);
 				return null;
 			}
 		} else {
@@ -51,26 +85,38 @@ public class Dragonstone.Settings.FileProvider : Dragonstone.Interface.Settings.
 		}
 	}
 	
-	public bool can_upload_object(string id){
+	public bool can_write_object(string path){
 		return writable;
 	}
-	public bool upload_object(string id, string content){
+	public bool write_object(string path, string? content){
 		if (writable) {
-			var name = get_name(id);
+			var name = get_name(path);
 			if(name != null){
+				bool updated = false;
 				try{
-					print(@"[settings][file settings provider] exporting $id to $basepath$name\n");
+					//print(@"[settings][file settings provider] exporting $path to $basepath$name\n");
 					var file = File.new_for_path(basepath+name);
-					try {
+					if (file.query_exists()) {
 						file.delete();
-					} catch {}
-					var file_output_stream = file.create(FileCreateFlags.PRIVATE | FileCreateFlags.REPLACE_DESTINATION);
-					var data_output_stream = new DataOutputStream(file_output_stream);
-					data_output_stream.put_string(content);
-					print(@"[settings][file settings provider] exported $id\n");
+						report(path, null, null, "successfully deleted file", basepath+name);
+						updated = true;
+					}
+					if (content != null) {
+						var file_output_stream = file.create(FileCreateFlags.PRIVATE | FileCreateFlags.REPLACE_DESTINATION);
+						var data_output_stream = new DataOutputStream(file_output_stream);
+						data_output_stream.put_string(content);
+						data_output_stream.close();
+						//print(@"[settings][file settings provider] exported $path\n");
+						report(path, null, null, "successfully written to file", basepath+name);
+						updated = true;
+					}
 				}catch (GLib.Error e) {
-					print(@"[settings][file settings provider][error] $(e.message)\n");
+					//print(@"[settings][file settings provider][error] $(e.message)\n");
+					report(path, e.message, null, null, basepath+name);
 					return false;
+				}
+				if (updated) {
+					settings_updated(path);
 				}
 			} else {
 				return false;

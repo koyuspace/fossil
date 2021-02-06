@@ -1,28 +1,38 @@
 public class Dragonstone.Settings.RamProvider : Dragonstone.Interface.Settings.Provider, Object {
 
-	public HashTable<string,Dragonstone.Interface.Settings.RomProvider> objects = new HashTable<string,Dragonstone.Interface.Settings.RomProvider>(str_hash, str_equal);
+	public HashTable<string,string> objects = new HashTable<string,string>(str_hash, str_equal);
 	public bool writable = true;
 	
-	public bool has_object(string id){
-		return objects.get(id) == null;
-	}
-	public Dragonstone.Interface.Settings.Rom? get_object(string id){
-		var rom_provider = objects.get(id);
-		if (rom_provider == null){ return null; }
-		return new Dragonstone.Interface.Settings.Rom(rom_provider);
+	  /////////////////////////////////////////////
+	 // Dragonstone.Interface.Settings.Provider //
+	/////////////////////////////////////////////
+	
+	public void request_index(string path_prefix, Func<string> cb){
+		objects.foreach((k,_) => {
+			cb(k);
+		});
 	}
 	
-	public bool can_upload_object(string id){
+	public bool has_object(string path){
+		return objects.get(path) != null;
+	}
+
+	public string? read_object(string path){
+		return objects.get(path);
+	}
+	
+	public bool can_write_object(string path){
 		return writable;
 	}
-	public bool upload_object(string id, string content){
+	
+	public bool write_object(string path, string? content){
 		if (writable) {
-			var rom_provider = objects.get(id);
-			if (rom_provider == null){
-				rom_provider = new Dragonstone.Interface.Settings.RomProvider(content);
+			if (content == null){
+				objects.remove(path);
 			} else {
-				rom_provider.content = content;
+				objects.set(path, content);
 			}
+			settings_updated(path);
 		}
 		return writable;
 	}

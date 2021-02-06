@@ -1,21 +1,22 @@
-public class Dragonstone.Settings.KVSettings : Dragonstone.Interface.Settings.Bridge, Object {
+public class Dragonstone.Settings.Bridge.KV : Object {
 
-	public string id;
+	public string path;
 	public HashTable<string,string> values = new HashTable<string,string>(str_hash,str_equal);	
 	
 	public signal void updated_key(string key);
 	
 	private bool dirty = false;
+	private Dragonstone.Interface.Settings.Provider settings_provider;
 	
-	public KVSettings(string id){
-		this.id = id;
-		this.updated_key.connect(() => {dirty = true;});
+	public KV(Dragonstone.Interface.Settings.Provider settings_provider, string path){
+		this.settings_provider = settings_provider;
+		this.path = path;
+		import();
 	}
 	
-	public bool import(Dragonstone.Interface.Settings.Provider settings_provider){
-		Dragonstone.Interface.Settings.Rom? rom = settings_provider.get_object(id);
-		if (rom == null){ return false; }
-		string input = rom.content;
+	public bool import(){
+		string? input = settings_provider.read_object(path);
+		if (input == null){ return false; }
 		string[] lines = input.split("\n");
 		foreach (string line in lines){
 			string[] tokens = line.strip().split(":",2);
@@ -28,7 +29,8 @@ public class Dragonstone.Settings.KVSettings : Dragonstone.Interface.Settings.Br
 	}
 	
 	//very naive, to be improved
-	public bool export(Dragonstone.Interface.Settings.Provider settings_provider){
+	public bool export(){
+		dirty = false;
 		string output = "";
 		foreach (string key in values.get_keys()){
 			string? val = values.get(key);
@@ -37,7 +39,7 @@ public class Dragonstone.Settings.KVSettings : Dragonstone.Interface.Settings.Br
 			}
 		}
 		dirty = false;
-		settings_provider.upload_object(this.id, output);
+		settings_provider.write_object(this.path, output);
 		return true;
 	}
 	
@@ -57,6 +59,19 @@ public class Dragonstone.Settings.KVSettings : Dragonstone.Interface.Settings.Br
 	public void set_value(string key, string val){
 		values.set(key,val);
 		updated_key(key);
+		make_dirty();
+	}
+	
+	private void make_dirty(){
+		lock (dirty) {
+			if (!dirty) {
+				dirty = true;
+				Timeout.add(5000,() => {
+					export();
+					return false;
+				});
+			}
+		}
 	}
 
 }
