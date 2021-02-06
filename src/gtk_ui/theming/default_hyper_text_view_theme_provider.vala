@@ -36,7 +36,7 @@ public class Dragonstone.GtkUi.Theming.DefaultHyperTextViewThemeProvider : Drago
 				//load the theme to make sure it can be loaded
 				var theme = theme_loader.get_theme_by_name(rule.theme_name);
 				if (theme != null) {
-					print("\t\tloded successfully!");
+					print("\t\tloaded successfully!\n");
 					best_score = score;
 					best_theme = theme;
 				}

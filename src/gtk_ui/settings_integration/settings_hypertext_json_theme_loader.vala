@@ -4,17 +4,31 @@ public class Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeLoa
 	
 	private Dragonstone.Interface.Settings.Provider settings_provider;
 	private string prefix;
+	private HashTable<string,Dragonstone.GtkUi.Interface.Theming.HyperTextViewTheme> theme_cache = new HashTable<string,Dragonstone.GtkUi.Interface.Theming.HyperTextViewTheme>(str_hash, str_equal);
 	
 	public SettingsHypertextJsonThemeLoader(Dragonstone.Interface.Settings.Provider settings_provider, string prefix){
 		this.settings_provider = settings_provider;
 		this.prefix = prefix;
+		this.settings_provider.settings_updated.connect(on_settings_updated);
 	}
 	
-	  //////////////////////////////////////////////////////////////
-	 // Dragonstone.GtkUi.Interface.Theming.HyperTextThemeLoader //
-	//////////////////////////////////////////////////////////////
+	~SettingsHypertextJsonThemeLoader(){
+		this.settings_provider.settings_updated.disconnect(on_settings_updated);
+	}
 	
-	public Dragonstone.GtkUi.Interface.Theming.HyperTextViewTheme? get_theme_by_name(string name){
+	private void on_settings_updated(string path){
+		lock(theme_cache){
+			if (path.has_prefix(prefix)){
+				if (path == prefix || path+"." == prefix){
+					theme_cache.remove_all();	
+				} else {
+					theme_cache.remove(path.substring(prefix.length));
+				}
+			}
+		}
+	}
+	
+	private Dragonstone.GtkUi.Interface.Theming.HyperTextViewTheme? load_theme_by_name(string name){
 		print(@"[Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeLoader] Loading theme $name at $prefix$name.json\n");
 		string path = @"$prefix$name.json";
 		var theme_json = settings_provider.read_object(path);
@@ -36,6 +50,22 @@ public class Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeLoa
 			}
 		}
 		return null;
+	}
+	
+	  //////////////////////////////////////////////////////////////
+	 // Dragonstone.GtkUi.Interface.Theming.HyperTextThemeLoader //
+	//////////////////////////////////////////////////////////////
+	
+	public Dragonstone.GtkUi.Interface.Theming.HyperTextViewTheme? get_theme_by_name(string name){
+		lock (theme_cache) {
+			Dragonstone.GtkUi.Interface.Theming.HyperTextViewTheme? theme = theme_cache.get(@"$name.json");
+			if (theme != null){
+				return theme;
+			}
+			theme = load_theme_by_name(name);
+			theme_cache.set(@"$name.json", theme);
+			return theme;
+		}
 	}
 	
 }
