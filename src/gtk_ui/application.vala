@@ -156,6 +156,8 @@ public class Dragonstone.GtkUi.Application : Gtk.Application {
 		if (cache != null){ cache.erase(); }
 		var sessions = (super_registry.retrieve("core.sessions") as Dragonstone.Registry.SessionRegistry);
 		if (sessions != null){ sessions.erase_all_caches(); }
+		var bookmark_bridge = (super_registry.retrieve("bookmarks.settings_bridge") as Dragonstone.Settings.Bridge.Bookmarks);
+		if (bookmark_bridge != null){ bookmark_bridge.export(); }
 	}
 	
 	private Dragonstone.Window build_window() {
