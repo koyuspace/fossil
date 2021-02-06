@@ -1,5 +1,8 @@
 public class Dragonstone.Startup.Hypertext.Settings {
-	public static string default_style_json = """
+	
+		
+	public static void register_default_settings(Dragonstone.Interface.Settings.Provider settings_provider){
+		string default_style_json = """
 {
 	"prefixes":{
 		"link":"{{{link_icon}}}",
@@ -64,9 +67,8 @@ public class Dragonstone.Startup.Hypertext.Settings {
 			"wrap_mode":"word_char"
 		}
 	}
-}""";
-		
-	public static void register_default_settings(Dragonstone.Interface.Settings.Provider settings_provider){
+}
+		""";
 		settings_provider.write_object("themes.default.json", default_style_json);
 	}
 }
