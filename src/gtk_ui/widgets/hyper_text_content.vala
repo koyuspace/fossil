@@ -67,9 +67,9 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 		}
 		
 		default_tag = get_themed_tag("*");
-		link_tag = get_themed_tag("*:link");
-		link_hover_tag = get_themed_tag("link :hover");
 		preformatted_tag = get_themed_tag("*:preformatted");
+		link_hover_tag = get_themed_tag("link :hover");
+		link_tag = get_themed_tag("*:link");
 		link_icon_tag = get_themed_tag("link_icon");
 		
 		link_tag.event.connect(on_link_tag_event);
@@ -118,17 +118,28 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 	 // Theme integration
 	/////////////////////////////
 	
+	public void update_prioritys(){
+		int max_priority = textview.buffer.tag_table.get_size()-1;
+		text_tag_cache.foreach((cache_key,tag) => {
+			if (cache_key.contains(":hover")) {
+				tag.set_priority(max_priority);
+			}
+		});
+	}
+	
 	public Gtk.TextTag get_themed_tag_by_name(string tag_name, string? tag_table_name){
 		string? _tag_table_name = tag_table_name;
 		if (_tag_table_name == null) { _tag_table_name = tag_name; }
 		Gtk.TextTag? tag = null;
 		tag = textview.buffer.tag_table.lookup(_tag_table_name);
 		if (tag == null) {
+			print(@"Creating tag $_tag_table_name\n");
 			tag = textview.buffer.create_tag(_tag_table_name);
 			var tag_theme = theme.get_text_tag_theme(tag_name);
 			if (tag_theme != null) {
 				tag_theme.apply_theme(tag);
 			}
+			update_prioritys();
 		}
 		return tag;
 	}
