@@ -30,9 +30,14 @@ public class Dragonstone.GtkUi.View.Hypertext : Gtk.Bin, Dragonstone.GtkUi.Inter
 			try{
     		var parser = token_parser_factory.get_token_parser(request.resource.mimetype);
     		parser.set_input_stream(file.read());
+    		bool first_title = true;
     		while (true) {
     			var token = parser.next_token();
     			if (token == null) { break; }
+    			if (first_title && token.token_type == TITLE){
+    				first_title = false;
+    				tab.set_title(token.text);
+    			}
     			hypertext.append_token(token);
     		}
     		

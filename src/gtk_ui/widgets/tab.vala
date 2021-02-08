@@ -477,7 +477,7 @@ public class Dragonstone.GtkUi.Tab : Gtk.Bin {
 		}
 	}
 	
-	public void set_title(string title, Dragonstone.Ui.TabDisplayState state =  Dragonstone.Ui.TabDisplayState.CONTENT){
+	public void set_title(string title, Dragonstone.Ui.TabDisplayState state = Dragonstone.Ui.TabDisplayState.CONTENT){
 		this.title = title;
 		this.display_state = state;
 		on_title_change(title,display_state);

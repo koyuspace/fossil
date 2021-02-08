@@ -31,11 +31,21 @@ public class Dragonstone.GtkUi.Widget.TabHead : Gtk.Box {
 		spinner.visible = state == LOADING;
 		error_icon.visible = state == ERROR;
 		if (title.char_count() > title_chars){
-			var startcut = title.index_of_nth_char(title_chars/2);
-			var endcut = title.index_of_nth_char(title.char_count()-(title_chars/2));
-			this.title.label = title[0:startcut]+"…"+title.slice(endcut,title.length);
+			if (title == tab.uri){
+				var startcut = title.index_of_nth_char(title_chars/2);
+				var endcut = title.index_of_nth_char(title.char_count()-(title_chars/2));
+				this.title.label = title[0:startcut]+"…"+title.slice(endcut,title.length);
+			} else {
+				var cutat = title.index_of_nth_char(title_chars);
+				this.title.label = title[0:cutat]+"…";
+			}
 		} else {
 			this.title.label = title;
+		}
+		if (title == tab.uri){
+			this.tooltip_text = title;
+		} else {
+			this.tooltip_markup = "<b>"+Markup.escape_text(title)+"</b>\n"+Markup.escape_text(tab.uri);
 		}
 	}
 	
