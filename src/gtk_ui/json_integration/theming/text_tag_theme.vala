@@ -105,6 +105,15 @@ public class Dragonstone.GtkUi.JsonIntegration.Theming.TextTagTheme {
 		if (tag_theme.indent != null) {
 			object.set_int_member("indent", tag_theme.indent);
 		}
+		if (tag_theme.left_margin != null) {
+			object.set_int_member("left_margin", tag_theme.left_margin);
+		}
+		if (tag_theme.right_margin != null) {
+			object.set_int_member("right_margin", tag_theme.right_margin);
+		}
+		if (tag_theme.invisible != null) {
+			object.set_boolean_member("invisible", tag_theme.invisible);
+		}
 		if (tag_theme.font_description != null) {
 			object.set_string_member("font", tag_theme.font_description.to_string());
 		}
@@ -141,10 +150,19 @@ public class Dragonstone.GtkUi.JsonIntegration.Theming.TextTagTheme {
 		if (scale > 1) {
 			tag_theme.scale = scale;
 		}
-		int indent = (int) object.get_int_member_with_default("indent",-1);
-		if (indent >= 1) {
-			tag_theme.indent = indent;
+		int int_member = (int) object.get_int_member_with_default("indent",-1000);
+		if (int_member > -1000) {
+			tag_theme.indent = int_member;
 		}
+		int_member = (int) object.get_int_member_with_default("left_margin",-1000);
+		if (int_member > -1000) {
+			tag_theme.left_margin = int_member;
+		}
+		int_member = (int) object.get_int_member_with_default("right_margin",-1000);
+		if (int_member > -1000) {
+			tag_theme.right_margin = int_member;
+		}
+		tag_theme.invisible = object.get_boolean_member_with_default("invisible", false);
 		member = object.get_string_member_with_default("font","");
 		if (member != ""){
 			tag_theme.font_description = Pango.FontDescription.from_string(member);
