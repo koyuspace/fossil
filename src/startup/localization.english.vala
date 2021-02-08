@@ -95,7 +95,7 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("edit_bookmark.delete_bookmark.label","Delete");
 		//messages
 		language.set_text("view.error/internal.label","Hell just broke loose");
-		language.set_text("view.error/internal.sublabel","or maybe it was just a tiny bug?\nPlease report to the developer!");
+		language.set_text("view.error/internal.sublabel","or maybe it was just a timeout?\nPlease report to the developer if you think this was caused by a bug!");
 		language.set_text("view.error/gibberish.label","Gibberish!");
 		language.set_text("view.error/gibberish.sublabel","That not what the server said,\n that's what it looks like!");
 		language.set_text("view.error/connectionRefused.label","Connection refused");
