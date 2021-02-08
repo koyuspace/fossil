@@ -27,6 +27,9 @@ public class Dragonstone.Startup.Hypertext.Gtk {
 			});
 			view_registry.add_rule(new Dragonstone.GtkUi.ViewRegistryRule.resource_view("text/gemini","hypertext"));
 			view_registry.add_rule(new Dragonstone.GtkUi.ViewRegistryRule.resource_view("text/gopher","hypertext"));
+			view_registry.add_rule(new Dragonstone.GtkUi.ViewRegistryRule.resource_view("text/", "hypertext"));
+			view_registry.add_rule(new Dragonstone.GtkUi.ViewRegistryRule.resource_view("application/xml", "hypertext"));
+			view_registry.add_rule(new Dragonstone.GtkUi.ViewRegistryRule.resource_view("application/json", "hypertext"));
 		}
 	}
 

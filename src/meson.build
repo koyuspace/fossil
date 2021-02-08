@@ -149,6 +149,7 @@ executable(
 	'ui/document/token.vala', #AUTOUPDATE_FILE
 	'ui/document/token_parser/gemini.vala', #AUTOUPDATE_FILE
 	'ui/document/token_parser/gopher.vala', #AUTOUPDATE_FILE
+	'ui/document/token_parser/plaintext.vala', #AUTOUPDATE_FILE
 	'ui/document/token_type.vala', #AUTOUPDATE_FILE
 	'ui/tab.vala', #AUTOUPDATE_FILE
 	'ui/tab_display_state.vala', #AUTOUPDATE_FILE

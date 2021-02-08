@@ -18,6 +18,7 @@ public class Dragonstone.Document.DefaultTokenParserFactory : Dragonstone.Interf
 		if (content_type.has_prefix("text/gopher")) { return new Dragonstone.Ui.Document.TokenParser.Gopher(gopher_type_registry); }
 		if (content_type.has_prefix("application/gopher")) { return new Dragonstone.Ui.Document.TokenParser.Gopher(gopher_type_registry); }
 		if (content_type.has_prefix("text/gemini")) { return new Dragonstone.Ui.Document.TokenParser.Gemini(); }
+		if (content_type.has_prefix("text/")) { return new Dragonstone.Ui.Document.TokenParser.Plaintext(); }
 		return null;
 	}
 	
@@ -25,6 +26,7 @@ public class Dragonstone.Document.DefaultTokenParserFactory : Dragonstone.Interf
 		if (content_type.has_prefix("text/gopher")) { return true; }
 		if (content_type.has_prefix("application/gopher")) { return true; }
 		if (content_type.has_prefix("text/gemini")) { return true; }
+		if (content_type.has_prefix("text/")) { return true; }
 		return false;
 	}
 	
