@@ -1,4 +1,4 @@
-public interface Dragonstone.GtkUi.Interface.Theming.HyperTextViewTheme : Object {
+public interface Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme : Object {
 	
 	public abstract string? get_prefix(string name);
 	public abstract Dragonstone.GtkUi.Theming.TextTagTheme? get_text_tag_theme(string name);

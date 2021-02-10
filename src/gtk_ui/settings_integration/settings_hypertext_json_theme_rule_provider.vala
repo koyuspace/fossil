@@ -1,6 +1,6 @@
-public class Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeRuleProvider : Dragonstone.GtkUi.Interface.HyperTextThemeRuleProvider, Object {
+public class Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeRuleProvider : Dragonstone.GtkUi.Interface.HypertextThemeRuleProvider, Object {
 	
-	private List<Dragonstone.GtkUi.Theming.HyperTextThemeRule> rules = new List<Dragonstone.GtkUi.Theming.HyperTextThemeRule>();
+	private List<Dragonstone.GtkUi.Theming.HypertextThemeRule> rules = new List<Dragonstone.GtkUi.Theming.HypertextThemeRule>();
 	private Dragonstone.Interface.Settings.Provider settings_provider;
 	private string path;
 	public string module_name = "Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeRuleProvider";
@@ -25,7 +25,7 @@ public class Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeRul
 	public void reload(){
 		lock(rules) {
 			if (rules.length()>0){
-				rules = new List<Dragonstone.GtkUi.Theming.HyperTextThemeRule>();
+				rules = new List<Dragonstone.GtkUi.Theming.HypertextThemeRule>();
 			}
 			var rules_json = settings_provider.read_object(path);
 			if (rules_json == null) {
@@ -41,7 +41,7 @@ public class Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeRul
 						var rules_array = root_node.get_array();
 						foreach (unowned Json.Node item in rules_array.get_elements()) {
 							if (item.get_node_type() == OBJECT) {
-								var rule = Dragonstone.GtkUi.JsonIntegration.Theming.HyperTextThemeRule.rule_from_json(item.get_object());
+								var rule = Dragonstone.GtkUi.JsonIntegration.Theming.HypertextThemeRule.rule_from_json(item.get_object());
 								if (rule != null) {
 									rules.append(rule);
 									counter++;
@@ -59,10 +59,10 @@ public class Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeRul
 	}
 	
 	  ////////////////////////////////////////////////////////////
-	 // Dragonstone.GtkUi.Interface.HyperTextThemeRuleProvider //
+	 // Dragonstone.GtkUi.Interface.HypertextThemeRuleProvider //
 	////////////////////////////////////////////////////////////
 	
-	public void foreach_relevant_rule(string content_type, string uri, Func<Dragonstone.GtkUi.Theming.HyperTextThemeRule> cb){
+	public void foreach_relevant_rule(string content_type, string uri, Func<Dragonstone.GtkUi.Theming.HypertextThemeRule> cb){
 		rules.foreach(cb);
 	}
 	

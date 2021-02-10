@@ -1,6 +1,6 @@
-public class Dragonstone.GtkUi.JsonIntegration.Theming.HyperTextViewTheme {
+public class Dragonstone.GtkUi.JsonIntegration.Theming.HypertextViewTheme {
 	
-	public static Json.Object hyper_text_view_theme_to_json(Dragonstone.GtkUi.Theming.HyperTextViewTheme theme){
+	public static Json.Object hyper_text_view_theme_to_json(Dragonstone.GtkUi.Theming.HypertextViewTheme theme){
 		var theme_object = new Json.Object();
 		theme_object.set_boolean_member("monospaced", theme.is_monospaced_by_default());
 		var prefix_object = new Json.Object();
@@ -16,8 +16,8 @@ public class Dragonstone.GtkUi.JsonIntegration.Theming.HyperTextViewTheme {
 		return theme_object;
 	}
 	
-	public static Dragonstone.GtkUi.Theming.HyperTextViewTheme hyper_text_view_theme_from_json(Json.Object theme_object){
-		var theme = new Dragonstone.GtkUi.Theming.HyperTextViewTheme();
+	public static Dragonstone.GtkUi.Theming.HypertextViewTheme hyper_text_view_theme_from_json(Json.Object theme_object){
+		var theme = new Dragonstone.GtkUi.Theming.HypertextViewTheme();
 		theme.monospaced_by_default = theme_object.get_boolean_member_with_default("monospaced", true);
 		var prefix_node = theme_object.get_member("prefixes");
 		if (prefix_node != null){

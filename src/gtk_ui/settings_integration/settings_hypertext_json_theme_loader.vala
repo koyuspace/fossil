@@ -1,10 +1,10 @@
-public class Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeLoader : Dragonstone.GtkUi.Interface.Theming.HyperTextThemeLoader, Object {
+public class Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeLoader : Dragonstone.GtkUi.Interface.Theming.HypertextThemeLoader, Object {
 	
 	public string module_name = "Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeLoader";
 	
 	private Dragonstone.Interface.Settings.Provider settings_provider;
 	private string prefix;
-	private HashTable<string,Dragonstone.GtkUi.Interface.Theming.HyperTextViewTheme> theme_cache = new HashTable<string,Dragonstone.GtkUi.Interface.Theming.HyperTextViewTheme>(str_hash, str_equal);
+	private HashTable<string,Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme> theme_cache = new HashTable<string,Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme>(str_hash, str_equal);
 	
 	public SettingsHypertextJsonThemeLoader(Dragonstone.Interface.Settings.Provider settings_provider, string prefix){
 		this.settings_provider = settings_provider;
@@ -28,7 +28,7 @@ public class Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeLoa
 		}
 	}
 	
-	private Dragonstone.GtkUi.Interface.Theming.HyperTextViewTheme? load_theme_by_name(string name){
+	private Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme? load_theme_by_name(string name){
 		print(@"[Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeLoader] Loading theme $name at $prefix$name.json\n");
 		string path = @"$prefix$name.json";
 		var theme_json = settings_provider.read_object(path);
@@ -40,7 +40,7 @@ public class Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeLoa
 				if (root_node != null){
 					if (root_node.get_node_type() == OBJECT) {
 						var theme_object = root_node.get_object();
-						return Dragonstone.GtkUi.JsonIntegration.Theming.HyperTextViewTheme.hyper_text_view_theme_from_json(theme_object);
+						return Dragonstone.GtkUi.JsonIntegration.Theming.HypertextViewTheme.hyper_text_view_theme_from_json(theme_object);
 					}
 				}
 				settings_provider.submit_client_report(new Dragonstone.Settings.Report(module_name, path, null, null, @"Imported theme"));
@@ -53,12 +53,12 @@ public class Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeLoa
 	}
 	
 	  //////////////////////////////////////////////////////////////
-	 // Dragonstone.GtkUi.Interface.Theming.HyperTextThemeLoader //
+	 // Dragonstone.GtkUi.Interface.Theming.HypertextThemeLoader //
 	//////////////////////////////////////////////////////////////
 	
-	public Dragonstone.GtkUi.Interface.Theming.HyperTextViewTheme? get_theme_by_name(string name){
+	public Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme? get_theme_by_name(string name){
 		lock (theme_cache) {
-			Dragonstone.GtkUi.Interface.Theming.HyperTextViewTheme? theme = theme_cache.get(@"$name.json");
+			Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme? theme = theme_cache.get(@"$name.json");
 			if (theme != null){
 				return theme;
 			}

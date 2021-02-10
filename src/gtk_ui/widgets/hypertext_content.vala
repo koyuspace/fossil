@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widget.TextContent, Dragonstone.Interface.Document.TokenRenderer {
+public class Dragonstone.GtkUi.Widget.HypertextContent : Dragonstone.GtkUi.Widget.TextContent, Dragonstone.Interface.Document.TokenRenderer {
 	
 	public HashTable<string,string> uris = new HashTable<string,string>(str_hash,str_equal);
 	public signal void go(string uri, bool alt); //alt is true if the link was ctrl-clicked or middleclicked
@@ -15,9 +15,9 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 	
 	public HashTable<string,Gtk.TextTag> text_tag_cache = new HashTable<string,Gtk.TextTag>(str_hash,str_equal);
 	
-	private Dragonstone.GtkUi.Interface.Theming.HyperTextViewTheme? theme = null;
+	private Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme? theme = null;
 	
-	public HyperTextContent(Dragonstone.GtkUi.Interface.Theming.HyperTextViewTheme? _theme = null, Dragonstone.GtkUi.Widget.LinkPopover? link_popover = null){
+	public HypertextContent(Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme? _theme = null, Dragonstone.GtkUi.Widget.LinkPopover? link_popover = null){
 		this.theme = _theme;
 		this.link_popover = link_popover;
 		/*
@@ -28,7 +28,7 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 			if (root_node != null){
 				if (root_node.get_node_type() == OBJECT) {
 					var theme_object = root_node.get_object();
-					theme = Dragonstone.GtkUi.JsonIntegration.Theming.HyperTextViewTheme.hyper_text_view_theme_from_json(theme_object);
+					theme = Dragonstone.GtkUi.JsonIntegration.Theming.HypertextViewTheme.hyper_text_view_theme_from_json(theme_object);
 				}
 			}
 		} catch (Error e) {
@@ -37,7 +37,7 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 		*/
 		
 		if(theme == null){ //fall back to an empty theme
-			theme = new Dragonstone.GtkUi.Theming.HyperTextViewTheme();
+			theme = new Dragonstone.GtkUi.Theming.HypertextViewTheme();
 		}
 		
 		//Register a custom style provider
@@ -293,7 +293,7 @@ public class Dragonstone.GtkUi.Widget.HyperTextContent : Dragonstone.GtkUi.Widge
 	
 	
 	  ///////////////////////////////////////////////
-	 // Dragonstone.GtkUi.Widget.HyperTextContent //
+	 // Dragonstone.GtkUi.Widget.HypertextContent //
 	///////////////////////////////////////////////
 	
 	protected void append_with_tag(string text, Gtk.TextTag tag, bool preformatted, string? uri = null){

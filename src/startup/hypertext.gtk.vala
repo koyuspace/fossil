@@ -6,11 +6,11 @@ public class Dragonstone.Startup.Hypertext.Gtk {
 		if (view_registry != null){
 			// Get get all the theming stuff set up
 			var theme_loader = new Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeLoader(settings_provider, "themes.");
-			Dragonstone.GtkUi.Interface.Theming.HyperTextViewTheme? default_theme = theme_loader.get_theme_by_name("default");
+			Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme? default_theme = theme_loader.get_theme_by_name("default");
 			if(default_theme == null) { //fall back to an empty theme
-				default_theme = new Dragonstone.GtkUi.Theming.HyperTextViewTheme();
+				default_theme = new Dragonstone.GtkUi.Theming.HypertextViewTheme();
 			}
-			var theme_provider = new Dragonstone.GtkUi.Theming.DefaultHyperTextViewThemeProvider(default_theme);
+			var theme_provider = new Dragonstone.GtkUi.Theming.DefaultHypertextViewThemeProvider(default_theme);
 			//setup the theme rule provider
 			var theme_rule_provider = new Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeRuleProvider(settings_provider, "settings.theme_rules.json");
 			theme_provider.set_theme_loader(theme_loader);

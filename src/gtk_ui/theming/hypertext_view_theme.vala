@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.Theming.HyperTextViewTheme : Dragonstone.GtkUi.Interface.Theming.HyperTextViewTheme, Object {
+public class Dragonstone.GtkUi.Theming.HypertextViewTheme : Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme, Object {
 	
 	public bool monospaced_by_default = true;
 	
@@ -30,7 +30,7 @@ public class Dragonstone.GtkUi.Theming.HyperTextViewTheme : Dragonstone.GtkUi.In
 	}
 	
 	  ////////////////////////////////////////////////////////////
-	 // Dragonstone.GtkUi.Interface.Theming.HyperTextViewTheme //
+	 // Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme //
 	////////////////////////////////////////////////////////////
 	
 	public string? get_prefix(string name){

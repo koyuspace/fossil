@@ -1,6 +1,6 @@
-public class Dragonstone.GtkUi.JsonIntegration.Theming.HyperTextThemeRule {
+public class Dragonstone.GtkUi.JsonIntegration.Theming.HypertextThemeRule {
 	
-	public static Json.Object rule_to_json(Dragonstone.GtkUi.Theming.HyperTextThemeRule rule){
+	public static Json.Object rule_to_json(Dragonstone.GtkUi.Theming.HypertextThemeRule rule){
 		var object = new Json.Object();
 		object.set_string_member("theme", rule.theme_name);
 		if (rule.content_type != null) {
@@ -24,12 +24,12 @@ public class Dragonstone.GtkUi.JsonIntegration.Theming.HyperTextThemeRule {
 		return object;
 	}
 	
-	public static Dragonstone.GtkUi.Theming.HyperTextThemeRule? rule_from_json(Json.Object object){
+	public static Dragonstone.GtkUi.Theming.HypertextThemeRule? rule_from_json(Json.Object object){
 		string member;
-		Dragonstone.GtkUi.Theming.HyperTextThemeRule rule;
+		Dragonstone.GtkUi.Theming.HypertextThemeRule rule;
 		member = object.get_string_member_with_default("theme","");
 		if (member != ""){
-			rule = new Dragonstone.GtkUi.Theming.HyperTextThemeRule(member);
+			rule = new Dragonstone.GtkUi.Theming.HypertextThemeRule(member);
 		} else {
 			return null;
 		}

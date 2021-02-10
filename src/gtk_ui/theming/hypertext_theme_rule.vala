@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.Theming.HyperTextThemeRule : Object {
+public class Dragonstone.GtkUi.Theming.HypertextThemeRule : Object {
 
 	public string theme_name;
 	public string? content_type = null;
@@ -8,7 +8,7 @@ public class Dragonstone.GtkUi.Theming.HyperTextThemeRule : Object {
 	public string? path_prefix = null;
 	public string? path_suffix = null;
 	
-	public HyperTextThemeRule(string theme_name){
+	public HypertextThemeRule(string theme_name){
 		this.theme_name = theme_name;
 	}
 	

@@ -24,19 +24,19 @@ executable(
 	'asm_init/switch.store.vala', #AUTOUPDATE_FILE
 	'asm_init/uri_autoprefix.registry.vala', #AUTOUPDATE_FILE
 	'gtk_ui/application.vala', #AUTOUPDATE_FILE
-	'gtk_ui/interface/theming/hyper_text_theme_loader.i.vala', #AUTOUPDATE_FILE
-	'gtk_ui/interface/theming/hyper_text_view_theme.vala', #AUTOUPDATE_FILE
-	'gtk_ui/interface/theming/hyper_text_view_theme_provider.vala', #AUTOUPDATE_FILE
+	'gtk_ui/interface/theming/hypertext_theme_loader.i.vala', #AUTOUPDATE_FILE
 	'gtk_ui/interface/theming/hypertext_theme_rule_provider.i.vala', #AUTOUPDATE_FILE
+	'gtk_ui/interface/theming/hypertext_view_theme.vala', #AUTOUPDATE_FILE
+	'gtk_ui/interface/theming/hypertext_view_theme_provider.vala', #AUTOUPDATE_FILE
 	'gtk_ui/interface/view.vala', #AUTOUPDATE_FILE
-	'gtk_ui/json_integration/theming/hyper_text_view_theme.vala', #AUTOUPDATE_FILE
 	'gtk_ui/json_integration/theming/hypertext_theme_rule.vala', #AUTOUPDATE_FILE
+	'gtk_ui/json_integration/theming/hypertext_view_theme.vala', #AUTOUPDATE_FILE
 	'gtk_ui/json_integration/theming/text_tag_theme.vala', #AUTOUPDATE_FILE
 	'gtk_ui/settings_integration/settings_hypertext_json_theme_loader.vala', #AUTOUPDATE_FILE
 	'gtk_ui/settings_integration/settings_hypertext_json_theme_rule_provider.vala', #AUTOUPDATE_FILE
-	'gtk_ui/theming/default_hyper_text_view_theme_provider.vala', #AUTOUPDATE_FILE
-	'gtk_ui/theming/hyper_text_theme_rule.vala', #AUTOUPDATE_FILE
-	'gtk_ui/theming/hyper_text_view_theme.vala', #AUTOUPDATE_FILE
+	'gtk_ui/theming/default_hypertext_view_theme_provider.vala', #AUTOUPDATE_FILE
+	'gtk_ui/theming/hypertext_theme_rule.vala', #AUTOUPDATE_FILE
+	'gtk_ui/theming/hypertext_view_theme.vala', #AUTOUPDATE_FILE
 	'gtk_ui/theming/text_tag_theme.vala', #AUTOUPDATE_FILE
 	'gtk_ui/util/default_gtk_link_icon_loader.vala', #AUTOUPDATE_FILE
 	'gtk_ui/util/gtk_scroll_export.vala', #AUTOUPDATE_FILE
@@ -66,7 +66,7 @@ executable(
 	'gtk_ui/widgets/cacheview.vala', #AUTOUPDATE_FILE
 	'gtk_ui/widgets/dialog_view_base.vala', #AUTOUPDATE_FILE
 	'gtk_ui/widgets/header_bar.vala', #AUTOUPDATE_FILE
-	'gtk_ui/widgets/hyper_text_content.vala', #AUTOUPDATE_FILE
+	'gtk_ui/widgets/hypertext_content.vala', #AUTOUPDATE_FILE
 	'gtk_ui/widgets/inline_search.vala', #AUTOUPDATE_FILE
 	'gtk_ui/widgets/inline_search_post_b64_file_popover_easter_egg.vala', #AUTOUPDATE_FILE
 	'gtk_ui/widgets/link_button.vala', #AUTOUPDATE_FILE

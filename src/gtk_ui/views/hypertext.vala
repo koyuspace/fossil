@@ -4,10 +4,10 @@ public class Dragonstone.GtkUi.View.Hypertext : Gtk.Bin, Dragonstone.GtkUi.Inter
 	private Dragonstone.GtkUi.Tab tab;
 	
 	private Dragonstone.Interface.Document.TokenParserFactory token_parser_factory;
-	private Dragonstone.GtkUi.Interface.Theming.HyperTextViewThemeProvider theme_provider;
-	private Dragonstone.GtkUi.Widget.HyperTextContent? hypertext = null;
+	private Dragonstone.GtkUi.Interface.Theming.HypertextViewThemeProvider theme_provider;
+	private Dragonstone.GtkUi.Widget.HypertextContent? hypertext = null;
 	
-	public Hypertext(Dragonstone.Interface.Document.TokenParserFactory token_parser_factory, Dragonstone.GtkUi.Interface.Theming.HyperTextViewThemeProvider theme_provider){
+	public Hypertext(Dragonstone.Interface.Document.TokenParserFactory token_parser_factory, Dragonstone.GtkUi.Interface.Theming.HypertextViewThemeProvider theme_provider){
 		this.token_parser_factory = token_parser_factory;
 		this.theme_provider = theme_provider;
 	}
@@ -19,7 +19,7 @@ public class Dragonstone.GtkUi.View.Hypertext : Gtk.Bin, Dragonstone.GtkUi.Inter
 			if (theme == null){
 				theme = theme_provider.get_default_theme();
 			}
-			hypertext = new Dragonstone.GtkUi.Widget.HyperTextContent(theme, new Dragonstone.GtkUi.Widget.LinkButtonPopover(tab));
+			hypertext = new Dragonstone.GtkUi.Widget.HypertextContent(theme, new Dragonstone.GtkUi.Widget.LinkButtonPopover(tab));
 			hypertext.go.connect(on_go_event);
 			add(hypertext);
 			var file = File.new_for_path(request.resource.filepath);
