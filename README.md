@@ -4,9 +4,7 @@ A simple GTK Gopher/Gemini client written in Vala
 
 This project is currently on long term support, meaning I won't add new features and only fix bugs if they get reported (or I notice them)
 
-Dragonstone will be replaced by [NightCat](https://gitlab.com/baschdel/nightcat) wich is at the time of writing (August 2020) still very young and just an unfinished empty frame with some test code around it.
-
-If you want to adopt this project and make it into your own feel free to do so, I won't be mag if you change the license to a GPL or MIT one.
+If you want to adopt this project and make it into your own feel free to do so, I won't be mad if you change the license to a GPL or MIT one.
 
 Screenshots may be out of date (use the git timestamps and a bit of common sense)
 
@@ -34,7 +32,7 @@ Screenshots may be out of date (use the git timestamps and a bit of common sense
 - trys to be as themeable as possible using GTK themes and icon packs (no guarantees except for obsidian2 and Numix because that's what I use on my development machines)
 - unfinished features and bugs (I try to keep them to a minimum)
 
-### Wishlist (will never come to dragonstone, but may come to NightCat)
+### Wishlist
 - more settings
 - plugins for supporting more protocols
 - a non-codename for the project
@@ -53,3 +51,6 @@ directory. The produced binary should be executable, now.
 
 To make development easy, the `run` script calls the `build.sh` script
 and then runs whatever is at the output (it will try and fail if there is none).
+
+### Wasn't it supposed to be replaced by NightCat?
+Yes, but as it turns out it's more motivating to work on an already existing project. So the plan is to slowly turn dragonstone into something similar to what nihgtcat should have been.
