@@ -21,6 +21,9 @@ public class Dragonstone.GtkUi.View.Directory : Gtk.Box, Dragonstone.GtkUi.Inter
 	private bool still_alive = true;
 	private bool search_dirty = true;
 	
+	private double previous_adjustment_value = 0;
+	private bool ignore_next_size_update = false;
+	
 	/*
 		Colums:
 		0: uri
@@ -100,6 +103,22 @@ public class Dragonstone.GtkUi.View.Directory : Gtk.Box, Dragonstone.GtkUi.Inter
 		var scrolled_window = new Gtk.ScrolledWindow(null,null);
 		scrolled_window.add(treeview);
 		scrolled_window.expand = true;
+		//some adjustment magic
+		scrolled_window.vadjustment.value_changed.connect(() => {
+			if (!ignore_next_size_update) {
+				bool scrolled_down = scrolled_window.vadjustment.value < previous_adjustment_value;
+				//print(@"Vadjustment : $(scrolled_window.vadjustment.value) $previous_adjustment_value $scrolled_down $(actionbar.is_visible())\n");
+				if (scrolled_down != actionbar.is_visible()){
+					actionbar.visible = scrolled_down;
+				}
+			} else {
+				ignore_next_size_update = false;
+			}
+			previous_adjustment_value = scrolled_window.vadjustment.value;
+		});
+		scrolled_window.vadjustment.changed.connect(() => {
+			ignore_next_size_update = true;
+		});
 		//pack to root window
 		pack_start(actionbar);
 		pack_start(scrolled_window);
