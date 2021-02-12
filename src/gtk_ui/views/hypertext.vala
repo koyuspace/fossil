@@ -22,27 +22,23 @@ public class Dragonstone.GtkUi.View.Hypertext : Gtk.Bin, Dragonstone.GtkUi.Inter
 			hypertext = new Dragonstone.GtkUi.Widget.HypertextContent(theme, new Dragonstone.GtkUi.Widget.LinkButtonPopover(tab));
 			hypertext.go.connect(on_go_event);
 			add(hypertext);
-			var file = File.new_for_path(request.resource.filepath);
-			if (!file.query_exists ()) {
+			var input_stream = tab.get_file_content_stream();
+			if (input_stream == null) {
 				hypertext.append_styled_text("The cache file for this resource does not exist!\nReloading the page should help,\nif not please contact the developer!", "exception", true, false, 0);
-			}
-			print("hypertext: rendering content\n");
-			try{
-    		var parser = token_parser_factory.get_token_parser(request.resource.mimetype);
-    		parser.set_input_stream(file.read());
-    		bool first_title = true;
-    		while (true) {
-    			var token = parser.next_token();
-    			if (token == null) { break; }
-    			if (first_title && token.token_type == TITLE){
-    				first_title = false;
-    				tab.set_title(token.text);
-    			}
-    			hypertext.append_token(token);
-    		}
-    		
-			} catch (GLib.Error e) {
-				hypertext.append_styled_text(e.message, "exception", true, false, 0);
+			} else {
+				print("hypertext: rendering content\n");
+	  		var parser = token_parser_factory.get_token_parser(request.resource.mimetype);
+	  		parser.set_input_stream(input_stream);
+	  		bool first_title = true;
+	  		while (true) {
+	  			var token = parser.next_token();
+	  			if (token == null) { break; }
+	  			if (first_title && token.token_type == TITLE){
+	  				first_title = false;
+	  				tab.set_title(token.text);
+	  			}
+	  			hypertext.append_token(token);
+	  		}
 			}
 		} else {
 			return false;

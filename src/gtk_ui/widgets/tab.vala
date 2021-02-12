@@ -67,6 +67,22 @@ public class Dragonstone.GtkUi.Tab : Gtk.Bin {
 		load_uri(uri);
 	}
 	
+	public FileInputStream? get_file_content_stream(){
+		var request = this.request;
+		if (request != null) {
+			var resource = request.resource;
+			if (resource != null) {
+				var file = File.new_for_path(resource.filepath);
+				try {
+				return file.read();
+				} catch (Error e){
+					print(@"[gtk_ui.tab] Error while reading file $(resource.filepath): $(e.message)");
+				}
+			}
+		}
+		return null;
+	}
+	
 	public void go_to_uri(string uri, bool is_absolute = false){
 		if(locked>0){ return; }
 		print(@"raw uri: $uri absolute: $is_absolute\n");
