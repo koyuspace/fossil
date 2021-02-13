@@ -35,7 +35,7 @@ public class Dragontone.Ui.Tab : Object {
 		return _display_state;
 	}
 	
-	public void set_title(string title, Dragonstone.Ui.TabDisplayState state =  Dragonstone.Ui.TabDisplayState.CONTENT){
+	public void set_title(string title, Dragonstone.Ui.TabDisplayState state = Dragonstone.Ui.TabDisplayState.CONTENT){
 		_title = title;
 		_display_state = state;
 		on_title_change(_title,_display_state);

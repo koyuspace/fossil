@@ -86,7 +86,7 @@ public class Dragonstone.GtkUi.Application : Gtk.Application {
 		Dragonstone.Startup.Localization.English.use_language(super_registry);
 		//Initalize fontend registries
 		var translation = (super_registry.retrieve("localization.translation") as Dragonstone.Registry.TranslationRegistry);
-		super_registry.store("gtk.views",new Dragonstone.GtkUi.ViewRegistry.default_configuration(translation));
+		super_registry.store("gtk.views",new Dragonstone.GtkUi.LegacyViewRegistry.default_configuration(translation));
 		//Initalize frontends
 		Dragonstone.Startup.Bookmarks.Gtk.setup_views(super_registry);
 		Dragonstone.Startup.Cache.Gtk.setup_views(super_registry);

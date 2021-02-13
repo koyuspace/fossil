@@ -1,7 +1,7 @@
-public class Dragonstone.GtkUi.View.UploadFile : Dragonstone.GtkUi.Widget.DialogViewBase, Dragonstone.GtkUi.Interface.View {
+public class Dragonstone.GtkUi.View.UploadFile : Dragonstone.GtkUi.LegacyWidget.DialogViewBase, Dragonstone.GtkUi.Interface.LegacyView {
 
 	private Dragonstone.Request? request = null;
-	private Dragonstone.GtkUi.Tab tab = null;
+	private Dragonstone.GtkUi.LegacyWidget.Tab tab = null;
 	private Dragonstone.Registry.MimetypeGuesser mimeguesser;
 	private File? choosen_file = null;
 	private string? choosen_file_path = null;
@@ -87,7 +87,7 @@ public class Dragonstone.GtkUi.View.UploadFile : Dragonstone.GtkUi.Widget.Dialog
 		this.upload_button.hide();
 	}
 	
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
+	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		if (!(request.status.has_prefix("interactive/upload"))) {return false;}
 		this.request = request;
 		this.upload_button.set_tooltip_text(request.uri);

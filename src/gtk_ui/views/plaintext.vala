@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.View.Plaintext : Gtk.ScrolledWindow, Dragonstone.GtkUi.Interface.View {
+public class Dragonstone.GtkUi.View.Plaintext : Gtk.ScrolledWindow, Dragonstone.GtkUi.Interface.LegacyView {
 	
 	private Dragonstone.Request request = null;
 	private Gtk.TextView textview;
@@ -12,7 +12,7 @@ public class Dragonstone.GtkUi.View.Plaintext : Gtk.ScrolledWindow, Dragonstone.
 		add(textview);
 	}
 	
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
+	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		if ((request.status == "success") && request.resource.mimetype.has_prefix("text/")){
 			string text = "";
 			var input_stream = tab.get_file_content_stream();
@@ -58,7 +58,7 @@ public class Dragonstone.GtkUi.View.Plaintext : Gtk.ScrolledWindow, Dragonstone.
 		}
 		string? val = kv.get_value("scroll");
 		if (val != null){
-			Dragonstone.GtkUi.Util.GtkScrollExport.import(this,val);
+			Dragonstone.GtkUi.LegacyUtil.GtkScrollExport.import(this,val);
 		}
 		return true;
 	}
@@ -66,7 +66,7 @@ public class Dragonstone.GtkUi.View.Plaintext : Gtk.ScrolledWindow, Dragonstone.
 	public string? export(){
 		var kv = new Dragonstone.Util.Kv();
 		kv.set_value("view_type","dragonstone.plain_text.0");
-		kv.set_value("scroll",Dragonstone.GtkUi.Util.GtkScrollExport.export(this));
+		kv.set_value("scroll",Dragonstone.GtkUi.LegacyUtil.GtkScrollExport.export(this));
 		return kv.export();
 	}
 	

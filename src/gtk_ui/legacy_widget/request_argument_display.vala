@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.Widget.RequestArgumentDisplay : Gtk.Box {
+public class Dragonstone.GtkUi.LegacyWidget.RequestArgumentDisplay : Gtk.Box {
 	construct {
 		this.orientation = Gtk.Orientation.VERTICAL;
 		this.spacing = 4;
@@ -16,7 +16,7 @@ public class Dragonstone.GtkUi.Widget.RequestArgumentDisplay : Gtk.Box {
 	
 }
 
-public class Dragonstone.GtkUi.Widget.RequestArgumentItem : Gtk.Box {
+public class Dragonstone.GtkUi.LegacyWidget.RequestArgumentItem : Gtk.Box {
 	public RequestArgumentItem(string key, string val){
 		this.orientation = Gtk.Orientation.HORIZONTAL;
 		this.spacing = 8;

@@ -1,6 +1,6 @@
-public class Dragonstone.GtkUi.Widget.CacheView : Gtk.Box {
+public class Dragonstone.GtkUi.LegacyWidget.CacheView : Gtk.Box {
 	
-	private Dragonstone.GtkUi.Tab tab;
+	private Dragonstone.GtkUi.LegacyWidget.Tab tab;
 	private Dragonstone.Store.Cache cache;
 	private Gtk.ListStore liststore = new Gtk.ListStore(4,typeof(string),typeof(string),typeof(string),typeof(string));
 	private HashTable<string,Gtk.TreeIter?> displayed_uris = new HashTable<string,Gtk.TreeIter?>(str_hash, str_equal);
@@ -24,7 +24,7 @@ public class Dragonstone.GtkUi.Widget.CacheView : Gtk.Box {
 		3: # of users as string
 	*/
 	
-	public CacheView(Dragonstone.Store.Cache cache, Dragonstone.GtkUi.Tab tab, Dragonstone.Registry.TranslationRegistry? itranslation){
+	public CacheView(Dragonstone.Store.Cache cache, Dragonstone.GtkUi.LegacyWidget.Tab tab, Dragonstone.Registry.TranslationRegistry? itranslation){
 		var translation = itranslation;
 		if(translation == null) {
 			var language = new Dragonstone.Registry.TranslationLanguageRegistry();

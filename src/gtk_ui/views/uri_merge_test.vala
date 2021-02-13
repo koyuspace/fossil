@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.View.UriMergeTest : Dragonstone.GtkUi.Widget.DialogViewBase, Dragonstone.GtkUi.Interface.View {
+public class Dragonstone.GtkUi.View.UriMergeTest : Dragonstone.GtkUi.LegacyWidget.DialogViewBase, Dragonstone.GtkUi.Interface.LegacyView {
 	
 	public UriMergeTest(){
 		var outlabel = new Gtk.Label("");
@@ -30,7 +30,7 @@ public class Dragonstone.GtkUi.View.UriMergeTest : Dragonstone.GtkUi.Widget.Dial
 		this.append_widget(new Gtk.Label(@"$baseuri + $relativeuri = $joined $res"));
 	}
 
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
+	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		return true;
 	}
 	

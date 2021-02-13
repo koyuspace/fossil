@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.View.Error.Generic : Dragonstone.GtkUi.Widget.DialogViewBase, Dragonstone.GtkUi.Interface.View {
+public class Dragonstone.GtkUi.View.Error.Generic : Dragonstone.GtkUi.LegacyWidget.DialogViewBase, Dragonstone.GtkUi.Interface.LegacyView {
 	
 	private Dragonstone.Request request = null;
 	private Gtk.Label statuslabel; 
@@ -14,14 +14,14 @@ public class Dragonstone.GtkUi.View.Error.Generic : Dragonstone.GtkUi.Widget.Dia
 	
 	}
 	
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
+	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		//if (!(request.status.has_prefix("error/") || request.status == "error")) {return false;}
 		view_status = request.status;
 		this.request = request;
 		headline.label = tab.translation.localize("view.error.label");
 		statuslabel.label = request.status;
 		sublabel.label = request.substatus;
-		var argument_display = new Dragonstone.GtkUi.Widget.RequestArgumentDisplay(request);
+		var argument_display = new Dragonstone.GtkUi.LegacyWidget.RequestArgumentDisplay(request);
 		append_widget(argument_display);
 		//nameLabel.label = request.name;
 		show_all();

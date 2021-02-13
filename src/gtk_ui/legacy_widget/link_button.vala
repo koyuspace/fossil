@@ -1,10 +1,10 @@
-public class Dragonstone.GtkUi.Widget.LinkButton : Gtk.Button {
+public class Dragonstone.GtkUi.LegacyWidget.LinkButton : Gtk.Button {
 
 	string uri;	
-	private Dragonstone.GtkUi.Tab tab;
+	private Dragonstone.GtkUi.LegacyWidget.Tab tab;
 	private Gtk.GestureLongPress long_press_gesture;
 	
-	public LinkButton(Dragonstone.GtkUi.Tab tab,string name,string uri,string? icon_name = null){
+	public LinkButton(Dragonstone.GtkUi.LegacyWidget.Tab tab,string name,string uri,string? icon_name = null){
 		this.tab = tab;
 		var icon_name_ = icon_name;
 		halign = Gtk.Align.START;
@@ -19,7 +19,7 @@ public class Dragonstone.GtkUi.Widget.LinkButton : Gtk.Button {
 			}
 		});
 		if(icon_name_ == null){
-			icon_name_ = Dragonstone.GtkUi.Util.DefaultGtkLinkIconLoader.guess_icon_name_for_uri(uri);
+			icon_name_ = Dragonstone.GtkUi.LegacyUtil.DefaultGtkLinkIconLoader.guess_icon_name_for_uri(uri);
 		}
 		always_show_image = true;
 		image = new Gtk.Image.from_icon_name(icon_name_,Gtk.IconSize.LARGE_TOOLBAR);
@@ -42,7 +42,7 @@ public class Dragonstone.GtkUi.Widget.LinkButton : Gtk.Button {
 	public void use_uri(string uri, bool update_icon){
 		this.uri = uri;
 		if (update_icon){
-			var icon_name = Dragonstone.GtkUi.Util.DefaultGtkLinkIconLoader.guess_icon_name_for_uri(uri);
+			var icon_name = Dragonstone.GtkUi.LegacyUtil.DefaultGtkLinkIconLoader.guess_icon_name_for_uri(uri);
 			image = new Gtk.Image.from_icon_name(icon_name,Gtk.IconSize.LARGE_TOOLBAR);
 		}
 	}
@@ -69,7 +69,7 @@ public class Dragonstone.GtkUi.Widget.LinkButton : Gtk.Button {
 	}
 	
 	private void show_popover(){
-		var popover = new Dragonstone.GtkUi.Widget.LinkButtonPopover(this.tab,uri);
+		var popover = new Dragonstone.GtkUi.LegacyWidget.LinkButtonPopover(this.tab,uri);
 		popover.set_relative_to(this);
 		popover.popup();
 		popover.show_all();
@@ -77,27 +77,27 @@ public class Dragonstone.GtkUi.Widget.LinkButton : Gtk.Button {
 	
 }
 
-public class Dragonstone.GtkUi.Widget.LinkButtonPopover : Dragonstone.GtkUi.Widget.LinkPopover,Gtk.Popover {
+public class Dragonstone.GtkUi.LegacyWidget.LinkButtonPopover : Dragonstone.GtkUi.LegacyWidget.LinkPopover,Gtk.Popover {
 	
-	public Dragonstone.GtkUi.Tab tab;
+	public Dragonstone.GtkUi.LegacyWidget.Tab tab;
 	public string? uri { get; set; }
 	
-	private Dragonstone.GtkUi.Widget.MenuBigTextDisplay uri_display;
+	private Dragonstone.GtkUi.LegacyWidget.MenuBigTextDisplay uri_display;
 	private Gtk.Button open_in_new_tab_button;
 	private Gtk.Button open_externally_button;
 	
-	public LinkButtonPopover(Dragonstone.GtkUi.Tab tab, string? uri = null){
+	public LinkButtonPopover(Dragonstone.GtkUi.LegacyWidget.Tab tab, string? uri = null){
 		this.tab = tab;
 		this.uri = null; //uri gets set below with use_uri(uri);
 		//this.constrain_to = Gtk.PopoverConstraint.WINDOW;
 		var box = new Gtk.Box(Gtk.Orientation.VERTICAL,2);
 		box.margin = 4;
-		var dummy_text_view = new Dragonstone.GtkUi.Widget.MenuBigTextDisplay("");
+		var dummy_text_view = new Dragonstone.GtkUi.LegacyWidget.MenuBigTextDisplay("");
 		box.pack_start(dummy_text_view);
 		box.remove(dummy_text_view);
-		uri_display = new Dragonstone.GtkUi.Widget.MenuBigTextDisplay("");
+		uri_display = new Dragonstone.GtkUi.LegacyWidget.MenuBigTextDisplay("");
 		var open_in_new_tab_button_label = tab.translation.localize("action.open_in_new_tab");
-		open_in_new_tab_button = new Dragonstone.GtkUi.Widget.MenuButton(open_in_new_tab_button_label);
+		open_in_new_tab_button = new Dragonstone.GtkUi.LegacyWidget.MenuButton(open_in_new_tab_button_label);
 		open_in_new_tab_button.set_relief(Gtk.ReliefStyle.NONE);
 		open_in_new_tab_button.clicked.connect(() => {
 			if (this.uri != null){
@@ -105,7 +105,7 @@ public class Dragonstone.GtkUi.Widget.LinkButtonPopover : Dragonstone.GtkUi.Widg
 			}
 		});
 		var open_externally_button_label = tab.translation.localize("action.open_uri_externally");
-		open_externally_button = new Dragonstone.GtkUi.Widget.MenuButton(open_externally_button_label);
+		open_externally_button = new Dragonstone.GtkUi.LegacyWidget.MenuButton(open_externally_button_label);
 		open_externally_button.set_relief(Gtk.ReliefStyle.NONE);
 		open_externally_button.clicked.connect(() => {
 			if (this.uri != null){

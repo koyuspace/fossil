@@ -1,11 +1,11 @@
-public class Dragonstone.GtkUi.Tab : Gtk.Bin {
+public class Dragonstone.GtkUi.LegacyWidget.Tab : Gtk.Bin, Dragonstone.Interface.Page.Service.LinearHistory {
 	private string _uri = "";
 	public string uri {
 		get { return _uri; }
 		set { 
 			go_to_uri(value);
 		}}
-	public Dragonstone.GtkUi.Interface.View view;
+	public Dragonstone.GtkUi.Interface.LegacyView view;
 	public Dragonstone.Request request;
 	public Dragonstone.Registry.SessionRegistry session_registry { get; set; }
 	public Dragonstone.Interface.Session session { get; protected set; }
@@ -14,7 +14,7 @@ public class Dragonstone.GtkUi.Tab : Gtk.Bin {
 	public signal void uri_changed(string uri);
 	public Dragonstone.Util.Stack<TabHistoryEntry> history = new Dragonstone.Util.Stack<TabHistoryEntry>();
 	public Dragonstone.Util.Stack<TabHistoryEntry> forward = new Dragonstone.Util.Stack<TabHistoryEntry>();
-	public Dragonstone.GtkUi.TabHistoryEntry currently_displayed_page = new Dragonstone.GtkUi.TabHistoryEntry();
+	public Dragonstone.GtkUi.LegacyWidget.TabHistoryEntry currently_displayed_page = new Dragonstone.GtkUi.LegacyWidget.TabHistoryEntry();
 	public Dragonstone.SuperRegistry super_registry { get; construct; }
 	public Dragonstone.Registry.TranslationRegistry translation;
 	public Gtk.Window parent_window; //only for use with dialog windows
@@ -22,18 +22,18 @@ public class Dragonstone.GtkUi.Tab : Gtk.Bin {
 	public string title = "New Tab";
 	public Dragonstone.Ui.TabDisplayState display_state = Dragonstone.Ui.TabDisplayState.BLANK;
 	public Dragonstone.Util.Flaglist view_flags = new Dragonstone.Util.Flaglist();
-	public Dragonstone.GtkUi.ViewRegistryViewChooser view_chooser;
+	public Dragonstone.GtkUi.LegacyViewRegistryViewChooser view_chooser;
 	public signal void on_cleanup();
 	public signal void on_title_change(string title, Dragonstone.Ui.TabDisplayState state);
 	public string current_view_id { get; protected set; }
 	public signal void on_view_change();
 	
 	private bool redirecting = false;
-	private uint64 redirectcounter = 0;
+	public uint redirectcounter = 0;
 	
 	private string resource_user_id = "tab_"+GLib.Uuid.string_random();
 	
-	private Dragonstone.GtkUi.ViewRegistry view_registry;
+	private Dragonstone.GtkUi.LegacyViewRegistry view_registry;
 	
 	public Tab(string session_id, string uri, Gtk.Window parent_window, Dragonstone.SuperRegistry super_registry){
 		Object(
@@ -52,12 +52,12 @@ public class Dragonstone.GtkUi.Tab : Gtk.Bin {
 			print("[tab][error]Session not found in session registry, falling back to dummy session");
 			this.session = new Dragonstone.Session.Dummy();
 		}
-		this.view_registry = (super_registry.retrieve("gtk.views") as Dragonstone.GtkUi.ViewRegistry);
+		this.view_registry = (super_registry.retrieve("gtk.views") as Dragonstone.GtkUi.LegacyViewRegistry);
 		if (this.view_registry == null){
 			print("[tab] No view registry in super registry, falling back to default configuration!\n");
-			this.view_registry = new Dragonstone.GtkUi.ViewRegistry.default_configuration();
+			this.view_registry = new Dragonstone.GtkUi.LegacyViewRegistry.default_configuration();
 		}
-		view_chooser = new Dragonstone.GtkUi.ViewRegistryViewChooser(view_registry);
+		view_chooser = new Dragonstone.GtkUi.LegacyViewRegistryViewChooser(view_registry);
 		this.translation = (super_registry.retrieve("localization.translation") as Dragonstone.Registry.TranslationRegistry);
 		if (this.translation == null){
 			print("[tab] No translation resgistry found, falling back to an empty one!\n");
@@ -235,7 +235,7 @@ public class Dragonstone.GtkUi.Tab : Gtk.Bin {
 	private void push_history(){
 		export_view_data();
 		history.push(currently_displayed_page);
-		currently_displayed_page = new Dragonstone.GtkUi.TabHistoryEntry();
+		currently_displayed_page = new Dragonstone.GtkUi.LegacyWidget.TabHistoryEntry();
 		forward.clear();
 	}
 	
@@ -248,7 +248,7 @@ public class Dragonstone.GtkUi.Tab : Gtk.Bin {
 			bool currently_displayed_is_subview = currently_displayed_page.currently_displayed_subview != null;
 			bool do_update_view = currently_displayed_is_subview == as_subview;
 			print(@"[tab] UPDATING view! [$(request.status)] ($reason)\n");
-			Dragonstone.GtkUi.Interface.View view;
+			Dragonstone.GtkUi.Interface.LegacyView view;
 			if (update_view_chooser){
 				string? mimetype = null;
 				if(request.resource != null){
@@ -272,7 +272,7 @@ public class Dragonstone.GtkUi.Tab : Gtk.Bin {
 				new_state = Dragonstone.Ui.TabDisplayState.ERROR;
 			}
 			set_title(uri,new_state);
-			if (do_update_view){
+			if (do_update_view) {
 				if (view_id == null) {
 					//view = view_registry.get_view(view_chooser.best_match);
 					current_view_id = view_chooser.best_match;
@@ -281,7 +281,7 @@ public class Dragonstone.GtkUi.Tab : Gtk.Bin {
 				}
 					view = view_registry.get_view(current_view_id);
 				if (view != null){
-					if(view.display_resource(request,this,as_subview)){
+					if(view.display_resource(request, this, as_subview)) {
 						print(@"Trying to import view data $current_view_id\n");
 						string? data = currently_displayed_page.persistance_values.get(current_view_id);
 						if (data != null){
@@ -291,21 +291,21 @@ public class Dragonstone.GtkUi.Tab : Gtk.Bin {
 						}
 						use_view(view);
 					} else {
-						if (view_id != null){
+						if (view_id != null) {
 							print(@"[tab] manually chosen view '$current_view_id' cannot handle the resource!\n");
 							update_view(null,"view_did_not_work");
 							return;
 						} else {
 							set_title(uri,Dragonstone.Ui.TabDisplayState.ERROR);
 							var error_message_localized = translation.get_localized_string("tab.error.wrong_view.message");
-							view = new Dragonstone.GtkUi.View.Label(@"$error_message_localized\n$(request.status)\n$(request.substatus)");
+							view = new Dragonstone.GtkUi.View.Message("-", error_message_localized, @"$(request.status)\n$(request.substatus)");
 							use_view(view);
 						}
 					}
 				} else {
 					set_title(uri,Dragonstone.Ui.TabDisplayState.ERROR);
 					var error_message_localized = translation.get_localized_string("tab.error.no_view.message");
-					view = new Dragonstone.GtkUi.View.Label(@"$error_message_localized\n$(request.status)\n$(request.substatus)");
+					view = new Dragonstone.GtkUi.View.Message("-", error_message_localized, @"$(request.status)\n$(request.substatus)");
 					use_view(view);
 				}
 				show();
@@ -314,7 +314,7 @@ public class Dragonstone.GtkUi.Tab : Gtk.Bin {
 		}
 	}
 	
-	private void use_view(owned Dragonstone.GtkUi.Interface.View new_view){
+	private void use_view(owned Dragonstone.GtkUi.Interface.LegacyView new_view){
 		lock(this.view){
 			//remove the old view
 			if (this.view is Gtk.Widget){
@@ -411,7 +411,7 @@ public class Dragonstone.GtkUi.Tab : Gtk.Bin {
 		apply_tab_history_entry(entry);
 	}
 	
-	public void apply_tab_history_entry(Dragonstone.GtkUi.TabHistoryEntry? entry){
+	public void apply_tab_history_entry(Dragonstone.GtkUi.LegacyWidget.TabHistoryEntry? entry){
 		if (entry != null){
 			currently_displayed_page = entry;
 			load_uri(currently_displayed_page.uri,false,entry.view);
@@ -501,7 +501,7 @@ public class Dragonstone.GtkUi.Tab : Gtk.Bin {
 	
 }
 
-public class Dragonstone.GtkUi.TabHistoryEntry : Object {
+public class Dragonstone.GtkUi.LegacyWidget.TabHistoryEntry : Object {
 	public string uri = "";
 	public string? view = null;
 	//subview history
@@ -518,6 +518,6 @@ public class Dragonstone.GtkUi.TabHistoryEntry : Object {
 	}
 }
 
-public class Dragonstone.GtkUi.TabSubviewHistoryEntry : Object {
+public class Dragonstone.GtkUi.LegacyWidget.TabSubviewHistoryEntry : Object {
 	public string view;
 }

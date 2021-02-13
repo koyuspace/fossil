@@ -1,8 +1,8 @@
-public class Dragonstone.GtkUi.Widget.InlineSearchPostB64FilePopoverEasterEgg : Gtk.Popover {
+public class Dragonstone.GtkUi.LegacyWidget.InlineSearchPostB64FilePopoverEasterEgg : Gtk.Popover {
 	
 	private string base64_buffer = "";
 	private string base_uri = "";
-	private Dragonstone.GtkUi.Widget.InlineSearch parent_entry;
+	private Dragonstone.GtkUi.LegacyWidget.InlineSearch parent_entry;
 	private uint64 max_file_size = 1024*1024*128;
 	private Gtk.Label error_label = new Gtk.Label("");
 	private Gtk.Entry comment_entry = new Gtk.Entry();
@@ -10,7 +10,7 @@ public class Dragonstone.GtkUi.Widget.InlineSearchPostB64FilePopoverEasterEgg : 
 	private Gtk.Button post_button;
 	private bool uploading = false;
 	
-	public InlineSearchPostB64FilePopoverEasterEgg(Dragonstone.GtkUi.Widget.InlineSearch parent, string uri){
+	public InlineSearchPostB64FilePopoverEasterEgg(Dragonstone.GtkUi.LegacyWidget.InlineSearch parent, string uri){
 		this.base_uri = uri;
 		this.parent_entry = parent;
 		var box = new Gtk.Box(Gtk.Orientation.VERTICAL,4);

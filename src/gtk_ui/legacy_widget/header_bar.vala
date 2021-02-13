@@ -3,15 +3,15 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 	public Gtk.Notebook tabs { get; construct; }
 	public Dragonstone.Window parent_window { get; construct; }
 	public Dragonstone.SuperRegistry super_registry { get; construct; }
-	public Dragonstone.GtkUi.Tab current_tab { get; protected set; }
+	public Dragonstone.GtkUi.LegacyWidget.Tab current_tab { get; protected set; }
 	public Dragonstone.Registry.UriAutoprefix uri_autoprefixer;
 	
 	public Gtk.Entry addressfield;
 	public Gtk.Button backbutton;
 	public Gtk.Button forwardbutton;
 	public Gtk.Button loadbutton;
-	private Dragonstone.GtkUi.Widget.ViewChooser view_chooser;
-	private Dragonstone.GtkUi.Widget.SessionChooser session_chooser;
+	private Dragonstone.GtkUi.LegacyWidget.ViewChooser view_chooser;
+	private Dragonstone.GtkUi.LegacyWidget.SessionChooser session_chooser;
 	private Gtk.Button savetodiskbutton;
 	private Gtk.Button downloadbutton;
 	private Gtk.Button bookmarkbutton;
@@ -79,31 +79,31 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		savetodiskbutton.sensitive = false;
 		mainmenuhbox.pack_start(savetodiskbutton);
 		//dummy button and switch to fix a wired bug where they dont get stylized like we want them to be
-		var dummy_button = new Dragonstone.GtkUi.Widget.MenuButton("---");
+		var dummy_button = new Dragonstone.GtkUi.LegacyWidget.MenuButton("---");
 		mainmenubox.pack_start(dummy_button);
 		mainmenubox.remove(dummy_button);
-		var dummy_switch = new Dragonstone.GtkUi.Widget.MenuSwitch("---");
+		var dummy_switch = new Dragonstone.GtkUi.LegacyWidget.MenuSwitch("---");
 		mainmenubox.pack_start(dummy_switch);
 		mainmenubox.remove(dummy_switch);
 		//show_tabs
 		var show_tabs_localized = parent_window.translation.get_localized_string("window.main_menu.show_tabs.label");
-		var show_tabs_widget = new Dragonstone.GtkUi.Widget.MenuSwitch(show_tabs_localized);
+		var show_tabs_widget = new Dragonstone.GtkUi.LegacyWidget.MenuSwitch(show_tabs_localized);
 		var show_tabs_switch = show_tabs_widget.switch_widget;
 		mainmenubox.pack_start(show_tabs_widget);
 		//prefer_source_view
 		var view_source_localized = parent_window.translation.get_localized_string("window.main_menu.prefer_source_view.label");
-		var prefer_source_view_widget = new Dragonstone.GtkUi.Widget.MenuSwitch(view_source_localized);
+		var prefer_source_view_widget = new Dragonstone.GtkUi.LegacyWidget.MenuSwitch(view_source_localized);
 		prefer_source_view_switch = prefer_source_view_widget.switch_widget;
 		mainmenubox.pack_start(prefer_source_view_widget);
 		//view chooser
-		view_chooser = new Dragonstone.GtkUi.Widget.ViewChooser();
+		view_chooser = new Dragonstone.GtkUi.LegacyWidget.ViewChooser();
 		var view_chooser_tooltip_localized = parent_window.translation.get_localized_string("window.main_menu.choose_view.tooltip");
 		view_chooser.set_tooltip_text(view_chooser_tooltip_localized);
 		mainmenubox.pack_start(view_chooser);
 		//seperator
 		mainmenubox.pack_start(new Gtk.Separator(Gtk.Orientation.HORIZONTAL));
 		//session chooser
-		session_chooser = new Dragonstone.GtkUi.Widget.SessionChooser();
+		session_chooser = new Dragonstone.GtkUi.LegacyWidget.SessionChooser();
 		var session_chooser_tooltip_localized = parent_window.translation.get_localized_string("window.main_menu.choose_session.tooltip");
 		session_chooser.set_tooltip_text(session_chooser_tooltip_localized);
 		mainmenubox.pack_start(session_chooser);
@@ -111,32 +111,32 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 		mainmenubox.pack_start(new Gtk.Separator(Gtk.Orientation.HORIZONTAL));
 		//open uri external
 		var open_uri_externally_localized = parent_window.translation.get_localized_string("window.main_menu.open_uri_externally.label");
-		var openuriexternllybutton = new Dragonstone.GtkUi.Widget.MenuButton(open_uri_externally_localized);
+		var openuriexternllybutton = new Dragonstone.GtkUi.LegacyWidget.MenuButton(open_uri_externally_localized);
 		mainmenubox.pack_start(openuriexternllybutton);
 		//open file external
 		var open_file_externally_localized = parent_window.translation.get_localized_string("window.main_menu.open_file_externally.label");
-		var openfileexternllybutton = new Dragonstone.GtkUi.Widget.MenuButton(open_file_externally_localized);
+		var openfileexternllybutton = new Dragonstone.GtkUi.LegacyWidget.MenuButton(open_file_externally_localized);
 		mainmenubox.pack_start(openfileexternllybutton);
 		//seperator
 		mainmenubox.pack_start(new Gtk.Separator(Gtk.Orientation.HORIZONTAL));
 		//Cache
 		var view_cache_localized = parent_window.translation.get_localized_string("window.main_menu.cache.label");
-		var cachebutton = new Dragonstone.GtkUi.Widget.MenuButton(view_cache_localized);
+		var cachebutton = new Dragonstone.GtkUi.LegacyWidget.MenuButton(view_cache_localized);
 		mainmenubox.pack_start(cachebutton);
 		//Session
 		var view_session_localized = parent_window.translation.get_localized_string("window.main_menu.session.label");
-		var sessionbutton = new Dragonstone.GtkUi.Widget.MenuButton(view_session_localized);
+		var sessionbutton = new Dragonstone.GtkUi.LegacyWidget.MenuButton(view_session_localized);
 		mainmenubox.pack_start(sessionbutton);
 		//seperator
 		mainmenubox.pack_start(new Gtk.Separator(Gtk.Orientation.HORIZONTAL));
 		//Settings
 		var view_settings_localized = parent_window.translation.get_localized_string("window.main_menu.settings.label");
-		var settingsbutton = new Dragonstone.GtkUi.Widget.MenuButton(view_settings_localized);
+		var settingsbutton = new Dragonstone.GtkUi.LegacyWidget.MenuButton(view_settings_localized);
 		settingsbutton.sensitive = false;
 		mainmenubox.pack_start(settingsbutton);
 		//close tabs button
 		var close_tab_localized = parent_window.translation.get_localized_string("window.main_menu.close_tab.label");		
-		close_tab_button = new Dragonstone.GtkUi.Widget.MenuButton(close_tab_localized);
+		close_tab_button = new Dragonstone.GtkUi.LegacyWidget.MenuButton(close_tab_localized);
 		mainmenubox.pack_start(close_tab_button);
 		//main menu end
 		mainmenu.add(mainmenubox);
@@ -263,11 +263,11 @@ public class Dragonstone.HeaderBar : Gtk.HeaderBar {
 			current_tab.uri_changed.disconnect(onUriChanged);
 		}
 		//set new tab
-		if (!(tab is Dragonstone.GtkUi.Tab || tab == null)) {
+		if (!(tab is Dragonstone.GtkUi.LegacyWidget.Tab || tab == null)) {
 			switching_tab = false;
 			return;
 		}
-		current_tab = tab as Dragonstone.GtkUi.Tab;
+		current_tab = tab as Dragonstone.GtkUi.LegacyWidget.Tab;
 		view_chooser.use_tab(current_tab);
 		session_chooser.use_tab(current_tab);
 		if (current_tab != null) {

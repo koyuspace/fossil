@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.Widget.SubviewBase : Gtk.Box {
+public class Dragonstone.GtkUi.LegacyWidget.SubviewBase : Gtk.Box {
 	
 	public Gtk.Button backbutton = new Gtk.Button.from_icon_name("go-previous-symbolic");
 	public Gtk.HeaderBar titlebar = new Gtk.HeaderBar();

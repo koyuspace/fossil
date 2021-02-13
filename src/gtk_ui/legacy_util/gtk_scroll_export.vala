@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.Util.GtkScrollExport {
+public class Dragonstone.GtkUi.LegacyUtil.GtkScrollExport {
 	
 	public static bool import(Gtk.ScrolledWindow sw, string data){
 		var kv = new Dragonstone.Util.Kv();

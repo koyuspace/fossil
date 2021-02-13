@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.Widget.TextContent : Gtk.ScrolledWindow {
+public class Dragonstone.GtkUi.LegacyWidget.TextContent : Gtk.ScrolledWindow {
 	public Gtk.TextView textview = null;
 	
 	construct {

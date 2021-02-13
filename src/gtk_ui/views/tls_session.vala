@@ -1,11 +1,11 @@
-public class Dragonstone.GtkUi.View.TlsSession : Gtk.ScrolledWindow, Dragonstone.GtkUi.Interface.View{
+public class Dragonstone.GtkUi.View.TlsSession : Gtk.ScrolledWindow, Dragonstone.GtkUi.Interface.LegacyView{
 
 	private Dragonstone.Request? request = null;
-	private Dragonstone.GtkUi.Tab? tab = null;
+	private Dragonstone.GtkUi.LegacyWidget.Tab? tab = null;
 	private Dragonstone.Registry.TranslationRegistry? translation = null;
 	private Dragonstone.Session.Tls? session = null;
 	
-	private Dragonstone.GtkUi.Widget.MenuSwitch cache_switch;
+	private Dragonstone.GtkUi.LegacyWidget.MenuSwitch cache_switch;
 	private Gtk.Button generate_certificate_button;
 	private Gtk.TextView certificate_pem_text;
 	
@@ -15,7 +15,7 @@ public class Dragonstone.GtkUi.View.TlsSession : Gtk.ScrolledWindow, Dragonstone
 		this.translation = translation;
 	}
 	
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
+	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		if (!(request.status == "interactive/tls_session")) {return false;}
 		this.request = request;
 		this.tab = tab;
@@ -23,7 +23,7 @@ public class Dragonstone.GtkUi.View.TlsSession : Gtk.ScrolledWindow, Dragonstone
 		if (session != null){
 			appendWidget(new Gtk.Label(translation.localize("view.session.tls.title")));
 			var localizd_name_entry_placeholder = translation.localize("view.session.tls.name_entry.placeholder");
-			var name_entry = new Dragonstone.GtkUi.Widget.TextEntrySingleLine(localizd_name_entry_placeholder,session.get_name(),"go-jump-symbolic");
+			var name_entry = new Dragonstone.GtkUi.LegacyWidget.TextEntrySingleLine(localizd_name_entry_placeholder,session.get_name(),"go-jump-symbolic");
 			name_entry.submit.connect((name) => {
 				if (name != ""){
 					session.set_name(name);
@@ -32,7 +32,7 @@ public class Dragonstone.GtkUi.View.TlsSession : Gtk.ScrolledWindow, Dragonstone
 			appendWidget(name_entry);
 			appendWidget(new Gtk.Separator(Gtk.Orientation.HORIZONTAL));
 			var cache_switch_localized = translation.localize("view.session.tls.cache_switch.label");
-			cache_switch = new Dragonstone.GtkUi.Widget.MenuSwitch(cache_switch_localized);
+			cache_switch = new Dragonstone.GtkUi.LegacyWidget.MenuSwitch(cache_switch_localized);
 			cache_switch.switch_widget.set_state(session.use_cache);
 			session.notify["use_cache"].connect(update_cache_button);
 			cache_switch.switch_widget.state_set.connect( e => {
@@ -41,7 +41,7 @@ public class Dragonstone.GtkUi.View.TlsSession : Gtk.ScrolledWindow, Dragonstone
 			});
 			appendWidget(cache_switch);
 			var cachelink_loclized = translation.localize("view.session.tls.view_cache.label");
-			var cachelink = new Dragonstone.GtkUi.Widget.LinkButton(tab,cachelink_loclized,"about:cache");
+			var cachelink = new Dragonstone.GtkUi.LegacyWidget.LinkButton(tab,cachelink_loclized,"about:cache");
 			cachelink.set_relief(Gtk.ReliefStyle.NORMAL);
 			appendWidget(cachelink);
 			appendWidget(new Gtk.Separator(Gtk.Orientation.HORIZONTAL));

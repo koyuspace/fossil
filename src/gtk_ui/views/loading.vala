@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.View.Loading : Dragonstone.GtkUi.Widget.DialogViewBase, Dragonstone.GtkUi.Interface.View {
+public class Dragonstone.GtkUi.View.Loading : Dragonstone.GtkUi.LegacyWidget.DialogViewBase, Dragonstone.GtkUi.Interface.LegacyView {
 	
 	private Dragonstone.Request request = null;
 	private Gtk.ProgressBar progressbar = new Gtk.ProgressBar();
@@ -56,7 +56,7 @@ public class Dragonstone.GtkUi.View.Loading : Dragonstone.GtkUi.Widget.DialogVie
 		}
 	}
 	
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
+	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		if (!(request.status == "loading" || request.status == "uploading" || request.status == "connecting" || request.status == "routing")) {return false;}
 		this.request = request;
 		this.request.notify["substatus"].connect(load_updated_timeout_hack);

@@ -1,9 +1,9 @@
-public class Dragonstone.GtkUi.Widget.HypertextContent : Dragonstone.GtkUi.Widget.TextContent, Dragonstone.Interface.Document.TokenRenderer {
+public class Dragonstone.GtkUi.LegacyWidget.HypertextContent : Dragonstone.GtkUi.LegacyWidget.TextContent, Dragonstone.Interface.Document.TokenRenderer {
 	
 	public HashTable<string,string> uris = new HashTable<string,string>(str_hash,str_equal);
 	public signal void go(string uri, bool alt); //alt is true if the link was ctrl-clicked or middleclicked
 
-	protected Dragonstone.GtkUi.Widget.LinkPopover? link_popover = null;
+	protected Dragonstone.GtkUi.LegacyWidget.LinkPopover? link_popover = null;
 	protected Gtk.TextTag default_tag;	
 	protected Gtk.TextTag link_tag;
 	protected Gtk.TextTag link_hover_tag;
@@ -17,7 +17,7 @@ public class Dragonstone.GtkUi.Widget.HypertextContent : Dragonstone.GtkUi.Widge
 	
 	private Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme? theme = null;
 	
-	public HypertextContent(Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme? _theme = null, Dragonstone.GtkUi.Widget.LinkPopover? link_popover = null){
+	public HypertextContent(Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme? _theme = null, Dragonstone.GtkUi.LegacyWidget.LinkPopover? link_popover = null){
 		this.theme = _theme;
 		this.link_popover = link_popover;
 		/*
@@ -229,7 +229,7 @@ public class Dragonstone.GtkUi.Widget.HypertextContent : Dragonstone.GtkUi.Widge
 				use_styled_text = false;
 				end_last_paragraph();
 				if (token.uri != null) {
-					var searchfield = new Dragonstone.GtkUi.Widget.InlineSearch(token.text, token.uri);
+					var searchfield = new Dragonstone.GtkUi.LegacyWidget.InlineSearch(token.text, token.uri);
 					searchfield.go.connect((s,uri) => {
 						go(uri, false);
 					});
@@ -293,7 +293,7 @@ public class Dragonstone.GtkUi.Widget.HypertextContent : Dragonstone.GtkUi.Widge
 	
 	
 	  ///////////////////////////////////////////////
-	 // Dragonstone.GtkUi.Widget.HypertextContent //
+	 // Dragonstone.GtkUi.LegacyWidget.HypertextContent //
 	///////////////////////////////////////////////
 	
 	protected void append_with_tag(string text, Gtk.TextTag tag, bool preformatted, string? uri = null){
@@ -319,7 +319,7 @@ public class Dragonstone.GtkUi.Widget.HypertextContent : Dragonstone.GtkUi.Widge
 	
 	public void append_link_icon(string uri){
 		Gtk.TextIter end_iter;
-		var icon_name = Dragonstone.GtkUi.Util.DefaultGtkLinkIconLoader.guess_icon_name_for_uri(uri);
+		var icon_name = Dragonstone.GtkUi.LegacyUtil.DefaultGtkLinkIconLoader.guess_icon_name_for_uri(uri);
 		var icon_theme = Gtk.IconTheme.get_for_screen(get_screen());
 		if (!icon_theme.has_icon(icon_name)) {
 			icon_name = "go-jump-symbolic";

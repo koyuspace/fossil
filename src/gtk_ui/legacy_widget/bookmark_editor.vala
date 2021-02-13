@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.Widget.BookmarkEditor : Gtk.Box {
+public class Dragonstone.GtkUi.LegacyWidget.BookmarkEditor : Gtk.Box {
 	
 	public Gtk.Entry name_entry;
 	public Gtk.Entry uri_entry;
@@ -70,7 +70,7 @@ public class Dragonstone.GtkUi.Widget.BookmarkEditor : Gtk.Box {
 		}
 	}	
 	
-	public Dragonstone.GtkUi.Widget.BookmarkEditor localize(Dragonstone.Registry.TranslationRegistry translation){
+	public Dragonstone.GtkUi.LegacyWidget.BookmarkEditor localize(Dragonstone.Registry.TranslationRegistry translation){
 		name_entry.placeholder_text = translation.localize("edit_bookmark.name.placeholder");
 		uri_entry.placeholder_text = translation.localize("edit_bookmark.uri.placeholder");
 		cancel_button.label = translation.localize("action.cancel");

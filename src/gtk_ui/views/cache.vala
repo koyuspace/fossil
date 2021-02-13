@@ -1,15 +1,15 @@
-public class Dragonstone.GtkUi.View.Cache : Gtk.Bin, Dragonstone.GtkUi.Interface.View {
+public class Dragonstone.GtkUi.View.Cache : Gtk.Bin, Dragonstone.GtkUi.Interface.LegacyView {
 	
 	private Dragonstone.Request? request = null;
-	private Dragonstone.GtkUi.Tab? tab = null;
+	private Dragonstone.GtkUi.LegacyWidget.Tab? tab = null;
 	private Dragonstone.Registry.TranslationRegistry? translation = null;
-	private Dragonstone.GtkUi.Widget.CacheView? cacheview = null;
+	private Dragonstone.GtkUi.LegacyWidget.CacheView? cacheview = null;
 	
 	public Cache(Dragonstone.Registry.TranslationRegistry? translation){
 		this.translation = translation;
 	}
 	
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
+	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		if (!(request.status == "interactive/cache")) {return false;}
 		this.request = request;
 		this.tab = tab;
@@ -17,7 +17,7 @@ public class Dragonstone.GtkUi.View.Cache : Gtk.Bin, Dragonstone.GtkUi.Interface
 		var cache = tab.session.get_cache();
 		
 		if (icache != null){
-			cacheview = new Dragonstone.GtkUi.Widget.CacheView(icache,tab,translation);
+			cacheview = new Dragonstone.GtkUi.LegacyWidget.CacheView(icache,tab,translation);
 			add(cacheview);
 			cacheview.show();
 			show();

@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.Util.MessageViewFactory : Object {
+public class Dragonstone.GtkUi.LegacyUtil.MessageViewFactory : Object {
 	
 	string unlocalized_label_text;
 	string unlocalized_sublabel_text;
@@ -24,7 +24,7 @@ public class Dragonstone.GtkUi.Util.MessageViewFactory : Object {
 		}
 	}
 	
-	public Dragonstone.GtkUi.Interface.View construct_view(){
+	public Dragonstone.GtkUi.Interface.LegacyView construct_view(){
 		string label_text = translator.get_localized_string(unlocalized_label_text);
 		string sublabel_text = translator.get_localized_string(unlocalized_sublabel_text);
 		return new Dragonstone.GtkUi.View.Message(view_status, label_text, sublabel_text, icon_name);

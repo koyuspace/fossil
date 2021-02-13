@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.View.UriError.Generic : Dragonstone.GtkUi.Widget.DialogViewBase, Dragonstone.GtkUi.Interface.View {
+public class Dragonstone.GtkUi.View.UriError.Generic : Dragonstone.GtkUi.LegacyWidget.DialogViewBase, Dragonstone.GtkUi.Interface.LegacyView {
 	
 	private Dragonstone.Request request = null;
 	
@@ -15,7 +15,7 @@ public class Dragonstone.GtkUi.View.UriError.Generic : Dragonstone.GtkUi.Widget.
 		show_all();
 	}
 	
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
+	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		if (!(request.status.has_prefix("error/uri"))) {return false;}
 		this.request = request;
 		show_all();

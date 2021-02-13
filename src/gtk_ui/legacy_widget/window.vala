@@ -58,8 +58,8 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		tabs.set_group_name("dragonstone.tabs");
 		
 		tabs.page_added.connect((widget, pagenum) => {
-			if (widget is Dragonstone.GtkUi.Tab){
-				var tab = (widget as Dragonstone.GtkUi.Tab);
+			if (widget is Dragonstone.GtkUi.LegacyWidget.Tab){
+				var tab = (widget as Dragonstone.GtkUi.LegacyWidget.Tab);
 				tab.set_tab_parent_window(this);
 			}
 		});
@@ -155,11 +155,11 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 	}
 	
 	public void add_tab(string uri, string session_id = "core.default"){
-		add_tab_object(new Dragonstone.GtkUi.Tab(session_id,uri,this,super_registry));
+		add_tab_object(new Dragonstone.GtkUi.LegacyWidget.Tab(session_id,uri,this,super_registry));
 	}
 	
-	public void add_tab_object(Dragonstone.GtkUi.Tab tab){
-		tabs.append_page(tab,new Dragonstone.GtkUi.Widget.TabHead(tab));
+	public void add_tab_object(Dragonstone.GtkUi.LegacyWidget.Tab tab){
+		tabs.append_page(tab,new Dragonstone.GtkUi.LegacyWidget.TabHead(tab));
 		tabs.set_tab_reorderable(tab,true);
 		tabs.set_tab_detachable(tab,true);
 		tabs.set_current_page(-1);
@@ -176,8 +176,8 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		}
 		if(page_num < 0) { return; }
 		tabs.remove_page(page_num);
-		Dragonstone.GtkUi.Tab dt = (tabx as Dragonstone.GtkUi.Tab);
-		if (dt is Dragonstone.GtkUi.Tab && dt != null) {
+		Dragonstone.GtkUi.LegacyWidget.Tab dt = (tabx as Dragonstone.GtkUi.LegacyWidget.Tab);
+		if (dt is Dragonstone.GtkUi.LegacyWidget.Tab && dt != null) {
 			dt.cleanup();
 		}
 		//if (tabs.get_n_pages() == 0) { add_new_tab(); }
@@ -187,8 +187,8 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		while(tabs.get_n_pages()>0){
 			var widget = tabs.get_nth_page(0);
 			tabs.remove_page(0);
-			Dragonstone.GtkUi.Tab dt = (widget as Dragonstone.GtkUi.Tab);
-			if (dt is Dragonstone.GtkUi.Tab && dt != null) {
+			Dragonstone.GtkUi.LegacyWidget.Tab dt = (widget as Dragonstone.GtkUi.LegacyWidget.Tab);
+			if (dt is Dragonstone.GtkUi.LegacyWidget.Tab && dt != null) {
 				dt.cleanup();
 			}
 		}

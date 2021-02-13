@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.View.Download : Dragonstone.GtkUi.Widget.DialogViewBase, Dragonstone.GtkUi.Interface.View {
+public class Dragonstone.GtkUi.View.Download : Dragonstone.GtkUi.LegacyWidget.DialogViewBase, Dragonstone.GtkUi.Interface.LegacyView {
 	
 	private Dragonstone.Request request = null;
 	private Gtk.Label name_label = new Gtk.Label("");
@@ -21,7 +21,7 @@ public class Dragonstone.GtkUi.View.Download : Dragonstone.GtkUi.Widget.DialogVi
 		
 	}
 	
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
+	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		if (!(request.status == "success")) {return false;}
 		this.request = request;
 		name_label.label = Dragonstone.Util.Uri.get_filename(request.uri);

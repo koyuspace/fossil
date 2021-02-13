@@ -1,7 +1,7 @@
-public class Dragonstone.GtkUi.View.Bookmarks : Gtk.Stack, Dragonstone.GtkUi.Interface.View {
+public class Dragonstone.GtkUi.View.Bookmarks : Gtk.Stack, Dragonstone.GtkUi.Interface.LegacyView {
 	
 	private Dragonstone.Request? request = null;
-	private Dragonstone.GtkUi.Tab? tab = null;
+	private Dragonstone.GtkUi.LegacyWidget.Tab? tab = null;
 	private Dragonstone.Registry.TranslationRegistry? translation = null;
 	private Dragonstone.Registry.BookmarkRegistry bookmark_registry;
 	
@@ -26,12 +26,12 @@ public class Dragonstone.GtkUi.View.Bookmarks : Gtk.Stack, Dragonstone.GtkUi.Int
 	private Gtk.Entry search_entry = new Gtk.Entry();
 	
 	//addview
-	private Dragonstone.GtkUi.Widget.SubviewBase subview_add = new Dragonstone.GtkUi.Widget.SubviewBase("temptitle: Add");
-	private Dragonstone.GtkUi.Widget.BookmarkAdder addwidget;
+	private Dragonstone.GtkUi.LegacyWidget.SubviewBase subview_add = new Dragonstone.GtkUi.LegacyWidget.SubviewBase("temptitle: Add");
+	private Dragonstone.GtkUi.LegacyWidget.BookmarkAdder addwidget;
 		
 	//editview
-	private Dragonstone.GtkUi.Widget.SubviewBase subview_edit = new Dragonstone.GtkUi.Widget.SubviewBase("temptitle: Edit");
-	private Dragonstone.GtkUi.Widget.BookmarkEditor editwidget;
+	private Dragonstone.GtkUi.LegacyWidget.SubviewBase subview_edit = new Dragonstone.GtkUi.LegacyWidget.SubviewBase("temptitle: Edit");
+	private Dragonstone.GtkUi.LegacyWidget.BookmarkEditor editwidget;
 	
 	/*
 		Columns:
@@ -54,7 +54,7 @@ public class Dragonstone.GtkUi.View.Bookmarks : Gtk.Stack, Dragonstone.GtkUi.Int
 		});
 		//addbutton
 		addbutton.label = translation.localize("view.boomarks.add.label");
-		addwidget = new Dragonstone.GtkUi.Widget.BookmarkAdder(bookmark_registry);
+		addwidget = new Dragonstone.GtkUi.LegacyWidget.BookmarkAdder(bookmark_registry);
 		addwidget.margin = 8;
 		subview_add.append_child(addwidget);
 		subview_add.set_title(translation.localize("view.boomarks.subview_add.title"));
@@ -83,7 +83,7 @@ public class Dragonstone.GtkUi.View.Bookmarks : Gtk.Stack, Dragonstone.GtkUi.Int
 		});
 		//editbutton
 		editbutton.tooltip_text = translation.localize("view.boomarks.editbutton.tooltip");
-		editwidget = new Dragonstone.GtkUi.Widget.BookmarkEditor(bookmark_registry);
+		editwidget = new Dragonstone.GtkUi.LegacyWidget.BookmarkEditor(bookmark_registry);
 		editwidget.margin = 8;
 		subview_edit.append_child(editwidget);
 		subview_edit.set_title(translation.localize("view.boomarks.subview_edit.title"));
@@ -144,7 +144,7 @@ public class Dragonstone.GtkUi.View.Bookmarks : Gtk.Stack, Dragonstone.GtkUi.Int
 		filterstore.set_visible_func(filter_visible_function);
 	}
 	
-	public bool display_resource(Dragonstone.Request request,Dragonstone.GtkUi.Tab tab, bool as_subview){
+	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		if (!(request.status == "interactive/bookmarks" || as_subview)) { return false; }
 		this.request = request;
 		this.tab = tab;
@@ -361,7 +361,7 @@ public class Dragonstone.GtkUi.View.Bookmarks : Gtk.Stack, Dragonstone.GtkUi.Int
 		}
 		val = kv.get_value("scroll");
 		if (val != null){
-			Dragonstone.GtkUi.Util.GtkScrollExport.import(this.list_scroll,val);
+			Dragonstone.GtkUi.LegacyUtil.GtkScrollExport.import(this.list_scroll,val);
 		}
 		return true;
 	}
@@ -385,7 +385,7 @@ public class Dragonstone.GtkUi.View.Bookmarks : Gtk.Stack, Dragonstone.GtkUi.Int
 			kv.set_value("edit_name_entry",this.editwidget.name_entry.text);
 			kv.set_value("edit_uri_entry",this.editwidget.uri_entry.text);
 		}
-		kv.set_value("scroll",Dragonstone.GtkUi.Util.GtkScrollExport.export(this.list_scroll));
+		kv.set_value("scroll",Dragonstone.GtkUi.LegacyUtil.GtkScrollExport.export(this.list_scroll));
 		return kv.export();
 	}
 	

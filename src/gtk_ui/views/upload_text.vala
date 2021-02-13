@@ -1,7 +1,7 @@
-public class Dragonstone.GtkUi.View.UploadText : Gtk.Box, Dragonstone.GtkUi.Interface.View {
+public class Dragonstone.GtkUi.View.UploadText : Gtk.Box, Dragonstone.GtkUi.Interface.LegacyView {
 	
 	private Dragonstone.Request? request = null;
-	private Dragonstone.GtkUi.Tab? tab = null;
+	private Dragonstone.GtkUi.LegacyWidget.Tab? tab = null;
 	private Dragonstone.Registry.MimetypeGuesser mimeguesser;
 	private string tempfile;
 	private Dragonstone.Resource resource;
@@ -180,7 +180,7 @@ public class Dragonstone.GtkUi.View.UploadText : Gtk.Box, Dragonstone.GtkUi.Inte
 		}
 	}
 	
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
+	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		if (!(request.status.has_prefix("interactive/upload"))) {return false;}
 		this.request = request;
 		this.tab = tab;

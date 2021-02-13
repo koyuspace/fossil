@@ -2,7 +2,7 @@ public class Dragonstone.Startup.Hypertext.Gtk {
 	
 	public static void setup_views(Dragonstone.SuperRegistry super_registry, Dragonstone.Interface.Settings.Provider? settings_provider){
 		print("[startup][hypertext][gtk] setup_views()\n");
-		var view_registry = (super_registry.retrieve("gtk.views") as Dragonstone.GtkUi.ViewRegistry);
+		var view_registry = (super_registry.retrieve("gtk.views") as Dragonstone.GtkUi.LegacyViewRegistry);
 		if (view_registry != null){
 			// Get get all the theming stuff set up
 			var theme_loader = new Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeLoader(settings_provider, "themes.");
@@ -25,11 +25,11 @@ public class Dragonstone.Startup.Hypertext.Gtk {
 			view_registry.add_view("hypertext",() => {	
 				return new Dragonstone.GtkUi.View.Hypertext(parser_factory, theme_provider);
 			});
-			view_registry.add_rule(new Dragonstone.GtkUi.ViewRegistryRule.resource_view("text/gemini","hypertext"));
-			view_registry.add_rule(new Dragonstone.GtkUi.ViewRegistryRule.resource_view("text/gopher","hypertext"));
-			view_registry.add_rule(new Dragonstone.GtkUi.ViewRegistryRule.resource_view("text/", "hypertext"));
-			view_registry.add_rule(new Dragonstone.GtkUi.ViewRegistryRule.resource_view("application/xml", "hypertext"));
-			view_registry.add_rule(new Dragonstone.GtkUi.ViewRegistryRule.resource_view("application/json", "hypertext"));
+			view_registry.add_rule(new Dragonstone.GtkUi.LegacyViewRegistryRule.resource_view("text/gemini","hypertext"));
+			view_registry.add_rule(new Dragonstone.GtkUi.LegacyViewRegistryRule.resource_view("text/gopher","hypertext"));
+			view_registry.add_rule(new Dragonstone.GtkUi.LegacyViewRegistryRule.resource_view("text/", "hypertext"));
+			view_registry.add_rule(new Dragonstone.GtkUi.LegacyViewRegistryRule.resource_view("application/xml", "hypertext"));
+			view_registry.add_rule(new Dragonstone.GtkUi.LegacyViewRegistryRule.resource_view("application/json", "hypertext"));
 		}
 	}
 

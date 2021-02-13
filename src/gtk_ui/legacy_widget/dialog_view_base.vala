@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.Widget.DialogViewBase : Gtk.Box {
+public class Dragonstone.GtkUi.LegacyWidget.DialogViewBase : Gtk.Box {
 	protected Gtk.Box outer_box = new Gtk.Box(Gtk.Orientation.VERTICAL,1);
 	protected Gtk.Box center_box = new Gtk.Box(Gtk.Orientation.VERTICAL,8);
 	protected Gtk.ScrolledWindow scrolled_window = new Gtk.ScrolledWindow(null,null);
@@ -21,7 +21,7 @@ public class Dragonstone.GtkUi.Widget.DialogViewBase : Gtk.Box {
 		this.backbutton.hide();
 	}
 	
-	public void use_as_subview(Dragonstone.GtkUi.Tab tab){
+	public void use_as_subview(Dragonstone.GtkUi.LegacyWidget.Tab tab){
 		this.actionbar.show();
 		this.backbutton.show();
 		this.backbutton.clicked.connect(tab.go_back_subview);

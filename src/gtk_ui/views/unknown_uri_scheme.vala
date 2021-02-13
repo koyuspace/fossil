@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.View.UnknownUriScheme : Dragonstone.GtkUi.Widget.DialogViewBase, Dragonstone.GtkUi.Interface.View {
+public class Dragonstone.GtkUi.View.UnknownUriScheme : Dragonstone.GtkUi.LegacyWidget.DialogViewBase, Dragonstone.GtkUi.Interface.LegacyView {
 	
 	private Dragonstone.Request request = null;
 	private Gtk.Button open_externally_button = new Gtk.Button.with_label("Open in external Browser");
@@ -18,7 +18,7 @@ public class Dragonstone.GtkUi.View.UnknownUriScheme : Dragonstone.GtkUi.Widget.
 		show_all();
 	}
 	
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
+	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		if (request.status != "error/uri/unknownScheme") {return false;}
 		this.request = request;
 		open_externally_button.clicked.connect(() => {

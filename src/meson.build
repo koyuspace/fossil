@@ -24,24 +24,44 @@ executable(
 	'asm_init/switch.store.vala', #AUTOUPDATE_FILE
 	'asm_init/uri_autoprefix.registry.vala', #AUTOUPDATE_FILE
 	'gtk_ui/application.vala', #AUTOUPDATE_FILE
+	'gtk_ui/interface/legacy_view.vala', #AUTOUPDATE_FILE
 	'gtk_ui/interface/theming/hypertext_theme_loader.i.vala', #AUTOUPDATE_FILE
 	'gtk_ui/interface/theming/hypertext_theme_rule_provider.i.vala', #AUTOUPDATE_FILE
 	'gtk_ui/interface/theming/hypertext_view_theme.vala', #AUTOUPDATE_FILE
 	'gtk_ui/interface/theming/hypertext_view_theme_provider.vala', #AUTOUPDATE_FILE
-	'gtk_ui/interface/view.vala', #AUTOUPDATE_FILE
 	'gtk_ui/json_integration/theming/hypertext_theme_rule.vala', #AUTOUPDATE_FILE
 	'gtk_ui/json_integration/theming/hypertext_view_theme.vala', #AUTOUPDATE_FILE
 	'gtk_ui/json_integration/theming/text_tag_theme.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_util/default_gtk_link_icon_loader.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_util/gtk_scroll_export.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_util/message_view_factory.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_view_registry.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_widget/bookmark_adder.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_widget/bookmark_editor.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_widget/cacheview.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_widget/dialog_view_base.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_widget/header_bar.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_widget/hypertext_content.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_widget/inline_search.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_widget/inline_search_post_b64_file_popover_easter_egg.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_widget/link_button.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_widget/link_popover.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_widget/menu_entrys.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_widget/request_argument_display.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_widget/session_chooser.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_widget/subview_base.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_widget/tab.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_widget/tab_head.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_widget/text_content.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_widget/text_entry.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_widget/view_chooser.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_widget/window.vala', #AUTOUPDATE_FILE
 	'gtk_ui/settings_integration/settings_hypertext_json_theme_loader.vala', #AUTOUPDATE_FILE
 	'gtk_ui/settings_integration/settings_hypertext_json_theme_rule_provider.vala', #AUTOUPDATE_FILE
 	'gtk_ui/theming/default_hypertext_view_theme_provider.vala', #AUTOUPDATE_FILE
 	'gtk_ui/theming/hypertext_theme_rule.vala', #AUTOUPDATE_FILE
 	'gtk_ui/theming/hypertext_view_theme.vala', #AUTOUPDATE_FILE
 	'gtk_ui/theming/text_tag_theme.vala', #AUTOUPDATE_FILE
-	'gtk_ui/util/default_gtk_link_icon_loader.vala', #AUTOUPDATE_FILE
-	'gtk_ui/util/gtk_scroll_export.vala', #AUTOUPDATE_FILE
-	'gtk_ui/util/message_view_factory.vala', #AUTOUPDATE_FILE
-	'gtk_ui/view_registry.vala', #AUTOUPDATE_FILE
 	'gtk_ui/views/bookmarks.vala', #AUTOUPDATE_FILE
 	'gtk_ui/views/cache.vala', #AUTOUPDATE_FILE
 	'gtk_ui/views/directory.vala', #AUTOUPDATE_FILE
@@ -50,7 +70,6 @@ executable(
 	'gtk_ui/views/geminiInput.vala', #AUTOUPDATE_FILE
 	'gtk_ui/views/hypertext.vala', #AUTOUPDATE_FILE
 	'gtk_ui/views/image.vala', #AUTOUPDATE_FILE
-	'gtk_ui/views/label.vala', #AUTOUPDATE_FILE
 	'gtk_ui/views/loading.vala', #AUTOUPDATE_FILE
 	'gtk_ui/views/message.vala', #AUTOUPDATE_FILE
 	'gtk_ui/views/plaintext.vala', #AUTOUPDATE_FILE
@@ -61,33 +80,22 @@ executable(
 	'gtk_ui/views/upload_text.vala', #AUTOUPDATE_FILE
 	'gtk_ui/views/uri_error_generic.vala', #AUTOUPDATE_FILE
 	'gtk_ui/views/uri_merge_test.vala', #AUTOUPDATE_FILE
-	'gtk_ui/widgets/bookmark_adder.vala', #AUTOUPDATE_FILE
-	'gtk_ui/widgets/bookmark_editor.vala', #AUTOUPDATE_FILE
-	'gtk_ui/widgets/cacheview.vala', #AUTOUPDATE_FILE
-	'gtk_ui/widgets/dialog_view_base.vala', #AUTOUPDATE_FILE
-	'gtk_ui/widgets/header_bar.vala', #AUTOUPDATE_FILE
-	'gtk_ui/widgets/hypertext_content.vala', #AUTOUPDATE_FILE
-	'gtk_ui/widgets/inline_search.vala', #AUTOUPDATE_FILE
-	'gtk_ui/widgets/inline_search_post_b64_file_popover_easter_egg.vala', #AUTOUPDATE_FILE
-	'gtk_ui/widgets/link_button.vala', #AUTOUPDATE_FILE
-	'gtk_ui/widgets/link_popover.vala', #AUTOUPDATE_FILE
-	'gtk_ui/widgets/menu_entrys.vala', #AUTOUPDATE_FILE
-	'gtk_ui/widgets/request_argument_display.vala', #AUTOUPDATE_FILE
-	'gtk_ui/widgets/session_chooser.vala', #AUTOUPDATE_FILE
-	'gtk_ui/widgets/subview_base.vala', #AUTOUPDATE_FILE
-	'gtk_ui/widgets/tab.vala', #AUTOUPDATE_FILE
-	'gtk_ui/widgets/tab_head.vala', #AUTOUPDATE_FILE
-	'gtk_ui/widgets/text_content.vala', #AUTOUPDATE_FILE
-	'gtk_ui/widgets/text_entry.vala', #AUTOUPDATE_FILE
-	'gtk_ui/widgets/view_chooser.vala', #AUTOUPDATE_FILE
-	'gtk_ui/widgets/window.vala', #AUTOUPDATE_FILE
 	'interface/cache.i.vala', #AUTOUPDATE_FILE
 	'interface/document/token_parser.i.vala', #AUTOUPDATE_FILE
 	'interface/document/token_parser_factory.i.vala', #AUTOUPDATE_FILE
 	'interface/document/token_renderer.i.vala', #AUTOUPDATE_FILE
+	'interface/page/page.i.vala', #AUTOUPDATE_FILE
+	'interface/page/service/external_navigation.i.vala', #AUTOUPDATE_FILE
+	'interface/page/service/internal_navigation.i.vala', #AUTOUPDATE_FILE
+	'interface/page/service/linear_history.i.vala', #AUTOUPDATE_FILE
+	'interface/page/service/metadata.i.vala', #AUTOUPDATE_FILE
+	'interface/page/service/syncronisation.i.vala', #AUTOUPDATE_FILE
 	'interface/resource_store.i.vala', #AUTOUPDATE_FILE
 	'interface/session.i.vala', #AUTOUPDATE_FILE
 	'interface/settings/provider.i.vala', #AUTOUPDATE_FILE
+	'page/page.vala', #AUTOUPDATE_FILE
+	'page/service/metadata.vala', #AUTOUPDATE_FILE
+	'page/service/syncronisation.vala', #AUTOUPDATE_FILE
 	'registries/bookmark_registry.vala', #AUTOUPDATE_FILE
 	'registries/gopher_type_registry.vala', #AUTOUPDATE_FILE
 	'registries/mimeguesser.vala', #AUTOUPDATE_FILE
