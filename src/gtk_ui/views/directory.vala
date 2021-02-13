@@ -266,20 +266,21 @@ public class Dragonstone.GtkUi.View.Directory : Gtk.Box, Dragonstone.GtkUi.Inter
 		if (!(request.status == "success" && request.resource.mimetype == "text/dragonstone-directory")) {return false;}
 		this.request = request;
 		this.tab = tab;
-		var file = File.new_for_path(request.resource.filepath);
-		if (!file.query_exists ()) {
+  	var input_stream = tab.get_file_content_stream();
+		if (input_stream == null) {
 			print("[directory.gtk][error] file does not exist!\n ");
       return false;
-  	}
-  	try {
-  		var dis = new DataInputStream (file.read ());
-      string line;
-			while ((line = dis.read_line (null)) != null) {
-				add_line(line.strip());
+		} else {
+			try {
+				var dis = new DataInputStream(input_stream);
+		    string line;
+				while ((line = dis.read_line (null)) != null) {
+					add_line(line.strip());
+				}
+				update_navigation();
+			}catch (GLib.Error e) {
+				print("[directory.gtk][error] Error while rendering directory content:\n"+e.message);
 			}
-			update_navigation();
-		}catch (GLib.Error e) {
-			print("[directory.gtk][error] Error while rendering directory content:\n"+e.message);
 		}
 		return true;
 	}

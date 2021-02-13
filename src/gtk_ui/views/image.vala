@@ -13,7 +13,11 @@ public class Dragonstone.GtkUi.View.Image : Gtk.ScrolledWindow, Dragonstone.GtkU
 	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
 		if ((request.status == "success") && request.resource.mimetype.has_prefix("image/")){
 			try {
-				pixbuf = new Gdk.Pixbuf.from_file(request.resource.filepath);
+				var input_stream = tab.get_file_content_stream();
+				if (input_stream == null) {
+					return false;
+				}
+				pixbuf = new Gdk.Pixbuf.from_stream(input_stream);
 				image = new Gtk.Image.from_pixbuf(pixbuf);
 				add(image);
 				size_allocate.connect(trigger_autoscale);

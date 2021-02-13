@@ -15,21 +15,22 @@ public class Dragonstone.GtkUi.View.Plaintext : Gtk.ScrolledWindow, Dragonstone.
 	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.Tab tab, bool as_subview){
 		if ((request.status == "success") && request.resource.mimetype.has_prefix("text/")){
 			string text = "";
-			var file = File.new_for_path (request.resource.filepath);
-			if (!file.query_exists ()) {
-				text = "ERROR: Cache file does not exist!\nReloading should help,\nif it doesn't please contact the developer!";
-			}
-			try {
-				// Open file for reading and wrap returned FileInputStream into a
-				// DataInputStream, so we can read line by line
-				var dis = new DataInputStream (file.read ());
-				string line;
-				// Read lines until end of file (null) is reached
-				while ((line = dis.read_line (null)) != null) {
-					text = text+line+"\n";
+			var input_stream = tab.get_file_content_stream();
+			if (input_stream == null) {
+				textview.buffer.text = "The cache file for this resource does not exist!\nReloading the page should help,\nif not please contact the developer!";
+			} else {
+				try {
+					// Open file for reading and wrap returned FileInputStream into a
+					// DataInputStream, so we can read line by line
+					var dis = new DataInputStream (input_stream);
+					string line;
+					// Read lines until end of file (null) is reached
+					while ((line = dis.read_line (null)) != null) {
+						text = text+line+"\n";
+					}
+				} catch (GLib.Error e) {
+					text = "ERROR WHILE READING FILE:\n"+e.message;
 				}
-			} catch (GLib.Error e) {
-			    text = "ERROR WHILE READING FILE:\n"+e.message;
 			}
 			textview.buffer.text = text;
 			
