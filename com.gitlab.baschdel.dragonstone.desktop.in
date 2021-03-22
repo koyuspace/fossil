@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=Dragonstone
+Comment=Gopher and Gemini browser
+Keywords=gemini;gopher;browser
+#GenericName=Dragonstone
+Exec=com.gitlab.baschdel.dragonstone %U
+Icon=applications-internet
+Terminal=false
+StartupNotify=true
+Type=Application
+MimeType=text/gopher;text/gemini;
+Categories=Internet;
+X-GNOME-Gettext-Domain=com.gitlab.baschdel.dragonstone
+X-GNOME-UsesNotifications=true
