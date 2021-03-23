@@ -200,7 +200,7 @@ public class Fossil.HeaderBar : Gtk.HeaderBar {
 		});
 		bookmarkbutton.clicked.connect(e => {
 			if (current_tab != null) {
-				current_tab.open_subview("dragonstone.bookmarks");
+				current_tab.open_subview("fossil.bookmarks");
 			}
 		});
 		openfileexternllybutton.clicked.connect(e => {
