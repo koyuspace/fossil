@@ -140,7 +140,9 @@ public class Fossil.Window : Gtk.ApplicationWindow {
 		});
 		Gtk.accelerator_parse("<control>q",out key,out modifiers);
 		accelerator_group.connect(key,modifiers,Gtk.AccelFlags.VISIBLE, () => {
-	        destroy();
+	        close_all_tabs();
+		    before_destroy();
+		    destroy();
 	        return true;
 		});
 		show_all();
@@ -192,7 +194,11 @@ public class Fossil.Window : Gtk.ApplicationWindow {
 		if (dt is Fossil.GtkUi.LegacyWidget.Tab && dt != null) {
 			dt.cleanup();
 		}
-		if (tabs.get_n_pages() == 0) { destroy(); }
+		if (tabs.get_n_pages() == 0) {
+		    close_all_tabs();
+		    before_destroy();
+		    destroy();
+		}
 	}
 	
 	public void close_all_tabs(){
