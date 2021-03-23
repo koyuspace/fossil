@@ -93,6 +93,8 @@ public class Fossil.Window : Gtk.ApplicationWindow {
 		headerbar.forwardbutton.add_accelerator("clicked",accelerator_group,key,modifiers,Gtk.AccelFlags.VISIBLE);
 		Gtk.accelerator_parse("<control>l",out key,out modifiers);
 		headerbar.addressfield.add_accelerator("grab_focus",accelerator_group,key,modifiers,Gtk.AccelFlags.VISIBLE);
+		Gtk.accelerator_parse("<control>k",out key,out modifiers);
+		headerbar.addressfield.add_accelerator("grab_focus",accelerator_group,key,modifiers,Gtk.AccelFlags.VISIBLE);
 		Gtk.accelerator_parse("<control>m",out key,out modifiers);
 		headerbar.menubutton.add_accelerator("clicked",accelerator_group,key,modifiers,Gtk.AccelFlags.VISIBLE);
 		Gtk.accelerator_parse("<control>t",out key,out modifiers);
@@ -120,6 +122,11 @@ public class Fossil.Window : Gtk.ApplicationWindow {
 			return true;
 		});
 		Gtk.accelerator_parse("F5",out key,out modifiers);
+		accelerator_group.connect(key,modifiers,Gtk.AccelFlags.VISIBLE,() => {
+			headerbar.current_tab.reload();
+			return true;
+		});
+		Gtk.accelerator_parse("<control>r",out key,out modifiers);
 		accelerator_group.connect(key,modifiers,Gtk.AccelFlags.VISIBLE,() => {
 			headerbar.current_tab.reload();
 			return true;
