@@ -31,7 +31,7 @@ To get started here are some links:
 => gopher://khzae.net/0/rfc1436.txt RFC1436 - The gopher specification
 => gopher://zaibatsu.circumlunar.space/1/~solderpunk/gemini The gemini specification
 
-### Gemini:
+### Gemini
 
 => gemini://geminispace.info/ The geminispace.info search engine (GUS is dead)
 => gemini://medusae.space/ medusae.space gemini directory
