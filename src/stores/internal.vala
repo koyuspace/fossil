@@ -35,7 +35,6 @@ To get started here are some links:
 
 => gemini://geminispace.info/ The geminispace.info search engine (GUS is dead)
 => gemini://medusae.space/ medusae.space gemini directory
-=> gemini://directory.randomroad.net/ Randomroad gemini directory
 => gemini://gemini.circumlunar.space/servers/ A list of the first known gemini servers
 => gemini://koyu.space koyu.space
 => gemini://tilde.zone tilde.zone
