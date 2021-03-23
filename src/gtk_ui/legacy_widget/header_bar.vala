@@ -309,11 +309,13 @@ public class Fossil.HeaderBar : Gtk.HeaderBar {
 				loadButtonReloadMode = true;
 				//loadbutton.label = "Reload!"; //TOTRANSLATE
 				loadbutton.image = reloadIcon;
+				loadbutton.get_style_context().remove_class("suggested-action");
 				return;
 			}
 		}
 		loadButtonReloadMode = false;
 		//loadbutton.label = "Go!"; //TOTRANSLATE
+		loadbutton.get_style_context().add_class("suggested-action");
 		loadbutton.image = goIcon;
 	}
 	
