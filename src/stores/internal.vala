@@ -30,6 +30,7 @@ To get started here are some links:
 => gopher://gopher.floodgap.com/1/gopher What is Gopher and why is it still relevant?
 => gopher://khzae.net/0/rfc1436.txt RFC1436 - The gopher specification
 => gopher://zaibatsu.circumlunar.space/1/~solderpunk/gemini The gemini specification
+=> gopher://tilde.club tilde.club
 
 ### Gemini
 
@@ -37,7 +38,7 @@ To get started here are some links:
 => gemini://medusae.space/ medusae.space gemini directory
 => gemini://gemini.circumlunar.space/servers/ A list of the first known gemini servers
 => gemini://koyu.space koyu.space
-=> gemini://tilde.zone tilde.zone
+=> gemini://tilde.club tilde.club
 
 ---
 
