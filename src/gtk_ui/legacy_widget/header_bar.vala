@@ -125,10 +125,10 @@ public class Fossil.HeaderBar : Gtk.HeaderBar {
 		//seperator
 		mainmenubox.pack_start(new Gtk.Separator(Gtk.Orientation.HORIZONTAL));
 		//Settings
-		var view_settings_localized = parent_window.translation.get_localized_string("window.main_menu.settings.label");
+		/*var view_settings_localized = parent_window.translation.get_localized_string("window.main_menu.settings.label");
 		var settingsbutton = new Fossil.GtkUi.LegacyWidget.MenuButton(view_settings_localized);
 		//settingsbutton.sensitive = false;
-		mainmenubox.pack_start(settingsbutton);
+		mainmenubox.pack_start(settingsbutton);*/
 		//About
 		var view_about_localized = parent_window.translation.get_localized_string("window.main_menu.about.label");
 		var aboutbutton = new Fossil.GtkUi.LegacyWidget.MenuButton(view_about_localized);
@@ -237,13 +237,13 @@ public class Fossil.HeaderBar : Gtk.HeaderBar {
 				parent_window.add_tab("about:cache");
 			}
 		});
-		settingsbutton.clicked.connect(e => {
+		/*settingsbutton.clicked.connect(e => {
 			if (current_tab != null){
 				current_tab.open_uri_in_new_tab("about:settings");
 			} else {
 				parent_window.add_tab("about:settings");
 			}
-		});
+		});*/
 	    aboutbutton.clicked.connect(e => {
 			if (current_tab != null){
 				current_tab.open_uri_in_new_tab("fossil://about");
