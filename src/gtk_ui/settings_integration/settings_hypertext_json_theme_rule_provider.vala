@@ -1,11 +1,11 @@
-public class Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeRuleProvider : Dragonstone.GtkUi.Interface.HypertextThemeRuleProvider, Object {
+public class Fossil.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeRuleProvider : Fossil.GtkUi.Interface.HypertextThemeRuleProvider, Object {
 	
-	private List<Dragonstone.GtkUi.Theming.HypertextThemeRule> rules = new List<Dragonstone.GtkUi.Theming.HypertextThemeRule>();
-	private Dragonstone.Interface.Settings.Provider settings_provider;
+	private List<Fossil.GtkUi.Theming.HypertextThemeRule> rules = new List<Fossil.GtkUi.Theming.HypertextThemeRule>();
+	private Fossil.Interface.Settings.Provider settings_provider;
 	private string path;
-	public string module_name = "Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeRuleProvider";
+	public string module_name = "Fossil.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeRuleProvider";
 	
-	public SettingsHypertextJsonThemeRuleProvider(Dragonstone.Interface.Settings.Provider settings_provider, string path){
+	public SettingsHypertextJsonThemeRuleProvider(Fossil.Interface.Settings.Provider settings_provider, string path){
 		this.settings_provider = settings_provider;
 		this.path = path;
 		reload();
@@ -25,7 +25,7 @@ public class Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeRul
 	public void reload(){
 		lock(rules) {
 			if (rules.length()>0){
-				rules = new List<Dragonstone.GtkUi.Theming.HypertextThemeRule>();
+				rules = new List<Fossil.GtkUi.Theming.HypertextThemeRule>();
 			}
 			var rules_json = settings_provider.read_object(path);
 			if (rules_json == null) {
@@ -41,7 +41,7 @@ public class Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeRul
 						var rules_array = root_node.get_array();
 						foreach (unowned Json.Node item in rules_array.get_elements()) {
 							if (item.get_node_type() == OBJECT) {
-								var rule = Dragonstone.GtkUi.JsonIntegration.Theming.HypertextThemeRule.rule_from_json(item.get_object());
+								var rule = Fossil.GtkUi.JsonIntegration.Theming.HypertextThemeRule.rule_from_json(item.get_object());
 								if (rule != null) {
 									rules.append(rule);
 									counter++;
@@ -50,19 +50,19 @@ public class Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeRul
 						}
 					}
 				}
-				settings_provider.submit_client_report(new Dragonstone.Settings.Report(module_name, path, null, null, @"Imported $counter rules"));
+				settings_provider.submit_client_report(new Fossil.Settings.Report(module_name, path, null, null, @"Imported $counter rules"));
 			} catch (Error e) {
-				settings_provider.submit_client_report(new Dragonstone.Settings.Report(module_name, path, e.message, null, "Error while decoding json"));
-				//print("[Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeRuleProvider] Error while parsing json "+e.message+"\n");
+				settings_provider.submit_client_report(new Fossil.Settings.Report(module_name, path, e.message, null, "Error while decoding json"));
+				//print("[Fossil.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeRuleProvider] Error while parsing json "+e.message+"\n");
 			}
 		}
 	}
 	
 	  ////////////////////////////////////////////////////////////
-	 // Dragonstone.GtkUi.Interface.HypertextThemeRuleProvider //
+	 // Fossil.GtkUi.Interface.HypertextThemeRuleProvider //
 	////////////////////////////////////////////////////////////
 	
-	public void foreach_relevant_rule(string content_type, string uri, Func<Dragonstone.GtkUi.Theming.HypertextThemeRule> cb){
+	public void foreach_relevant_rule(string content_type, string uri, Func<Fossil.GtkUi.Theming.HypertextThemeRule> cb){
 		rules.foreach(cb);
 	}
 	

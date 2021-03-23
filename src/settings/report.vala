@@ -1,4 +1,4 @@
-public class Dragonstone.Settings.Report : Object {
+public class Fossil.Settings.Report : Object {
 	public string module_name { get; private set; }
 	public string path { get; private set; }
 	public string? error { get; private set; }
@@ -17,7 +17,7 @@ public class Dragonstone.Settings.Report : Object {
 		this.timestamp = (GLib.get_real_time()/1000);
 	}
 	
-	public Report.with_updated_path(Dragonstone.Settings.Report report, string new_path, string module_name_prefix = ""){
+	public Report.with_updated_path(Fossil.Settings.Report report, string new_path, string module_name_prefix = ""){
 		this.module_name = module_name_prefix+report.module_name;
 		this.path = new_path;
 		this.error = report.error;

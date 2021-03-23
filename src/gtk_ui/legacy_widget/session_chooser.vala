@@ -1,5 +1,5 @@
-public class Dragonstone.GtkUi.LegacyWidget.SessionChooser : Gtk.ComboBoxText {
-	private Dragonstone.GtkUi.LegacyWidget.Tab? tab = null;
+public class Fossil.GtkUi.LegacyWidget.SessionChooser : Gtk.ComboBoxText {
+	private Fossil.GtkUi.LegacyWidget.Tab? tab = null;
 	private bool tab_changing = false;
 	
 	public SessionChooser(){
@@ -7,7 +7,7 @@ public class Dragonstone.GtkUi.LegacyWidget.SessionChooser : Gtk.ComboBoxText {
 		this.changed.connect(on_change);
 	}
 	
-	public void use_tab(Dragonstone.GtkUi.LegacyWidget.Tab? tab){
+	public void use_tab(Fossil.GtkUi.LegacyWidget.Tab? tab){
 		tab_changing = true;
 		if (this.tab != null){
 			this.tab.on_session_change.disconnect(update_active_id);
@@ -27,7 +27,7 @@ public class Dragonstone.GtkUi.LegacyWidget.SessionChooser : Gtk.ComboBoxText {
 		this.remove_all();
 		if (this.tab != null){
 			foreach (string key in this.tab.session_registry.sessions.get_keys()){
-				Dragonstone.Interface.Session? session = this.tab.session_registry.sessions.get(key);
+				Fossil.Interface.Session? session = this.tab.session_registry.sessions.get(key);
 				if (session != null){
 					this.append(key,@"$(session.get_name()) [$key]");
 				}

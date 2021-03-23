@@ -1,16 +1,16 @@
-public class Dragonstone.GtkUi.View.Download : Dragonstone.GtkUi.LegacyWidget.DialogViewBase, Dragonstone.GtkUi.Interface.LegacyView {
+public class Fossil.GtkUi.View.Download : Fossil.GtkUi.LegacyWidget.DialogViewBase, Fossil.GtkUi.Interface.LegacyView {
 	
-	private Dragonstone.Request request = null;
+	private Fossil.Request request = null;
 	private Gtk.Label name_label = new Gtk.Label("");
 	private Gtk.Button save_button = new Gtk.Button.with_label("Save");
 	private Gtk.Button open_button = new Gtk.Button.with_label("Open in external viewer");
 	private string title = "Downloaded!";
 	
-	public Download(Dragonstone.Registry.TranslationRegistry? translation = null) {
+	public Download(Fossil.Registry.TranslationRegistry? translation = null) {
 		if (translation != null){
-			save_button.label = translation.localize("view.dragonstone.download.save_button.label");
-			open_button.label = translation.localize("view.dragonstone.download.open_button.label");
-			this.title = translation.localize("view.dragonstone.download.title");
+			save_button.label = translation.localize("view.fossil.download.save_button.label");
+			open_button.label = translation.localize("view.fossil.download.open_button.label");
+			this.title = translation.localize("view.fossil.download.title");
 		}
 		save_button.get_style_context().add_class("suggested-action");
 		this.append_big_icon("document-save-symbolic");
@@ -21,10 +21,10 @@ public class Dragonstone.GtkUi.View.Download : Dragonstone.GtkUi.LegacyWidget.Di
 		
 	}
 	
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
+	public bool display_resource(Fossil.Request request, Fossil.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		if (!(request.status == "success")) {return false;}
 		this.request = request;
-		name_label.label = Dragonstone.Util.Uri.get_filename(request.uri);
+		name_label.label = Fossil.Util.Uri.get_filename(request.uri);
 		save_button.clicked.connect(() => {
 			tab.download();
 		});

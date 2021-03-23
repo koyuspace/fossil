@@ -1,7 +1,7 @@
 
 
 public static int main(string[] args) {
-	var dragonstone = new Dragonstone.GtkUi.Application();
-	return dragonstone.run(args);
+	var fossil = new Fossil.GtkUi.Application();
+	return fossil.run(args);
 }
 

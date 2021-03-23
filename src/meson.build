@@ -152,7 +152,7 @@ executable(
 	'stores/gopher.vala', #AUTOUPDATE_FILE
 	'stores/gopherwrite.vala', #AUTOUPDATE_FILE
 	'stores/switch.vala', #AUTOUPDATE_FILE
-	'stores/test.vala', #AUTOUPDATE_FILE
+	'stores/internal.vala', #AUTOUPDATE_FILE
 	'ui/document/default_token_parser_factory.vala', #AUTOUPDATE_FILE
 	'ui/document/token.vala', #AUTOUPDATE_FILE
 	'ui/document/token_parser/gemini.vala', #AUTOUPDATE_FILE

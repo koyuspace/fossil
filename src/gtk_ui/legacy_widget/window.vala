@@ -1,12 +1,12 @@
-public class Dragonstone.Window : Gtk.ApplicationWindow {
+public class Fossil.Window : Gtk.ApplicationWindow {
 	
 	public Gtk.Notebook tabs;
-	public Dragonstone.SuperRegistry super_registry { get; construct; }
-	public Dragonstone.Registry.TranslationRegistry translation;
-	private Dragonstone.GtkUi.Application app;
-	private Dragonstone.Settings.Bridge.KV? settings = null;
+	public Fossil.SuperRegistry super_registry { get; construct; }
+	public Fossil.Registry.TranslationRegistry translation;
+	private Fossil.GtkUi.Application app;
+	private Fossil.Settings.Bridge.KV? settings = null;
 	
-	public Window(Dragonstone.GtkUi.Application application) {
+	public Window(Fossil.GtkUi.Application application) {
 		Object(
 			application: application,
 			super_registry: application.super_registry
@@ -16,7 +16,7 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		initalize();
 	}
 	
-	public Window.from_dropped_tab(Dragonstone.GtkUi.Application application, int x, int y) {
+	public Window.from_dropped_tab(Fossil.GtkUi.Application application, int x, int y) {
 		Object(
 			application: application,
 			super_registry: application.super_registry
@@ -28,10 +28,10 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 	}
 	
 	private void load_translation() {
-		this.translation = (super_registry.retrieve("localization.translation") as Dragonstone.Registry.TranslationRegistry);
+		this.translation = (super_registry.retrieve("localization.translation") as Fossil.Registry.TranslationRegistry);
 		if (this.translation == null){
 			print("[window] No translation resgistry found, falling back to an empty one!\n");
-			this.translation = new Dragonstone.Registry.TranslationLanguageRegistry();
+			this.translation = new Fossil.Registry.TranslationLanguageRegistry();
 		}
 		title = translation.get_localized_string("window.title");
 	}
@@ -42,7 +42,7 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		
 		set_events(Gdk.EventMask.ALL_EVENTS_MASK);
 		
-		settings = super_registry.retrieve("settings.frontend") as Dragonstone.Settings.Bridge.KV;
+		settings = super_registry.retrieve("settings.frontend") as Fossil.Settings.Bridge.KV;
 		
 		//place window where it has been bofore closing
 		//move(settings.get_int("main-window-pos-x"),settings.get_int("main-window-pos-y"));
@@ -58,14 +58,14 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		tabs.set_group_name("dragonstone.tabs");
 		
 		tabs.page_added.connect((widget, pagenum) => {
-			if (widget is Dragonstone.GtkUi.LegacyWidget.Tab){
-				var tab = (widget as Dragonstone.GtkUi.LegacyWidget.Tab);
+			if (widget is Fossil.GtkUi.LegacyWidget.Tab){
+				var tab = (widget as Fossil.GtkUi.LegacyWidget.Tab);
 				tab.set_tab_parent_window(this);
 			}
 		});
 		
 		tabs.create_window.connect((page,x,y) => {
-			var window = new Dragonstone.Window.from_dropped_tab(this.app,x,y);
+			var window = new Fossil.Window.from_dropped_tab(this.app,x,y);
 			return window.tabs;
 		});
 		
@@ -79,7 +79,7 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		add(tabs);
 		
 		//header bar
-		var headerbar = new Dragonstone.HeaderBar(this);
+		var headerbar = new Fossil.HeaderBar(this);
 		set_titlebar (headerbar);
 		
 		//keyboard shortcuts
@@ -155,11 +155,11 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 	}
 	
 	public void add_tab(string uri, string session_id = "core.default"){
-		add_tab_object(new Dragonstone.GtkUi.LegacyWidget.Tab(session_id,uri,this,super_registry));
+		add_tab_object(new Fossil.GtkUi.LegacyWidget.Tab(session_id,uri,this,super_registry));
 	}
 	
-	public void add_tab_object(Dragonstone.GtkUi.LegacyWidget.Tab tab){
-		tabs.append_page(tab,new Dragonstone.GtkUi.LegacyWidget.TabHead(tab));
+	public void add_tab_object(Fossil.GtkUi.LegacyWidget.Tab tab){
+		tabs.append_page(tab,new Fossil.GtkUi.LegacyWidget.TabHead(tab));
 		tabs.set_tab_reorderable(tab,true);
 		tabs.set_tab_detachable(tab,true);
 		tabs.set_current_page(-1);
@@ -176,8 +176,8 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		}
 		if(page_num < 0) { return; }
 		tabs.remove_page(page_num);
-		Dragonstone.GtkUi.LegacyWidget.Tab dt = (tabx as Dragonstone.GtkUi.LegacyWidget.Tab);
-		if (dt is Dragonstone.GtkUi.LegacyWidget.Tab && dt != null) {
+		Fossil.GtkUi.LegacyWidget.Tab dt = (tabx as Fossil.GtkUi.LegacyWidget.Tab);
+		if (dt is Fossil.GtkUi.LegacyWidget.Tab && dt != null) {
 			dt.cleanup();
 		}
 		//if (tabs.get_n_pages() == 0) { add_new_tab(); }
@@ -187,8 +187,8 @@ public class Dragonstone.Window : Gtk.ApplicationWindow {
 		while(tabs.get_n_pages()>0){
 			var widget = tabs.get_nth_page(0);
 			tabs.remove_page(0);
-			Dragonstone.GtkUi.LegacyWidget.Tab dt = (widget as Dragonstone.GtkUi.LegacyWidget.Tab);
-			if (dt is Dragonstone.GtkUi.LegacyWidget.Tab && dt != null) {
+			Fossil.GtkUi.LegacyWidget.Tab dt = (widget as Fossil.GtkUi.LegacyWidget.Tab);
+			if (dt is Fossil.GtkUi.LegacyWidget.Tab && dt != null) {
 				dt.cleanup();
 			}
 		}

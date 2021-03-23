@@ -1,11 +1,11 @@
-public class Dragonstone.Store.GeminiWrite : Object, Dragonstone.Interface.ResourceStore {
+public class Fossil.Store.GeminiWrite : Object, Fossil.Interface.ResourceStore {
 	
 	public int32 default_resource_lifetime = 1000*60*30; //30 minutes
-	public Dragonstone.Util.ConnectionHelper connection_helper = new Dragonstone.Util.ConnectionHelper();
+	public Fossil.Util.ConnectionHelper connection_helper = new Fossil.Util.ConnectionHelper();
 	
-	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
+	public void request(Fossil.Request request,string? filepath = null, bool upload = false){
 		// parse uri
-		var parsed_uri = new Dragonstone.Util.ParsedUri(request.uri,false);
+		var parsed_uri = new Fossil.Util.ParsedUri(request.uri,false);
 		if(!(parsed_uri.scheme == "gemini+write")){
 			request.setStatus("error/uri/unknownScheme","geminiwrite only knows gemini+upload://");
 			request.finish();
@@ -36,8 +36,8 @@ public class Dragonstone.Store.GeminiWrite : Object, Dragonstone.Interface.Resou
 		}
 		string resource_user_id = "geminiwrite_"+GLib.Uuid.string_random();
 		request.upload_resource.increment_users(resource_user_id);
-		var download_resource = new Dragonstone.Resource(download_resource_uri,filepath,true);
-		var uploader = new Dragonstone.Geminiwrite.ResourceUploader(download_resource,request,host,port);
+		var download_resource = new Fossil.Resource(download_resource_uri,filepath,true);
+		var uploader = new Fossil.Geminiwrite.ResourceUploader(download_resource,request,host,port);
 		new Thread<int>(@"geminiwrite resource uploader $host:$port [$(request.uri)]",() => {
 			print("STARTED geminiwrite resource uploader\n");
 			uploader.do_upload_resource(connection_helper, default_resource_lifetime);
@@ -48,15 +48,15 @@ public class Dragonstone.Store.GeminiWrite : Object, Dragonstone.Interface.Resou
 	}
 }
 
-public class Dragonstone.Geminiwrite.ResourceUploader : Object {
+public class Fossil.Geminiwrite.ResourceUploader : Object {
 	
 	public string host { get; construct; }
 	public uint16 port { get; construct; }
-	public Dragonstone.Resource? download_resource { get; construct; }
-	public Dragonstone.Resource upload_resource { get; construct; }
-	public Dragonstone.Request request { get; construct; }
+	public Fossil.Resource? download_resource { get; construct; }
+	public Fossil.Resource upload_resource { get; construct; }
+	public Fossil.Request request { get; construct; }
 	
-	public ResourceUploader(Dragonstone.Resource? download_resource, Dragonstone.Request request, string host, uint16 port){
+	public ResourceUploader(Fossil.Resource? download_resource, Fossil.Request request, string host, uint16 port){
 		Object(
 			upload_resource: request.upload_resource,
 			download_resource: download_resource,
@@ -66,7 +66,7 @@ public class Dragonstone.Geminiwrite.ResourceUploader : Object {
 		);
 	}
 	
-	public void do_upload_resource(Dragonstone.Util.ConnectionHelper connection_helper, int32 default_resource_lifetime){
+	public void do_upload_resource(Fossil.Util.ConnectionHelper connection_helper, int32 default_resource_lifetime){
 			
 		request.setStatus("connecting");
 		
@@ -95,14 +95,14 @@ public class Dragonstone.Geminiwrite.ResourceUploader : Object {
 				mimetype = "application/octet-stream";
 			}
 			
-			var uri = new Dragonstone.Util.ParsedUri(request.uri);
+			var uri = new Fossil.Util.ParsedUri(request.uri);
 			
 			string token = "";
 			if (uri.query != null){
 				token = uri.query;
 			}
 			
-			string query = Dragonstone.Util.Uri.strip_querys(request.uri)+"\n"+token+"\n"+mimetype+"\n"+size.to_string("%d")+"\n";
+			string query = Fossil.Util.Uri.strip_querys(request.uri)+"\n"+token+"\n"+mimetype+"\n"+size.to_string("%d")+"\n";
 			
 			conn.output_stream.write(query.data);
 			conn.output_stream.flush();
@@ -150,7 +150,7 @@ public class Dragonstone.Geminiwrite.ResourceUploader : Object {
 			request.arguments.set("gemini.metaline",metaline);
 			
 			if (statuscode/10==3){
-				var joined_uri = Dragonstone.Util.Uri.join(request.uri,metaline);
+				var joined_uri = Fossil.Util.Uri.join(request.uri,metaline);
 				if (joined_uri == null){joined_uri = request.uri;}
 				request.setStatus("redirect/temporary",joined_uri);
 			} else if (statuscode/10==4){
@@ -174,7 +174,7 @@ public class Dragonstone.Geminiwrite.ResourceUploader : Object {
 	}
 	
 	//this assumes, that the filesize did not change, but this rarely should be an issue
-	public static bool upload_blob(OutputStream output_stream, File file, Dragonstone.Request request, int64 size){
+	public static bool upload_blob(OutputStream output_stream, File file, Fossil.Request request, int64 size){
 		int64 progress = 0;
 		try {
 			var data_input_stream = new DataInputStream (file.read ());

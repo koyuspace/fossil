@@ -1,9 +1,9 @@
-public class Dragonstone.Page.Service.Metadata : Object, Dragonstone.Interface.Page.Service.Metadata {
+public class Fossil.Page.Service.Metadata : Object, Fossil.Interface.Page.Service.Metadata {
 	
 	private HashTable<string,string> metadata = new HashTable<string,string>(str_hash, str_equal);
 	
 	  /////////////////////////////////////////////////
-	 // Dragonstone.Interface.Page.Service.Metadata //
+	 // Fossil.Interface.Page.Service.Metadata //
 	/////////////////////////////////////////////////
 	
 	public void set_page_metadata(string key, string? val, string module_name){

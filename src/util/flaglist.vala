@@ -1,4 +1,4 @@
-public class Dragonstone.Util.Flaglist : Object {
+public class Fossil.Util.Flaglist : Object {
 	public List<string> flags = new List<string>();
 	
 	public void set_flag(string flag, bool state = true){

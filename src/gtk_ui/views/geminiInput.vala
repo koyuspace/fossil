@@ -1,19 +1,19 @@
-public class Dragonstone.GtkUi.View.GeminiInput : Dragonstone.GtkUi.LegacyWidget.DialogViewBase, Dragonstone.GtkUi.Interface.LegacyView {
+public class Fossil.GtkUi.View.GeminiInput : Fossil.GtkUi.LegacyWidget.DialogViewBase, Fossil.GtkUi.Interface.LegacyView {
 	
-	private Dragonstone.Request request = null;
+	private Fossil.Request request = null;
 	
-	private Dragonstone.GtkUi.View.GeminiInputInput? input = null;
+	private Fossil.GtkUi.View.GeminiInputInput? input = null;
 	private bool confidential = false;
 	
 	construct {
 		this.append_big_headline(">_");
 	}
 	
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
+	public bool display_resource(Fossil.Request request, Fossil.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		if (!(request.status == "success" && request.resource.mimetype == "gemini/input")) {return false;}
 		this.request = request;
 		this.append_small_headline(request.resource.name);
-		input = new Dragonstone.GtkUi.View.GeminiInputInput("",tab.uri);
+		input = new Fossil.GtkUi.View.GeminiInputInput("",tab.uri);
 		input.go.connect((s,uri) => {tab.go_to_uri(uri);});
 		if (request.arguments.get("gemini.statuscode") == "11") {
 			confidential = true;
@@ -39,9 +39,9 @@ public class Dragonstone.GtkUi.View.GeminiInput : Dragonstone.GtkUi.LegacyWidget
 		if (confidential || input == null){
 			return false;
 		}
-		var kv = new Dragonstone.Util.Kv();
+		var kv = new Fossil.Util.Kv();
 		kv.import(data);
-		if (kv.get_value("view_type") != "dragonstone.gemini_input.0"){
+		if (kv.get_value("view_type") != "fossil.gemini_input.0"){
 			return false;
 		}
 		string? val = kv.get_value("input");
@@ -55,15 +55,15 @@ public class Dragonstone.GtkUi.View.GeminiInput : Dragonstone.GtkUi.LegacyWidget
 		if (confidential || input == null){
 			return null;
 		}
-		var kv = new Dragonstone.Util.Kv();
-		kv.set_value("view_type","dragonstone.gemini_input.0");
+		var kv = new Fossil.Util.Kv();
+		kv.set_value("view_type","fossil.gemini_input.0");
 		kv.set_value("input",input.entry.text);
 		return kv.export();
 	}
 	
 }
 
-private class Dragonstone.GtkUi.View.GeminiInputInput : Gtk.Box {
+private class Fossil.GtkUi.View.GeminiInputInput : Gtk.Box {
 
 	public signal void go(string uri);
 	private string base_uri;

@@ -1,30 +1,30 @@
-public class Dragonstone.GtkUi.LegacyWidget.Tab : Gtk.Bin, Dragonstone.Interface.Page.Service.LinearHistory {
+public class Fossil.GtkUi.LegacyWidget.Tab : Gtk.Bin, Fossil.Interface.Page.Service.LinearHistory {
 	private string _uri = "";
 	public string uri {
 		get { return _uri; }
 		set { 
 			go_to_uri(value);
 		}}
-	public Dragonstone.GtkUi.Interface.LegacyView view;
-	public Dragonstone.Request request;
-	public Dragonstone.Registry.SessionRegistry session_registry { get; set; }
-	public Dragonstone.Interface.Session session { get; protected set; }
+	public Fossil.GtkUi.Interface.LegacyView view;
+	public Fossil.Request request;
+	public Fossil.Registry.SessionRegistry session_registry { get; set; }
+	public Fossil.Interface.Session session { get; protected set; }
 	public string current_session_id { get; protected set; }
 	public signal void on_session_change();	
 	public signal void uri_changed(string uri);
-	public Dragonstone.Util.Stack<TabHistoryEntry> history = new Dragonstone.Util.Stack<TabHistoryEntry>();
-	public Dragonstone.Util.Stack<TabHistoryEntry> forward = new Dragonstone.Util.Stack<TabHistoryEntry>();
-	public Dragonstone.GtkUi.LegacyWidget.TabHistoryEntry currently_displayed_page = new Dragonstone.GtkUi.LegacyWidget.TabHistoryEntry();
-	public Dragonstone.SuperRegistry super_registry { get; construct; }
-	public Dragonstone.Registry.TranslationRegistry translation;
+	public Fossil.Util.Stack<TabHistoryEntry> history = new Fossil.Util.Stack<TabHistoryEntry>();
+	public Fossil.Util.Stack<TabHistoryEntry> forward = new Fossil.Util.Stack<TabHistoryEntry>();
+	public Fossil.GtkUi.LegacyWidget.TabHistoryEntry currently_displayed_page = new Fossil.GtkUi.LegacyWidget.TabHistoryEntry();
+	public Fossil.SuperRegistry super_registry { get; construct; }
+	public Fossil.Registry.TranslationRegistry translation;
 	public Gtk.Window parent_window; //only for use with dialog windows
 	private int locked = 0;
 	public string title = "New Tab";
-	public Dragonstone.Ui.TabDisplayState display_state = Dragonstone.Ui.TabDisplayState.BLANK;
-	public Dragonstone.Util.Flaglist view_flags = new Dragonstone.Util.Flaglist();
-	public Dragonstone.GtkUi.LegacyViewRegistryViewChooser view_chooser;
+	public Fossil.Ui.TabDisplayState display_state = Fossil.Ui.TabDisplayState.BLANK;
+	public Fossil.Util.Flaglist view_flags = new Fossil.Util.Flaglist();
+	public Fossil.GtkUi.LegacyViewRegistryViewChooser view_chooser;
 	public signal void on_cleanup();
-	public signal void on_title_change(string title, Dragonstone.Ui.TabDisplayState state);
+	public signal void on_title_change(string title, Fossil.Ui.TabDisplayState state);
 	public string current_view_id { get; protected set; }
 	public signal void on_view_change();
 	
@@ -33,35 +33,35 @@ public class Dragonstone.GtkUi.LegacyWidget.Tab : Gtk.Bin, Dragonstone.Interface
 	
 	private string resource_user_id = "tab_"+GLib.Uuid.string_random();
 	
-	private Dragonstone.GtkUi.LegacyViewRegistry view_registry;
+	private Fossil.GtkUi.LegacyViewRegistry view_registry;
 	
-	public Tab(string session_id, string uri, Gtk.Window parent_window, Dragonstone.SuperRegistry super_registry){
+	public Tab(string session_id, string uri, Gtk.Window parent_window, Fossil.SuperRegistry super_registry){
 		Object(
 			//store: store,
 			super_registry: super_registry
 		);
 		this.current_view_id = "";
 		this.current_session_id = session_id;
-		this.session_registry = (super_registry.retrieve("core.sessions") as Dragonstone.Registry.SessionRegistry);
+		this.session_registry = (super_registry.retrieve("core.sessions") as Fossil.Registry.SessionRegistry);
 		if (this.session_registry == null){
 			print("[tab][error]No sessionregistry found in spplyed superregistry, falling back to an empty one\n");
-			this.session_registry = new Dragonstone.Registry.SessionRegistry();
+			this.session_registry = new Fossil.Registry.SessionRegistry();
 		}
 		this.session = this.session_registry.get_session_by_id(session_id);
 		if (this.session == null){
 			print("[tab][error]Session not found in session registry, falling back to dummy session");
-			this.session = new Dragonstone.Session.Dummy();
+			this.session = new Fossil.Session.Dummy();
 		}
-		this.view_registry = (super_registry.retrieve("gtk.views") as Dragonstone.GtkUi.LegacyViewRegistry);
+		this.view_registry = (super_registry.retrieve("gtk.views") as Fossil.GtkUi.LegacyViewRegistry);
 		if (this.view_registry == null){
 			print("[tab] No view registry in super registry, falling back to default configuration!\n");
-			this.view_registry = new Dragonstone.GtkUi.LegacyViewRegistry.default_configuration();
+			this.view_registry = new Fossil.GtkUi.LegacyViewRegistry.default_configuration();
 		}
-		view_chooser = new Dragonstone.GtkUi.LegacyViewRegistryViewChooser(view_registry);
-		this.translation = (super_registry.retrieve("localization.translation") as Dragonstone.Registry.TranslationRegistry);
+		view_chooser = new Fossil.GtkUi.LegacyViewRegistryViewChooser(view_registry);
+		this.translation = (super_registry.retrieve("localization.translation") as Fossil.Registry.TranslationRegistry);
 		if (this.translation == null){
 			print("[tab] No translation resgistry found, falling back to an empty one!\n");
-			this.translation = new Dragonstone.Registry.TranslationLanguageRegistry();
+			this.translation = new Fossil.Registry.TranslationLanguageRegistry();
 		}
 		this.parent_window = parent_window;
 		load_uri(uri);
@@ -92,7 +92,7 @@ public class Dragonstone.GtkUi.LegacyWidget.Tab : Gtk.Bin, Dragonstone.Interface
 		}
 		string uritogo = null;
 		if (!is_absolute) {
-			uritogo = Dragonstone.Util.Uri.join(_uri,uri);
+			uritogo = Fossil.Util.Uri.join(_uri,uri);
 		}
 		if (uritogo == null){uritogo = uri;}
 		print(@"Going to uri: $uritogo\n");
@@ -102,7 +102,7 @@ public class Dragonstone.GtkUi.LegacyWidget.Tab : Gtk.Bin, Dragonstone.Interface
 		load_uri(uritogo);
 	}
 	
-	public string? upload_to_uri(string uri,Dragonstone.Resource upload_resource){
+	public string? upload_to_uri(string uri,Fossil.Resource upload_resource){
 		if(locked>0){ return null; }
 		//add to history
 		push_history();
@@ -123,7 +123,7 @@ public class Dragonstone.GtkUi.LegacyWidget.Tab : Gtk.Bin, Dragonstone.Interface
 	//handle with care!
 	public void redirect(string uri){
 		if(locked>0){ return; }
-		var joined_uri = Dragonstone.Util.Uri.join(_uri,uri);
+		var joined_uri = Fossil.Util.Uri.join(_uri,uri);
 		if (joined_uri == null){joined_uri = uri;}
 		redirecting = true;
 		load_uri(joined_uri);
@@ -139,7 +139,7 @@ public class Dragonstone.GtkUi.LegacyWidget.Tab : Gtk.Bin, Dragonstone.Interface
 		} else {
 			redirectcounter = 0;
 		}
-		set_title(uri ,Dragonstone.Ui.TabDisplayState.LOADING);
+		set_title(uri ,Fossil.Ui.TabDisplayState.LOADING);
 		var rquri = this.uri;
 		var startoffragment = rquri.index_of_char('#');
 		if(startoffragment > 0){
@@ -151,7 +151,7 @@ public class Dragonstone.GtkUi.LegacyWidget.Tab : Gtk.Bin, Dragonstone.Interface
 		uri_changed(this.uri);
 	}
 	
-	private void set_request(Dragonstone.Request? rq){
+	private void set_request(Fossil.Request? rq){
 		if (request != null){
 			if (request.resource != null){
 				request.resource.decrement_users(resource_user_id);
@@ -169,7 +169,7 @@ public class Dragonstone.GtkUi.LegacyWidget.Tab : Gtk.Bin, Dragonstone.Interface
 		}
 	}
 	
-	private void on_request_finished(Dragonstone.Request request){
+	private void on_request_finished(Fossil.Request request){
 		Timeout.add(0,() => {
 			print("[tab][debug] on_request_finished()\n");
 			check_view(true);
@@ -177,7 +177,7 @@ public class Dragonstone.GtkUi.LegacyWidget.Tab : Gtk.Bin, Dragonstone.Interface
 		},Priority.HIGH);
 	}
 	
-	private void on_status_update(Dragonstone.Request rq){
+	private void on_status_update(Fossil.Request rq){
 		print(@"[tab] on status udate $(rq.status) | $(request.status) {$redirectcounter}\n");
 		if(locked>0){ return; }
 		if (request.resource != null){
@@ -235,7 +235,7 @@ public class Dragonstone.GtkUi.LegacyWidget.Tab : Gtk.Bin, Dragonstone.Interface
 	private void push_history(){
 		export_view_data();
 		history.push(currently_displayed_page);
-		currently_displayed_page = new Dragonstone.GtkUi.LegacyWidget.TabHistoryEntry();
+		currently_displayed_page = new Fossil.GtkUi.LegacyWidget.TabHistoryEntry();
 		forward.clear();
 	}
 	
@@ -248,7 +248,7 @@ public class Dragonstone.GtkUi.LegacyWidget.Tab : Gtk.Bin, Dragonstone.Interface
 			bool currently_displayed_is_subview = currently_displayed_page.currently_displayed_subview != null;
 			bool do_update_view = currently_displayed_is_subview == as_subview;
 			print(@"[tab] UPDATING view! [$(request.status)] ($reason)\n");
-			Dragonstone.GtkUi.Interface.LegacyView view;
+			Fossil.GtkUi.Interface.LegacyView view;
 			if (update_view_chooser){
 				string? mimetype = null;
 				if(request.resource != null){
@@ -261,15 +261,15 @@ public class Dragonstone.GtkUi.LegacyWidget.Tab : Gtk.Bin, Dragonstone.Interface
 			}
 			
 			//do some status specific things
-			Dragonstone.Ui.TabDisplayState new_state = Dragonstone.Ui.TabDisplayState.LOADING;
+			Fossil.Ui.TabDisplayState new_state = Fossil.Ui.TabDisplayState.LOADING;
 			if (request.done) {
-				new_state = Dragonstone.Ui.TabDisplayState.CONTENT;
+				new_state = Fossil.Ui.TabDisplayState.CONTENT;
 			}
 			if (uri == "about:blank") {
-				new_state = Dragonstone.Ui.TabDisplayState.BLANK;
+				new_state = Fossil.Ui.TabDisplayState.BLANK;
 			}
 			if (request.status.has_prefix("error")) {
-				new_state = Dragonstone.Ui.TabDisplayState.ERROR;
+				new_state = Fossil.Ui.TabDisplayState.ERROR;
 			}
 			set_title(uri,new_state);
 			if (do_update_view) {
@@ -296,16 +296,16 @@ public class Dragonstone.GtkUi.LegacyWidget.Tab : Gtk.Bin, Dragonstone.Interface
 							update_view(null,"view_did_not_work");
 							return;
 						} else {
-							set_title(uri,Dragonstone.Ui.TabDisplayState.ERROR);
+							set_title(uri,Fossil.Ui.TabDisplayState.ERROR);
 							var error_message_localized = translation.get_localized_string("tab.error.wrong_view.message");
-							view = new Dragonstone.GtkUi.View.Message("-", error_message_localized, @"$(request.status)\n$(request.substatus)");
+							view = new Fossil.GtkUi.View.Message("-", error_message_localized, @"$(request.status)\n$(request.substatus)");
 							use_view(view);
 						}
 					}
 				} else {
-					set_title(uri,Dragonstone.Ui.TabDisplayState.ERROR);
+					set_title(uri,Fossil.Ui.TabDisplayState.ERROR);
 					var error_message_localized = translation.get_localized_string("tab.error.no_view.message");
-					view = new Dragonstone.GtkUi.View.Message("-", error_message_localized, @"$(request.status)\n$(request.substatus)");
+					view = new Fossil.GtkUi.View.Message("-", error_message_localized, @"$(request.status)\n$(request.substatus)");
 					use_view(view);
 				}
 				show();
@@ -314,7 +314,7 @@ public class Dragonstone.GtkUi.LegacyWidget.Tab : Gtk.Bin, Dragonstone.Interface
 		}
 	}
 	
-	private void use_view(owned Dragonstone.GtkUi.Interface.LegacyView new_view){
+	private void use_view(owned Fossil.GtkUi.Interface.LegacyView new_view){
 		lock(this.view){
 			//remove the old view
 			if (this.view is Gtk.Widget){
@@ -344,7 +344,7 @@ public class Dragonstone.GtkUi.LegacyWidget.Tab : Gtk.Bin, Dragonstone.Interface
 		apply_tab_history_entry(null);
 	}
 	
-	public void set_tab_parent_window(Dragonstone.Window window){
+	public void set_tab_parent_window(Fossil.Window window){
 		parent_window = window;
 	}
 	
@@ -363,7 +363,7 @@ public class Dragonstone.GtkUi.LegacyWidget.Tab : Gtk.Bin, Dragonstone.Interface
 	
 	public void close(){
 		cleanup();
-		var window = (parent_window as Dragonstone.Window);
+		var window = (parent_window as Fossil.Window);
 		if (window != null){
 			window.close_tab(this);
 		}
@@ -411,7 +411,7 @@ public class Dragonstone.GtkUi.LegacyWidget.Tab : Gtk.Bin, Dragonstone.Interface
 		apply_tab_history_entry(entry);
 	}
 	
-	public void apply_tab_history_entry(Dragonstone.GtkUi.LegacyWidget.TabHistoryEntry? entry){
+	public void apply_tab_history_entry(Fossil.GtkUi.LegacyWidget.TabHistoryEntry? entry){
 		if (entry != null){
 			currently_displayed_page = entry;
 			load_uri(currently_displayed_page.uri,false,entry.view);
@@ -446,11 +446,11 @@ public class Dragonstone.GtkUi.LegacyWidget.Tab : Gtk.Bin, Dragonstone.Interface
 	}
 	
 	public void open_uri_in_new_tab(string uri, bool is_absolute = false){
-		var window = (parent_window as Dragonstone.Window);
+		var window = (parent_window as Fossil.Window);
 		if (window != null){
 			string uritogo = uri;
 			if (!is_absolute) {
-				uritogo = Dragonstone.Util.Uri.join(_uri,uri);
+				uritogo = Fossil.Util.Uri.join(_uri,uri);
 			}
 			window.add_tab(uritogo,this.current_session_id);
 		}
@@ -458,9 +458,9 @@ public class Dragonstone.GtkUi.LegacyWidget.Tab : Gtk.Bin, Dragonstone.Interface
 	
 	public void open_uri_externally(string? uri = null){
 		if(uri == null){
-			Dragonstone.External.open_uri(this.uri);
+			Fossil.External.open_uri(this.uri);
 		} else {
-			Dragonstone.External.open_uri(uri);
+			Fossil.External.open_uri(uri);
 		}
 	}
 	
@@ -468,7 +468,7 @@ public class Dragonstone.GtkUi.LegacyWidget.Tab : Gtk.Bin, Dragonstone.Interface
 		if (this.request != null){
 			if (this.request.resource != null){
 				if (this.request.resource.filepath != null){
-					Dragonstone.External.open_uri(this.request.resource.filepath);
+					Fossil.External.open_uri(this.request.resource.filepath);
 				}
 			}
 		}
@@ -482,18 +482,18 @@ public class Dragonstone.GtkUi.LegacyWidget.Tab : Gtk.Bin, Dragonstone.Interface
 		}
 		var download_localized = translation.get_localized_string("action.download");
 		var filechooser = new Gtk.FileChooserNative(@"$download_localized - $uri",parent_window,Gtk.FileChooserAction.SAVE,download_localized,translation.get_localized_string("action.cancel"));
-		filechooser.set_current_name(Dragonstone.Util.Uri.get_filename(uri));
+		filechooser.set_current_name(Fossil.Util.Uri.get_filename(uri));
 		filechooser.set_current_folder(Environment.get_user_special_dir(UserDirectory.DOWNLOAD));
 		filechooser.set_select_multiple(false);
 		filechooser.run();
 		if (filechooser.get_filename() != null) {
 			var filepath = filechooser.get_filename();
 			print(@"[tab] Download: $uri ($(request.resource.filepath)) -> $filepath\n");
-			Dragonstone.Downloader.save_resource.begin(this.request.resource,filepath,(obj, res) => {;});
+			Fossil.Downloader.save_resource.begin(this.request.resource,filepath,(obj, res) => {;});
 		}
 	}
 	
-	public void set_title(string title, Dragonstone.Ui.TabDisplayState state = Dragonstone.Ui.TabDisplayState.CONTENT){
+	public void set_title(string title, Fossil.Ui.TabDisplayState state = Fossil.Ui.TabDisplayState.CONTENT){
 		this.title = title;
 		this.display_state = state;
 		on_title_change(title,display_state);
@@ -501,11 +501,11 @@ public class Dragonstone.GtkUi.LegacyWidget.Tab : Gtk.Bin, Dragonstone.Interface
 	
 }
 
-public class Dragonstone.GtkUi.LegacyWidget.TabHistoryEntry : Object {
+public class Fossil.GtkUi.LegacyWidget.TabHistoryEntry : Object {
 	public string uri = "";
 	public string? view = null;
 	//subview history
-	public Dragonstone.Util.Stack<TabSubviewHistoryEntry> subview_history = new Dragonstone.Util.Stack<TabSubviewHistoryEntry>();
+	public Fossil.Util.Stack<TabSubviewHistoryEntry> subview_history = new Fossil.Util.Stack<TabSubviewHistoryEntry>();
 	public TabSubviewHistoryEntry? currently_displayed_subview = null;
 	//upload_information
 	public bool upload = false;
@@ -518,6 +518,6 @@ public class Dragonstone.GtkUi.LegacyWidget.TabHistoryEntry : Object {
 	}
 }
 
-public class Dragonstone.GtkUi.LegacyWidget.TabSubviewHistoryEntry : Object {
+public class Fossil.GtkUi.LegacyWidget.TabSubviewHistoryEntry : Object {
 	public string view;
 }

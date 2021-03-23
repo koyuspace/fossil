@@ -1,4 +1,4 @@
-public class Dragonstone.Ui.Document.TokenParser.Gemini : Dragonstone.Interface.Document.TokenParser, Object {
+public class Fossil.Ui.Document.TokenParser.Gemini : Fossil.Interface.Document.TokenParser, Object {
 	
 	private DataInputStream? input_stream = null; 
 	
@@ -8,7 +8,7 @@ public class Dragonstone.Ui.Document.TokenParser.Gemini : Dragonstone.Interface.
 	private uint level = 0;
 	
 	  ////////////////////////////////////////////////
-	 // Dragonstone.Interface.Document.TokenParser //
+	 // Fossil.Interface.Document.TokenParser //
 	////////////////////////////////////////////////
 	
 	public void set_input_stream(InputStream input_stream){
@@ -16,10 +16,10 @@ public class Dragonstone.Ui.Document.TokenParser.Gemini : Dragonstone.Interface.
 	}
 	
 	//returns null when finished can possibly hang because of the input stream
-	public Dragonstone.Ui.Document.Token? next_token(){
+	public Fossil.Ui.Document.Token? next_token(){
 		if (input_stream == null) { return null; }
 		string? line = null;
-		Dragonstone.Ui.Document.Token? token = null;
+		Fossil.Ui.Document.Token? token = null;
 		try {
 			while ((line = input_stream.read_line (null)) != null) {
 				bool is_text = true;
@@ -41,7 +41,7 @@ public class Dragonstone.Ui.Document.TokenParser.Gemini : Dragonstone.Interface.
 								alttext += line.substring(3).strip();
 							}
 							if (alttext != null && alttext != "" && !preformatted_block_empty) {
-								token = new Dragonstone.Ui.Document.Token(DESCRIPTION, level, alttext);
+								token = new Fossil.Ui.Document.Token(DESCRIPTION, level, alttext);
 								alttext = null;
 								break;
 							}
@@ -53,29 +53,29 @@ public class Dragonstone.Ui.Document.TokenParser.Gemini : Dragonstone.Interface.
 						if (line.has_prefix("###")) {
 							level = 2;
 							is_text = false;
-							token = new Dragonstone.Ui.Document.Token(TITLE, level, line.substring(3).strip());
+							token = new Fossil.Ui.Document.Token(TITLE, level, line.substring(3).strip());
 							break;
 						}
 						if (line.has_prefix("##")) {
 							level = 1;
 							is_text = false;
-							token = new Dragonstone.Ui.Document.Token(TITLE, level, line.substring(2).strip());
+							token = new Fossil.Ui.Document.Token(TITLE, level, line.substring(2).strip());
 							break;
 						}
 						if (line.has_prefix("#")) {
 							level = 0;
 							is_text = false;
-							token = new Dragonstone.Ui.Document.Token(TITLE, level, line.substring(1).strip());
+							token = new Fossil.Ui.Document.Token(TITLE, level, line.substring(1).strip());
 							break;
 						}
 						if (line.has_prefix("* ")) {
 							is_text = false;
-							token = new Dragonstone.Ui.Document.Token(LIST_ITEM, level, line.substring(2).strip());
+							token = new Fossil.Ui.Document.Token(LIST_ITEM, level, line.substring(2).strip());
 							break;
 						}
 						if (line.has_prefix(">")) {
 							is_text = false;
-							token = new Dragonstone.Ui.Document.Token(QUOTE, level, line.substring(1).strip());
+							token = new Fossil.Ui.Document.Token(QUOTE, level, line.substring(1).strip());
 							break;
 						}
 						if (line.has_prefix("=>")) {
@@ -95,16 +95,16 @@ public class Dragonstone.Ui.Document.TokenParser.Gemini : Dragonstone.Interface.
 								htext = uri_and_text.substring(spaceindex).strip();
 							}
 							is_text = false;
-							token = new Dragonstone.Ui.Document.Token(LINK, level, htext, uri);
+							token = new Fossil.Ui.Document.Token(LINK, level, htext, uri);
 							break;
 						}
 						
 					}
 					if (is_text){
 						if (line == "" && !preformatted_block) {
-							token = new Dragonstone.Ui.Document.Token(EMPTY_LINE, 0, "");
+							token = new Fossil.Ui.Document.Token(EMPTY_LINE, 0, "");
 						} else {
-							token = new Dragonstone.Ui.Document.Token(PARAGRAPH, level, line+"\n", null, preformatted_block, preformatted_block && (!preformatted_block_empty));
+							token = new Fossil.Ui.Document.Token(PARAGRAPH, level, line+"\n", null, preformatted_block, preformatted_block && (!preformatted_block_empty));
 							preformatted_block_empty = false;
 						}
 						break;
@@ -115,7 +115,7 @@ public class Dragonstone.Ui.Document.TokenParser.Gemini : Dragonstone.Interface.
 				input_stream.close();
 			}
 		} catch (Error e) {
-			return new Dragonstone.Ui.Document.Token.parser_error(level, e.message);
+			return new Fossil.Ui.Document.Token.parser_error(level, e.message);
 		}
 		
 		return token;

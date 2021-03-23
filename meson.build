@@ -1,4 +1,4 @@
-project('com.gitlab.baschdel.dragonstone','vala','c')
+project('com.github.koyuspace.fossil','vala','c')
 
 subdir('src')
 

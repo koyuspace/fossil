@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.LegacyWidget.InlineSearch : Gtk.Bin {
+public class Fossil.GtkUi.LegacyWidget.InlineSearch : Gtk.Bin {
 
 	public signal void go(string uri);
 	private string uri_template;
@@ -34,7 +34,7 @@ public class Dragonstone.GtkUi.LegacyWidget.InlineSearch : Gtk.Bin {
 	private bool handle_button_press(Gdk.EventButton event){
 		if (event.type == BUTTON_PRESS){
 			if (event.button == 3 && uri_template.has_suffix("/postfile%09{search}")) { //right click
-				var popover = new Dragonstone.GtkUi.LegacyWidget.InlineSearchPostB64FilePopoverEasterEgg(this,uri_template.substring(0,uri_template.length-11)+"b64");
+				var popover = new Fossil.GtkUi.LegacyWidget.InlineSearchPostB64FilePopoverEasterEgg(this,uri_template.substring(0,uri_template.length-11)+"b64");
 				popover.set_relative_to(this);
 				popover.popup();
 				popover.show_all();

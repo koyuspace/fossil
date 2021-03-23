@@ -1,4 +1,4 @@
-public interface Dragonstone.Interface.Page.Service.LinearHistory : Object {
+public interface Fossil.Interface.Page.Service.LinearHistory : Object {
 
 	public abstract void go_back();
 	public abstract bool can_go_back();

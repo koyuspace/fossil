@@ -1,6 +1,6 @@
-public class Dragonstone.Registry.GopherTypeRegistry : Dragonstone.Asm.SimpleAsmObject, Dragonstone.Asm.AsmObject {
+public class Fossil.Registry.GopherTypeRegistry : Fossil.Asm.SimpleAsmObject, Fossil.Asm.AsmObject {
 	
-	private HashTable<unichar,Dragonstone.Registry.GopherTypeRegistryEntry> entrys = new HashTable<unichar,Dragonstone.Registry.GopherTypeRegistryEntry>(unichar_hash, unichar_equal);
+	private HashTable<unichar,Fossil.Registry.GopherTypeRegistryEntry> entrys = new HashTable<unichar,Fossil.Registry.GopherTypeRegistryEntry>(unichar_hash, unichar_equal);
 	
 	public static uint unichar_hash(unichar c){
 		return ((uint) c)%8192;
@@ -57,19 +57,19 @@ public class Dragonstone.Registry.GopherTypeRegistry : Dragonstone.Asm.SimpleAsm
 		*/
 	}
 	
-	public Dragonstone.Registry.GopherTypeRegistryEntry? get_entry_by_gophertype(unichar gophertype){
+	public Fossil.Registry.GopherTypeRegistryEntry? get_entry_by_gophertype(unichar gophertype){
 		return entrys.get(gophertype);
 	}
 	
-	public void add(Dragonstone.Registry.GopherTypeRegistryEntry entry){
+	public void add(Fossil.Registry.GopherTypeRegistryEntry entry){
 		entrys.set(entry.gophertype,entry);
 	}
 	
-	public Dragonstone.Asm.Scriptreturn? add_entry(string _gophertype, string _mimetype, string hint = ""){
+	public Fossil.Asm.Scriptreturn? add_entry(string _gophertype, string _mimetype, string hint = ""){
 		print(@"ADD_ENTRY $_gophertype $_mimetype $hint\n");
 		string? uri_template = null;
 		if (_gophertype.char_count() != 1){ //yes we use bytes here
-			return new Dragonstone.Asm.Scriptreturn(false,@"Argument[0]: Expected a unichar got $_gophertype");
+			return new Fossil.Asm.Scriptreturn(false,@"Argument[0]: Expected a unichar got $_gophertype");
 		}
 		string mimetype = _mimetype;
 		if (mimetype == "" || mimetype == "*"){
@@ -99,20 +99,20 @@ public class Dragonstone.Registry.GopherTypeRegistry : Dragonstone.Asm.SimpleAsm
 	}
 	
 	// ASM integration
-	public Dragonstone.Asm.Scriptreturn? asm_add_entry(string arg, Object? context = null){
-		var parsed_args = new Dragonstone.Asm.Argparse(arg);
-		if (!(parsed_args.verify_argument(0,Dragonstone.Asm.Argparse.TYPE_STRING) &&
-		      parsed_args.verify_argument(1,Dragonstone.Asm.Argparse.TYPE_STRING))){
-			return new Dragonstone.Asm.Scriptreturn.missing_argument();
+	public Fossil.Asm.Scriptreturn? asm_add_entry(string arg, Object? context = null){
+		var parsed_args = new Fossil.Asm.Argparse(arg);
+		if (!(parsed_args.verify_argument(0,Fossil.Asm.Argparse.TYPE_STRING) &&
+		      parsed_args.verify_argument(1,Fossil.Asm.Argparse.TYPE_STRING))){
+			return new Fossil.Asm.Scriptreturn.missing_argument();
 		}
-		if (!parsed_args.verify_argument(3,Dragonstone.Asm.Argparse.TYPE_NULL)){
-			return new Dragonstone.Asm.Scriptreturn.too_many_arguments();
+		if (!parsed_args.verify_argument(3,Fossil.Asm.Argparse.TYPE_NULL)){
+			return new Fossil.Asm.Scriptreturn.too_many_arguments();
 		}
 		return this.add_entry(parsed_args.get_string(0),parsed_args.get_string(1),parsed_args.get_string(2,""));
 	}
 	
 	private void initalize_asm(){
-		this.add_asm_function(new Dragonstone.Asm.FunctionDescriptor(
+		this.add_asm_function(new Fossil.Asm.FunctionDescriptor(
 			this.asm_add_entry,
 			"ADD_ENTRY",
 			"asm.help.registry.gopher_type_registry.add_entry",
@@ -122,7 +122,7 @@ public class Dragonstone.Registry.GopherTypeRegistry : Dragonstone.Asm.SimpleAsm
 	
 }
 
-public class Dragonstone.Registry.GopherTypeRegistryEntry {
+public class Fossil.Registry.GopherTypeRegistryEntry {
 	public unichar gophertype { get; protected set; }
 	public string? mimetype { get; protected set; }
 	public string uri_template { get; protected set; }
@@ -151,7 +151,7 @@ public class Dragonstone.Registry.GopherTypeRegistryEntry {
 		}
 	}
 	
-	public Dragonstone.Registry.GopherTypeRegistryEntry make_mimetype_suggestion(){
+	public Fossil.Registry.GopherTypeRegistryEntry make_mimetype_suggestion(){
 		this.mimeyte_is_suggestion = true;
 		return this;
 	}
@@ -170,7 +170,7 @@ public class Dragonstone.Registry.GopherTypeRegistryEntry {
 	
 }
 
-public enum Dragonstone.Registry.GopherTypeRegistryContentHint {
+public enum Fossil.Registry.GopherTypeRegistryContentHint {
 	TEXT,
 	ERROR,
 	LINK,

@@ -1,7 +1,7 @@
-public class Dragonstone.Startup.Hypertext.Settings {
+public class Fossil.Startup.Hypertext.Settings {
 	
 		
-	public static void register_default_settings(Dragonstone.Interface.Settings.Provider settings_provider){
+	public static void register_default_settings(Fossil.Interface.Settings.Provider settings_provider){
 		string default_style_json = """
 {
 	"prefixes":{

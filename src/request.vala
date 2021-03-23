@@ -1,4 +1,4 @@
-public class Dragonstone.Request : Object {
+public class Fossil.Request : Object {
 	//request
 	public string uri { get; protected set; default = "";} //what exactly do you want?
 	public bool reload { get; protected set; default = false; } //if the resource should not be fetched from cache
@@ -7,10 +7,10 @@ public class Dragonstone.Request : Object {
 	public string status { get; protected set; default = "routing";} //how's it going?
 	public string substatus { get; protected set; default = "";} //what?
 	public string? store { get; protected set; default = null;} //who processed the request?
-	public Dragonstone.Resource? resource { get; protected set; default = null;} //what was the result?
-	public Dragonstone.Resource? upload_resource { get; protected set; default = null;} //what was the result?
-	public signal void status_changed(Dragonstone.Request request);
-	public signal void resource_changed(Dragonstone.Request request);
+	public Fossil.Resource? resource { get; protected set; default = null;} //what was the result?
+	public Fossil.Resource? upload_resource { get; protected set; default = null;} //what was the result?
+	public signal void status_changed(Fossil.Request request);
+	public signal void resource_changed(Fossil.Request request);
 	//writing to this table after passing on the request will result in undefined bahaviour
 	public HashTable<string,string> arguments = new HashTable<string,string>(str_hash, str_equal);
 	
@@ -22,7 +22,7 @@ public class Dragonstone.Request : Object {
 	public bool download_success { get; protected set; default = false;}
 	public bool upload_success { get; protected set; default = false;}
 	
-	public signal void finished(Dragonstone.Request request);
+	public signal void finished(Fossil.Request request);
 	
 	public Request(string uri, bool reload = false){
 		this.uri = uri;
@@ -42,7 +42,7 @@ public class Dragonstone.Request : Object {
 	
 	//turns this into an upload request
 	//returns itself for chaining it onto a constructor
-	public Request upload(Dragonstone.Resource upload_resource, string upload_result_uri){
+	public Request upload(Fossil.Resource upload_resource, string upload_result_uri){
 		this.upload_resource = upload_resource;
 		this.upload_result_uri = upload_result_uri;
 		return this;
@@ -61,7 +61,7 @@ public class Dragonstone.Request : Object {
 		}
 	}
 	
-	public void setResource(Dragonstone.Resource resource, string store, string status = "success", string substatus = "", bool finish = true){
+	public void setResource(Fossil.Resource resource, string store, string status = "success", string substatus = "", bool finish = true){
 		this.resource = resource;
 		this.store = store;
 		this.resource_changed(this);
@@ -114,7 +114,7 @@ public class Dragonstone.Request : Object {
 	                          substatus contains the types of session, that are supported, seperated by a ";"
 */
 
-public enum Dragonstone.RequestArgumentSeverity {
+public enum Fossil.RequestArgumentSeverity {
 	UNKNOWN, //Use default
 	IGNORE,
 	WARNING,

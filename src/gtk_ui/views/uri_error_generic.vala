@@ -1,8 +1,8 @@
-public class Dragonstone.GtkUi.View.UriError.Generic : Dragonstone.GtkUi.LegacyWidget.DialogViewBase, Dragonstone.GtkUi.Interface.LegacyView {
+public class Fossil.GtkUi.View.UriError.Generic : Fossil.GtkUi.LegacyWidget.DialogViewBase, Fossil.GtkUi.Interface.LegacyView {
 	
-	private Dragonstone.Request request = null;
+	private Fossil.Request request = null;
 	
-	public Generic(Dragonstone.Registry.TranslationRegistry? translation = null) {
+	public Generic(Fossil.Registry.TranslationRegistry? translation = null) {
 		string title = "Invalid Uri";
 		string subtitle = "Something went wrong while parsin an URL/URI";
 		if (translation != null){
@@ -15,7 +15,7 @@ public class Dragonstone.GtkUi.View.UriError.Generic : Dragonstone.GtkUi.LegacyW
 		show_all();
 	}
 	
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
+	public bool display_resource(Fossil.Request request, Fossil.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		if (!(request.status.has_prefix("error/uri"))) {return false;}
 		this.request = request;
 		show_all();

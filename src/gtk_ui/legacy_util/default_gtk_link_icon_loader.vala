@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.LegacyUtil.DefaultGtkLinkIconLoader {
+public class Fossil.GtkUi.LegacyUtil.DefaultGtkLinkIconLoader {
 
 	//to be replaced in the near future by an icon registry
 	public static string guess_icon_name_for_uri(string uri){

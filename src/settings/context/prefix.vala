@@ -1,10 +1,10 @@
-public class Dragonstone.Settings.Context.Prefix : Dragonstone.Interface.Settings.Provider, Object {
+public class Fossil.Settings.Context.Prefix : Fossil.Interface.Settings.Provider, Object {
 	
-	private Dragonstone.Interface.Settings.Provider provider;
+	private Fossil.Interface.Settings.Provider provider;
 	private string add_prefix;
 	private string remove_prefix;
 	
-	public Prefix(Dragonstone.Interface.Settings.Provider provider, string add_prefix, string remove_prefix = ""){
+	public Prefix(Fossil.Interface.Settings.Provider provider, string add_prefix, string remove_prefix = ""){
 		this.provider = provider;
 		this.add_prefix = add_prefix;
 		this.remove_prefix = remove_prefix;
@@ -36,22 +36,22 @@ public class Dragonstone.Settings.Context.Prefix : Dragonstone.Interface.Setting
 		}
 	}
 	
-	private void on_provider_report(Dragonstone.Settings.Report report){
+	private void on_provider_report(Fossil.Settings.Report report){
 		string translated_path = translate_from_provider_path(report.path);
 		if (translated_path != null) {
-			this.provider_report(new Dragonstone.Settings.Report.with_updated_path(report, translated_path));
+			this.provider_report(new Fossil.Settings.Report.with_updated_path(report, translated_path));
 		}
 	}
 	
-	public void on_submit_client_report(Dragonstone.Settings.Report report){
+	public void on_submit_client_report(Fossil.Settings.Report report){
 		string translated_path = translate_to_provider_path(report.path);
 		if (translated_path != null) {
-			provider.submit_client_report(new Dragonstone.Settings.Report.with_updated_path(report, translated_path));
+			provider.submit_client_report(new Fossil.Settings.Report.with_updated_path(report, translated_path));
 		}
 	}
 	
 	  /////////////////////////////////////////////
-	 // Dragonstone.Interface.Settings.Provider //
+	 // Fossil.Interface.Settings.Provider //
 	/////////////////////////////////////////////
 	
 	public void request_index(string path_prefix, Func<string> cb){

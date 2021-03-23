@@ -1,18 +1,18 @@
-public class Dragonstone.Page.Page : Object, Dragonstone.Interface.Page.Page {
+public class Fossil.Page.Page : Object, Fossil.Interface.Page.Page {
 	
-	protected Dragonstone.Interface.Settings.Provider? persistant_settings = null;
-	protected Dragonstone.Settings.RamProvider local_settings = new Dragonstone.Settings.RamProvider();
-	protected Dragonstone.Settings.Context.Fallback settings_context = new Dragonstone.Settings.Context.Fallback();
-	protected Dragonstone.Interface.Page.Service.Metadata metadata;
-	protected Dragonstone.Interface.Page.Service.Syncronisation syncronisation = new Dragonstone.Page.Service.Syncronisation();
-	protected Dragonstone.Interface.Page.Service.InternalNavigation internal_navigation;
-	protected Dragonstone.Interface.Page.Service.ExternalNavigation external_navigation;
-	protected Dragonstone.Interface.Page.Service.LinearHistory? linear_history = null;
+	protected Fossil.Interface.Settings.Provider? persistant_settings = null;
+	protected Fossil.Settings.RamProvider local_settings = new Fossil.Settings.RamProvider();
+	protected Fossil.Settings.Context.Fallback settings_context = new Fossil.Settings.Context.Fallback();
+	protected Fossil.Interface.Page.Service.Metadata metadata;
+	protected Fossil.Interface.Page.Service.Syncronisation syncronisation = new Fossil.Page.Service.Syncronisation();
+	protected Fossil.Interface.Page.Service.InternalNavigation internal_navigation;
+	protected Fossil.Interface.Page.Service.ExternalNavigation external_navigation;
+	protected Fossil.Interface.Page.Service.LinearHistory? linear_history = null;
 	
-	public Dragonstone.GtkUi.LegacyWidget.Tab? legacy_tab = null;
-	public Dragonstone.Request? legacy_request = null;
+	public Fossil.GtkUi.LegacyWidget.Tab? legacy_tab = null;
+	public Fossil.Request? legacy_request = null;
 	
-	public Page(Dragonstone.Interface.Page.Service.InternalNavigation internal_navigation, Dragonstone.Interface.Page.Service.ExternalNavigation external_navigation, Dragonstone.Interface.Settings.Provider? persistant_settings = null, Dragonstone.Interface.Page.Service.LinearHistory? linear_history = null, Dragonstone.Interface.Page.Service.Metadata? metadata = null){
+	public Page(Fossil.Interface.Page.Service.InternalNavigation internal_navigation, Fossil.Interface.Page.Service.ExternalNavigation external_navigation, Fossil.Interface.Settings.Provider? persistant_settings = null, Fossil.Interface.Page.Service.LinearHistory? linear_history = null, Fossil.Interface.Page.Service.Metadata? metadata = null){
 		this.internal_navigation = internal_navigation;
 		this.external_navigation = external_navigation;
 		this.persistant_settings = persistant_settings;
@@ -20,7 +20,7 @@ public class Dragonstone.Page.Page : Object, Dragonstone.Interface.Page.Page {
 		if (metadata != null){
 			this.metadata = metadata;
 		} else {
-			this.metadata = new Dragonstone.Page.Service.Metadata();
+			this.metadata = new Fossil.Page.Service.Metadata();
 		}
 		this.settings_context.add_fallback(local_settings);
 		if (persistant_settings != null) {
@@ -29,36 +29,36 @@ public class Dragonstone.Page.Page : Object, Dragonstone.Interface.Page.Page {
 	}
 	
 	  /////////////////////////////////////
-	 // Dragonstone.Interface.Page.Page //
+	 // Fossil.Interface.Page.Page //
 	/////////////////////////////////////
 	
-	public virtual Dragonstone.Interface.Settings.Provider get_page_settings_provider(){
+	public virtual Fossil.Interface.Settings.Provider get_page_settings_provider(){
 		return settings_context;
 	}
 	
-	public virtual Dragonstone.Interface.Settings.Provider? get_persistant_page_settings_provider(){
+	public virtual Fossil.Interface.Settings.Provider? get_persistant_page_settings_provider(){
 		return persistant_settings;
 	}
 	
 	//Core services
-	public virtual Dragonstone.Interface.Page.Service.Metadata get_metadata_service(){
+	public virtual Fossil.Interface.Page.Service.Metadata get_metadata_service(){
 		return metadata;
 	}
 	
-	public virtual Dragonstone.Interface.Page.Service.Syncronisation get_syncronisation_service(){
+	public virtual Fossil.Interface.Page.Service.Syncronisation get_syncronisation_service(){
 		return syncronisation;
 	}
 	
-	public virtual Dragonstone.Interface.Page.Service.InternalNavigation get_internal_navigation_service(){
+	public virtual Fossil.Interface.Page.Service.InternalNavigation get_internal_navigation_service(){
 		return internal_navigation;
 	}
 	
-	public virtual Dragonstone.Interface.Page.Service.ExternalNavigation get_external_navigation_service(){
+	public virtual Fossil.Interface.Page.Service.ExternalNavigation get_external_navigation_service(){
 		return external_navigation;
 	}
 	
 	//optinal services
-	public virtual Dragonstone.Interface.Page.Service.LinearHistory? get_linear_history_service(){
+	public virtual Fossil.Interface.Page.Service.LinearHistory? get_linear_history_service(){
 		return linear_history;
 	}
 	
@@ -89,6 +89,6 @@ public class Dragonstone.Page.Page : Object, Dragonstone.Interface.Page.Page {
 		return null;
 	}
 	
-	public virtual Dragonstone.GtkUi.LegacyWidget.Tab? get_legacy_tab(){ return legacy_tab; }
-	public virtual Dragonstone.Request? get_legacy_request(){ return legacy_request; }
+	public virtual Fossil.GtkUi.LegacyWidget.Tab? get_legacy_tab(){ return legacy_tab; }
+	public virtual Fossil.Request? get_legacy_request(){ return legacy_request; }
 }

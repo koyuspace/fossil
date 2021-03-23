@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.LegacyWidget.MenuButton : Gtk.Button {
+public class Fossil.GtkUi.LegacyWidget.MenuButton : Gtk.Button {
 	public MenuButton(string labeltext){
 		var label = new Gtk.Label(labeltext);
 		label.single_line_mode = true;
@@ -11,7 +11,7 @@ public class Dragonstone.GtkUi.LegacyWidget.MenuButton : Gtk.Button {
 	}
 }
 
-public class Dragonstone.GtkUi.LegacyWidget.MenuSwitch : Gtk.Button {
+public class Fossil.GtkUi.LegacyWidget.MenuSwitch : Gtk.Button {
 
 	public Gtk.Switch switch_widget;
 	
@@ -36,7 +36,7 @@ public class Dragonstone.GtkUi.LegacyWidget.MenuSwitch : Gtk.Button {
 	}
 }
 
-public class Dragonstone.GtkUi.LegacyWidget.MenuBigTextDisplay : Gtk.Label {
+public class Fossil.GtkUi.LegacyWidget.MenuBigTextDisplay : Gtk.Label {
 	
 	public string text {
 		get {

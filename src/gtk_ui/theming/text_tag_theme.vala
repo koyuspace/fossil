@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.Theming.TextTagTheme : Object {
+public class Fossil.GtkUi.Theming.TextTagTheme : Object {
 	
 	public Gdk.RGBA? foreground_color = null;
 	public Gdk.RGBA? background_color = null;

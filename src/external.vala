@@ -1,4 +1,4 @@
-public class Dragonstone.External {
+public class Fossil.External {
 
 	public static void open_uri(string uri){
 		try {

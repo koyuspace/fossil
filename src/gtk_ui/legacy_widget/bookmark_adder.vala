@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.LegacyWidget.BookmarkAdder : Gtk.Box {
+public class Fossil.GtkUi.LegacyWidget.BookmarkAdder : Gtk.Box {
 	
 	public Gtk.Entry name_entry;
 	public Gtk.Entry uri_entry;
@@ -6,11 +6,11 @@ public class Dragonstone.GtkUi.LegacyWidget.BookmarkAdder : Gtk.Box {
 	public Gtk.Button cancel_button = new Gtk.Button.with_label("Cancel");
 	public Gtk.Button add_button = new Gtk.Button.with_label("Add");
 	
-	public Dragonstone.Registry.BookmarkRegistry bookmark_registry;
+	public Fossil.Registry.BookmarkRegistry bookmark_registry;
 	
-	public signal void bookmark_added(Dragonstone.Registry.BookmarkRegistryEntry bookmark);
+	public signal void bookmark_added(Fossil.Registry.BookmarkRegistryEntry bookmark);
 	
-	public BookmarkAdder(Dragonstone.Registry.BookmarkRegistry bookmark_registry){
+	public BookmarkAdder(Fossil.Registry.BookmarkRegistry bookmark_registry){
 		this.bookmark_registry = bookmark_registry;
 		this.orientation = Gtk.Orientation.VERTICAL;
 		this.spacing = 4;
@@ -52,7 +52,7 @@ public class Dragonstone.GtkUi.LegacyWidget.BookmarkAdder : Gtk.Box {
 		}
 	}
 	
-	public Dragonstone.GtkUi.LegacyWidget.BookmarkAdder localize(Dragonstone.Registry.TranslationRegistry translation){
+	public Fossil.GtkUi.LegacyWidget.BookmarkAdder localize(Fossil.Registry.TranslationRegistry translation){
 		name_entry.placeholder_text = translation.localize("add_bookmark.name.placeholder");
 		uri_entry.placeholder_text = translation.localize("add_bookmark.uri.placeholder");
 		cancel_button.label = translation.localize("action.cancel");

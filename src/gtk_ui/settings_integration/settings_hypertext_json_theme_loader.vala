@@ -1,12 +1,12 @@
-public class Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeLoader : Dragonstone.GtkUi.Interface.Theming.HypertextThemeLoader, Object {
+public class Fossil.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeLoader : Fossil.GtkUi.Interface.Theming.HypertextThemeLoader, Object {
 	
-	public string module_name = "Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeLoader";
+	public string module_name = "Fossil.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeLoader";
 	
-	private Dragonstone.Interface.Settings.Provider settings_provider;
+	private Fossil.Interface.Settings.Provider settings_provider;
 	private string prefix;
-	private HashTable<string,Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme> theme_cache = new HashTable<string,Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme>(str_hash, str_equal);
+	private HashTable<string,Fossil.GtkUi.Interface.Theming.HypertextViewTheme> theme_cache = new HashTable<string,Fossil.GtkUi.Interface.Theming.HypertextViewTheme>(str_hash, str_equal);
 	
-	public SettingsHypertextJsonThemeLoader(Dragonstone.Interface.Settings.Provider settings_provider, string prefix){
+	public SettingsHypertextJsonThemeLoader(Fossil.Interface.Settings.Provider settings_provider, string prefix){
 		this.settings_provider = settings_provider;
 		this.prefix = prefix;
 		this.settings_provider.settings_updated.connect(on_settings_updated);
@@ -28,8 +28,8 @@ public class Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeLoa
 		}
 	}
 	
-	private Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme? load_theme_by_name(string name){
-		print(@"[Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeLoader] Loading theme $name at $prefix$name.json\n");
+	private Fossil.GtkUi.Interface.Theming.HypertextViewTheme? load_theme_by_name(string name){
+		print(@"[Fossil.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeLoader] Loading theme $name at $prefix$name.json\n");
 		string path = @"$prefix$name.json";
 		var theme_json = settings_provider.read_object(path);
 		if (theme_json != null) {
@@ -40,25 +40,25 @@ public class Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeLoa
 				if (root_node != null){
 					if (root_node.get_node_type() == OBJECT) {
 						var theme_object = root_node.get_object();
-						return Dragonstone.GtkUi.JsonIntegration.Theming.HypertextViewTheme.hyper_text_view_theme_from_json(theme_object);
+						return Fossil.GtkUi.JsonIntegration.Theming.HypertextViewTheme.hyper_text_view_theme_from_json(theme_object);
 					}
 				}
-				settings_provider.submit_client_report(new Dragonstone.Settings.Report(module_name, path, null, null, @"Imported theme"));
+				settings_provider.submit_client_report(new Fossil.Settings.Report(module_name, path, null, null, @"Imported theme"));
 			} catch (Error e) {
-				settings_provider.submit_client_report(new Dragonstone.Settings.Report(module_name, path, e.message, null, "Error while decoding json"));
-				//print("[Dragonstone.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeLoader] Error while parsing theme json: "+e.message+"\n");
+				settings_provider.submit_client_report(new Fossil.Settings.Report(module_name, path, e.message, null, "Error while decoding json"));
+				//print("[Fossil.GtkUi.SettingsIntegration.SettingsHypertextJsonThemeLoader] Error while parsing theme json: "+e.message+"\n");
 			}
 		}
 		return null;
 	}
 	
 	  //////////////////////////////////////////////////////////////
-	 // Dragonstone.GtkUi.Interface.Theming.HypertextThemeLoader //
+	 // Fossil.GtkUi.Interface.Theming.HypertextThemeLoader //
 	//////////////////////////////////////////////////////////////
 	
-	public Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme? get_theme_by_name(string name){
+	public Fossil.GtkUi.Interface.Theming.HypertextViewTheme? get_theme_by_name(string name){
 		lock (theme_cache) {
-			Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme? theme = theme_cache.get(@"$name.json");
+			Fossil.GtkUi.Interface.Theming.HypertextViewTheme? theme = theme_cache.get(@"$name.json");
 			if (theme != null){
 				return theme;
 			}

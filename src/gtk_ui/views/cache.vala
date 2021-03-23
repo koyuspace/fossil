@@ -1,23 +1,23 @@
-public class Dragonstone.GtkUi.View.Cache : Gtk.Bin, Dragonstone.GtkUi.Interface.LegacyView {
+public class Fossil.GtkUi.View.Cache : Gtk.Bin, Fossil.GtkUi.Interface.LegacyView {
 	
-	private Dragonstone.Request? request = null;
-	private Dragonstone.GtkUi.LegacyWidget.Tab? tab = null;
-	private Dragonstone.Registry.TranslationRegistry? translation = null;
-	private Dragonstone.GtkUi.LegacyWidget.CacheView? cacheview = null;
+	private Fossil.Request? request = null;
+	private Fossil.GtkUi.LegacyWidget.Tab? tab = null;
+	private Fossil.Registry.TranslationRegistry? translation = null;
+	private Fossil.GtkUi.LegacyWidget.CacheView? cacheview = null;
 	
-	public Cache(Dragonstone.Registry.TranslationRegistry? translation){
+	public Cache(Fossil.Registry.TranslationRegistry? translation){
 		this.translation = translation;
 	}
 	
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
+	public bool display_resource(Fossil.Request request, Fossil.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		if (!(request.status == "interactive/cache")) {return false;}
 		this.request = request;
 		this.tab = tab;
-		var icache = tab.session.get_cache() as Dragonstone.Store.Cache;
+		var icache = tab.session.get_cache() as Fossil.Store.Cache;
 		var cache = tab.session.get_cache();
 		
 		if (icache != null){
-			cacheview = new Dragonstone.GtkUi.LegacyWidget.CacheView(icache,tab,translation);
+			cacheview = new Fossil.GtkUi.LegacyWidget.CacheView(icache,tab,translation);
 			add(cacheview);
 			cacheview.show();
 			show();

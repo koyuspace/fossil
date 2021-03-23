@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.JsonIntegration.Theming.TextTagTheme {
+public class Fossil.GtkUi.JsonIntegration.Theming.TextTagTheme {
 	
 	public static string gtk_wrap_mode_to_string(Gtk.WrapMode wrap_mode){
 		switch (wrap_mode) {
@@ -85,7 +85,7 @@ public class Dragonstone.GtkUi.JsonIntegration.Theming.TextTagTheme {
 		}
 	}
 	
-	public static Json.Object text_tag_theme_to_json(Dragonstone.GtkUi.Theming.TextTagTheme tag_theme){
+	public static Json.Object text_tag_theme_to_json(Fossil.GtkUi.Theming.TextTagTheme tag_theme){
 		var object = new Json.Object();
 		if (tag_theme.foreground_color != null) {
 			object.set_string_member("foreground", tag_theme.foreground_color.to_string());
@@ -126,9 +126,9 @@ public class Dragonstone.GtkUi.JsonIntegration.Theming.TextTagTheme {
 		return object;
 	}
 	
-	public static Dragonstone.GtkUi.Theming.TextTagTheme text_tag_theme_from_json(Json.Object object){
+	public static Fossil.GtkUi.Theming.TextTagTheme text_tag_theme_from_json(Json.Object object){
 		string member;
-		var tag_theme = new Dragonstone.GtkUi.Theming.TextTagTheme();
+		var tag_theme = new Fossil.GtkUi.Theming.TextTagTheme();
 		member = object.get_string_member_with_default("foreground","");
 		if (member != ""){
 			tag_theme.foreground_color = gdk_rgba_from_string(member);

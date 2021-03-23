@@ -1,4 +1,4 @@
-public interface Dragonstone.GtkUi.LegacyWidget.LinkPopover : Gtk.Popover {
+public interface Fossil.GtkUi.LegacyWidget.LinkPopover : Gtk.Popover {
 	public abstract void use_uri(string uri);
 }
 

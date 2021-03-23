@@ -1,4 +1,4 @@
-public class Dragonstone.Settings.Bridge.KV : Object {
+public class Fossil.Settings.Bridge.KV : Object {
 
 	public string path;
 	public HashTable<string,string> values = new HashTable<string,string>(str_hash,str_equal);	
@@ -6,9 +6,9 @@ public class Dragonstone.Settings.Bridge.KV : Object {
 	public signal void updated_key(string key);
 	
 	private bool dirty = false;
-	private Dragonstone.Interface.Settings.Provider settings_provider;
+	private Fossil.Interface.Settings.Provider settings_provider;
 	
-	public KV(Dragonstone.Interface.Settings.Provider settings_provider, string path){
+	public KV(Fossil.Interface.Settings.Provider settings_provider, string path){
 		this.settings_provider = settings_provider;
 		this.path = path;
 		import();

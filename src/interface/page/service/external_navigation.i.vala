@@ -1,4 +1,4 @@
-public interface Dragonstone.Interface.Page.Service.ExternalNavigation : Object {
+public interface Fossil.Interface.Page.Service.ExternalNavigation : Object {
 	
 	/*
 		This interface is for navigation to other pages, the requests will be passed on to the tab 

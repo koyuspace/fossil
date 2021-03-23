@@ -1,8 +1,8 @@
-public class Dragonstone.Asm.SimpleAsmObject : Object, Dragonstone.Asm.AsmObject {
+public class Fossil.Asm.SimpleAsmObject : Object, Fossil.Asm.AsmObject {
 	
-	protected HashTable<string,Dragonstone.Asm.FunctionDescriptor> asm_functions = new HashTable<string,Dragonstone.Asm.FunctionDescriptor>(str_hash,str_equal);
+	protected HashTable<string,Fossil.Asm.FunctionDescriptor> asm_functions = new HashTable<string,Fossil.Asm.FunctionDescriptor>(str_hash,str_equal);
 	
-	public void add_asm_function(Dragonstone.Asm.FunctionDescriptor function) {
+	public void add_asm_function(Fossil.Asm.FunctionDescriptor function) {
 		asm_functions.set(function.name,function);
 	}
 	
@@ -12,12 +12,12 @@ public class Dragonstone.Asm.SimpleAsmObject : Object, Dragonstone.Asm.AsmObject
 		});
 	}
 	
-	public Dragonstone.Asm.Scriptreturn? exec(string method, string arg, Object? context = null){
+	public Fossil.Asm.Scriptreturn? exec(string method, string arg, Object? context = null){
 		var function = asm_functions.get(method);
 		if (function != null){
 			return function.callback(arg,context);
 		}
-		return new Dragonstone.Asm.Scriptreturn.unknown_function(method);
+		return new Fossil.Asm.Scriptreturn.unknown_function(method);
 	}
 	
 	public string? get_localizable_helptext(string method){

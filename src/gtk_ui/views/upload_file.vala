@@ -1,8 +1,8 @@
-public class Dragonstone.GtkUi.View.UploadFile : Dragonstone.GtkUi.LegacyWidget.DialogViewBase, Dragonstone.GtkUi.Interface.LegacyView {
+public class Fossil.GtkUi.View.UploadFile : Fossil.GtkUi.LegacyWidget.DialogViewBase, Fossil.GtkUi.Interface.LegacyView {
 
-	private Dragonstone.Request? request = null;
-	private Dragonstone.GtkUi.LegacyWidget.Tab tab = null;
-	private Dragonstone.Registry.MimetypeGuesser mimeguesser;
+	private Fossil.Request? request = null;
+	private Fossil.GtkUi.LegacyWidget.Tab tab = null;
+	private Fossil.Registry.MimetypeGuesser mimeguesser;
 	private File? choosen_file = null;
 	private string? choosen_file_path = null;
 	
@@ -11,9 +11,9 @@ public class Dragonstone.GtkUi.View.UploadFile : Dragonstone.GtkUi.LegacyWidget.
 	private Gtk.Button upload_button;
 	private Gtk.Button upload_text_button;	
 		
-	public UploadFile(Dragonstone.Registry.TranslationRegistry translation, Dragonstone.Registry.MimetypeGuesser? mimeguesser){
+	public UploadFile(Fossil.Registry.TranslationRegistry translation, Fossil.Registry.MimetypeGuesser? mimeguesser){
 		if (mimeguesser == null){
-			this.mimeguesser = new Dragonstone.Registry.MimetypeGuesser.default_configuration();
+			this.mimeguesser = new Fossil.Registry.MimetypeGuesser.default_configuration();
 		} else {
 			this.mimeguesser = mimeguesser;
 		}
@@ -70,7 +70,7 @@ public class Dragonstone.GtkUi.View.UploadFile : Dragonstone.GtkUi.LegacyWidget.
 				if (basename == null){
 					basename = choosen_file_path;
 				}
-				var resource = new Dragonstone.Resource(null,choosen_file_path,false);
+				var resource = new Fossil.Resource(null,choosen_file_path,false);
 				resource.add_metadata(this.mimeguesser.get_closest_match(basename,"text/plain"),basename);
 				this.tab.upload_to_uri(this.request.uri,resource);
 			}
@@ -87,7 +87,7 @@ public class Dragonstone.GtkUi.View.UploadFile : Dragonstone.GtkUi.LegacyWidget.
 		this.upload_button.hide();
 	}
 	
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
+	public bool display_resource(Fossil.Request request, Fossil.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		if (!(request.status.has_prefix("interactive/upload"))) {return false;}
 		this.request = request;
 		this.upload_button.set_tooltip_text(request.uri);

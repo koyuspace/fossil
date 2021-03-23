@@ -1,15 +1,15 @@
-public delegate Dragonstone.GtkUi.Interface.LegacyView Dragonstone.GtkUi.ViewConstructor();
+public delegate Fossil.GtkUi.Interface.LegacyView Fossil.GtkUi.ViewConstructor();
 
-public class Dragonstone.GtkUi.LegacyViewRegistry : Object {
+public class Fossil.GtkUi.LegacyViewRegistry : Object {
 	
 	public HashTable<string,LegacyViewRegistryEntry> views = new HashTable<string,LegacyViewRegistryEntry>(str_hash, str_equal);
 	
-	public LegacyViewRegistry.default_configuration(Dragonstone.Registry.TranslationRegistry? translatori = null){
+	public LegacyViewRegistry.default_configuration(Fossil.Registry.TranslationRegistry? translatori = null){
 		var translator = translatori;
 		print("[view_registry] initalizung with default configuration\n");
 		if (translator == null){
 			print("tranlator not found\n");
-			var language = new Dragonstone.Registry.TranslationLanguageRegistry();
+			var language = new Fossil.Registry.TranslationLanguageRegistry();
 			language.set_text("view.error/internal.label","Hell just broke loose");
 			language.set_text("view.error/internal.sublabel","or maybe it was just a tiny bug?\nPlease report to the developer!");
 			language.set_text("view.error/gibberish.label","Gibberish!");
@@ -29,56 +29,56 @@ public class Dragonstone.GtkUi.LegacyViewRegistry : Object {
 			translator = (owned) language;
 		}
 		print(@"$(translator != null)\n");
-		add_view("dragonstone.loading", () => { return new Dragonstone.GtkUi.View.Loading(); });
-		add_view("dragonstone.redirect", () => { return new Dragonstone.GtkUi.View.Redirect(translator);});
-		var interal_error_view_factory = new Dragonstone.GtkUi.LegacyUtil.MessageViewFactory("error/internal","dialog-warning-symbolic",translator);
-		add_view("dragonstone.error.internal", interal_error_view_factory.construct_view);
-		var gibberish_error_view_factory = new Dragonstone.GtkUi.LegacyUtil.MessageViewFactory("error/gibberish","dialog-question-symbolic",translator);
-		add_view("dragonstone.error.gibberish", gibberish_error_view_factory.construct_view);
-		var connection_refused_error_view_factory = new Dragonstone.GtkUi.LegacyUtil.MessageViewFactory("error/connectionRefused","action-unavailable-symbolic",translator);
-		add_view("dragonstone.error.connectionRefused", connection_refused_error_view_factory.construct_view);
-		var no_host_error_view_factory = new Dragonstone.GtkUi.LegacyUtil.MessageViewFactory("error/noHost","find-location-symbolic",translator);
-		add_view("dragonstone.error.noHost", no_host_error_view_factory.construct_view);
-		var resource_unavaiable_error_view_factory = new Dragonstone.GtkUi.LegacyUtil.MessageViewFactory("error/resourceUnavaiable","computer-fail-symbolic",translator);
-		add_view("dragonstone.error.resourceUnavaiable", resource_unavaiable_error_view_factory.construct_view);
-		var resource_unavaiable_temoprary_error_view_factory = new Dragonstone.GtkUi.LegacyUtil.MessageViewFactory("error/resourceUnavaiable/temporary","computer-fail-symbolic",translator);
-		add_view("dragonstone.error.resourceUnavaiable.temporary", resource_unavaiable_temoprary_error_view_factory.construct_view);
-		add_view("dragonstone.error.uri.unknownScheme", () => { return new Dragonstone.GtkUi.View.UnknownUriScheme(translator); });
-		var uri_unknown_scheme_error_cat_view_factory = new Dragonstone.GtkUi.LegacyUtil.MessageViewFactory("error/uri/unknownScheme","user-available-symbolic",translator,"view.meow.label","view.meow.sublabel");
-		add_view("dragonstone.meow", uri_unknown_scheme_error_cat_view_factory.construct_view);
-		add_view("dragonstone.error",() => { return new Dragonstone.GtkUi.View.Error.Generic(); });
-		add_view("dragonstone.text",() => { return new Dragonstone.GtkUi.View.Plaintext(); });
-		add_view("dragonstone.image",() => { return new Dragonstone.GtkUi.View.Image(); });
-		add_view("dragonstone.download",() => { return new Dragonstone.GtkUi.View.Download(translator); });
+		add_view("fossil.loading", () => { return new Fossil.GtkUi.View.Loading(); });
+		add_view("fossil.redirect", () => { return new Fossil.GtkUi.View.Redirect(translator);});
+		var interal_error_view_factory = new Fossil.GtkUi.LegacyUtil.MessageViewFactory("error/internal","dialog-warning-symbolic",translator);
+		add_view("fossil.error.internal", interal_error_view_factory.construct_view);
+		var gibberish_error_view_factory = new Fossil.GtkUi.LegacyUtil.MessageViewFactory("error/gibberish","dialog-question-symbolic",translator);
+		add_view("fossil.error.gibberish", gibberish_error_view_factory.construct_view);
+		var connection_refused_error_view_factory = new Fossil.GtkUi.LegacyUtil.MessageViewFactory("error/connectionRefused","action-unavailable-symbolic",translator);
+		add_view("fossil.error.connectionRefused", connection_refused_error_view_factory.construct_view);
+		var no_host_error_view_factory = new Fossil.GtkUi.LegacyUtil.MessageViewFactory("error/noHost","find-location-symbolic",translator);
+		add_view("fossil.error.noHost", no_host_error_view_factory.construct_view);
+		var resource_unavaiable_error_view_factory = new Fossil.GtkUi.LegacyUtil.MessageViewFactory("error/resourceUnavaiable","computer-fail-symbolic",translator);
+		add_view("fossil.error.resourceUnavaiable", resource_unavaiable_error_view_factory.construct_view);
+		var resource_unavaiable_temoprary_error_view_factory = new Fossil.GtkUi.LegacyUtil.MessageViewFactory("error/resourceUnavaiable/temporary","computer-fail-symbolic",translator);
+		add_view("fossil.error.resourceUnavaiable.temporary", resource_unavaiable_temoprary_error_view_factory.construct_view);
+		add_view("fossil.error.uri.unknownScheme", () => { return new Fossil.GtkUi.View.UnknownUriScheme(translator); });
+		var uri_unknown_scheme_error_cat_view_factory = new Fossil.GtkUi.LegacyUtil.MessageViewFactory("error/uri/unknownScheme","user-available-symbolic",translator,"view.meow.label","view.meow.sublabel");
+		add_view("fossil.meow", uri_unknown_scheme_error_cat_view_factory.construct_view);
+		add_view("fossil.error",() => { return new Fossil.GtkUi.View.Error.Generic(); });
+		add_view("fossil.text",() => { return new Fossil.GtkUi.View.Plaintext(); });
+		add_view("fossil.image",() => { return new Fossil.GtkUi.View.Image(); });
+		add_view("fossil.download",() => { return new Fossil.GtkUi.View.Download(translator); });
 		
 		//add rules
-		add_rule(new LegacyViewRegistryRule("loading","dragonstone.loading"));
-		add_rule(new LegacyViewRegistryRule("uploading","dragonstone.loading"));
-		add_rule(new LegacyViewRegistryRule("connecting","dragonstone.loading"));
-		add_rule(new LegacyViewRegistryRule("routing","dragonstone.loading"));
-		add_rule(new LegacyViewRegistryRule("redirect","dragonstone.redirect"));
-		add_rule(new LegacyViewRegistryRule("error/internal","dragonstone.error.internal"));
-		add_rule(new LegacyViewRegistryRule("error/gibberish","dragonstone.error.gibberish"));
-		add_rule(new LegacyViewRegistryRule("error/connectionRefused","dragonstone.error.connectionRefused"));
-		add_rule(new LegacyViewRegistryRule("error/noHost","dragonstone.error.noHost"));
-		add_rule(new LegacyViewRegistryRule("error/resourceUnavaiable","dragonstone.error.resourceUnavaiable"));
-		add_rule(new LegacyViewRegistryRule("error/resourceUnavaiable/temporary","dragonstone.error.resourceUnavaiable.temporary"));
-		add_rule(new LegacyViewRegistryRule("error/uri/unknownScheme","dragonstone.error.uri.unknownScheme"));
-		add_rule(new LegacyViewRegistryRule("error/uri/unknownScheme","dragonstone.meow").prefix("cat://"));
-		add_rule(new LegacyViewRegistryRule("error","dragonstone.error"));
-		add_rule(new LegacyViewRegistryRule.resource_view("text/","dragonstone.text").set_flag(LegacyViewRegistryRule.FLAG_SOURCEVIEW));
-		add_rule(new LegacyViewRegistryRule.resource_view("application/xml","dragonstone.text").set_flag(LegacyViewRegistryRule.FLAG_SOURCEVIEW));
-		add_rule(new LegacyViewRegistryRule.resource_view("application/json","dragonstone.text").set_flag(LegacyViewRegistryRule.FLAG_SOURCEVIEW));
-		add_rule(new LegacyViewRegistryRule.resource_view("image/","dragonstone.image"));
-		add_rule(new LegacyViewRegistryRule.resource_view("","dragonstone.download"));
+		add_rule(new LegacyViewRegistryRule("loading","fossil.loading"));
+		add_rule(new LegacyViewRegistryRule("uploading","fossil.loading"));
+		add_rule(new LegacyViewRegistryRule("connecting","fossil.loading"));
+		add_rule(new LegacyViewRegistryRule("routing","fossil.loading"));
+		add_rule(new LegacyViewRegistryRule("redirect","fossil.redirect"));
+		add_rule(new LegacyViewRegistryRule("error/internal","fossil.error.internal"));
+		add_rule(new LegacyViewRegistryRule("error/gibberish","fossil.error.gibberish"));
+		add_rule(new LegacyViewRegistryRule("error/connectionRefused","fossil.error.connectionRefused"));
+		add_rule(new LegacyViewRegistryRule("error/noHost","fossil.error.noHost"));
+		add_rule(new LegacyViewRegistryRule("error/resourceUnavaiable","fossil.error.resourceUnavaiable"));
+		add_rule(new LegacyViewRegistryRule("error/resourceUnavaiable/temporary","fossil.error.resourceUnavaiable.temporary"));
+		add_rule(new LegacyViewRegistryRule("error/uri/unknownScheme","fossil.error.uri.unknownScheme"));
+		add_rule(new LegacyViewRegistryRule("error/uri/unknownScheme","fossil.meow").prefix("cat://"));
+		add_rule(new LegacyViewRegistryRule("error","fossil.error"));
+		add_rule(new LegacyViewRegistryRule.resource_view("text/","fossil.text").set_flag(LegacyViewRegistryRule.FLAG_SOURCEVIEW));
+		add_rule(new LegacyViewRegistryRule.resource_view("application/xml","fossil.text").set_flag(LegacyViewRegistryRule.FLAG_SOURCEVIEW));
+		add_rule(new LegacyViewRegistryRule.resource_view("application/json","fossil.text").set_flag(LegacyViewRegistryRule.FLAG_SOURCEVIEW));
+		add_rule(new LegacyViewRegistryRule.resource_view("image/","fossil.image"));
+		add_rule(new LegacyViewRegistryRule.resource_view("","fossil.download"));
 	}
 	
-	public void add_view(string id,owned Dragonstone.GtkUi.ViewConstructor constructor){
+	public void add_view(string id,owned Fossil.GtkUi.ViewConstructor constructor){
 		views.set(id,new LegacyViewRegistryEntry((owned) constructor));
 	}
 	
 	
-	public Dragonstone.GtkUi.Interface.LegacyView? get_view(string? id){
+	public Fossil.GtkUi.Interface.LegacyView? get_view(string? id){
 		if(id == null){ return null; }
 		if (views.contains(id)){
 			var entry = views.get(id);
@@ -90,7 +90,7 @@ public class Dragonstone.GtkUi.LegacyViewRegistry : Object {
 	}
 	
 	//View rule stuff
-	public List<Dragonstone.GtkUi.LegacyViewRegistryRule> rules = new List<Dragonstone.GtkUi.LegacyViewRegistryRule>();
+	public List<Fossil.GtkUi.LegacyViewRegistryRule> rules = new List<Fossil.GtkUi.LegacyViewRegistryRule>();
 	
 	
 	public void add_rule(LegacyViewRegistryRule rule){
@@ -98,7 +98,7 @@ public class Dragonstone.GtkUi.LegacyViewRegistry : Object {
 	}
 }
 
-public class Dragonstone.GtkUi.LegacyViewRegistryViewChooser : Object {
+public class Fossil.GtkUi.LegacyViewRegistryViewChooser : Object {
 	public string? best_match = null; //may be overidden by i.e. user choice
 	public HashTable<string,uint32> matches = new HashTable<string,uint32>(str_hash, str_equal);
 	public LegacyViewRegistry registry;
@@ -126,7 +126,7 @@ public class Dragonstone.GtkUi.LegacyViewRegistryViewChooser : Object {
 		this.reset();
 		string? best_match = null;
 		uint32 highscore = 0;
-		foreach (Dragonstone.GtkUi.LegacyViewRegistryRule rule in registry.rules) {
+		foreach (Fossil.GtkUi.LegacyViewRegistryRule rule in registry.rules) {
 			if (status.has_prefix(rule.status)){
 				//print(@"checking $(rule.view)\n");
 				bool exact_status_match = status == rule.status;
@@ -187,7 +187,7 @@ public class Dragonstone.GtkUi.LegacyViewRegistryViewChooser : Object {
 	
 }
 
-public class Dragonstone.GtkUi.LegacyViewRegistryRule : Object {
+public class Fossil.GtkUi.LegacyViewRegistryRule : Object {
 	public string status;
 	public string view;
 	public string? mimetype = null;
@@ -246,11 +246,11 @@ public class Dragonstone.GtkUi.LegacyViewRegistryRule : Object {
 	public const string FLAG_UPLOAD = "upload";
 }
 
-public class Dragonstone.GtkUi.LegacyViewRegistryEntry : Object {
+public class Fossil.GtkUi.LegacyViewRegistryEntry : Object {
 	
-	public Dragonstone.GtkUi.ViewConstructor constructor;
+	public Fossil.GtkUi.ViewConstructor constructor;
 	
-	public LegacyViewRegistryEntry(owned Dragonstone.GtkUi.ViewConstructor constructor){
+	public LegacyViewRegistryEntry(owned Fossil.GtkUi.ViewConstructor constructor){
 		this.constructor = (owned) constructor;
 	}
 }

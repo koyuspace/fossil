@@ -1,12 +1,12 @@
-public class Dragonstone.GtkUi.View.Bookmarks : Gtk.Stack, Dragonstone.GtkUi.Interface.LegacyView {
+public class Fossil.GtkUi.View.Bookmarks : Gtk.Stack, Fossil.GtkUi.Interface.LegacyView {
 	
-	private Dragonstone.Request? request = null;
-	private Dragonstone.GtkUi.LegacyWidget.Tab? tab = null;
-	private Dragonstone.Registry.TranslationRegistry? translation = null;
-	private Dragonstone.Registry.BookmarkRegistry bookmark_registry;
+	private Fossil.Request? request = null;
+	private Fossil.GtkUi.LegacyWidget.Tab? tab = null;
+	private Fossil.Registry.TranslationRegistry? translation = null;
+	private Fossil.Registry.BookmarkRegistry bookmark_registry;
 	
 	private HashTable<string,Gtk.TreeIter?> displayed_uids = new HashTable<string,Gtk.TreeIter?>(str_hash, str_equal);
-	private Dragonstone.Registry.BookmarkRegistryEntry? selected_bookmark = null;
+	private Fossil.Registry.BookmarkRegistryEntry? selected_bookmark = null;
 	
 	private Gtk.ListStore liststore = new Gtk.ListStore(3,typeof(string),typeof(string),typeof(string));
 	private Gtk.TreeModelFilter filterstore;
@@ -26,12 +26,12 @@ public class Dragonstone.GtkUi.View.Bookmarks : Gtk.Stack, Dragonstone.GtkUi.Int
 	private Gtk.Entry search_entry = new Gtk.Entry();
 	
 	//addview
-	private Dragonstone.GtkUi.LegacyWidget.SubviewBase subview_add = new Dragonstone.GtkUi.LegacyWidget.SubviewBase("temptitle: Add");
-	private Dragonstone.GtkUi.LegacyWidget.BookmarkAdder addwidget;
+	private Fossil.GtkUi.LegacyWidget.SubviewBase subview_add = new Fossil.GtkUi.LegacyWidget.SubviewBase("temptitle: Add");
+	private Fossil.GtkUi.LegacyWidget.BookmarkAdder addwidget;
 		
 	//editview
-	private Dragonstone.GtkUi.LegacyWidget.SubviewBase subview_edit = new Dragonstone.GtkUi.LegacyWidget.SubviewBase("temptitle: Edit");
-	private Dragonstone.GtkUi.LegacyWidget.BookmarkEditor editwidget;
+	private Fossil.GtkUi.LegacyWidget.SubviewBase subview_edit = new Fossil.GtkUi.LegacyWidget.SubviewBase("temptitle: Edit");
+	private Fossil.GtkUi.LegacyWidget.BookmarkEditor editwidget;
 	
 	/*
 		Columns:
@@ -40,11 +40,11 @@ public class Dragonstone.GtkUi.View.Bookmarks : Gtk.Stack, Dragonstone.GtkUi.Int
 		2: name
 	*/
 	
-	public Bookmarks(Dragonstone.Registry.BookmarkRegistry bookmark_registry, Dragonstone.Registry.TranslationRegistry? translation){
+	public Bookmarks(Fossil.Registry.BookmarkRegistry bookmark_registry, Fossil.Registry.TranslationRegistry? translation){
 		this.bookmark_registry = bookmark_registry;
 		this.translation = translation;
 		if (translation == null){
-			this.translation = new Dragonstone.Registry.TranslationLanguageRegistry();
+			this.translation = new Fossil.Registry.TranslationLanguageRegistry();
 		}
 		//backbutton
 		backbutton.clicked.connect(() => {
@@ -54,7 +54,7 @@ public class Dragonstone.GtkUi.View.Bookmarks : Gtk.Stack, Dragonstone.GtkUi.Int
 		});
 		//addbutton
 		addbutton.label = translation.localize("view.boomarks.add.label");
-		addwidget = new Dragonstone.GtkUi.LegacyWidget.BookmarkAdder(bookmark_registry);
+		addwidget = new Fossil.GtkUi.LegacyWidget.BookmarkAdder(bookmark_registry);
 		addwidget.margin = 8;
 		subview_add.append_child(addwidget);
 		subview_add.set_title(translation.localize("view.boomarks.subview_add.title"));
@@ -83,7 +83,7 @@ public class Dragonstone.GtkUi.View.Bookmarks : Gtk.Stack, Dragonstone.GtkUi.Int
 		});
 		//editbutton
 		editbutton.tooltip_text = translation.localize("view.boomarks.editbutton.tooltip");
-		editwidget = new Dragonstone.GtkUi.LegacyWidget.BookmarkEditor(bookmark_registry);
+		editwidget = new Fossil.GtkUi.LegacyWidget.BookmarkEditor(bookmark_registry);
 		editwidget.margin = 8;
 		subview_edit.append_child(editwidget);
 		subview_edit.set_title(translation.localize("view.boomarks.subview_edit.title"));
@@ -144,7 +144,7 @@ public class Dragonstone.GtkUi.View.Bookmarks : Gtk.Stack, Dragonstone.GtkUi.Int
 		filterstore.set_visible_func(filter_visible_function);
 	}
 	
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
+	public bool display_resource(Fossil.Request request, Fossil.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		if (!(request.status == "interactive/bookmarks" || as_subview)) { return false; }
 		this.request = request;
 		this.tab = tab;
@@ -202,7 +202,7 @@ public class Dragonstone.GtkUi.View.Bookmarks : Gtk.Stack, Dragonstone.GtkUi.Int
 		return true;
 	}
 	
-	private void append_entry(Dragonstone.Registry.BookmarkRegistryEntry entry){
+	private void append_entry(Fossil.Registry.BookmarkRegistryEntry entry){
 		lock(displayed_uids){
 			if (displayed_uids.get(entry.uid) == null){
 				Gtk.TreeIter iter;
@@ -214,7 +214,7 @@ public class Dragonstone.GtkUi.View.Bookmarks : Gtk.Stack, Dragonstone.GtkUi.Int
 		}
 	}
 	
-	private void update_entry(Dragonstone.Registry.BookmarkRegistryEntry entry){
+	private void update_entry(Fossil.Registry.BookmarkRegistryEntry entry){
 		lock(displayed_uids){
 			var iter = displayed_uids.get(entry.uid); 
 			if (iter != null){
@@ -225,7 +225,7 @@ public class Dragonstone.GtkUi.View.Bookmarks : Gtk.Stack, Dragonstone.GtkUi.Int
 		}
 	}
 	
-	private void remove_entry(Dragonstone.Registry.BookmarkRegistryEntry entry){
+	private void remove_entry(Fossil.Registry.BookmarkRegistryEntry entry){
 		lock(displayed_uids){
 			var iter = displayed_uids.get(entry.uid); 
 			if (iter != null){
@@ -325,9 +325,9 @@ public class Dragonstone.GtkUi.View.Bookmarks : Gtk.Stack, Dragonstone.GtkUi.Int
 	}
 	
 	public bool import(string data){
-		var kv = new Dragonstone.Util.Kv();
+		var kv = new Fossil.Util.Kv();
 		kv.import(data);
-		if (kv.get_value("view_type") != "dragonstone.bookmarks.0"){
+		if (kv.get_value("view_type") != "fossil.bookmarks.0"){
 			return false;
 		}
 		string? val = kv.get_value("search.text");
@@ -361,14 +361,14 @@ public class Dragonstone.GtkUi.View.Bookmarks : Gtk.Stack, Dragonstone.GtkUi.Int
 		}
 		val = kv.get_value("scroll");
 		if (val != null){
-			Dragonstone.GtkUi.LegacyUtil.GtkScrollExport.import(this.list_scroll,val);
+			Fossil.GtkUi.LegacyUtil.GtkScrollExport.import(this.list_scroll,val);
 		}
 		return true;
 	}
 	
 	public string? export(){
-		var kv = new Dragonstone.Util.Kv();
-		kv.set_value("view_type","dragonstone.bookmarks.0");
+		var kv = new Fossil.Util.Kv();
+		kv.set_value("view_type","fossil.bookmarks.0");
 		if (this.search_entry.text != ""){
 			kv.set_value("search.text",this.search_entry.text);
 		}
@@ -385,7 +385,7 @@ public class Dragonstone.GtkUi.View.Bookmarks : Gtk.Stack, Dragonstone.GtkUi.Int
 			kv.set_value("edit_name_entry",this.editwidget.name_entry.text);
 			kv.set_value("edit_uri_entry",this.editwidget.uri_entry.text);
 		}
-		kv.set_value("scroll",Dragonstone.GtkUi.LegacyUtil.GtkScrollExport.export(this.list_scroll));
+		kv.set_value("scroll",Fossil.GtkUi.LegacyUtil.GtkScrollExport.export(this.list_scroll));
 		return kv.export();
 	}
 	

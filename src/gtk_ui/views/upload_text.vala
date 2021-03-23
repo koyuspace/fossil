@@ -1,10 +1,10 @@
-public class Dragonstone.GtkUi.View.UploadText : Gtk.Box, Dragonstone.GtkUi.Interface.LegacyView {
+public class Fossil.GtkUi.View.UploadText : Gtk.Box, Fossil.GtkUi.Interface.LegacyView {
 	
-	private Dragonstone.Request? request = null;
-	private Dragonstone.GtkUi.LegacyWidget.Tab? tab = null;
-	private Dragonstone.Registry.MimetypeGuesser mimeguesser;
+	private Fossil.Request? request = null;
+	private Fossil.GtkUi.LegacyWidget.Tab? tab = null;
+	private Fossil.Registry.MimetypeGuesser mimeguesser;
 	private string tempfile;
-	private Dragonstone.Resource resource;
+	private Fossil.Resource resource;
 	private bool use_tempfile = true;
 	private string open_file_localized = "";
 	private bool uploading = false;
@@ -18,9 +18,9 @@ public class Dragonstone.GtkUi.View.UploadText : Gtk.Box, Dragonstone.GtkUi.Inte
 	private Gtk.Button save_button = new Gtk.Button.from_icon_name("document-save-symbolic");
 	private Gtk.Button upload_button;
 	
-	public UploadText(string tempfile, Dragonstone.Registry.TranslationRegistry translation, Dragonstone.Registry.MimetypeGuesser? mimeguesser){
+	public UploadText(string tempfile, Fossil.Registry.TranslationRegistry translation, Fossil.Registry.MimetypeGuesser? mimeguesser){
 		if (mimeguesser == null){
-			this.mimeguesser = new Dragonstone.Registry.MimetypeGuesser.default_configuration();
+			this.mimeguesser = new Fossil.Registry.MimetypeGuesser.default_configuration();
 		} else {
 			this.mimeguesser = mimeguesser;
 		}
@@ -31,7 +31,7 @@ public class Dragonstone.GtkUi.View.UploadText : Gtk.Box, Dragonstone.GtkUi.Inte
 			}
 		});
 		this.tempfile = tempfile;
-		resource = new Dragonstone.Resource(null,tempfile,true,false);
+		resource = new Fossil.Resource(null,tempfile,true,false);
 		resource.derive_uri_from_filepath();
 		var upload_button_label = translation.localize("view.upload_text.uploadbutton.label");
 		var open_button_tooltip = translation.localize("view.upload_text.openbutton.tooltip");
@@ -180,7 +180,7 @@ public class Dragonstone.GtkUi.View.UploadText : Gtk.Box, Dragonstone.GtkUi.Inte
 		}
 	}
 	
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
+	public bool display_resource(Fossil.Request request, Fossil.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		if (!(request.status.has_prefix("interactive/upload"))) {return false;}
 		this.request = request;
 		this.tab = tab;

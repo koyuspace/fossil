@@ -1,6 +1,6 @@
-public class Dragonstone.Store.Test : Object, Dragonstone.Interface.ResourceStore {
+public class Fossil.Store.Internal : Object, Fossil.Interface.ResourceStore {
 
-	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
+	public void request(Fossil.Request request,string? filepath = null, bool upload = false){
 		if (filepath == null){
 			request.setStatus("error/internal","Filepath required!");
 			request.finish();
@@ -11,49 +11,64 @@ public class Dragonstone.Store.Test : Object, Dragonstone.Interface.ResourceStor
 			request.finish();
 			return;
 		}
-		if (request.uri == "test://") {
-			var helper = new Dragonstone.Util.ResourceFileWriteHelper(request,filepath,0);
+		if (request.uri == "fossil://") {
+			var helper = new Fossil.Util.ResourceFileWriteHelper(request,filepath,0);
 			helper.appendString("# Hello!
 
-## Welcome to the internet of Gopherholes and Geminisites!
+## Welcome to the internet of Gopherholes and Gemini capsules!
 
 Warning:
 Gemini is supposed to be more secure than gopher but beacause of the implementation,
 it cannot vertify a servers identity yet and therefore is about as secure as gopher.
 
 To get started here are some links:
-=> gopher://gopher.floodgap.com/1/v2 The Veronica-2 Gopher search engine
-=> gemini://gus.guru/ The GUS search engine for gemini
-=> gemini://gemini.circumlunar.space/servers/ A list of the first known gemini servers
-=> gopher://khzae.net khzae has some gopher based services, that definitely deserve more attention
 
+### Gopher
+
+=> gopher://gopher.floodgap.com/1/v2 The Veronica-2 Gopher search engine
+=> gopher://khzae.net khzae has some gopher based services, that definitely deserve more attention
 => gopher://gopher.floodgap.com/1/gopher What is Gopher and why is it still relevant?
 => gopher://khzae.net/0/rfc1436.txt RFC1436 - The gopher specification
 => gopher://zaibatsu.circumlunar.space/1/~solderpunk/gemini The gemini specification
 
-You can find the sourcecode over at
+### Gemini:
+
+=> gemini://geminispace.info/ The geminispace.info search engine (GUS is dead)
+=> gemini://medusae.space/ medusae.space gemini directory
+=> gemini://directory.randomroad.net/ Randomroad gemini directory
+=> gemini://gemini.circumlunar.space/servers/ A list of the first known gemini servers
+=> gemini://koyu.space koyu.space
+=> gemini://tilde.zone tilde.zone
+
+---
+
+Fossil is based on Dragonstone
 => https://gitlab.com/baschdel/dragonstone
+
+You can find the sourcecode over at
+=> https://github.com/koyuspace/fossil
+
 If you want to contribute just submit a pull request
 			");
 			if (helper.error){return;}
 			helper.close();
-			var resource = new Dragonstone.Resource(request.uri,filepath,true);
+			var resource = new Fossil.Resource(request.uri,filepath,true);
 			resource.add_metadata("text/gemini","Hello!");
-			request.setResource(resource,"test");
-		} else if (request.uri == "test://contact") {
-				var helper = new Dragonstone.Util.ResourceFileWriteHelper(request,filepath,0);
+			request.setResource(resource,"fossil");
+		} else if (request.uri == "fossil://contact") {
+				var helper = new Fossil.Util.ResourceFileWriteHelper(request,filepath,0);
 				helper.appendString("
-Write an e-mail to baschdel@disroot.org
-=> mailto:baschdel@disroot.org
-or contact me over the fediverse
-=> https://fedi.absturztau.be/baschdel");
+Write an e-mail to support@koyu.space
+=> mailto:support@koyu.space
+or contact Leonie over the fediverse
+=> https://koyu.space/@koyu");
 			if (helper.error){return;}
 			helper.close();
-			var resource = new Dragonstone.Resource(request.uri,filepath,true);
+			var resource = new Fossil.Resource(request.uri,filepath,true);
 			resource.add_metadata("text/gemini","Contact");
-			request.setResource(resource,"test");
-		} else if (request.uri == "test://lipsum") {
-			var helper = new Dragonstone.Util.ResourceFileWriteHelper(request,filepath,0);
+			request.setResource(resource,"fossil");
+		} else if (request.uri == "fossil://lipsum") {
+			var helper = new Fossil.Util.ResourceFileWriteHelper(request,filepath,0);
 			helper.appendString("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\nhttps://lipsum.com/
 \n------------------------------------------------------\n
 Fusce iaculis a urna vitae hendrerit. Fusce at risus quis neque consectetur accumsan. Aenean tristique bibendum consectetur. Nullam eleifend eros elit. Morbi ut odio sollicitudin, iaculis tortor congue, pellentesque massa. Nunc nec pulvinar eros, in bibendum urna. Nunc at porta mauris, eu commodo magna. Duis augue ante, ornare id tincidunt eget, congue sed urna. Maecenas tempor arcu ac venenatis viverra. Vivamus in magna ac mi cursus egestas at in nibh.
@@ -67,31 +82,48 @@ Ut consequat semper diam, in imperdiet lectus aliquet vitae. Cras augue neque, s
 Praesent metus quam, accumsan eget nunc a, pellentesque sodales velit. Aliquam ut justo urna. Nullam commodo condimentum enim vitae malesuada. Nam convallis dictum nisi, eget consequat odio tempor nec. Praesent suscipit ante nec felis malesuada tristique ac ut sem. Nunc pulvinar nulla at tellus ultricies, a aliquam augue commodo. Sed ex metus, auctor eget dolor eget, pretium posuere augue.");
 			if (helper.error){return;}
 			helper.close();
-			var resource = new Dragonstone.Resource(request.uri,filepath,true);
+			var resource = new Fossil.Resource(request.uri,filepath,true);
 			resource.add_metadata("text/plain","Hello World");
-			request.setResource(resource,"test");
-		} else if (request.uri == "test://uri_error") {
+			request.setResource(resource,"fossil");
+		} else if (request.uri == "fossil://about") {
+		    var helper = new Fossil.Util.ResourceFileWriteHelper(request,filepath,0);
+            helper.appendString("# About
+Fossil version 1.0
+
+A gemini/gopher client originally written by Baschdel as Dragonstone, now forked and maintained by koyu.space under the name Fossil
+
+=> gemini://koyu.space koyu.space on Gemini
+=> https://koyu.space koyu.space on the world-wide-web
+
+I hope you enjoy this software as much we enjoyed making it! ^_^
+");
+			if (helper.error){return;}
+			helper.close();
+			var resource = new Fossil.Resource(request.uri,filepath,true);
+			resource.add_metadata("text/gemini","About");
+			request.setResource(resource,"fossil");
+		} else if (request.uri == "fossil://uri_error") {
 			request.setStatus("error/uri/unknownScheme");
 			request.finish();
-		} else if (request.uri == "test://loading") {
+		} else if (request.uri == "fossil://loading") {
 			request.setStatus("loading");
-		} else if (request.uri == "test://uploading") {
+		} else if (request.uri == "fossil://uploading") {
 			request.setStatus("uploading");
-		} else if (request.uri == "test://offline") {
+		} else if (request.uri == "fossil://offline") {
 			request.setStatus("error/noHost");
 			Timeout.add(0,() => {
 				request.arguments.set("error.example.message","This is an example error");
 				request.finish();
 				return false;
 			},Priority.HIGH);
-		} else if (request.uri == "test://error") {
+		} else if (request.uri == "fossil://error") {
 			request.arguments.set("error.example.boolean","true");
 			request.arguments.set("error.example.message","This is an example error");
 			request.arguments.set("warning.example.boolean","true");
 			request.arguments.set("warning.example.message","This is an example warning");
 			request.setStatus("error");
 			request.finish();
-		} else if (request.uri == "test://gibberish") {
+		} else if (request.uri == "fossil://gibberish") {
 			request.setStatus("error/gibberish");
 			request.finish();
 		} else {

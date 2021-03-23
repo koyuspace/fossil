@@ -1,4 +1,4 @@
-public class Dragonstone.Util.TlsCertficateGenerator {
+public class Fossil.Util.TlsCertficateGenerator {
 
 	public static GnuTLS.X509.PrivateKey generate_private_key() {
 		var key = GnuTLS.X509.PrivateKey.create();
@@ -54,8 +54,8 @@ public class Dragonstone.Util.TlsCertficateGenerator {
 	}
 	
 	public static string? generate_signed_certificate_key_pair_pem(){
-		var key = Dragonstone.Util.TlsCertficateGenerator.generate_private_key();
-		var certificate = Dragonstone.Util.TlsCertficateGenerator.generate_client_certificate(key);
+		var key = Fossil.Util.TlsCertficateGenerator.generate_private_key();
+		var certificate = Fossil.Util.TlsCertficateGenerator.generate_client_certificate(key);
 		if (certificate != null) {
 			var certificate_pem = certificate_to_pem(certificate);
 			var key_pem = private_key_to_pem(key);

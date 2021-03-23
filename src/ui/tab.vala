@@ -2,7 +2,7 @@ public class Dragontone.Ui.Tab : Object {
 	
 	private string _uri = "";
 	private string _title = "";
-	private Dragonstone.Ui.TabDisplayState _display_state = Dragonstone.Ui.TabDisplayState.BLANK;
+	private Fossil.Ui.TabDisplayState _display_state = Fossil.Ui.TabDisplayState.BLANK;
 	
 	private bool redirecting = false;
 	private uint64 redirectcounter = 0;
@@ -10,15 +10,15 @@ public class Dragontone.Ui.Tab : Object {
 	
 	private string resource_user_id = "tab_"+GLib.Uuid.string_random();
 	
-	private Dragonstone.Interface.Session session;
+	private Fossil.Interface.Session session;
 	//deprecated, will be changed to private as soon as all views support alternative apis
-	public Dragonstone.Request? request;
+	public Fossil.Request? request;
 	
 	public signal void uri_changed(string uri);
-	public signal void on_title_change(string title, Dragonstone.Ui.TabDisplayState state);
+	public signal void on_title_change(string title, Fossil.Ui.TabDisplayState state);
 	
 	
-	public Tab(Dragonstone.Interface.Session session, string uri){
+	public Tab(Fossil.Interface.Session session, string uri){
 		this.session = session;
 		this._uri = uri;
 	}
@@ -31,11 +31,11 @@ public class Dragontone.Ui.Tab : Object {
 		return _title;
 	}
 	
-	public Dragonstone.Ui.TabDisplayState get_display_state(){
+	public Fossil.Ui.TabDisplayState get_display_state(){
 		return _display_state;
 	}
 	
-	public void set_title(string title, Dragonstone.Ui.TabDisplayState state = Dragonstone.Ui.TabDisplayState.CONTENT){
+	public void set_title(string title, Fossil.Ui.TabDisplayState state = Fossil.Ui.TabDisplayState.CONTENT){
 		_title = title;
 		_display_state = state;
 		on_title_change(_title,_display_state);
@@ -66,7 +66,7 @@ public class Dragontone.Ui.Tab : Object {
 		}
 		string uritogo = null;
 		if (!is_absolute) {
-			uritogo = Dragonstone.Util.Uri.join(_uri,uri);
+			uritogo = Fossil.Util.Uri.join(_uri,uri);
 		}
 		if (uritogo == null) { uritogo = uri; }
 		print(@"[ui.tab] Going to uri: $uritogo\n");
@@ -78,7 +78,7 @@ public class Dragontone.Ui.Tab : Object {
 	//handle with care!
 	public void redirect(string uri){
 		if(locked>0){ return; }
-		var joined_uri = Dragonstone.Util.Uri.join(_uri,uri);
+		var joined_uri = Fossil.Util.Uri.join(_uri,uri);
 		if (joined_uri == null){joined_uri = uri;}
 		redirecting = true;
 		load_uri(joined_uri);
@@ -93,7 +93,7 @@ public class Dragontone.Ui.Tab : Object {
 		} else {
 			redirectcounter = 0;
 		}
-		set_title(uri,Dragonstone.Ui.TabDisplayState.LOADING);
+		set_title(uri,Fossil.Ui.TabDisplayState.LOADING);
 		var rquri = this._uri;
 		var startoffragment = rquri.index_of_char('#');
 		if(startoffragment > 0){
@@ -104,7 +104,7 @@ public class Dragontone.Ui.Tab : Object {
 		uri_changed(this._uri);
 	}
 	
-	private void set_request(Dragonstone.Request? rq){
+	private void set_request(Fossil.Request? rq){
 		if (request != null){
 			if (request.resource != null){
 				request.resource.decrement_users(resource_user_id);
@@ -122,10 +122,10 @@ public class Dragontone.Ui.Tab : Object {
 		}
 	}
 	
-	private void on_request_finished(Dragonstone.Request request){
+	private void on_request_finished(Fossil.Request request){
 	}
 	
-	private void on_status_update(Dragonstone.Request rq){
+	private void on_status_update(Fossil.Request rq){
 		print(@"[ui.tab] on status udate $(rq.status) | $(request.status) {$redirectcounter}\n");
 		if(locked>0){ return; }
 		if (request.resource != null){

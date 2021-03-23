@@ -1,6 +1,6 @@
-public class Dragonstone.GtkUi.View.Loading : Dragonstone.GtkUi.LegacyWidget.DialogViewBase, Dragonstone.GtkUi.Interface.LegacyView {
+public class Fossil.GtkUi.View.Loading : Fossil.GtkUi.LegacyWidget.DialogViewBase, Fossil.GtkUi.Interface.LegacyView {
 	
-	private Dragonstone.Request request = null;
+	private Fossil.Request request = null;
 	private Gtk.ProgressBar progressbar = new Gtk.ProgressBar();
 	
 	private Gtk.Image default_icon;
@@ -56,7 +56,7 @@ public class Dragonstone.GtkUi.View.Loading : Dragonstone.GtkUi.LegacyWidget.Dia
 		}
 	}
 	
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
+	public bool display_resource(Fossil.Request request, Fossil.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		if (!(request.status == "loading" || request.status == "uploading" || request.status == "connecting" || request.status == "routing")) {return false;}
 		this.request = request;
 		this.request.notify["substatus"].connect(load_updated_timeout_hack);
@@ -93,7 +93,7 @@ public class Dragonstone.GtkUi.View.Loading : Dragonstone.GtkUi.LegacyWidget.Dia
 		}
 		progressbar.pulse();
 		uint64 bytes = 0;
-		Dragonstone.Util.Intparser.try_parse_base_16_unsigned(request.substatus,out bytes);
+		Fossil.Util.Intparser.try_parse_base_16_unsigned(request.substatus,out bytes);
 		float kb = bytes/1000;
 		//float kb = int64.parse(request.substatus,16)/1000;
 		progressbar.set_text(@"$kb KB");

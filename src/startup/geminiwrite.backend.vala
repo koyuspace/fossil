@@ -1,9 +1,9 @@
-public class Dragonstone.Startup.GeminiWrite.Backend {
+public class Fossil.Startup.GeminiWrite.Backend {
 	
-	public static void setup_store(Dragonstone.SuperRegistry super_registry){
-		var store_registry = (super_registry.retrieve("core.stores") as Dragonstone.Registry.StoreRegistry);
+	public static void setup_store(Fossil.SuperRegistry super_registry){
+		var store_registry = (super_registry.retrieve("core.stores") as Fossil.Registry.StoreRegistry);
 		if (store_registry != null){
-			var store = new Dragonstone.Store.GeminiWrite();
+			var store = new Fossil.Store.GeminiWrite();
 			store_registry.add_resource_store("gemini+write://",store);
 		}
 	}

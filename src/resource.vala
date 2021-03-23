@@ -1,4 +1,4 @@
-public class Dragonstone.Resource : Object {
+public class Fossil.Resource : Object {
 	//requester
 	public string uri { get; protected set; default = "";} //where did you find that one?
 	public string filepath { get; protected set; default = "";} //the file, that contains the information

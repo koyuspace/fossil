@@ -1,4 +1,4 @@
-public class Dragonstone.Util.Kv {
+public class Fossil.Util.Kv {
 	public HashTable<string,string> values = new HashTable<string,string>(str_hash,str_equal);
 	
 	public static bool is_valid_key(string key){

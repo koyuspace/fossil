@@ -1,4 +1,4 @@
-public class Dragonstone.Settings.FileProvider : Dragonstone.Interface.Settings.Provider, Object {
+public class Fossil.Settings.FileProvider : Fossil.Interface.Settings.Provider, Object {
 	
 	//the id, stripped of its prefix will be directly appendd to this
 	//this is done to make it possible to enforce filenames starting with a fixed prefix
@@ -49,10 +49,10 @@ public class Dragonstone.Settings.FileProvider : Dragonstone.Interface.Settings.
 	}
 	
 	private void report(string path, string? error, string? warning, string? info, string? debug){
-		this.provider_report(new Dragonstone.Settings.Report(module_name, path, error, warning, info, debug));
+		this.provider_report(new Fossil.Settings.Report(module_name, path, error, warning, info, debug));
 	}
 	  /////////////////////////////////////////////
-	 // Dragonstone.Interface.Settings.Provider //
+	 // Fossil.Interface.Settings.Provider //
 	/////////////////////////////////////////////
 	
 	public void request_index(string path_prefix, Func<string> cb){

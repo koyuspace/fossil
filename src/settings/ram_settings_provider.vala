@@ -1,10 +1,10 @@
-public class Dragonstone.Settings.RamProvider : Dragonstone.Interface.Settings.Provider, Object {
+public class Fossil.Settings.RamProvider : Fossil.Interface.Settings.Provider, Object {
 
 	public HashTable<string,string> objects = new HashTable<string,string>(str_hash, str_equal);
 	public bool writable = true;
 	
 	  /////////////////////////////////////////////
-	 // Dragonstone.Interface.Settings.Provider //
+	 // Fossil.Interface.Settings.Provider //
 	/////////////////////////////////////////////
 	
 	public void request_index(string path_prefix, Func<string> cb){

@@ -1,8 +1,8 @@
-public class Dragonstone.Util.ConnectionHelper : Object {
+public class Fossil.Util.ConnectionHelper : Object {
 		
 		public uint default_timeout = 30;
 		
-		public GLib.IOStream? connect_to_server(string host, uint16 port, Dragonstone.Request request, bool use_tls, SocketConnectable? _server_identity = null){
+		public GLib.IOStream? connect_to_server(string host, uint16 port, Fossil.Request request, bool use_tls, SocketConnectable? _server_identity = null){
 			//make request
 			List<InetAddress> addresses;
 			try {
@@ -20,8 +20,8 @@ public class Dragonstone.Util.ConnectionHelper : Object {
 			}
 			string? client_certificate = request.arguments.get("tls.client.certificate");
 			string? expected_server_certificate = request.arguments.get("tls.server.expected_certificate");
-			var tls_check_settings = new Dragonstone.Util.ConnectionHelperTlsCheckSettings().import_from_request(request);
-			Dragonstone.Util.ConnectionHelperTlsConnection? last_tls_attempt = null;
+			var tls_check_settings = new Fossil.Util.ConnectionHelperTlsCheckSettings().import_from_request(request);
+			Fossil.Util.ConnectionHelperTlsConnection? last_tls_attempt = null;
 			SocketConnection? conn = null;
 			bool has_connection = false;
 			foreach (InetAddress address in addresses){
@@ -92,13 +92,13 @@ public class Dragonstone.Util.ConnectionHelper : Object {
 			}
 		}
 		
-		public Dragonstone.Util.ConnectionHelperTlsConnection upgrade_to_tls_connection(SocketConnection socket, string? client_certificate_pem, string? expected_server_certificate_pem, Dragonstone.Util.ConnectionHelperTlsCheckSettings? check_settings = null, SocketConnectable? server_identity = null){
+		public Fossil.Util.ConnectionHelperTlsConnection upgrade_to_tls_connection(SocketConnection socket, string? client_certificate_pem, string? expected_server_certificate_pem, Fossil.Util.ConnectionHelperTlsCheckSettings? check_settings = null, SocketConnectable? server_identity = null){
 			try {
 				print("[connection_helper] Upgrading to TLS connection\n");
 				if (server_identity != null){
 					print("[connection_helper] Server identity: "+server_identity.to_string()+"\n");
 				}
-				Dragonstone.Util.ConnectionHelperTlsConnection returninfo = new Dragonstone.Util.ConnectionHelperTlsConnection(check_settings);
+				Fossil.Util.ConnectionHelperTlsConnection returninfo = new Fossil.Util.ConnectionHelperTlsConnection(check_settings);
 				returninfo.expected_server_certificate_pem = expected_server_certificate_pem;
 				returninfo.connection = TlsClientConnection.@new(socket,server_identity);
 				
@@ -124,13 +124,13 @@ public class Dragonstone.Util.ConnectionHelper : Object {
 				return returninfo;
 			} catch (Error e) {
 				print(@"[connection_helper] Something went wrong during TLS connection attempt: $(e.message)\n");
-				return new Dragonstone.Util.ConnectionHelperTlsConnection.error(e.message);
+				return new Fossil.Util.ConnectionHelperTlsConnection.error(e.message);
 			}
 		}
 	
 }
 
-public class Dragonstone.Util.ConnectionHelperTlsCheckSettings {
+public class Fossil.Util.ConnectionHelperTlsCheckSettings {
 	public bool unexpected_certificate_critical = false;
 	public bool identity_mismatch_critical = true;
 	public bool expired_critical = false;
@@ -143,7 +143,7 @@ public class Dragonstone.Util.ConnectionHelperTlsCheckSettings {
 		//Do nothing
 	}
 	
-	public ConnectionHelperTlsCheckSettings import_from_request(Dragonstone.Request request){
+	public ConnectionHelperTlsCheckSettings import_from_request(Fossil.Request request){
 		unexpected_certificate_critical = get_is_critical(request,"unexpected_certificate",unexpected_certificate_critical);
 		identity_mismatch_critical = get_is_critical(request,"identity_mismatch",identity_mismatch_critical);
 		expired_critical = get_is_critical(request,"expired",expired_critical);
@@ -154,7 +154,7 @@ public class Dragonstone.Util.ConnectionHelperTlsCheckSettings {
 		return this;
 	}
 	
-	private static bool get_is_critical(Dragonstone.Request request,string check_id,bool default_critical){
+	private static bool get_is_critical(Fossil.Request request,string check_id,bool default_critical){
 		string? val = request.arguments.get("tls.check."+check_id);
 		if (val != null){
 			return val == "critical";
@@ -164,7 +164,7 @@ public class Dragonstone.Util.ConnectionHelperTlsCheckSettings {
 	}
 }
 
-public class Dragonstone.Util.ConnectionHelperTlsConnection : Object {
+public class Fossil.Util.ConnectionHelperTlsConnection : Object {
 	public TlsConnection? connection = null;
 	public TlsCertificateFlags? tls_errors = null;
 	public TlsCertificate? peer_certificate = null;
@@ -173,9 +173,9 @@ public class Dragonstone.Util.ConnectionHelperTlsConnection : Object {
 	public bool server_certificate_passed = false;
 	public bool success = false;
 	
-	Dragonstone.Util.ConnectionHelperTlsCheckSettings? check_settings = null;
+	Fossil.Util.ConnectionHelperTlsCheckSettings? check_settings = null;
 	
-	public ConnectionHelperTlsConnection(Dragonstone.Util.ConnectionHelperTlsCheckSettings? check_settings){
+	public ConnectionHelperTlsConnection(Fossil.Util.ConnectionHelperTlsCheckSettings? check_settings){
 		this.check_settings = check_settings;
 	}
 	
@@ -184,7 +184,7 @@ public class Dragonstone.Util.ConnectionHelperTlsConnection : Object {
 		check_settings = new ConnectionHelperTlsCheckSettings();
 	}
 	
-	public void write_arguments(Dragonstone.Request request){
+	public void write_arguments(Fossil.Request request){
 		if (tls_errors != null){
 			if ((tls_errors & GLib.TlsCertificateFlags.BAD_IDENTITY) != 0){request.arguments.set("warning.tls.certificate.identity_mismatch","true");}
 			if ((tls_errors & GLib.TlsCertificateFlags.EXPIRED) != 0){request.arguments.set("warning.tls.certificate.expired","true");}
@@ -198,7 +198,7 @@ public class Dragonstone.Util.ConnectionHelperTlsConnection : Object {
 		if (peer_certificate != null){request.arguments.set("tls.server.certificate",peer_certificate.certificate_pem);}
 	}
 	
-	public void write_status(Dragonstone.Request request){
+	public void write_status(Fossil.Request request){
 		if (!success){
 			if (error_message != null){
 				if (error_message == "Unacceptable TLS certificate"){

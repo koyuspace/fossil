@@ -1,15 +1,15 @@
-public class Dragonstone.Startup.File.Backend {
+public class Fossil.Startup.File.Backend {
 	
-	public static void setup_store(Dragonstone.SuperRegistry super_registry){
-		var store_registry = (super_registry.retrieve("core.stores") as Dragonstone.Registry.StoreRegistry);
-		var mimeguesser = (super_registry.retrieve("core.mimeguesser") as Dragonstone.Registry.MimetypeGuesser);
+	public static void setup_store(Fossil.SuperRegistry super_registry){
+		var store_registry = (super_registry.retrieve("core.stores") as Fossil.Registry.StoreRegistry);
+		var mimeguesser = (super_registry.retrieve("core.mimeguesser") as Fossil.Registry.MimetypeGuesser);
 		if (store_registry != null){
-			store_registry.add_resource_store("file://",new Dragonstone.Store.File.with_mimeguesser(mimeguesser));
+			store_registry.add_resource_store("file://",new Fossil.Store.File.with_mimeguesser(mimeguesser));
 		}
 	}
 	
-	public static void setup_uri_autocompletion(Dragonstone.SuperRegistry super_registry){
-		var uri_autoprefixer = (super_registry.retrieve("core.uri_autoprefixer") as Dragonstone.Registry.UriAutoprefix);
+	public static void setup_uri_autocompletion(Fossil.SuperRegistry super_registry){
+		var uri_autoprefixer = (super_registry.retrieve("core.uri_autoprefixer") as Fossil.Registry.UriAutoprefix);
 		if (uri_autoprefixer != null){
 			uri_autoprefixer.add("file:","file://");
 			uri_autoprefixer.add("file://","file://");

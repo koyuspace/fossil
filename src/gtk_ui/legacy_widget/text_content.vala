@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.LegacyWidget.TextContent : Gtk.ScrolledWindow {
+public class Fossil.GtkUi.LegacyWidget.TextContent : Gtk.ScrolledWindow {
 	public Gtk.TextView textview = null;
 	
 	construct {
@@ -6,7 +6,8 @@ public class Dragonstone.GtkUi.LegacyWidget.TextContent : Gtk.ScrolledWindow {
 		textview.editable = false;
 		textview.wrap_mode = Gtk.WrapMode.WORD;
 		textview.set_monospace(true);
-		textview.set_left_margin(4);
+		textview.set_left_margin(30);
+		textview.set_top_margin(20);
 		add(textview);
 	}
 	

@@ -1,12 +1,12 @@
-public class Dragonstone.Store.About : Object, Dragonstone.Interface.ResourceStore {
+public class Fossil.Store.About : Object, Fossil.Interface.ResourceStore {
 	
-	private HashTable<string,Dragonstone.Interface.ResourceStore> substores = new HashTable<string,Dragonstone.Interface.ResourceStore>(str_hash, str_equal);
+	private HashTable<string,Fossil.Interface.ResourceStore> substores = new HashTable<string,Fossil.Interface.ResourceStore>(str_hash, str_equal);
 	
 	construct {
-		this.set_sub_store("blank",new Dragonstone.Store.AboutStore.FixedText(""));
+		this.set_sub_store("blank",new Fossil.Store.AboutStore.FixedText(""));
 	}
 	
-	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
+	public void request(Fossil.Request request,string? filepath = null, bool upload = false){
 		var substore = substores.get(request.uri);
 		if (substore != null) {
 			substore.request(request,filepath,upload);
@@ -16,7 +16,7 @@ public class Dragonstone.Store.About : Object, Dragonstone.Interface.ResourceSto
 		}
 	}
 	
-	public void set_sub_store(string about_what, Dragonstone.Interface.ResourceStore? substore){
+	public void set_sub_store(string about_what, Fossil.Interface.ResourceStore? substore){
 		if(substore != null) {
 			print("[about] registred about:"+about_what+"\n");
 			substores.set("about:"+about_what,substore);
@@ -27,7 +27,7 @@ public class Dragonstone.Store.About : Object, Dragonstone.Interface.ResourceSto
 	
 }
 
-public class Dragonstone.Store.AboutStore.FixedText : Object, Dragonstone.Interface.ResourceStore {
+public class Fossil.Store.AboutStore.FixedText : Object, Fossil.Interface.ResourceStore {
 	
 	public string text;
 	public string mimetype;
@@ -39,7 +39,7 @@ public class Dragonstone.Store.AboutStore.FixedText : Object, Dragonstone.Interf
 		this.name = name;
 	}
 	
-	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
+	public void request(Fossil.Request request,string? filepath = null, bool upload = false){
 		if (filepath == null){
 			request.setStatus("error/internal","Filepath required!");
 			request.finish();
@@ -50,11 +50,11 @@ public class Dragonstone.Store.AboutStore.FixedText : Object, Dragonstone.Interf
 			request.finish();
 			return;
 		}
-		var helper = new Dragonstone.Util.ResourceFileWriteHelper(request,filepath,0);
+		var helper = new Fossil.Util.ResourceFileWriteHelper(request,filepath,0);
 		helper.appendString(this.text);
 		if (helper.error){return;}
 		helper.close();
-		var resource = new Dragonstone.Resource(request.uri,filepath,true);
+		var resource = new Fossil.Resource(request.uri,filepath,true);
 		resource.add_metadata(this.mimetype,this.name);
 		request.setResource(resource,"about");
 		request.finish(true);
@@ -62,7 +62,7 @@ public class Dragonstone.Store.AboutStore.FixedText : Object, Dragonstone.Interf
 	
 }
 
-public class Dragonstone.Store.AboutStore.FixedStatus : Object, Dragonstone.Interface.ResourceStore {
+public class Fossil.Store.AboutStore.FixedStatus : Object, Fossil.Interface.ResourceStore {
 	
 	public string status;
 	public string substatus;
@@ -72,7 +72,7 @@ public class Dragonstone.Store.AboutStore.FixedStatus : Object, Dragonstone.Inte
 		this.substatus = substatus;
 	}
 	
-	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
+	public void request(Fossil.Request request,string? filepath = null, bool upload = false){
 		request.setStatus(this.status,this.substatus);
 		request.finish();
 	}

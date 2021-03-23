@@ -1,9 +1,9 @@
-public class Dragonstone.GtkUi.Theming.HypertextViewTheme : Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme, Object {
+public class Fossil.GtkUi.Theming.HypertextViewTheme : Fossil.GtkUi.Interface.Theming.HypertextViewTheme, Object {
 	
 	public bool monospaced_by_default = true;
 	
 	private HashTable<string,string> prefixes = new HashTable<string,string>(str_hash, str_equal);
-	private HashTable<string,Dragonstone.GtkUi.Theming.TextTagTheme> text_tag_themes = new HashTable<string,Dragonstone.GtkUi.Theming.TextTagTheme>(str_hash, str_equal);
+	private HashTable<string,Fossil.GtkUi.Theming.TextTagTheme> text_tag_themes = new HashTable<string,Fossil.GtkUi.Theming.TextTagTheme>(str_hash, str_equal);
 	
 	public void set_prefix(string name, string? prefix){
 		if (prefix != null) {
@@ -13,7 +13,7 @@ public class Dragonstone.GtkUi.Theming.HypertextViewTheme : Dragonstone.GtkUi.In
 		}
 	}
 	
-	public void set_text_tag_theme(string name, Dragonstone.GtkUi.Theming.TextTagTheme? theme){
+	public void set_text_tag_theme(string name, Fossil.GtkUi.Theming.TextTagTheme? theme){
 		if (theme != null) {
 			text_tag_themes.set(name, theme);
 		} else {
@@ -25,19 +25,19 @@ public class Dragonstone.GtkUi.Theming.HypertextViewTheme : Dragonstone.GtkUi.In
 		prefixes.foreach(cb);
 	}
 	
-	public void foreach_text_tag_theme(HFunc<string,Dragonstone.GtkUi.Theming.TextTagTheme> cb){
+	public void foreach_text_tag_theme(HFunc<string,Fossil.GtkUi.Theming.TextTagTheme> cb){
 		text_tag_themes.foreach(cb);
 	}
 	
 	  ////////////////////////////////////////////////////////////
-	 // Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme //
+	 // Fossil.GtkUi.Interface.Theming.HypertextViewTheme //
 	////////////////////////////////////////////////////////////
 	
 	public string? get_prefix(string name){
 		return prefixes.get(name);
 	}
 	
-	public Dragonstone.GtkUi.Theming.TextTagTheme? get_text_tag_theme(string name){
+	public Fossil.GtkUi.Theming.TextTagTheme? get_text_tag_theme(string name){
 		return text_tag_themes.get(name);
 	}
 	

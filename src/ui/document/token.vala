@@ -1,14 +1,14 @@
-public class Dragonstone.Ui.Document.Token : Object {
+public class Fossil.Ui.Document.Token : Object {
 	
 	public string text = "";
 	public string? uri = null;
 	public bool preformatted = false;
 	public bool inlined = false; //don't start a new paragraph if possible
-	public Dragonstone.Ui.Document.TokenType token_type;
+	public Fossil.Ui.Document.TokenType token_type;
 	public uint level = 0;
 	
 	
-	public Token(Dragonstone.Ui.Document.TokenType token_type, uint level, string text, string? uri = null, bool preformatted = false, bool inlined = false){
+	public Token(Fossil.Ui.Document.TokenType token_type, uint level, string text, string? uri = null, bool preformatted = false, bool inlined = false){
 		this.token_type = token_type;
 		this.level = level;
 		this.text = text;
@@ -18,7 +18,7 @@ public class Dragonstone.Ui.Document.Token : Object {
 	}
 	
 	public Token.parser_error(uint level, string text){
-		this.token_type = Dragonstone.Ui.Document.TokenType.PARSER_ERROR;
+		this.token_type = Fossil.Ui.Document.TokenType.PARSER_ERROR;
 		this.level = level;
 		this.text = text;
 	}

@@ -1,6 +1,6 @@
-public class Dragonstone.Util.ResourceFileWriteHelper : Object {
+public class Fossil.Util.ResourceFileWriteHelper : Object {
 	
-	private Dragonstone.Request request = null;
+	private Fossil.Request request = null;
 	private File file = null;
 	private FileOutputStream outstream = null;
 	public bool error = false;
@@ -10,7 +10,7 @@ public class Dragonstone.Util.ResourceFileWriteHelper : Object {
 	public int64 progress = 0;
 	public string filepath = null;
 	
-	public ResourceFileWriteHelper(Dragonstone.Request request, string filepath, int64 size){
+	public ResourceFileWriteHelper(Fossil.Request request, string filepath, int64 size){
 		this.request = request;
 		this.size = size;
 		this.filepath = filepath;

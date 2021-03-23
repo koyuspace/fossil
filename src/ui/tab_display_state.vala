@@ -1,4 +1,4 @@
-public enum Dragonstone.Ui.TabDisplayState {
+public enum Fossil.Ui.TabDisplayState {
 	LOADING,
 	ERROR,
 	CONTENT,

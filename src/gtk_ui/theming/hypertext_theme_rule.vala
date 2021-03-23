@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.Theming.HypertextThemeRule : Object {
+public class Fossil.GtkUi.Theming.HypertextThemeRule : Object {
 
 	public string theme_name;
 	public string? content_type = null;

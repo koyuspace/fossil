@@ -1,9 +1,9 @@
-public class Dragonstone.Page.Service.Syncronisation : Object, Dragonstone.Interface.Page.Service.Syncronisation {
+public class Fossil.Page.Service.Syncronisation : Object, Fossil.Interface.Page.Service.Syncronisation {
 	
 	private HashTable<string,string> objects = new HashTable<string,string>(str_hash, str_equal);
 	
 	  ///////////////////////////////////////////////////////
-	 // Dragonstone.Interface.Page.Service.Syncronisation //
+	 // Fossil.Interface.Page.Service.Syncronisation //
 	///////////////////////////////////////////////////////
 	
 	public void syncronisation_write(string key, string? val, string module_name){

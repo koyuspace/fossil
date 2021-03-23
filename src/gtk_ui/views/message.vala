@@ -1,6 +1,6 @@
-public class Dragonstone.GtkUi.View.Message : Dragonstone.GtkUi.LegacyWidget.DialogViewBase, Dragonstone.GtkUi.Interface.LegacyView {
+public class Fossil.GtkUi.View.Message : Fossil.GtkUi.LegacyWidget.DialogViewBase, Fossil.GtkUi.Interface.LegacyView {
 	
-	private Dragonstone.Request request = null;
+	private Fossil.Request request = null;
 	private Gtk.Label error_label = new Gtk.Label(""); 
 	private string status;
 	
@@ -13,7 +13,7 @@ public class Dragonstone.GtkUi.View.Message : Dragonstone.GtkUi.LegacyWidget.Dia
 		show_all();
 	}
 	
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
+	public bool display_resource(Fossil.Request request, Fossil.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		if (!(request.status.has_prefix(status))) {return false;}
 		this.request = request;
 		error_label.label = request.status+"\n"+request.substatus;

@@ -1,4 +1,4 @@
-public class Dragonstone.GtkUi.LegacyWidget.BookmarkEditor : Gtk.Box {
+public class Fossil.GtkUi.LegacyWidget.BookmarkEditor : Gtk.Box {
 	
 	public Gtk.Entry name_entry;
 	public Gtk.Entry uri_entry;
@@ -7,12 +7,12 @@ public class Dragonstone.GtkUi.LegacyWidget.BookmarkEditor : Gtk.Box {
 	public Gtk.Button save_button = new Gtk.Button.with_label("Save");
 	public Gtk.Button delete_button = new Gtk.Button.with_label("Delete");
 	
-	public Dragonstone.Registry.BookmarkRegistry bookmark_registry;
-	Dragonstone.Registry.BookmarkRegistryEntry? bookmark = null;
+	public Fossil.Registry.BookmarkRegistry bookmark_registry;
+	Fossil.Registry.BookmarkRegistryEntry? bookmark = null;
 	
-	public signal void done_editing(Dragonstone.Registry.BookmarkRegistryEntry bookmark,bool triggered_by_save=false);
+	public signal void done_editing(Fossil.Registry.BookmarkRegistryEntry bookmark,bool triggered_by_save=false);
 	
-	public BookmarkEditor(Dragonstone.Registry.BookmarkRegistry bookmark_registry){
+	public BookmarkEditor(Fossil.Registry.BookmarkRegistry bookmark_registry){
 		this.bookmark_registry = bookmark_registry;
 		this.orientation = Gtk.Orientation.VERTICAL;
 		this.spacing = 4;
@@ -43,7 +43,7 @@ public class Dragonstone.GtkUi.LegacyWidget.BookmarkEditor : Gtk.Box {
 		uri_entry.activate.connect(save_uri);
 	}
 	
-	public void edit_bookmark(Dragonstone.Registry.BookmarkRegistryEntry? bookmark){
+	public void edit_bookmark(Fossil.Registry.BookmarkRegistryEntry? bookmark){
 		this.bookmark = bookmark;
 		if (bookmark == null){
 			this.name_entry.text = "";
@@ -70,7 +70,7 @@ public class Dragonstone.GtkUi.LegacyWidget.BookmarkEditor : Gtk.Box {
 		}
 	}	
 	
-	public Dragonstone.GtkUi.LegacyWidget.BookmarkEditor localize(Dragonstone.Registry.TranslationRegistry translation){
+	public Fossil.GtkUi.LegacyWidget.BookmarkEditor localize(Fossil.Registry.TranslationRegistry translation){
 		name_entry.placeholder_text = translation.localize("edit_bookmark.name.placeholder");
 		uri_entry.placeholder_text = translation.localize("edit_bookmark.uri.placeholder");
 		cancel_button.label = translation.localize("action.cancel");

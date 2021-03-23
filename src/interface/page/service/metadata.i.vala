@@ -1,4 +1,4 @@
-public interface Dragonstone.Interface.Page.Service.Metadata : Object {
+public interface Fossil.Interface.Page.Service.Metadata : Object {
 	
 	/*
 		This interface is supposed to store page wide metadata

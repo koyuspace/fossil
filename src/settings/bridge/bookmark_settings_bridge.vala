@@ -1,13 +1,13 @@
-public class Dragonstone.Settings.Bridge.Bookmarks : Object {
+public class Fossil.Settings.Bridge.Bookmarks : Object {
 
 	public string path;
-	private Dragonstone.Registry.BookmarkRegistry bookmark_registry;
-	private Dragonstone.Interface.Settings.Provider settings_provider;
+	private Fossil.Registry.BookmarkRegistry bookmark_registry;
+	private Fossil.Interface.Settings.Provider settings_provider;
 	
 	private bool dirty = false;
 	//uri<\t>name
 	
-	public Bookmarks(Dragonstone.Interface.Settings.Provider settings_provider, string path, Dragonstone.Registry.BookmarkRegistry bookmark_registry){
+	public Bookmarks(Fossil.Interface.Settings.Provider settings_provider, string path, Fossil.Registry.BookmarkRegistry bookmark_registry){
 		this.settings_provider = settings_provider;
 		this.path = path;
 		this.bookmark_registry = bookmark_registry;

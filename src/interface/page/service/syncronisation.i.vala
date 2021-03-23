@@ -1,4 +1,4 @@
-public interface Dragonstone.Interface.Page.Service.Syncronisation : Object {
+public interface Fossil.Interface.Page.Service.Syncronisation : Object {
 	
 	/*
 		This service stores data from widgets, so that it can be used by other widgets or to persist state.

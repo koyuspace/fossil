@@ -1,17 +1,17 @@
-public class Dragonstone.Store.File : Object, Dragonstone.Interface.ResourceStore {
+public class Fossil.Store.File : Object, Fossil.Interface.ResourceStore {
 	
-	public Dragonstone.Registry.MimetypeGuesser mimeguesser = null;
+	public Fossil.Registry.MimetypeGuesser mimeguesser = null;
 	
 	
 	public File(){
-		mimeguesser = new Dragonstone.Registry.MimetypeGuesser.default_configuration();
+		mimeguesser = new Fossil.Registry.MimetypeGuesser.default_configuration();
 	}
 	
-	public File.with_mimeguesser(Dragonstone.Registry.MimetypeGuesser mimeguesser){
+	public File.with_mimeguesser(Fossil.Registry.MimetypeGuesser mimeguesser){
 		this.mimeguesser = mimeguesser;
 	}
 	
-	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
+	public void request(Fossil.Request request,string? filepath = null, bool upload = false){
 		if (upload){
 			request.setStatus("error/noupload","Uploding not supported");
 			request.finish();
@@ -44,7 +44,7 @@ public class Dragonstone.Store.File : Object, Dragonstone.Interface.ResourceStor
 		if (basename == null) {basename = request.uri;}
 		
 		if(FileUtils.test(path, FileTest.IS_DIR)){
-			var helper = new Dragonstone.Util.ResourceFileWriteHelper(request,filepath,0);
+			var helper = new Fossil.Util.ResourceFileWriteHelper(request,filepath,0);
 			try {
 				Dir dir = Dir.open (path, 0);
 				string? name = null;
@@ -78,13 +78,13 @@ public class Dragonstone.Store.File : Object, Dragonstone.Interface.ResourceStor
 			}
 			if (helper.closed) { return; }
 			helper.close();
-			var resource = new Dragonstone.Resource(request.uri,filepath,true);
+			var resource = new Fossil.Resource(request.uri,filepath,true);
 			resource.add_metadata("text/dragonstone-directory",basename);
 			request.setResource(resource,"file");
 			return;
 		}
 		
-		var resource = new Dragonstone.Resource(request.uri,path,false);
+		var resource = new Fossil.Resource(request.uri,path,false);
 		resource.add_metadata(mimeguesser.get_closest_match(basename,"text/plain"),basename);
 		request.setResource(resource,"file");
 		return;

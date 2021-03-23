@@ -1,4 +1,4 @@
-public enum Dragonstone.Ui.Document.TokenType {
+public enum Fossil.Ui.Document.TokenType {
 	PARAGRAPH,
 	TITLE,
 	LINK,

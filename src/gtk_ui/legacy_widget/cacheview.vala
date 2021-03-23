@@ -1,7 +1,7 @@
-public class Dragonstone.GtkUi.LegacyWidget.CacheView : Gtk.Box {
+public class Fossil.GtkUi.LegacyWidget.CacheView : Gtk.Box {
 	
-	private Dragonstone.GtkUi.LegacyWidget.Tab tab;
-	private Dragonstone.Store.Cache cache;
+	private Fossil.GtkUi.LegacyWidget.Tab tab;
+	private Fossil.Store.Cache cache;
 	private Gtk.ListStore liststore = new Gtk.ListStore(4,typeof(string),typeof(string),typeof(string),typeof(string));
 	private HashTable<string,Gtk.TreeIter?> displayed_uris = new HashTable<string,Gtk.TreeIter?>(str_hash, str_equal);
 	private Gtk.TreeModelFilter filterstore;
@@ -24,10 +24,10 @@ public class Dragonstone.GtkUi.LegacyWidget.CacheView : Gtk.Box {
 		3: # of users as string
 	*/
 	
-	public CacheView(Dragonstone.Store.Cache cache, Dragonstone.GtkUi.LegacyWidget.Tab tab, Dragonstone.Registry.TranslationRegistry? itranslation){
+	public CacheView(Fossil.Store.Cache cache, Fossil.GtkUi.LegacyWidget.Tab tab, Fossil.Registry.TranslationRegistry? itranslation){
 		var translation = itranslation;
 		if(translation == null) {
-			var language = new Dragonstone.Registry.TranslationLanguageRegistry();
+			var language = new Fossil.Registry.TranslationLanguageRegistry();
 			language.set_text("view.interactive/cache.erase_cache","Erase cache");
 			language.set_text("view.interactive/cache.search.placeholder","Search for uri ...");
 			language.set_text("view.interactive/cache.remove.tooltip","Remove resource from cache");

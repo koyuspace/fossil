@@ -1,4 +1,4 @@
-public class Dragonstone.SuperRegistry : Object, Dragonstone.Asm.ObjectProvider {
+public class Fossil.SuperRegistry : Object, Fossil.Asm.ObjectProvider {
 
 	private HashTable<string,Object> objects = new HashTable<string,Object>(str_hash, str_equal);
 	
@@ -14,20 +14,20 @@ public class Dragonstone.SuperRegistry : Object, Dragonstone.Asm.ObjectProvider 
 		objects.@foreach(cb);
 	}
 	
-	public void foreach_asm_object(HFunc<string,Dragonstone.Asm.AsmObject> cb){
+	public void foreach_asm_object(HFunc<string,Fossil.Asm.AsmObject> cb){
 		objects.@foreach((k,v) => {
-			if (v is Dragonstone.Asm.AsmObject){
-				cb(k,(Dragonstone.Asm.AsmObject) v);
+			if (v is Fossil.Asm.AsmObject){
+				cb(k,(Fossil.Asm.AsmObject) v);
 			}
 		});
 	} // iterates over all object names in this object store
 	
-	public Dragonstone.Asm.AsmObject? get_asm_object(string name){
-		return (Dragonstone.Asm.AsmObject) objects.get(name);
+	public Fossil.Asm.AsmObject? get_asm_object(string name){
+		return (Fossil.Asm.AsmObject) objects.get(name);
 	}
 }
 
 /*
-errordomain Dragonstone.SuperRegistryError {
+errordomain Fossil.SuperRegistryError {
     MISSING_ENTRY
 }*/

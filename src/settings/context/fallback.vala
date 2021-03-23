@@ -1,6 +1,6 @@
-public class Dragonstone.Settings.Context.Fallback : Dragonstone.Interface.Settings.Provider, Object {
+public class Fossil.Settings.Context.Fallback : Fossil.Interface.Settings.Provider, Object {
 	
-	private List<Dragonstone.Interface.Settings.Provider> fallbacks = new List<Dragonstone.Interface.Settings.Provider>();
+	private List<Fossil.Interface.Settings.Provider> fallbacks = new List<Fossil.Interface.Settings.Provider>();
 	public bool deepwrite = false;
 	
 	public Fallback() {
@@ -8,7 +8,7 @@ public class Dragonstone.Settings.Context.Fallback : Dragonstone.Interface.Setti
 	}
 	
 	//first added fallbacks are first used
-	public void add_fallback(Dragonstone.Interface.Settings.Provider provider){
+	public void add_fallback(Fossil.Interface.Settings.Provider provider){
 		lock(fallbacks){
 			if (fallbacks.index(provider) < 0) {
 				fallbacks.append(provider);
@@ -19,7 +19,7 @@ public class Dragonstone.Settings.Context.Fallback : Dragonstone.Interface.Setti
 		}
 	}
 	
-	public void remove_fallback(Dragonstone.Interface.Settings.Provider provider){
+	public void remove_fallback(Fossil.Interface.Settings.Provider provider){
 		lock(fallbacks){
 			if (fallbacks.index(provider) >= 0) {
 				provider.settings_updated.disconnect(on_settings_updated);
@@ -34,23 +34,23 @@ public class Dragonstone.Settings.Context.Fallback : Dragonstone.Interface.Setti
 		this.settings_updated(path);
 	}
 	
-	private void on_provider_report(Dragonstone.Settings.Report report){
+	private void on_provider_report(Fossil.Settings.Report report){
 		this.provider_report(report);
 	}
 	
-	public void on_submit_client_report(Dragonstone.Settings.Report report){
-		foreach(Dragonstone.Interface.Settings.Provider provider in fallbacks){
+	public void on_submit_client_report(Fossil.Settings.Report report){
+		foreach(Fossil.Interface.Settings.Provider provider in fallbacks){
 			provider.submit_client_report(report);
 		}
 	}
 	
 	  /////////////////////////////////////////////
-	 // Dragonstone.Interface.Settings.Provider //
+	 // Fossil.Interface.Settings.Provider //
 	/////////////////////////////////////////////
 	
 	public void request_index(string path_prefix, Func<string> cb){
 		GenericSet<string> alredy_seen = new GenericSet<string>(str_hash, str_equal);
-		foreach(Dragonstone.Interface.Settings.Provider provider in fallbacks){
+		foreach(Fossil.Interface.Settings.Provider provider in fallbacks){
 			provider.request_index(path_prefix, (path) => {
 				if (!alredy_seen.contains(path)) {
 					alredy_seen.add(path);
@@ -61,7 +61,7 @@ public class Dragonstone.Settings.Context.Fallback : Dragonstone.Interface.Setti
 	}
 	
 	public bool has_object(string path){
-		foreach(Dragonstone.Interface.Settings.Provider provider in fallbacks){
+		foreach(Fossil.Interface.Settings.Provider provider in fallbacks){
 			if (provider.has_object(path)) {
 				return true;
 			}
@@ -70,7 +70,7 @@ public class Dragonstone.Settings.Context.Fallback : Dragonstone.Interface.Setti
 	}
 	
 	public string? read_object(string path){
-		foreach(Dragonstone.Interface.Settings.Provider provider in fallbacks){
+		foreach(Fossil.Interface.Settings.Provider provider in fallbacks){
 			string? content = provider.read_object(path);
 			if (content != null) {
 				return content;
@@ -80,7 +80,7 @@ public class Dragonstone.Settings.Context.Fallback : Dragonstone.Interface.Setti
 	}
 	
 	public bool can_write_object(string path){
-		foreach(Dragonstone.Interface.Settings.Provider provider in fallbacks){
+		foreach(Fossil.Interface.Settings.Provider provider in fallbacks){
 			if (provider.can_write_object(path)) {
 				return true;
 			}
@@ -91,7 +91,7 @@ public class Dragonstone.Settings.Context.Fallback : Dragonstone.Interface.Setti
 	// writing null content will be the equivalent of a delete
 	public bool write_object(string path, string? content){
 		bool success = false;
-		foreach(Dragonstone.Interface.Settings.Provider provider in fallbacks){
+		foreach(Fossil.Interface.Settings.Provider provider in fallbacks){
 			if (provider.write_object(path, content)) {
 				if (deepwrite) {
 					return true;

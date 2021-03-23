@@ -1,11 +1,11 @@
-class Dragonstone.Store.Switch : Object, Dragonstone.Interface.ResourceStore {
+class Fossil.Store.Switch : Object, Fossil.Interface.ResourceStore {
 
 	private string cacheDirectory = "/tmp";
-	private Dragonstone.Registry.StoreRegistry storeRegistry;
-	private Dragonstone.Interface.Cache? cache = null;
-	//private List<Dragonstone.Request> hooked_requests = new Listy<Dragonstone.Request>();
+	private Fossil.Registry.StoreRegistry storeRegistry;
+	private Fossil.Interface.Cache? cache = null;
+	//private List<Fossil.Request> hooked_requests = new Listy<Fossil.Request>();
 	
-	public Switch(string? cacheDirectory,Dragonstone.Registry.StoreRegistry storeRegistry,Dragonstone.Interface.Cache? cache = null){
+	public Switch(string? cacheDirectory,Fossil.Registry.StoreRegistry storeRegistry,Fossil.Interface.Cache? cache = null){
 		this.cache = cache;
 		this.storeRegistry = storeRegistry;
 		if (cacheDirectory != null){
@@ -15,13 +15,13 @@ class Dragonstone.Store.Switch : Object, Dragonstone.Interface.ResourceStore {
 	}
 	
 	public Switch.default_configuration(){
-		this.storeRegistry = new Dragonstone.Registry.StoreRegistry.default_configuration();
+		this.storeRegistry = new Fossil.Registry.StoreRegistry.default_configuration();
 		string cachedir = GLib.Environment.get_user_cache_dir();
-		this.cacheDirectory = cachedir+"/dragonstone";
+		this.cacheDirectory = cachedir+"/fossil";
 		GLib.DirUtils.create_with_parents(this.cacheDirectory,16832);
 	}
 	
-	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
+	public void request(Fossil.Request request,string? filepath = null, bool upload = false){
 		print(@"[switch] Loading uri: '$(request.uri)'\n");
 		if (cache != null && (!request.reload) && (!upload)){
 			if (cache.can_serve_request(request.uri)){
@@ -33,7 +33,7 @@ class Dragonstone.Store.Switch : Object, Dragonstone.Interface.ResourceStore {
 		load_from_store(request, filepath, upload);
 	}
 	
-	private void load_from_store(Dragonstone.Request request,string? filepath = null, bool upload = false){
+	private void load_from_store(Fossil.Request request,string? filepath = null, bool upload = false){
 		var store = storeRegistry.get_closest_match(request.uri);
 		if (store != null){
 			string filepathx = filepath;

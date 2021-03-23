@@ -1,13 +1,13 @@
-public class Dragonstone.GtkUi.View.Redirect : Dragonstone.GtkUi.LegacyWidget.DialogViewBase, Dragonstone.GtkUi.Interface.LegacyView {
+public class Fossil.GtkUi.View.Redirect : Fossil.GtkUi.LegacyWidget.DialogViewBase, Fossil.GtkUi.Interface.LegacyView {
 	
-	private Dragonstone.Request request = null;
+	private Fossil.Request request = null;
 	private Gtk.Button redirbutton = new Gtk.Button();
 	private Gtk.Label buttonlabel = new Gtk.Label("");
 	private string title = "Redirect to";
 	
-	public Redirect(Dragonstone.Registry.TranslationRegistry? translation = null) {
+	public Redirect(Fossil.Registry.TranslationRegistry? translation = null) {
 		if(translation != null){
-			this.title = translation.localize("view.dragonstone.redirect.title");
+			this.title = translation.localize("view.fossil.redirect.title");
 		}
 		redirbutton.get_style_context().add_class("suggested-action");
 		redirbutton.add(buttonlabel);
@@ -19,7 +19,7 @@ public class Dragonstone.GtkUi.View.Redirect : Dragonstone.GtkUi.LegacyWidget.Di
 		show_all();
 	}
 	
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
+	public bool display_resource(Fossil.Request request, Fossil.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		if (!(request.status.has_prefix("redirect"))) {return false;}
 		this.request = request;
 		buttonlabel.label = request.substatus;

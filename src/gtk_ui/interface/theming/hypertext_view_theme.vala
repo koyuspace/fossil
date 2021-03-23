@@ -1,7 +1,7 @@
-public interface Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme : Object {
+public interface Fossil.GtkUi.Interface.Theming.HypertextViewTheme : Object {
 	
 	public abstract string? get_prefix(string name);
-	public abstract Dragonstone.GtkUi.Theming.TextTagTheme? get_text_tag_theme(string name);
+	public abstract Fossil.GtkUi.Theming.TextTagTheme? get_text_tag_theme(string name);
 	
 	public abstract string get_best_matching_text_tag_theme_name(string[] classes);
 	

@@ -1,25 +1,25 @@
-public class Dragonstone.GtkUi.View.Hypertext : Gtk.Bin, Dragonstone.GtkUi.Interface.LegacyView {
+public class Fossil.GtkUi.View.Hypertext : Gtk.Bin, Fossil.GtkUi.Interface.LegacyView {
 	
-	private Dragonstone.Request request = null;
-	private Dragonstone.GtkUi.LegacyWidget.Tab tab;
+	private Fossil.Request request = null;
+	private Fossil.GtkUi.LegacyWidget.Tab tab;
 	
-	private Dragonstone.Interface.Document.TokenParserFactory token_parser_factory;
-	private Dragonstone.GtkUi.Interface.Theming.HypertextViewThemeProvider theme_provider;
-	private Dragonstone.GtkUi.LegacyWidget.HypertextContent? hypertext = null;
+	private Fossil.Interface.Document.TokenParserFactory token_parser_factory;
+	private Fossil.GtkUi.Interface.Theming.HypertextViewThemeProvider theme_provider;
+	private Fossil.GtkUi.LegacyWidget.HypertextContent? hypertext = null;
 	
-	public Hypertext(Dragonstone.Interface.Document.TokenParserFactory token_parser_factory, Dragonstone.GtkUi.Interface.Theming.HypertextViewThemeProvider theme_provider){
+	public Hypertext(Fossil.Interface.Document.TokenParserFactory token_parser_factory, Fossil.GtkUi.Interface.Theming.HypertextViewThemeProvider theme_provider){
 		this.token_parser_factory = token_parser_factory;
 		this.theme_provider = theme_provider;
 	}
 	
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
+	public bool display_resource(Fossil.Request request, Fossil.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		this.tab = tab;
 		if (request.status == "success" && token_parser_factory.has_parser_for(request.resource.mimetype)){
 			var theme = theme_provider.get_theme(request.resource.mimetype, request.uri);
 			if (theme == null){
 				theme = theme_provider.get_default_theme();
 			}
-			hypertext = new Dragonstone.GtkUi.LegacyWidget.HypertextContent(theme, new Dragonstone.GtkUi.LegacyWidget.LinkButtonPopover(tab));
+			hypertext = new Fossil.GtkUi.LegacyWidget.HypertextContent(theme, new Fossil.GtkUi.LegacyWidget.LinkButtonPopover(tab));
 			hypertext.go.connect(on_go_event);
 			add(hypertext);
 			var input_stream = tab.get_file_content_stream();
@@ -68,23 +68,23 @@ public class Dragonstone.GtkUi.View.Hypertext : Gtk.Bin, Dragonstone.GtkUi.Inter
 	
 	public bool import(string data){
 		if (hypertext == null) { return false; }
-		var kv = new Dragonstone.Util.Kv();
+		var kv = new Fossil.Util.Kv();
 		kv.import(data);
-		if (kv.get_value("view_type") != "dragonstone.hyper_text.0") {
+		if (kv.get_value("view_type") != "fossil.hyper_text.0") {
 			return false;
 		}
 		string? val = kv.get_value("scroll");
 		if (val != null) {
-			Dragonstone.GtkUi.LegacyUtil.GtkScrollExport.import(hypertext, val);
+			Fossil.GtkUi.LegacyUtil.GtkScrollExport.import(hypertext, val);
 		}
 		return true;
 	}
 	
 	public string? export(){
 		if (hypertext == null) { return null; }
-		var kv = new Dragonstone.Util.Kv();
-		kv.set_value("view_type","dragonstone.hyper_text.0");
-		kv.set_value("scroll",Dragonstone.GtkUi.LegacyUtil.GtkScrollExport.export(hypertext));
+		var kv = new Fossil.Util.Kv();
+		kv.set_value("view_type","fossil.hyper_text.0");
+		kv.set_value("scroll",Fossil.GtkUi.LegacyUtil.GtkScrollExport.export(hypertext));
 		return kv.export();
 	}
 	

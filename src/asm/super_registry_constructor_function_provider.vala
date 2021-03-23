@@ -1,10 +1,10 @@
-public delegate Object Dragonstone.Asm.SuperRegistrySimpleConstructorFunction();
+public delegate Object Fossil.Asm.SuperRegistrySimpleConstructorFunction();
 
-public class Dragonstone.Asm.SuperRegistrySimpleConstructorFunctionDescriptor : Dragonstone.Asm.FunctionDescriptor {
+public class Fossil.Asm.SuperRegistrySimpleConstructorFunctionDescriptor : Fossil.Asm.FunctionDescriptor {
 	
-	Dragonstone.Asm.SuperRegistrySimpleConstructorFunction constructor_function;
+	Fossil.Asm.SuperRegistrySimpleConstructorFunction constructor_function;
 	
-	public SuperRegistrySimpleConstructorFunctionDescriptor(string name, owned Dragonstone.Asm.SuperRegistrySimpleConstructorFunction constructor_function){
+	public SuperRegistrySimpleConstructorFunctionDescriptor(string name, owned Fossil.Asm.SuperRegistrySimpleConstructorFunction constructor_function){
 		base.empty();
 		this.constructor_function = (owned) constructor_function;
 		this.name = name;
@@ -13,15 +13,15 @@ public class Dragonstone.Asm.SuperRegistrySimpleConstructorFunctionDescriptor : 
 		this.unlocalized_helptext = @"$name <name> Initalizes an object and stores it in the context at <name>";
 	}
 	
-	private Dragonstone.Asm.Scriptreturn? construct_object(string _arg, Object? context = null){
+	private Fossil.Asm.Scriptreturn? construct_object(string _arg, Object? context = null){
 		string arg = _arg.strip();
 		if (arg == ""){
-			return new Dragonstone.Asm.Scriptreturn.missing_argument();
+			return new Fossil.Asm.Scriptreturn.missing_argument();
 		}
-		Dragonstone.SuperRegistry? super_registry = (Dragonstone.SuperRegistry) context;
+		Fossil.SuperRegistry? super_registry = (Fossil.SuperRegistry) context;
 		if (super_registry == null){
 			print(@"error while constructing $arg = new $name(): wrong context\n");
-			return new Dragonstone.Asm.Scriptreturn.wrong_context("SuperRegistry");
+			return new Fossil.Asm.Scriptreturn.wrong_context("SuperRegistry");
 		}
 		print(@"constructing: $arg = new $name()\n");
 		super_registry.store(arg,this.constructor_function());

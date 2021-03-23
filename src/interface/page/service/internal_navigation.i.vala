@@ -1,4 +1,4 @@
-public interface Dragonstone.Interface.Page.Service.InternalNavigation : Object {
+public interface Fossil.Interface.Page.Service.InternalNavigation : Object {
 	
 	/*
 		This interface is for navigating withing a page,

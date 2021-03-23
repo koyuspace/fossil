@@ -1,4 +1,4 @@
-public interface Dragonstone.Interface.ResourceStore : Object  {
+public interface Fossil.Interface.ResourceStore : Object  {
 	
 	// A resource store is basically a protocol adapter, that takes request
 	// objects and fullfills the requests
@@ -15,5 +15,5 @@ public interface Dragonstone.Interface.ResourceStore : Object  {
 	// the store will then attempt to upload the resource, and if successful
 	// download the servers response
 	
-	public abstract void request(Dragonstone.Request request, string? filepath = null, bool upload = false);
+	public abstract void request(Fossil.Request request, string? filepath = null, bool upload = false);
 }

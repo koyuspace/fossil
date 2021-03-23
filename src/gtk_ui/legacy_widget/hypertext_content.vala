@@ -1,9 +1,9 @@
-public class Dragonstone.GtkUi.LegacyWidget.HypertextContent : Dragonstone.GtkUi.LegacyWidget.TextContent, Dragonstone.Interface.Document.TokenRenderer {
+public class Fossil.GtkUi.LegacyWidget.HypertextContent : Fossil.GtkUi.LegacyWidget.TextContent, Fossil.Interface.Document.TokenRenderer {
 	
 	public HashTable<string,string> uris = new HashTable<string,string>(str_hash,str_equal);
 	public signal void go(string uri, bool alt); //alt is true if the link was ctrl-clicked or middleclicked
 
-	protected Dragonstone.GtkUi.LegacyWidget.LinkPopover? link_popover = null;
+	protected Fossil.GtkUi.LegacyWidget.LinkPopover? link_popover = null;
 	protected Gtk.TextTag default_tag;	
 	protected Gtk.TextTag link_tag;
 	protected Gtk.TextTag link_hover_tag;
@@ -15,9 +15,9 @@ public class Dragonstone.GtkUi.LegacyWidget.HypertextContent : Dragonstone.GtkUi
 	
 	public HashTable<string,Gtk.TextTag> text_tag_cache = new HashTable<string,Gtk.TextTag>(str_hash,str_equal);
 	
-	private Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme? theme = null;
+	private Fossil.GtkUi.Interface.Theming.HypertextViewTheme? theme = null;
 	
-	public HypertextContent(Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme? _theme = null, Dragonstone.GtkUi.LegacyWidget.LinkPopover? link_popover = null){
+	public HypertextContent(Fossil.GtkUi.Interface.Theming.HypertextViewTheme? _theme = null, Fossil.GtkUi.LegacyWidget.LinkPopover? link_popover = null){
 		this.theme = _theme;
 		this.link_popover = link_popover;
 		/*
@@ -28,7 +28,7 @@ public class Dragonstone.GtkUi.LegacyWidget.HypertextContent : Dragonstone.GtkUi
 			if (root_node != null){
 				if (root_node.get_node_type() == OBJECT) {
 					var theme_object = root_node.get_object();
-					theme = Dragonstone.GtkUi.JsonIntegration.Theming.HypertextViewTheme.hyper_text_view_theme_from_json(theme_object);
+					theme = Fossil.GtkUi.JsonIntegration.Theming.HypertextViewTheme.hyper_text_view_theme_from_json(theme_object);
 				}
 			}
 		} catch (Error e) {
@@ -37,7 +37,7 @@ public class Dragonstone.GtkUi.LegacyWidget.HypertextContent : Dragonstone.GtkUi
 		*/
 		
 		if(theme == null){ //fall back to an empty theme
-			theme = new Dragonstone.GtkUi.Theming.HypertextViewTheme();
+			theme = new Fossil.GtkUi.Theming.HypertextViewTheme();
 		}
 		
 		//Register a custom style provider
@@ -178,7 +178,7 @@ public class Dragonstone.GtkUi.LegacyWidget.HypertextContent : Dragonstone.GtkUi
 			if (uri != null){
 				append_link_icon(uri);
 			} else {
-				append_link_icon(""); //dhould fail all tests and just display an arrow
+				append_link_icon(""); //dhould fail all fossils and just display an arrow
 			}
 		} else if (prefix != null && prefix != ""){
 			var prefix_tag = get_themed_tag(prefix_theme_cache_key);
@@ -189,7 +189,7 @@ public class Dragonstone.GtkUi.LegacyWidget.HypertextContent : Dragonstone.GtkUi
 	}
 	
 	  //////////////////////////////////////////////////
-	 // Dragonstone.Interface.Document.TokenRenderer //
+	 // Fossil.Interface.Document.TokenRenderer //
 	//////////////////////////////////////////////////
 	
 	private bool last_had_newline = true;
@@ -201,7 +201,7 @@ public class Dragonstone.GtkUi.LegacyWidget.HypertextContent : Dragonstone.GtkUi
 		}
 	}
 	
-	public void append_token(Dragonstone.Ui.Document.Token token){
+	public void append_token(Fossil.Ui.Document.Token token){
 		if (!token.text.validate(token.text.length)) {
 			append_styled_text("", "invalid_utf_8", token.preformatted, token.inlined, token.level);
 		}
@@ -229,7 +229,7 @@ public class Dragonstone.GtkUi.LegacyWidget.HypertextContent : Dragonstone.GtkUi
 				use_styled_text = false;
 				end_last_paragraph();
 				if (token.uri != null) {
-					var searchfield = new Dragonstone.GtkUi.LegacyWidget.InlineSearch(token.text, token.uri);
+					var searchfield = new Fossil.GtkUi.LegacyWidget.InlineSearch(token.text, token.uri);
 					searchfield.go.connect((s,uri) => {
 						go(uri, false);
 					});
@@ -293,7 +293,7 @@ public class Dragonstone.GtkUi.LegacyWidget.HypertextContent : Dragonstone.GtkUi
 	
 	
 	  ///////////////////////////////////////////////
-	 // Dragonstone.GtkUi.LegacyWidget.HypertextContent //
+	 // Fossil.GtkUi.LegacyWidget.HypertextContent //
 	///////////////////////////////////////////////
 	
 	protected void append_with_tag(string text, Gtk.TextTag tag, bool preformatted, string? uri = null){
@@ -319,7 +319,7 @@ public class Dragonstone.GtkUi.LegacyWidget.HypertextContent : Dragonstone.GtkUi
 	
 	public void append_link_icon(string uri){
 		Gtk.TextIter end_iter;
-		var icon_name = Dragonstone.GtkUi.LegacyUtil.DefaultGtkLinkIconLoader.guess_icon_name_for_uri(uri);
+		var icon_name = Fossil.GtkUi.LegacyUtil.DefaultGtkLinkIconLoader.guess_icon_name_for_uri(uri);
 		var icon_theme = Gtk.IconTheme.get_for_screen(get_screen());
 		if (!icon_theme.has_icon(icon_name)) {
 			icon_name = "go-jump-symbolic";

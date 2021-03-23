@@ -1,14 +1,14 @@
 [Desktop Entry]
-Name=Dragonstone
+Name=Fossil
 Comment=Gopher and Gemini browser
 Keywords=gemini;gopher;browser
-#GenericName=Dragonstone
-Exec=com.gitlab.baschdel.dragonstone %U
+#GenericName=Fossil
+Exec=com.github.koyuspace.fossil %U
 Icon=applications-internet
 Terminal=false
 StartupNotify=true
 Type=Application
 MimeType=text/gopher;text/gemini;
 Categories=Internet;
-X-GNOME-Gettext-Domain=com.gitlab.baschdel.dragonstone
+X-GNOME-Gettext-Domain=com.github.koyupace.fossil
 X-GNOME-UsesNotifications=true

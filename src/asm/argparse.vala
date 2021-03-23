@@ -1,4 +1,4 @@
-public class Dragonstone.Asm.Argparse : Object {
+public class Fossil.Asm.Argparse : Object {
 	
 	public string[] arguments;
 	
@@ -28,7 +28,7 @@ public class Dragonstone.Asm.Argparse : Object {
 		string? text = get_string(argnum);
 		if (text == null){ return _default; }
 		uint64 val;
-		if (Dragonstone.Util.Intparser.try_parse_unsigned(text, out val)){
+		if (Fossil.Util.Intparser.try_parse_unsigned(text, out val)){
 			return val;
 		}
 		return _default;

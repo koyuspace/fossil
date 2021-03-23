@@ -1,4 +1,4 @@
-public class Dragonstone.Util.Intparser {
+public class Fossil.Util.Intparser {
 
 	public static bool try_parse_unsigned(string input,out uint64 integer){
 		bool success = false;	

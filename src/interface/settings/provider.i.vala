@@ -1,4 +1,4 @@
-public interface Dragonstone.Interface.Settings.Provider : Object {
+public interface Fossil.Interface.Settings.Provider : Object {
 	
 	public signal void settings_updated(string path_prefix);
 	
@@ -13,9 +13,9 @@ public interface Dragonstone.Interface.Settings.Provider : Object {
 	
 	//those who use this settings provider can use this one to publish their
 	//reports when something settings related happend
-	public signal void submit_client_report(Dragonstone.Settings.Report report);
+	public signal void submit_client_report(Fossil.Settings.Report report);
 	
 	// this signal is where reports from settings porivders are supposed to be propagated upwards
-	public signal void provider_report(Dragonstone.Settings.Report report);
+	public signal void provider_report(Fossil.Settings.Report report);
 	
 }

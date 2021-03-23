@@ -1,16 +1,16 @@
-public class Dragonstone.Store.GopherWrite : Object, Dragonstone.Interface.ResourceStore {
+public class Fossil.Store.GopherWrite : Object, Fossil.Interface.ResourceStore {
 	
 	//
 	
 	public int32 default_resource_lifetime = 1000*60*10; //10 minutes
-	public Dragonstone.Util.ConnectionHelper connection_helper = new Dragonstone.Util.ConnectionHelper();
+	public Fossil.Util.ConnectionHelper connection_helper = new Fossil.Util.ConnectionHelper();
 	
 	//uriformat:
 	//gopher+write(t|f)://<server>[:<port>]/<encoded_selector>
 	
-	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
+	public void request(Fossil.Request request,string? filepath = null, bool upload = false){
 		// parse uri
-		var parsed_uri = new Dragonstone.Util.ParsedUri(request.uri,false);
+		var parsed_uri = new Fossil.Util.ParsedUri(request.uri,false);
 		if(!(parsed_uri.scheme == "gopher+writet" || parsed_uri.scheme == "gopher+writef")){
 			request.setStatus("error/uri/unknownScheme","gopherwrite only knows gopher+writet:// and gopher+writef://");
 			request.finish();
@@ -52,8 +52,8 @@ public class Dragonstone.Store.GopherWrite : Object, Dragonstone.Interface.Resou
 		}
 		string resource_user_id = "gopherwrite_"+GLib.Uuid.string_random();
 		request.upload_resource.increment_users(resource_user_id);
-		var download_resource = new Dragonstone.Resource(download_resource_uri,filepath,true);
-		var uploader = new Dragonstone.gopherwriteGopher.ResourceUploader(download_resource,request,host,port,query);
+		var download_resource = new Fossil.Resource(download_resource_uri,filepath,true);
+		var uploader = new Fossil.gopherwriteGopher.ResourceUploader(download_resource,request,host,port,query);
 		new Thread<int>(@"gopherwriteGopher resource uploader $host:$port [$query]",() => {
 			uploader.do_upload_resource(connection_helper, default_resource_lifetime,upload_text);
 			request.upload_resource.decrement_users(resource_user_id);
@@ -62,16 +62,16 @@ public class Dragonstone.Store.GopherWrite : Object, Dragonstone.Interface.Resou
 	}
 }
 
-public class Dragonstone.gopherwriteGopher.ResourceUploader : Object {
+public class Fossil.gopherwriteGopher.ResourceUploader : Object {
 	
 	public string host { get; construct; }
 	public uint16 port { get; construct; }
 	public string query { get; construct; }
-	public Dragonstone.Resource? download_resource { get; construct; }
-	public Dragonstone.Resource upload_resource { get; construct; }
-	public Dragonstone.Request request { get; construct; }
+	public Fossil.Resource? download_resource { get; construct; }
+	public Fossil.Resource upload_resource { get; construct; }
+	public Fossil.Request request { get; construct; }
 	
-	public ResourceUploader(Dragonstone.Resource? download_resource, Dragonstone.Request request, string host, uint16 port, string query){
+	public ResourceUploader(Fossil.Resource? download_resource, Fossil.Request request, string host, uint16 port, string query){
 		Object(
 			upload_resource: request.upload_resource,
 			download_resource: download_resource,
@@ -83,7 +83,7 @@ public class Dragonstone.gopherwriteGopher.ResourceUploader : Object {
 	}
 	
 	//upload_text id set to false, upload as blob
-	public void do_upload_resource(Dragonstone.Util.ConnectionHelper connection_helper, int32 default_resource_lifetime, bool upload_text){
+	public void do_upload_resource(Fossil.Util.ConnectionHelper connection_helper, int32 default_resource_lifetime, bool upload_text){
 			
 		request.setStatus("connecting");
 		
@@ -152,10 +152,10 @@ public class Dragonstone.gopherwriteGopher.ResourceUploader : Object {
 			// Receive response
 			request.setStatus("loading");
 			var input_stream = new DataInputStream (conn.input_stream);
-			var helper = new Dragonstone.Util.ResourceFileWriteHelper(request,download_resource.filepath,0);
+			var helper = new Fossil.Util.ResourceFileWriteHelper(request,download_resource.filepath,0);
 			
 			// Receive text
-			success =  Dragonstone.Gopher.ResourceFetcher.readText(input_stream,helper,request);
+			success =  Fossil.Gopher.ResourceFetcher.readText(input_stream,helper,request);
 			if (success){
 				download_resource.add_metadata("text/gopher",@"[gopherwrite] $host:$port | $query");
 			} else {
@@ -175,7 +175,7 @@ public class Dragonstone.gopherwriteGopher.ResourceUploader : Object {
 		return;
 	}
 	
-	public static bool upload_text(OutputStream output_stream, File file, Dragonstone.Request request, int64 size){
+	public static bool upload_text(OutputStream output_stream, File file, Fossil.Request request, int64 size){
 		int64 progress = 0;
 		try {
 			var fileinfo = file.query_info(GLib.FileAttribute.STANDARD_SIZE,GLib.FileQueryInfoFlags.NONE);
@@ -211,7 +211,7 @@ public class Dragonstone.gopherwriteGopher.ResourceUploader : Object {
 	}
 	
 	//this assumes, that the filesize did not change, but this rarely should be an issue
-	public static bool upload_blob(OutputStream output_stream, File file, Dragonstone.Request request, int64 size){
+	public static bool upload_blob(OutputStream output_stream, File file, Fossil.Request request, int64 size){
 		int64 progress = 0;
 		try {
 			var data_input_stream = new DataInputStream (file.read ());

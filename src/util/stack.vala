@@ -1,4 +1,4 @@
-public class Dragonstone.Util.Stack<G> : Object{
+public class Fossil.Util.Stack<G> : Object{
 	
 	public List<G> list = new List<G>();
 	

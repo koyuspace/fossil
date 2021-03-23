@@ -1,4 +1,4 @@
-private class Dragonstone.GtkUi.LegacyWidget.TextEntrySingleLine : Gtk.Bin {
+private class Fossil.GtkUi.LegacyWidget.TextEntrySingleLine : Gtk.Bin {
 
 	public signal void submit(string text);
 	public Gtk.Entry entry;

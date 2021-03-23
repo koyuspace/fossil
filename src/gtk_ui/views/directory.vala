@@ -1,7 +1,7 @@
-public class Dragonstone.GtkUi.View.Directory : Gtk.Box, Dragonstone.GtkUi.Interface.LegacyView {
+public class Fossil.GtkUi.View.Directory : Gtk.Box, Fossil.GtkUi.Interface.LegacyView {
 	
-	private Dragonstone.Request request = null;
-	private Dragonstone.GtkUi.LegacyWidget.Tab tab = null;
+	private Fossil.Request request = null;
+	private Fossil.GtkUi.LegacyWidget.Tab tab = null;
 	private Gtk.ListStore liststore = new Gtk.ListStore(3,typeof(string),typeof(string),typeof(string));
 	private HashTable<string,Gtk.TreeIter?> displayed_uris = new HashTable<string,Gtk.TreeIter?>(str_hash, str_equal);
 	private Gtk.TreeModelFilter filterstore;
@@ -31,10 +31,10 @@ public class Dragonstone.GtkUi.View.Directory : Gtk.Box, Dragonstone.GtkUi.Inter
 		2: icon-name
 	*/
 	
-	public Directory(Dragonstone.Registry.TranslationRegistry? itranslation){
+	public Directory(Fossil.Registry.TranslationRegistry? itranslation){
 		var translation = itranslation;
 		if(translation == null) {
-			var language = new Dragonstone.Registry.TranslationLanguageRegistry();
+			var language = new Fossil.Registry.TranslationLanguageRegistry();
 			language.set_text("view.directory.search.placeholder","Search ...");
 			language.set_text("view.directory.column.uri.head","Uri");
 			language.set_text("view.directory.colum.users.filename","Filename");
@@ -194,7 +194,7 @@ public class Dragonstone.GtkUi.View.Directory : Gtk.Box, Dragonstone.GtkUi.Inter
 	
 	private void go_path() {
 		if (this.root_uri != null) {
-			this.tab.go_to_uri(Dragonstone.Util.Uri.join(this.root_uri,this.path_entry.text));
+			this.tab.go_to_uri(Fossil.Util.Uri.join(this.root_uri,this.path_entry.text));
 		} else {
 			this.tab.go_to_uri(this.path_entry.text);
 		}
@@ -262,8 +262,8 @@ public class Dragonstone.GtkUi.View.Directory : Gtk.Box, Dragonstone.GtkUi.Inter
 		return urival.get_string();
 	}
 	
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
-		if (!(request.status == "success" && request.resource.mimetype == "text/dragonstone-directory")) {return false;}
+	public bool display_resource(Fossil.Request request, Fossil.GtkUi.LegacyWidget.Tab tab, bool as_subview){
+		if (!(request.status == "success" && request.resource.mimetype == "text/fossil-directory")) {return false;}
 		this.request = request;
 		this.tab = tab;
   	var input_stream = tab.get_file_content_stream();
@@ -289,7 +289,7 @@ public class Dragonstone.GtkUi.View.Directory : Gtk.Box, Dragonstone.GtkUi.Inter
 		if (request == null){
 			return false;
 		}else{
-			return request.status == "success" && request.resource.mimetype == "text/dragonstone-directory";
+			return request.status == "success" && request.resource.mimetype == "text/fossil-directory";
 		}
 	}
 	

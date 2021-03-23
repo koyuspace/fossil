@@ -1,9 +1,9 @@
-public class Dragonstone.Store.Gemini : Object, Dragonstone.Interface.ResourceStore {
+public class Fossil.Store.Gemini : Object, Fossil.Interface.ResourceStore {
 	
 	public int32 default_resource_lifetime = 1000*60*10; //10 minutes
-	public Dragonstone.Util.ConnectionHelper connection_helper = new Dragonstone.Util.ConnectionHelper();
+	public Fossil.Util.ConnectionHelper connection_helper = new Fossil.Util.ConnectionHelper();
 	
-	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
+	public void request(Fossil.Request request,string? filepath = null, bool upload = false){
 		if (filepath == null){
 			request.setStatus("error/internal","Filepath required!");
 			request.finish();
@@ -15,7 +15,7 @@ public class Dragonstone.Store.Gemini : Object, Dragonstone.Interface.ResourceSt
 			return;
 		}
 		// parse uri
-		var parsed_uri = new Dragonstone.Util.ParsedUri(request.uri);
+		var parsed_uri = new Fossil.Util.ParsedUri(request.uri);
 		
 		if(!(parsed_uri.scheme == "gemini" || parsed_uri.scheme == null)){
 			request.setStatus("error/uri/unknownScheme","Gemini only knows gemini://");
@@ -43,8 +43,8 @@ public class Dragonstone.Store.Gemini : Object, Dragonstone.Interface.ResourceSt
 		
 		//debugging information
 		print(@"Gemini Request:\n  Host:  $host\n  Port:  $port\n  Uri:   $(request.uri)\n");
-		var resource = new Dragonstone.Resource(request.uri,filepath,true);
-		var fetcher = new Dragonstone.GeminiResourceFetcher(resource,request,host,port);
+		var resource = new Fossil.Resource(request.uri,filepath,true);
+		var fetcher = new Fossil.GeminiResourceFetcher(resource,request,host,port);
 		new Thread<int>(@"Gemini resource fetcher $host:$port [$(request.uri)]",() => {
 			fetcher.fetchResource(connection_helper, default_resource_lifetime);
 			return 0;
@@ -54,15 +54,15 @@ public class Dragonstone.Store.Gemini : Object, Dragonstone.Interface.ResourceSt
 	
 }
 
-private class Dragonstone.GeminiResourceFetcher : Object {
+private class Fossil.GeminiResourceFetcher : Object {
 	
 	public string host { get; construct; }
 	public uint16 port { get; construct; }
 	public string uri { get; construct; }
-	public Dragonstone.Resource resource { get; construct; }
-	public Dragonstone.Request request { get; construct; }
+	public Fossil.Resource resource { get; construct; }
+	public Fossil.Request request { get; construct; }
 	
-	public GeminiResourceFetcher(Dragonstone.Resource resource,Dragonstone.Request request,string host,uint16 port){
+	public GeminiResourceFetcher(Fossil.Resource resource,Fossil.Request request,string host,uint16 port){
 		Object(
 			resource: resource,
 			request: request,
@@ -72,7 +72,7 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 		);
 	}
 	
-	public void fetchResource(Dragonstone.Util.ConnectionHelper connection_helper, int32 default_resource_lifetime){
+	public void fetchResource(Fossil.Util.ConnectionHelper connection_helper, int32 default_resource_lifetime){
 		
 		request.setStatus("connecting");
 		
@@ -90,7 +90,7 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 			request.setStatus("loading");
 			
 			bool beyond_header = false;
-			Dragonstone.Util.ResourceFileWriteHelper? helper = null;
+			Fossil.Util.ResourceFileWriteHelper? helper = null;
 			
 			try{
 				var statusline = input_stream.read_line(null);
@@ -131,7 +131,7 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 				request.arguments.set("gemini.metaline",statusline.substring(3));
 				
 				if (statuscode/10==1){
-					helper = new Dragonstone.Util.ResourceFileWriteHelper(request,resource.filepath,0);
+					helper = new Fossil.Util.ResourceFileWriteHelper(request,resource.filepath,0);
 					helper.appendString(metaline); //input prompt
 					resource.add_metadata("gemini/input",metaline);
 					if (helper.closed){return;} //error or cancelled
@@ -143,7 +143,7 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 					}
 					resource.add_metadata(metaline/*mimetype*/,@"[gemini] $uri");
 					resource.valid_until = resource.timestamp+default_resource_lifetime;
-					helper = new Dragonstone.Util.ResourceFileWriteHelper(request,resource.filepath,0);
+					helper = new Fossil.Util.ResourceFileWriteHelper(request,resource.filepath,0);
 					read_bytes(input_stream,helper,request);
 					if (helper.error){
 						request.finish();
@@ -152,7 +152,7 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 					helper.close();
 					request.setResource(resource,"gemini");
 				} else if (statuscode/10==3){
-					var joined_uri = Dragonstone.Util.Uri.join(uri,metaline);
+					var joined_uri = Fossil.Util.Uri.join(uri,metaline);
 					if (joined_uri == null){joined_uri = uri;}
 					request.setStatus("redirect/temporary",joined_uri);
 					request.finish(true);
@@ -205,7 +205,7 @@ private class Dragonstone.GeminiResourceFetcher : Object {
 		return;
 	}
 	
-	public static void read_bytes(DataInputStream input_stream, Dragonstone.Util.ResourceFileWriteHelper helper, Dragonstone.Request request) throws Error{
+	public static void read_bytes(DataInputStream input_stream, Fossil.Util.ResourceFileWriteHelper helper, Fossil.Request request) throws Error{
 		//print("[debug] readbytes start\n");
 		uint64 counter = 0;
 		while (true){

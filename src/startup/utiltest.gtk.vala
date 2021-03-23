@@ -1,10 +1,10 @@
-public class Dragonstone.Startup.Utiltest.Gtk {
-	public static void setup_views(Dragonstone.SuperRegistry super_registry){
-		var view_registry = (super_registry.retrieve("gtk.views") as Dragonstone.GtkUi.LegacyViewRegistry);
+public class Fossil.Startup.Utilfossil.Gtk {
+	public static void setup_views(Fossil.SuperRegistry super_registry){
+		var view_registry = (super_registry.retrieve("gtk.views") as Fossil.GtkUi.LegacyViewRegistry);
 		if (view_registry != null){
-			print("[startup][utiltest] setup_views()\n");
-			view_registry.add_view("uri_merge_test",() => { return new Dragonstone.GtkUi.View.UriMergeTest(); });
-			view_registry.add_rule(new Dragonstone.GtkUi.LegacyViewRegistryRule("interactive/uri_merge_test","uri_merge_test"));
+			print("[startup][utilfossil] setup_views()\n");
+			view_registry.add_view("uri_merge_fossil",() => { return new Fossil.GtkUi.View.UriMergeInternal(); });
+			view_registry.add_rule(new Fossil.GtkUi.LegacyViewRegistryRule("interactive/uri_merge_fossil","uri_merge_fossil"));
 		}
 	}
 }

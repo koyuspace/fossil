@@ -1,4 +1,4 @@
-public class Dragonstone.Util.Uri {
+public class Fossil.Util.Uri {
 	
 	public static string join(string baseuri,string relativeuri){
 		if (is_absulute(relativeuri)){ //alternative: turn rel into base and make rel empty
@@ -74,7 +74,7 @@ public class Dragonstone.Util.Uri {
 	}
 	
 	public static string join_paths(string basepath,string relativepath){
-		Dragonstone.Util.Stack<string> pathtokens = new Dragonstone.Util.Stack<string>();
+		Fossil.Util.Stack<string> pathtokens = new Fossil.Util.Stack<string>();
 		if (basepath != ""){
 			foreach(string token in basepath.split("/")){
 				if (token == "."){ //ignore
@@ -147,7 +147,7 @@ public class Dragonstone.Util.Uri {
 	
 }
 
-public class Dragonstone.Util.ParsedUri : Object {
+public class Fossil.Util.ParsedUri : Object {
 	private string? _uri = null;
 	private string? _scheme = null;
 	private string? _authority = null;
@@ -509,7 +509,7 @@ public class Dragonstone.Util.ParsedUri : Object {
 	public uint16? get_port_number(){
 		if (this.port != null){
 			uint64 result;
-			if (Dragonstone.Util.Intparser.try_parse_unsigned(this.port,out result)) {
+			if (Fossil.Util.Intparser.try_parse_unsigned(this.port,out result)) {
 				if (result >= 0 && result <= uint16.MAX){
 					return (uint16) result;
 				}

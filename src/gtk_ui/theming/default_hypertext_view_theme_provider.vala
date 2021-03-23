@@ -1,32 +1,32 @@
-public class Dragonstone.GtkUi.Theming.DefaultHypertextViewThemeProvider : Dragonstone.GtkUi.Interface.Theming.HypertextViewThemeProvider, Object {
+public class Fossil.GtkUi.Theming.DefaultHypertextViewThemeProvider : Fossil.GtkUi.Interface.Theming.HypertextViewThemeProvider, Object {
 	
-	private Dragonstone.GtkUi.Interface.Theming.HypertextThemeLoader? theme_loader = null;
-	private Dragonstone.GtkUi.Interface.HypertextThemeRuleProvider? rule_provider = null;
-	private Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme default_theme;
+	private Fossil.GtkUi.Interface.Theming.HypertextThemeLoader? theme_loader = null;
+	private Fossil.GtkUi.Interface.HypertextThemeRuleProvider? rule_provider = null;
+	private Fossil.GtkUi.Interface.Theming.HypertextViewTheme default_theme;
 	
-	public DefaultHypertextViewThemeProvider(Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme default_theme){
+	public DefaultHypertextViewThemeProvider(Fossil.GtkUi.Interface.Theming.HypertextViewTheme default_theme){
 		this.default_theme = default_theme;
 	}
 	
-	public void set_theme_loader(Dragonstone.GtkUi.Interface.Theming.HypertextThemeLoader theme_loader){
+	public void set_theme_loader(Fossil.GtkUi.Interface.Theming.HypertextThemeLoader theme_loader){
 		this.theme_loader = theme_loader;
 	}
 	
-	public void set_rule_provider(Dragonstone.GtkUi.Interface.HypertextThemeRuleProvider rule_provider){
+	public void set_rule_provider(Fossil.GtkUi.Interface.HypertextThemeRuleProvider rule_provider){
 		this.rule_provider = rule_provider;
 	}
 	
 	  ////////////////////////////////////////////////////////////////////
-	 // Dragonstone.GtkUi.Interface.Theming.HypertextViewThemeProvider //
+	 // Fossil.GtkUi.Interface.Theming.HypertextViewThemeProvider //
 	////////////////////////////////////////////////////////////////////
 	
-	public Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme? get_theme(string content_type, string uri){
-		print(@"[Dragonstone.GtkUi.Theming.DefaultHypertextViewThemeProvider] Looking up theme for $uri $content_type\n");
+	public Fossil.GtkUi.Interface.Theming.HypertextViewTheme? get_theme(string content_type, string uri){
+		print(@"[Fossil.GtkUi.Theming.DefaultHypertextViewThemeProvider] Looking up theme for $uri $content_type\n");
 		if (theme_loader == null && rule_provider == null){
 			return null;
 		}
-		var parsed_uri = new Dragonstone.Util.ParsedUri(uri);
-		Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme? best_theme = null;
+		var parsed_uri = new Fossil.Util.ParsedUri(uri);
+		Fossil.GtkUi.Interface.Theming.HypertextViewTheme? best_theme = null;
 		int best_score = 0;
 		int score = 0;
 		rule_provider.foreach_relevant_rule(content_type, uri, (rule) => {
@@ -45,7 +45,7 @@ public class Dragonstone.GtkUi.Theming.DefaultHypertextViewThemeProvider : Drago
 		return best_theme;
 	}
 	
-	public Dragonstone.GtkUi.Interface.Theming.HypertextViewTheme get_default_theme(){
+	public Fossil.GtkUi.Interface.Theming.HypertextViewTheme get_default_theme(){
 		return default_theme;
 	}
 	

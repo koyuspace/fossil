@@ -1,22 +1,22 @@
-public class Dragonstone.Session.Default : Dragonstone.Interface.Session, Object {
-	private Dragonstone.Interface.ResourceStore backend;
-	private Dragonstone.Store.Cache cache = new Dragonstone.Store.Cache();
+public class Fossil.Session.Default : Fossil.Interface.Session, Object {
+	private Fossil.Interface.ResourceStore backend;
+	private Fossil.Store.Cache cache = new Fossil.Store.Cache();
 	private string _name = "Default";
 	
-	public Default(Dragonstone.Interface.ResourceStore backend){
+	public Default(Fossil.Interface.ResourceStore backend){
 		this.backend = backend;
 	}
 	
-	public Dragonstone.Request make_download_request(string uri, bool reload=false){
+	public Fossil.Request make_download_request(string uri, bool reload=false){
 		if (uri == "about:cache"){
-			var request = new Dragonstone.Request(uri,reload);
+			var request = new Fossil.Request(uri,reload);
 			request.setStatus("interactive/cache");
 			request.finish();
 			return request;
 		}
 		print(@"[session.default] making request to $uri\n");
-		Dragonstone.Request? request = null;
-		request = new Dragonstone.Request(uri,reload);
+		Fossil.Request? request = null;
+		request = new Fossil.Request(uri,reload);
 		if (!reload){
 			print("[session.default] checking cache\n");
 			if (cache.can_serve_request(request.uri)){
@@ -31,15 +31,15 @@ public class Dragonstone.Session.Default : Dragonstone.Interface.Session, Object
 		return request;
 	}
 	
-	public Dragonstone.Request make_upload_request(string uri, Dragonstone.Resource resource, out string upload_urn = null){
+	public Fossil.Request make_upload_request(string uri, Fossil.Resource resource, out string upload_urn = null){
 		upload_urn = "urn:upload:"+GLib.Uuid.string_random();
-		var request = new Dragonstone.Request(uri).upload(resource,upload_urn);
+		var request = new Fossil.Request(uri).upload(resource,upload_urn);
 		request.finished.connect(reqest_finished_cachehook);
 		backend.request(request,null,true);
 		return request;
 	}
 	
-	private void reqest_finished_cachehook(Dragonstone.Request outrequest){
+	private void reqest_finished_cachehook(Fossil.Request outrequest){
 		if (outrequest.resource != null){
 			if (outrequest.resource.valid_until != 0){
 				cache.put_resource(outrequest.resource);
@@ -48,16 +48,16 @@ public class Dragonstone.Session.Default : Dragonstone.Interface.Session, Object
 		}
 	}
 	
-	public bool set_default_backend(Dragonstone.Interface.ResourceStore store){
+	public bool set_default_backend(Fossil.Interface.ResourceStore store){
 		backend = store;
 		return true;
 	}
 	
-	public Dragonstone.Interface.ResourceStore? get_default_backend(){
+	public Fossil.Interface.ResourceStore? get_default_backend(){
 		return backend;
 	}
 	
-	public Dragonstone.Interface.Cache? get_cache() {
+	public Fossil.Interface.Cache? get_cache() {
 		return cache;
 	}
 	

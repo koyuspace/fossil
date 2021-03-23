@@ -1,9 +1,9 @@
-public class Dragonstone.Store.Finger : Object, Dragonstone.Interface.ResourceStore {
+public class Fossil.Store.Finger : Object, Fossil.Interface.ResourceStore {
 	
 	public int32 default_resource_lifetime = 1000*60*10; //10 minutes
-	public Dragonstone.Util.ConnectionHelper connection_helper = new Dragonstone.Util.ConnectionHelper();
+	public Fossil.Util.ConnectionHelper connection_helper = new Fossil.Util.ConnectionHelper();
 	
-	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
+	public void request(Fossil.Request request,string? filepath = null, bool upload = false){
 		if (filepath == null){
 			request.setStatus("error/internal","Filepath required!");
 			request.finish();
@@ -15,7 +15,7 @@ public class Dragonstone.Store.Finger : Object, Dragonstone.Interface.ResourceSt
 			return;
 		}
 		// parse uri
-		var parsed_uri = new Dragonstone.Util.ParsedUri(request.uri);
+		var parsed_uri = new Fossil.Util.ParsedUri(request.uri);
 		
 		if(!(parsed_uri.scheme == "finger" || parsed_uri.scheme == null)){
 			request.setStatus("error/uri/unknownScheme","Finger only knows finger://");
@@ -44,8 +44,8 @@ public class Dragonstone.Store.Finger : Object, Dragonstone.Interface.ResourceSt
 		
 		//debugging information
 		print(@"Finger Request:\n  Host:  $host\n  Port:  $port\n  Query: $query\n");
-		var resource = new Dragonstone.Resource(request.uri,filepath,true);
-		var fetcher = new Dragonstone.FingerResourceFetcher(resource,request,host,port,query,"text/plain");
+		var resource = new Fossil.Resource(request.uri,filepath,true);
+		var fetcher = new Fossil.FingerResourceFetcher(resource,request,host,port,query,"text/plain");
 		new Thread<int>(@"Finger resource fetcher $host:$port [$query]",() => {
 			fetcher.fetchResource(connection_helper, default_resource_lifetime);
 			return 0;
@@ -53,16 +53,16 @@ public class Dragonstone.Store.Finger : Object, Dragonstone.Interface.ResourceSt
 	}
 }
 
-private class Dragonstone.FingerResourceFetcher : Object {
+private class Fossil.FingerResourceFetcher : Object {
 	
 	public string host { get; construct; }
 	public uint16 port { get; construct; }
 	public string query { get; construct; }
 	public string mimetype { get; construct; }
-	public Dragonstone.Resource resource { get; construct; }
-	public Dragonstone.Request request { get; construct; }
+	public Fossil.Resource resource { get; construct; }
+	public Fossil.Request request { get; construct; }
 	
-	public FingerResourceFetcher(Dragonstone.Resource resource,Dragonstone.Request request,string host,uint16 port,string query,string mimetype){
+	public FingerResourceFetcher(Fossil.Resource resource,Fossil.Request request,string host,uint16 port,string query,string mimetype){
 		Object(
 			resource: resource,
 			request: request,
@@ -73,7 +73,7 @@ private class Dragonstone.FingerResourceFetcher : Object {
 		);
 	}
 	
-	public void fetchResource(Dragonstone.Util.ConnectionHelper connection_helper, int32 default_resource_lifetime){
+	public void fetchResource(Fossil.Util.ConnectionHelper connection_helper, int32 default_resource_lifetime){
 			
 		request.setStatus("connecting");
 		var conn = connection_helper.connect_to_server(host,port,request,false);
@@ -88,7 +88,7 @@ private class Dragonstone.FingerResourceFetcher : Object {
 			
 			// Receive response
 			var input_stream = new DataInputStream (conn.input_stream);
-			var helper = new Dragonstone.Util.ResourceFileWriteHelper(request,resource.filepath,0);
+			var helper = new Fossil.Util.ResourceFileWriteHelper(request,resource.filepath,0);
 			try{
 				readBytes(input_stream,helper);
 				resource.add_metadata(mimetype,@"[finger] $host:$port | $query");
@@ -109,7 +109,7 @@ private class Dragonstone.FingerResourceFetcher : Object {
 		return;
 	}
 	
-	public void readBytes(DataInputStream input_stream,Dragonstone.Util.ResourceFileWriteHelper helper) throws Error{
+	public void readBytes(DataInputStream input_stream,Fossil.Util.ResourceFileWriteHelper helper) throws Error{
 			uint64 counter = 0;
 			while (true){
 				if(request.cancelled){

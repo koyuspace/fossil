@@ -1,4 +1,4 @@
-public interface Dragonstone.Registry.TranslationRegistry : Object {
+public interface Fossil.Registry.TranslationRegistry : Object {
 	
 	//returns "?_"+text_id if no translation is known
 	public abstract string get_localized_string(string text_id);
@@ -11,7 +11,7 @@ public interface Dragonstone.Registry.TranslationRegistry : Object {
 	
 }
 
-public class Dragonstone.Registry.TranslationMultiplexerRegistry : Object, Dragonstone.Registry.TranslationRegistry {
+public class Fossil.Registry.TranslationMultiplexerRegistry : Object, Fossil.Registry.TranslationRegistry {
 	
 	private HashTable<string,TranslationRegistry> languages = new HashTable<string,TranslationRegistry>(str_hash, str_equal);
 	
@@ -37,7 +37,7 @@ public class Dragonstone.Registry.TranslationMultiplexerRegistry : Object, Drago
 	
 }
 
-public class Dragonstone.Registry.TranslationLanguageRegistry : Object, Dragonstone.Registry.TranslationRegistry {
+public class Fossil.Registry.TranslationLanguageRegistry : Object, Fossil.Registry.TranslationRegistry {
 	
 	private HashTable<string,string> texts = new HashTable<string,string>(str_hash, str_equal);
 	

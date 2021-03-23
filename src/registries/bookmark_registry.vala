@@ -1,7 +1,7 @@
 //return true to keep going
-public delegate bool Dragonstone.Registry.BookmarkRegistryIterator(BookmarkRegistryEntry entry);
+public delegate bool Fossil.Registry.BookmarkRegistryIterator(BookmarkRegistryEntry entry);
 
-public class Dragonstone.Registry.BookmarkRegistry : Object {
+public class Fossil.Registry.BookmarkRegistry : Object {
 	protected List<BookmarkRegistryEntry> entrys = new List<BookmarkRegistryEntry>();
 	
 	public signal void bookmark_added(BookmarkRegistryEntry bookmark);
@@ -24,7 +24,7 @@ public class Dragonstone.Registry.BookmarkRegistry : Object {
 		bookmark_removed(bookmark);
 	}
 	
-	public void iterate_over_all_bookmarks(Dragonstone.Registry.BookmarkRegistryIterator callback){
+	public void iterate_over_all_bookmarks(Fossil.Registry.BookmarkRegistryIterator callback){
 		foreach (var entry in entrys){
 			if (!callback(entry)){
 				break;
@@ -67,7 +67,7 @@ public class Dragonstone.Registry.BookmarkRegistry : Object {
 	
 }
 
-public class Dragonstone.Registry.BookmarkRegistryEntry : Object {
+public class Fossil.Registry.BookmarkRegistryEntry : Object {
 	public string name;
 	public string uri;
 	public string uid;

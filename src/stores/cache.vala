@@ -1,9 +1,9 @@
-public class Dragonstone.Store.Cache : Object, Dragonstone.Interface.ResourceStore, Dragonstone.Interface.Cache{
+public class Fossil.Store.Cache : Object, Fossil.Interface.ResourceStore, Fossil.Interface.Cache{
 	
-	public HashTable<string,Dragonstone.Resource> cached_resources { get; protected set; }
+	public HashTable<string,Fossil.Resource> cached_resources { get; protected set; }
 	
 	construct {
-		cached_resources = new HashTable<string,Dragonstone.Resource>(str_hash, str_equal);
+		cached_resources = new HashTable<string,Fossil.Resource>(str_hash, str_equal);
 		Timeout.add(1000*60*5,() => { //clean cache
 			print("[cache] Cleaning Up!\n");
 			clean();
@@ -11,7 +11,7 @@ public class Dragonstone.Store.Cache : Object, Dragonstone.Interface.ResourceSto
 		},Priority.LOW);
 	}
 	
-	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
+	public void request(Fossil.Request request,string? filepath = null, bool upload = false){
 		if (upload){
 			request.setStatus("error/noupload","Uploding not supported");
 			request.finish();
@@ -38,7 +38,7 @@ public class Dragonstone.Store.Cache : Object, Dragonstone.Interface.ResourceSto
 		return true;
 	}
 	
-	public void put_resource(Dragonstone.Resource resource){
+	public void put_resource(Fossil.Resource resource){
 		if (will_cache_resource(resource)){
 			print(@"[cache] put resource $(resource.uri) fully loaded at $(resource.timestamp) valid until $(resource.valid_until)\n");
 			resource.increment_users("cache");
@@ -50,7 +50,7 @@ public class Dragonstone.Store.Cache : Object, Dragonstone.Interface.ResourceSto
 		}
 	}
 	
-	private bool will_cache_resource(Dragonstone.Resource resource){
+	private bool will_cache_resource(Fossil.Resource resource){
 		if(resource.valid_until == 0){ return false; }
 		if(!resource.is_temporary){ return false; } //permanent resoureces are already in the filesystem and fetched fast
 		if(resource.filepath == null){ return false; }
@@ -59,7 +59,7 @@ public class Dragonstone.Store.Cache : Object, Dragonstone.Interface.ResourceSto
 	
 	public void erase(){
 		lock (cached_resources){
-			foreach (Dragonstone.Resource resource in cached_resources.get_values()){
+			foreach (Fossil.Resource resource in cached_resources.get_values()){
 				resource.decrement_users("cache");
 			}
 			cached_resources.remove_all();

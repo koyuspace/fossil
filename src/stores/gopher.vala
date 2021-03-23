@@ -1,25 +1,25 @@
-public class Dragonstone.Store.Gopher : Object, Dragonstone.Interface.ResourceStore {
+public class Fossil.Store.Gopher : Object, Fossil.Interface.ResourceStore {
 	
-	private Dragonstone.Registry.MimetypeGuesser mimeguesser;
-	private Dragonstone.Registry.GopherTypeRegistry type_registry;
+	private Fossil.Registry.MimetypeGuesser mimeguesser;
+	private Fossil.Registry.GopherTypeRegistry type_registry;
 	public int32 default_resource_lifetime = 1000*60*10; //10 minutes
-	public Dragonstone.Util.ConnectionHelper connection_helper = new Dragonstone.Util.ConnectionHelper();
+	public Fossil.Util.ConnectionHelper connection_helper = new Fossil.Util.ConnectionHelper();
 	
 	public Gopher(){
-		mimeguesser = new Dragonstone.Registry.MimetypeGuesser.default_configuration();
-		type_registry = new Dragonstone.Registry.GopherTypeRegistry.default_configuration();
+		mimeguesser = new Fossil.Registry.MimetypeGuesser.default_configuration();
+		type_registry = new Fossil.Registry.GopherTypeRegistry.default_configuration();
 	}
 	
-	public Gopher.with_mimeguesser(Dragonstone.Registry.MimetypeGuesser mimeguesser,Dragonstone.Registry.GopherTypeRegistry? type_registry = null){
+	public Gopher.with_mimeguesser(Fossil.Registry.MimetypeGuesser mimeguesser,Fossil.Registry.GopherTypeRegistry? type_registry = null){
 		this.mimeguesser = mimeguesser;
 		if (type_registry != null) {
 			this.type_registry = type_registry;
 		} else {
-			this.type_registry = new Dragonstone.Registry.GopherTypeRegistry.default_configuration();
+			this.type_registry = new Fossil.Registry.GopherTypeRegistry.default_configuration();
 		}
 	}
 	
-	public void request(Dragonstone.Request request,string? filepath = null, bool upload = false){
+	public void request(Fossil.Request request,string? filepath = null, bool upload = false){
 		if (filepath == null){
 			request.setStatus("error/internal","Filepath required!");
 			request.finish();
@@ -31,7 +31,7 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.Interface.ResourceSt
 			return;
 		}
 		// parse uri
-		var parsed_uri = new Dragonstone.Util.ParsedUri(request.uri,false);
+		var parsed_uri = new Fossil.Util.ParsedUri(request.uri,false);
 		
 		if(!(parsed_uri.scheme == "gopher" || parsed_uri.scheme == null)){
 			request.setStatus("error/uri/unknownScheme","Gopher only knows gopher://");
@@ -76,7 +76,7 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.Interface.ResourceSt
 			request.finish();
 			return;
 		}
-		var stripped_uri = Dragonstone.Util.Uri.strip_querys(request.uri);
+		var stripped_uri = Fossil.Util.Uri.strip_querys(request.uri);
 		string? mimetype = typeinfo.mimetype;
 		if (typeinfo.mimeyte_is_suggestion || mimetype == null) {
 			mimetype = mimeguesser.get_closest_match(stripped_uri,mimetype);
@@ -84,8 +84,8 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.Interface.ResourceSt
 		
 		//debugging information
 		print(@"Gopher Request:\n  Host:  $host\n  Port:  $port\n  Type:  $gophertype\n  Query: $query\n");
-		var resource = new Dragonstone.Resource(request.uri,filepath,true);
-		var fetcher = new Dragonstone.Gopher.ResourceFetcher(resource,request,host,port,query,mimetype);
+		var resource = new Fossil.Resource(request.uri,filepath,true);
+		var fetcher = new Fossil.Gopher.ResourceFetcher(resource,request,host,port,query,mimetype);
 		new Thread<int>(@"Gopher resource fetcher $host:$port [$gophertype|$query]",() => {
 			fetcher.fetchResource(connection_helper, default_resource_lifetime);
 			return 0;
@@ -93,16 +93,16 @@ public class Dragonstone.Store.Gopher : Object, Dragonstone.Interface.ResourceSt
 	}
 }
 
-public class Dragonstone.Gopher.ResourceFetcher : Object {
+public class Fossil.Gopher.ResourceFetcher : Object {
 	
 	public string host { get; construct; }
 	public uint16 port { get; construct; }
 	public string query { get; construct; }
 	public string mimetype { get; construct; }
-	public Dragonstone.Resource resource { get; construct; }
-	public Dragonstone.Request request { get; construct; }
+	public Fossil.Resource resource { get; construct; }
+	public Fossil.Request request { get; construct; }
 	
-	public ResourceFetcher(Dragonstone.Resource resource,Dragonstone.Request request,string host,uint16 port,string query,string mimetype){
+	public ResourceFetcher(Fossil.Resource resource,Fossil.Request request,string host,uint16 port,string query,string mimetype){
 		Object(
 			resource: resource,
 			request: request,
@@ -113,7 +113,7 @@ public class Dragonstone.Gopher.ResourceFetcher : Object {
 		);
 	}
 	
-	public void fetchResource(Dragonstone.Util.ConnectionHelper connection_helper, int32 default_resource_lifetime){
+	public void fetchResource(Fossil.Util.ConnectionHelper connection_helper, int32 default_resource_lifetime){
 			
 		request.setStatus("connecting");
 		
@@ -132,7 +132,7 @@ public class Dragonstone.Gopher.ResourceFetcher : Object {
 			
 			// Receive response
 			var input_stream = new DataInputStream (conn.input_stream);
-			var helper = new Dragonstone.Util.ResourceFileWriteHelper(request,resource.filepath,0);
+			var helper = new Fossil.Util.ResourceFileWriteHelper(request,resource.filepath,0);
 			
 			if (mimetype.has_prefix("text/")){
 				// Receive text
@@ -164,7 +164,7 @@ public class Dragonstone.Gopher.ResourceFetcher : Object {
 		return;
 	}
 	
-	public static bool readText(DataInputStream input_stream,Dragonstone.Util.ResourceFileWriteHelper helper, Dragonstone.Request request){
+	public static bool readText(DataInputStream input_stream,Fossil.Util.ResourceFileWriteHelper helper, Fossil.Request request){
 		uint64 counter = 0;
 		
 		try{
@@ -199,7 +199,7 @@ public class Dragonstone.Gopher.ResourceFetcher : Object {
 		return true;
 	}
 	
-	public void readBytes(DataInputStream input_stream, Dragonstone.Util.ResourceFileWriteHelper helper, Dragonstone.Request request) throws Error{
+	public void readBytes(DataInputStream input_stream, Fossil.Util.ResourceFileWriteHelper helper, Fossil.Request request) throws Error{
 			uint64 counter = 0;
 			while (true){
 				if(request.cancelled){

@@ -1,6 +1,6 @@
-public class Dragonstone.AsmInit.Finger.Store {
-	public static void register_initalizer(string name,Dragonstone.Asm.SimpleAsmObject object){
-		var desc = new Dragonstone.Asm.SuperRegistrySimpleConstructorFunctionDescriptor(
+public class Fossil.AsmInit.Finger.Store {
+	public static void register_initalizer(string name,Fossil.Asm.SimpleAsmObject object){
+		var desc = new Fossil.Asm.SuperRegistrySimpleConstructorFunctionDescriptor(
 			name,
 			constr
 		);
@@ -8,6 +8,6 @@ public class Dragonstone.AsmInit.Finger.Store {
 	}
 	
 	private static Object constr(){
-		return new Dragonstone.Store.Finger();
+		return new Fossil.Store.Finger();
 	}
 }

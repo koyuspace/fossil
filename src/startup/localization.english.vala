@@ -1,6 +1,6 @@
-public class Dragonstone.Startup.Localization.English {
+public class Fossil.Startup.Localization.English {
 	public static void setup_language(SuperRegistry super_registry){
-		var language = new Dragonstone.Registry.TranslationLanguageRegistry();
+		var language = new Fossil.Registry.TranslationLanguageRegistry();
 		//add all words, phrases, etc.
 		//general actions
 		language.set_text("action.cancel","Cancel");
@@ -12,12 +12,13 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("tab.error.no_view.message","I'm sorry, but I don't know how to show that to you\nPlease report this to the developer if this is a release version (or you think this really shouldn't have happened)!");
 		language.set_text("tab.error.wrong_view.message","I think i chose the wrong view ...\nPlease report this to the developer!");
 		//window
-		language.set_text("window.title","Project Dragonstone");
+		language.set_text("window.title","Project Fossil");
 		language.set_text("window.main_menu.show_tabs.label","Show tabs");
 		language.set_text("window.main_menu.prefer_source_view.label","View Page Source");
 		language.set_text("window.main_menu.cache.label","Cache");
 		language.set_text("window.main_menu.session.label","Session");
 		language.set_text("window.main_menu.settings.label","Settings");
+		language.set_text("window.main_menu.about.label", "About");
 		language.set_text("window.main_menu.close_tab.label","Close tab");
 		language.set_text("window.main_menu.open_uri_externally.label","Open in external browser");
 		language.set_text("window.main_menu.open_file_externally.label","Open in external viewer");
@@ -51,11 +52,11 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("view.directory.column.uri.head","Uri");
 		language.set_text("view.directory.column.filename.head","Filename");
 		//Download
-		language.set_text("view.dragonstone.download.title","Downloaded!");
-		language.set_text("view.dragonstone.download.save_button.label","Save");
-		language.set_text("view.dragonstone.download.open_button.label","Open in external viewer");
+		language.set_text("view.fossil.download.title","Downloaded!");
+		language.set_text("view.fossil.download.save_button.label","Save");
+		language.set_text("view.fossil.download.open_button.label","Open in external viewer");
 		//Redirect
-		language.set_text("view.dragonstone.redirect.title","Redirect to");
+		language.set_text("view.fossil.redirect.title","Redirect to");
 		//Loading view
 		language.set_text("view.loading.headline_default","LOADING");
 		language.set_text("view.loading.headline_connecting","CONNECTING");
@@ -107,21 +108,21 @@ public class Dragonstone.Startup.Localization.English {
 		language.set_text("view.error.label","Something went wrong ...");
 		language.set_text("view.error/resourceUnavaiable/temporary.label","Reource not found");
 		language.set_text("view.error/resourceUnwavaiable/temporary.sublabel","Should be back soon™️");
-		language.set_text("view.dragonstone.unknown_uri_scheme.title","Unknown uri scheme");
+		language.set_text("view.fossil.unknown_uri_scheme.title","Unknown uri scheme");
 		language.set_text("view.meow.label","Meow!");
 		language.set_text("view.meow.sublabel","");
 		language.set_text("view.no_session_panel.label","No Session Panel");
 		language.set_text("view.no_session_panel.sublabel","\"Works without configuration\"");
 		//done
 		super_registry.store("localization.translation.english",language);
-		var multiplexer = (super_registry.retrieve("localization.translation") as Dragonstone.Registry.TranslationMultiplexerRegistry);
+		var multiplexer = (super_registry.retrieve("localization.translation") as Fossil.Registry.TranslationMultiplexerRegistry);
 		if (multiplexer != null){
 			multiplexer.add_language("english",language);
 		}
 	}
 	
 	public static void use_language(SuperRegistry super_registry){
-		var multiplexer = (super_registry.retrieve("localization.translation") as Dragonstone.Registry.TranslationMultiplexerRegistry);
+		var multiplexer = (super_registry.retrieve("localization.translation") as Fossil.Registry.TranslationMultiplexerRegistry);
 		if (multiplexer != null){
 			multiplexer.active_languages.append("english");
 		}

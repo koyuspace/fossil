@@ -1,6 +1,6 @@
-public class Dragonstone.GtkUi.View.Image : Gtk.ScrolledWindow, Dragonstone.GtkUi.Interface.LegacyView {
+public class Fossil.GtkUi.View.Image : Gtk.ScrolledWindow, Fossil.GtkUi.Interface.LegacyView {
 	
-	private Dragonstone.Request request = null;
+	private Fossil.Request request = null;
 	private Gtk.Image image;
 	private Gdk.Pixbuf pixbuf;
 	
@@ -10,7 +10,7 @@ public class Dragonstone.GtkUi.View.Image : Gtk.ScrolledWindow, Dragonstone.GtkU
 	
 	construct {}
 	
-	public bool display_resource(Dragonstone.Request request, Dragonstone.GtkUi.LegacyWidget.Tab tab, bool as_subview){
+	public bool display_resource(Fossil.Request request, Fossil.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		if ((request.status == "success") && request.resource.mimetype.has_prefix("image/")){
 			try {
 				var input_stream = tab.get_file_content_stream();

@@ -1,6 +1,6 @@
-public class Dragonstone.Registry.MimetypeGuesser : Dragonstone.Asm.SimpleAsmObject, Dragonstone.Asm.AsmObject {
+public class Fossil.Registry.MimetypeGuesser : Fossil.Asm.SimpleAsmObject, Fossil.Asm.AsmObject {
 	
-	public List<Dragonstone.Util.MimetypeGuesserEntry> mimetypes = new List<Dragonstone.Util.MimetypeGuesserEntry>();
+	public List<Fossil.Util.MimetypeGuesserEntry> mimetypes = new List<Fossil.Util.MimetypeGuesserEntry>();
 	
 	public MimetypeGuesser.default_configuration(){	
 		initalize_asm();
@@ -40,7 +40,7 @@ public class Dragonstone.Registry.MimetypeGuesser : Dragonstone.Asm.SimpleAsmObj
 	}
 	
 	public void add_type(string suffix,string mimetype){
-		mimetypes.append(new Dragonstone.Util.MimetypeGuesserEntry(suffix,mimetype));
+		mimetypes.append(new Fossil.Util.MimetypeGuesserEntry(suffix,mimetype));
 	}
 	
 	public string? get_closest_match(string uri,string? default_mimetype = null, Object? context = null){
@@ -51,7 +51,7 @@ public class Dragonstone.Registry.MimetypeGuesser : Dragonstone.Asm.SimpleAsmObj
 		if(default_mimetype != null){
 			has_suffix_star = default_mimetype.has_suffix("*");
 		}
-		foreach(Dragonstone.Util.MimetypeGuesserEntry entry in mimetypes){
+		foreach(Fossil.Util.MimetypeGuesserEntry entry in mimetypes){
 			if (uri.ascii_down().has_suffix(entry.suffix) && entry.suffix.length > closest_match_length){
 				if (has_suffix_star){
 					add = entry.mimetype.has_prefix(default_mimetype[0:-1]);
@@ -68,21 +68,21 @@ public class Dragonstone.Registry.MimetypeGuesser : Dragonstone.Asm.SimpleAsmObj
 	}
 	
 	//ASM integration
-	public Dragonstone.Asm.Scriptreturn? asm_add_type(string arg){
-		var parsed_args = new Dragonstone.Asm.Argparse(arg);
-		if (!(parsed_args.verify_argument(0,Dragonstone.Asm.Argparse.TYPE_STRING) &&
-		      parsed_args.verify_argument(1,Dragonstone.Asm.Argparse.TYPE_STRING))){
-			return new Dragonstone.Asm.Scriptreturn.missing_argument();
+	public Fossil.Asm.Scriptreturn? asm_add_type(string arg){
+		var parsed_args = new Fossil.Asm.Argparse(arg);
+		if (!(parsed_args.verify_argument(0,Fossil.Asm.Argparse.TYPE_STRING) &&
+		      parsed_args.verify_argument(1,Fossil.Asm.Argparse.TYPE_STRING))){
+			return new Fossil.Asm.Scriptreturn.missing_argument();
 		}
-		if (!parsed_args.verify_argument(2,Dragonstone.Asm.Argparse.TYPE_NULL)){
-			return new Dragonstone.Asm.Scriptreturn.too_many_arguments();
+		if (!parsed_args.verify_argument(2,Fossil.Asm.Argparse.TYPE_NULL)){
+			return new Fossil.Asm.Scriptreturn.too_many_arguments();
 		}
 		this.add_type(parsed_args.get_string(0),parsed_args.get_string(1));
 		return null;
 	}
 	
 	private void initalize_asm(){
-		this.add_asm_function(new Dragonstone.Asm.FunctionDescriptor(
+		this.add_asm_function(new Fossil.Asm.FunctionDescriptor(
 			this.asm_add_type,
 			"ADD_TYPE",
 			"asm.help.registry.gopher_type_registry.add_type",
@@ -92,7 +92,7 @@ public class Dragonstone.Registry.MimetypeGuesser : Dragonstone.Asm.SimpleAsmObj
 	
 }
 
-public class Dragonstone.Util.MimetypeGuesserEntry {
+public class Fossil.Util.MimetypeGuesserEntry {
 	public string suffix;
 	public string mimetype;
 	

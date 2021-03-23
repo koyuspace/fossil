@@ -1,13 +1,13 @@
 //the widget, that you can see on the top tab, where you can select wich tab to see
-public class Dragonstone.GtkUi.LegacyWidget.TabHead : Gtk.Box {
+public class Fossil.GtkUi.LegacyWidget.TabHead : Gtk.Box {
 	private Gtk.Button close_button;
 	private Gtk.Label title = new Gtk.Label("💫️ New Tab");
-	private Dragonstone.GtkUi.LegacyWidget.Tab tab;
+	private Fossil.GtkUi.LegacyWidget.Tab tab;
 	private Gtk.Spinner spinner = new Gtk.Spinner();
 	private Gtk.Image error_icon = new Gtk.Image.from_icon_name("dialog-error", Gtk.IconSize.LARGE_TOOLBAR);
 	private int title_chars = 25;
 	
-	public TabHead(Dragonstone.GtkUi.LegacyWidget.Tab tab) {
+	public TabHead(Fossil.GtkUi.LegacyWidget.Tab tab) {
 		close_button = new Gtk.Button.from_icon_name("window-close-symbolic");
 		close_button.relief = Gtk.ReliefStyle.NONE;
 		this.orientation = Gtk.Orientation.HORIZONTAL;
@@ -26,7 +26,7 @@ public class Dragonstone.GtkUi.LegacyWidget.TabHead : Gtk.Box {
 		refresh_title(tab.title, tab.display_state);
 	}
 	
-	public void refresh_title(string title, Dragonstone.Ui.TabDisplayState state){
+	public void refresh_title(string title, Fossil.Ui.TabDisplayState state){
 		spinner.active = state == LOADING;
 		spinner.visible = state == LOADING;
 		error_icon.visible = state == ERROR;

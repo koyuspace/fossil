@@ -1,12 +1,6 @@
-# dragonstone
+# Fossil
 
 A simple GTK Gopher/Gemini client written in Vala
-
-This project is currently on long term support, meaning I won't add new features and only fix bugs if they get reported (or I notice them)
-
-If you want to adopt this project and make it into your own feel free to do so, I won't be mad if you change the license to a GPL or MIT one.
-
-Screenshots may be out of date (use the git timestamps and a bit of common sense)
 
 ### Supported download protocols
 - gopher
@@ -35,10 +29,9 @@ Screenshots may be out of date (use the git timestamps and a bit of common sense
 ### Wishlist
 - more settings
 - plugins for supporting more protocols
-- a non-codename for the project
 
-##How to build/install?
-Note: to build dragonstone you need the following dependencies:
+## How to build/install?
+Note: to build Fossil you need the following dependencies:
 - gtk3+ - the graphics toolkit
 - valac - the Vala compiler
 - meson - the build system
@@ -51,6 +44,3 @@ directory. The produced binary should be executable, now.
 
 To make development easy, the `run` script calls the `build.sh` script
 and then runs whatever is at the output (it will try and fail if there is none).
-
-### Wasn't it supposed to be replaced by NightCat?
-Yes, but as it turns out it's more motivating to work on an already existing project. So the plan is to slowly turn dragonstone into something similar to what nihgtcat should have been.

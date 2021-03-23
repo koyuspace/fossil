@@ -1,24 +1,24 @@
-public class Dragonstone.Document.DefaultTokenParserFactory : Dragonstone.Interface.Document.TokenParserFactory, Object {
+public class Fossil.Document.DefaultTokenParserFactory : Fossil.Interface.Document.TokenParserFactory, Object {
 	
-	private Dragonstone.Registry.GopherTypeRegistry gopher_type_registry;
+	private Fossil.Registry.GopherTypeRegistry gopher_type_registry;
 	
-	public DefaultTokenParserFactory(Dragonstone.Registry.GopherTypeRegistry gopher_type_registry){
+	public DefaultTokenParserFactory(Fossil.Registry.GopherTypeRegistry gopher_type_registry){
 		this.gopher_type_registry = gopher_type_registry;
 	}
 	
 	  ///////////////////////////////////////////////////////
-	 // Dragonstone.Interface.Document.TokenParserFactory //
+	 // Fossil.Interface.Document.TokenParserFactory //
 	///////////////////////////////////////////////////////
 	
-	public Dragonstone.Interface.Document.TokenParser? get_token_parser(string content_type){
+	public Fossil.Interface.Document.TokenParser? get_token_parser(string content_type){
 		//Make sure we don't forget to add the parser to the has_parser_for function
 		if (!has_parser_for(content_type)) {
 			return null;
 		}
-		if (content_type.has_prefix("text/gopher")) { return new Dragonstone.Ui.Document.TokenParser.Gopher(gopher_type_registry); }
-		if (content_type.has_prefix("application/gopher")) { return new Dragonstone.Ui.Document.TokenParser.Gopher(gopher_type_registry); }
-		if (content_type.has_prefix("text/gemini")) { return new Dragonstone.Ui.Document.TokenParser.Gemini(); }
-		if (content_type.has_prefix("text/")) { return new Dragonstone.Ui.Document.TokenParser.Plaintext(); }
+		if (content_type.has_prefix("text/gopher")) { return new Fossil.Ui.Document.TokenParser.Gopher(gopher_type_registry); }
+		if (content_type.has_prefix("application/gopher")) { return new Fossil.Ui.Document.TokenParser.Gopher(gopher_type_registry); }
+		if (content_type.has_prefix("text/gemini")) { return new Fossil.Ui.Document.TokenParser.Gemini(); }
+		if (content_type.has_prefix("text/")) { return new Fossil.Ui.Document.TokenParser.Plaintext(); }
 		return null;
 	}
 	
