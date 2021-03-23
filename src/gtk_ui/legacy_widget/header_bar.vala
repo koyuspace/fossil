@@ -12,9 +12,9 @@ public class Fossil.HeaderBar : Gtk.HeaderBar {
 	public Gtk.Button loadbutton;
 	private Fossil.GtkUi.LegacyWidget.ViewChooser view_chooser;
 	private Fossil.GtkUi.LegacyWidget.SessionChooser session_chooser;
-	private Gtk.Button savetodiskbutton;
+	//private Gtk.Button savetodiskbutton;
 	private Gtk.Button downloadbutton;
-	private Gtk.Button bookmarkbutton;
+	//private Gtk.Button bookmarkbutton;
 	private bool loadButtonReloadMode = false;
 	private bool switching_tab = false;
 	private Gtk.Image reloadIcon = new Gtk.Image.from_icon_name("view-refresh-symbolic",Gtk.IconSize.BUTTON);
@@ -71,13 +71,12 @@ public class Fossil.HeaderBar : Gtk.HeaderBar {
 		mainmenubox.pack_start(mainmenuhbox);
 		downloadbutton = new Gtk.Button.from_icon_name("document-save-symbolic",Gtk.IconSize.LARGE_TOOLBAR );
 		mainmenuhbox.pack_start(downloadbutton);
-		bookmarkbutton = new Gtk.Button.from_icon_name("user-bookmarks-symbolic",Gtk.IconSize.LARGE_TOOLBAR );
+		/*bookmarkbutton = new Gtk.Button.from_icon_name("user-bookmarks-symbolic",Gtk.IconSize.LARGE_TOOLBAR );
 		mainmenuhbox.pack_start(bookmarkbutton);
 		savetodiskbutton = new Gtk.ToggleButton();
 		var diskicon = new Gtk.Image.from_icon_name("drive-harddisk-symbolic",Gtk.IconSize.LARGE_TOOLBAR );
 		savetodiskbutton.add(diskicon);
-		savetodiskbutton.sensitive = false;
-		mainmenuhbox.pack_start(savetodiskbutton);
+		mainmenuhbox.pack_start(savetodiskbutton);*/
 		//dummy button and switch to fix a wired bug where they dont get stylized like we want them to be
 		var dummy_button = new Fossil.GtkUi.LegacyWidget.MenuButton("---");
 		mainmenubox.pack_start(dummy_button);
@@ -198,11 +197,11 @@ public class Fossil.HeaderBar : Gtk.HeaderBar {
 				current_tab.download();
 			}
 		});
-		bookmarkbutton.clicked.connect(e => {
+		/*bookmarkbutton.clicked.connect(e => {
 			if (current_tab != null) {
 				current_tab.open_subview("fossil.bookmarks");
 			}
-		});
+		});*/
 		openfileexternllybutton.clicked.connect(e => {
 			if (current_tab != null) {
 				current_tab.open_resource_externally();
