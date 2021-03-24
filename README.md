@@ -37,6 +37,8 @@ Note: to build Fossil you need the following dependencies:
 - meson - the build system
 - cmake - used by meson
 - python 3.x
+- json-glib
+- gnutls
 
 To build it, run the `build.sh` script, which will automatically setup
 the build folder, run ninja, and put the output in the projects root
