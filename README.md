@@ -44,3 +44,5 @@ directory. The produced binary should be executable, now.
 
 To make development easy, the `run` script calls the `build.sh` script
 and then runs whatever is at the output (it will try and fail if there is none).
+
+![](https://cdn.discordapp.com/attachments/766326715244740618/824233938049695774/unknown.png)
