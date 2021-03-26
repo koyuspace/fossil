@@ -9,6 +9,7 @@ public class Fossil.Store.GopherWrite : Object, Fossil.Interface.ResourceStore {
 	//gopher+write(t|f)://<server>[:<port>]/<encoded_selector>
 	
 	public void request(Fossil.Request request,string? filepath = null, bool upload = false){
+        Fossil.GtkUi.LegacyWidget.TabHead.favicon.set_from_icon_name("text-x-generic", Gtk.IconSize.LARGE_TOOLBAR);
 		// parse uri
 		var parsed_uri = new Fossil.Util.ParsedUri(request.uri,false);
 		if(!(parsed_uri.scheme == "gopher+writet" || parsed_uri.scheme == "gopher+writef")){

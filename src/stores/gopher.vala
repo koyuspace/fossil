@@ -124,6 +124,18 @@ public class Fossil.Gopher.ResourceFetcher : Object {
 		if (conn == null){ return; }
 		
 		request.setStatus("loading");
+
+        try {
+            var file_from_http = File.new_for_uri (@"https://$host/favicon.ico");
+            File local_file = File.new_for_path("/tmp/fossil-favicon.ico");
+            file_from_http.copy(local_file, FileCopyFlags.OVERWRITE);
+            Gdk.Pixbuf pixbuf = new Gdk.Pixbuf.from_file("/tmp/fossil-favicon.ico");
+            var pxb = pixbuf.scale_simple(16, 16, Gdk.InterpType.BILINEAR);
+            Fossil.GtkUi.LegacyWidget.TabHead.favicon.set_from_pixbuf(pxb);
+        } catch (Error e) {
+            Fossil.GtkUi.LegacyWidget.TabHead.favicon.set_from_icon_name("text-x-generic", Gtk.IconSize.LARGE_TOOLBAR);
+        }
+
 		try {
 			//send gopher request
 			var message = @"$query\r\n";

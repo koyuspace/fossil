@@ -1,6 +1,7 @@
 public class Fossil.Store.Internal : Object, Fossil.Interface.ResourceStore {
 
 	public void request(Fossil.Request request,string? filepath = null, bool upload = false){
+	    Fossil.GtkUi.LegacyWidget.TabHead.favicon.set_from_icon_name("text-x-generic", Gtk.IconSize.LARGE_TOOLBAR);
 		if (filepath == null){
 			request.setStatus("error/internal","Filepath required!");
 			request.finish();

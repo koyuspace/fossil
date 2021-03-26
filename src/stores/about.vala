@@ -8,6 +8,7 @@ public class Fossil.Store.About : Object, Fossil.Interface.ResourceStore {
 	
 	public void request(Fossil.Request request,string? filepath = null, bool upload = false){
 		var substore = substores.get(request.uri);
+		Fossil.GtkUi.LegacyWidget.TabHead.favicon.set_from_icon_name("text-x-generic", Gtk.IconSize.LARGE_TOOLBAR);
 		if (substore != null) {
 			substore.request(request,filepath,upload);
 		} else {

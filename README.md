@@ -36,6 +36,7 @@ Note: to build Fossil you need the following dependencies:
 - valac - the Vala compiler
 - meson - the build system
 - cmake - used by meson
+- gdk-pixbuf-2.0 - to resize favicons
 - python 3.x
 - json-glib
 - gnutls

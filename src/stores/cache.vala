@@ -23,6 +23,7 @@ public class Fossil.Store.Cache : Object, Fossil.Interface.ResourceStore, Fossil
 			request.finish();
 		}
 		request.setResource(resource,"cache");
+		Fossil.GtkUi.LegacyWidget.TabHead.favicon.set_from_icon_name("text-x-generic", Gtk.IconSize.LARGE_TOOLBAR);
 	}
 	
 	//if maxage is 0 assume the age doesn't matter

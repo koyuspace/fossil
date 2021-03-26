@@ -12,6 +12,7 @@ public class Fossil.Store.File : Object, Fossil.Interface.ResourceStore {
 	}
 	
 	public void request(Fossil.Request request,string? filepath = null, bool upload = false){
+	    Fossil.GtkUi.LegacyWidget.TabHead.favicon.set_from_icon_name("text-x-generic", Gtk.IconSize.LARGE_TOOLBAR);
 		if (upload){
 			request.setStatus("error/noupload","Uploding not supported");
 			request.finish();
