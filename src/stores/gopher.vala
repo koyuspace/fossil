@@ -126,7 +126,7 @@ public class Fossil.Gopher.ResourceFetcher : Object {
 		request.setStatus("loading");
 
         try {
-            var file_from_http = File.new_for_uri (@"https://$host/favicon.ico");
+            var file_from_http = File.new_for_uri(@"https://$host/favicon.ico");
             File local_file = File.new_for_path("/tmp/fossil-favicon.ico");
             file_from_http.copy(local_file, FileCopyFlags.OVERWRITE);
             Gdk.Pixbuf pixbuf = new Gdk.Pixbuf.from_file("/tmp/fossil-favicon.ico");
