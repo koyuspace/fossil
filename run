@@ -1,4 +1,0 @@
-#!/bin/bash
-mv -f dragonstone dragonstone.old
-./build.sh
-./dragonstone
