@@ -1,6 +1,6 @@
 public class Fossil.Registry.GopherTypeRegistry : Fossil.Asm.SimpleAsmObject, Fossil.Asm.AsmObject {
 	
-	private HashTable<unichar,Fossil.Registry.GopherTypeRegistryEntry> entrys = new HashTable<unichar,Fossil.Registry.GopherTypeRegistryEntry>(unichar_hash, unichar_equal);
+	private HashTable<unichar,Fossil.Registry.GopherTypeRegistryEntry> entries = new HashTable<unichar,Fossil.Registry.GopherTypeRegistryEntry>(unichar_hash, unichar_equal);
 	
 	public static uint unichar_hash(unichar c){
 		return ((uint) c)%8192;
@@ -58,11 +58,11 @@ public class Fossil.Registry.GopherTypeRegistry : Fossil.Asm.SimpleAsmObject, Fo
 	}
 	
 	public Fossil.Registry.GopherTypeRegistryEntry? get_entry_by_gophertype(unichar gophertype){
-		return entrys.get(gophertype);
+		return entries.get(gophertype);
 	}
 	
 	public void add(Fossil.Registry.GopherTypeRegistryEntry entry){
-		entrys.set(entry.gophertype,entry);
+		entries.set(entry.gophertype,entry);
 	}
 	
 	public Fossil.Asm.Scriptreturn? add_entry(string _gophertype, string _mimetype, string hint = ""){

@@ -2,7 +2,7 @@
 public delegate bool Fossil.Registry.BookmarkRegistryIterator(BookmarkRegistryEntry entry);
 
 public class Fossil.Registry.BookmarkRegistry : Object {
-	protected List<BookmarkRegistryEntry> entrys = new List<BookmarkRegistryEntry>();
+	protected List<BookmarkRegistryEntry> entries = new List<BookmarkRegistryEntry>();
 	
 	public signal void bookmark_added(BookmarkRegistryEntry bookmark);
 	public signal void bookmark_modified(BookmarkRegistryEntry bookmark);
@@ -14,18 +14,18 @@ public class Fossil.Registry.BookmarkRegistry : Object {
 			uid = GLib.Uuid.string_random();
 		}
 		var entry = new BookmarkRegistryEntry(uid, name, uri);
-		entrys.append(entry);
+		entries.append(entry);
 		bookmark_added(entry);
 		return entry;
 	}
 	
 	public void remove_bookmark(BookmarkRegistryEntry bookmark){
-		entrys.remove_all(bookmark);
+		entries.remove_all(bookmark);
 		bookmark_removed(bookmark);
 	}
 	
 	public void iterate_over_all_bookmarks(Fossil.Registry.BookmarkRegistryIterator callback){
-		foreach (var entry in entrys){
+		foreach (var entry in entries){
 			if (!callback(entry)){
 				break;
 			}
@@ -33,7 +33,7 @@ public class Fossil.Registry.BookmarkRegistry : Object {
 	}
 	
 	public BookmarkRegistryEntry? get_bookmark_by_uid(string uid){
-		foreach (var entry in entrys){
+		foreach (var entry in entries){
 			if (entry.uid == uid){
 				return entry;
 			}
@@ -42,7 +42,7 @@ public class Fossil.Registry.BookmarkRegistry : Object {
 	}
 	
 	public BookmarkRegistryEntry? get_bookmark_with_name(string name, uint skip = 0){
-		foreach (var entry in entrys){
+		foreach (var entry in entries){
 			if (entry.name == name){
 				if (skip > 0){
 					skip--;
@@ -54,7 +54,7 @@ public class Fossil.Registry.BookmarkRegistry : Object {
 	}
 	
 	public BookmarkRegistryEntry? get_bookmark_with_uri(string uri, uint skip = 0){
-		foreach (var entry in entrys){
+		foreach (var entry in entries){
 			if (entry.uri == uri){
 				if (skip > 0){
 					skip--;

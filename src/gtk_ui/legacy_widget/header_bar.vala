@@ -9,6 +9,7 @@ public class Fossil.HeaderBar : Gtk.HeaderBar {
 	public Gtk.Entry addressfield;
 	public Gtk.Button backbutton;
 	public Gtk.Button forwardbutton;
+	public Gtk.Button homebutton;
 	public Gtk.Button loadbutton;
 	private Fossil.GtkUi.LegacyWidget.ViewChooser view_chooser;
 	private Fossil.GtkUi.LegacyWidget.SessionChooser session_chooser;
@@ -50,6 +51,11 @@ public class Fossil.HeaderBar : Gtk.HeaderBar {
 		forwardbutton.relief = Gtk.ReliefStyle.NONE;
 		forwardbutton.valign = Gtk.Align.CENTER;
 		pack_start(forwardbutton);
+		//homebutton
+		homebutton = new Gtk.Button.from_icon_name("go-home-symbolic");
+		homebutton.relief = Gtk.ReliefStyle.NONE;
+		homebutton.valign = Gtk.Align.CENTER;
+		pack_start(homebutton);
 		//addressfield
 		addressfield = new Gtk.Entry();
 		addressfield.expand = true;
@@ -191,6 +197,9 @@ public class Fossil.HeaderBar : Gtk.HeaderBar {
 			if (current_tab != null) {
 				current_tab.go_forward();
 			}
+		});
+		homebutton.clicked.connect(e => {
+			current_tab.go_to_uri("fossil://");
 		});
 		downloadbutton.clicked.connect(e => {
 			if (current_tab != null) {

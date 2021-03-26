@@ -46,7 +46,7 @@ executable(
 	'gtk_ui/legacy_widget/inline_search_post_b64_file_popover_easter_egg.vala', #AUTOUPDATE_FILE
 	'gtk_ui/legacy_widget/link_button.vala', #AUTOUPDATE_FILE
 	'gtk_ui/legacy_widget/link_popover.vala', #AUTOUPDATE_FILE
-	'gtk_ui/legacy_widget/menu_entrys.vala', #AUTOUPDATE_FILE
+	'gtk_ui/legacy_widget/menu_entries.vala', #AUTOUPDATE_FILE
 	'gtk_ui/legacy_widget/request_argument_display.vala', #AUTOUPDATE_FILE
 	'gtk_ui/legacy_widget/session_chooser.vala', #AUTOUPDATE_FILE
 	'gtk_ui/legacy_widget/subview_base.vala', #AUTOUPDATE_FILE

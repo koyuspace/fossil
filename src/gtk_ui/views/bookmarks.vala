@@ -221,7 +221,7 @@ public class Fossil.GtkUi.View.Bookmarks : Gtk.Stack, Fossil.GtkUi.Interface.Leg
 				liststore.set (iter, 1, entry.uri, 2, entry.name);
 				on_search_dirty();
 			}
-			//maybe add the entry, if its not in the table of displayed entrys
+			//maybe add the entry, if its not in the table of displayed entries
 		}
 	}
 	
