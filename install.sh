@@ -8,4 +8,4 @@ fi
 
 cd "$builddir"
 ninja
-ninja install
+sudo ninja install
