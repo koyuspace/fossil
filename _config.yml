@@ -1,3 +1,16 @@
-theme: jekyll-theme-minimal
-logo: logo.png
 title: Fossil
+
+path: /
+url: https://fossil.koyu.space
+
+markdown: kramdown
+
+sass:
+  sass_dir: css
+  style:    expanded
+
+exclude:
+- README.md
+
+safe: true
+lsi: false
