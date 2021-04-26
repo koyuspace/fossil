@@ -2,7 +2,7 @@
 
 A simple GTK Gopher/Gemini client written in Vala
 
-![](https://cdn.discordapp.com/attachments/766326715244740618/824233938049695774/unknown.png)
+<img src="https://cdn.discordapp.com/attachments/766326715244740618/824233938049695774/unknown.png" style="margin:5px;float:right">
 
 ### Supported download protocols
 - Gopher
