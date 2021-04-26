@@ -1,4 +1,4 @@
 meson_build
-dragonstone
-dragonstone.old
+fossil
+fossil.old
 src/meson.build.old

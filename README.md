@@ -35,6 +35,13 @@ Note: to build Fossil you need the following dependencies:
 - python 3.x
 - json-glib
 - gnutls
+- gettext
+
+One-liner for Debian-based systems:
+
+```
+sudo apt install libgtk-3-dev valac meson cmake libgdk-pixbuf2.0-dev python3 libjson-glib-dev libgnutls28-dev gettext
+```
 
 To build it, run the `build.sh` script, which will automatically setup
 the build folder, run ninja, and put the output in the projects root
