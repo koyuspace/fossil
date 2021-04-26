@@ -1,37 +1,50 @@
-## Welcome to GitHub Pages
+# Fossil
 
-You can use the [editor on GitHub](https://github.com/koyuspace/fossil/edit/web/index.md) to maintain and preview the content for your website in Markdown files.
+A simple GTK Gopher/Gemini client written in Vala
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+![](https://cdn.discordapp.com/attachments/766326715244740618/824233938049695774/unknown.png)
 
-### Markdown
+### Supported download protocols
+- Gopher
+- Gemini
+- Finger
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+### Supported upload protocols
+- [gopher+write](https://alexschroeder.ch/wiki/2017-12-30_Gopher_Wiki)
+- [gemini+write](https://alexschroeder.ch/wiki/2020-06-04_Gemini_Upload)
+- [gemini+upload](https://alexschroeder.ch/wiki/Baschdels_spin_on_Gemini_uploading)
 
-```markdown
-Syntax highlighted code block
+### Noteworthy features
+- Tabs
+- Bookmarks
+- In-application image display
+- View page source option
+- Support for `file://` URIs
+- Per tab history
+- Ability to save everything to disk
+- Cache
+- Works on Linux-based smartphones
+- Tries to be as themeable as possible using GTK themes and icon packs
+- Favicons
 
-# Header 1
-## Header 2
-### Header 3
+## How to build/install?
+Note: to build Fossil you need the following dependencies:
+- gtk3+ - the graphics toolkit
+- valac - the Vala compiler
+- meson - the build system
+- cmake - used by meson
+- gdk-pixbuf-2.0 - to resize favicons
+- python 3.x
+- json-glib
+- gnutls
+- gettext
 
-- Bulleted
-- List
+One-liner for Debian-based systems:
 
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+```
+sudo apt install libgtk-3-dev valac meson cmake libgdk-pixbuf2.0-dev python3 libjson-glib-dev libgnutls28-dev gettext
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/koyuspace/fossil/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+To build it, run the `build.sh` script, which will automatically setup
+the build folder, run ninja, and put the output in the projects root
+directory. The produced binary should be executable, now.
