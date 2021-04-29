@@ -30,4 +30,3 @@ A simple GTK Gopher/Gemini client written in Vala
 - Cache
 - Works on Linux-based smartphones
 - Tries to be as themeable as possible using GTK themes and icon packs
-- Favicons
