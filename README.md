@@ -26,7 +26,6 @@ A simple GTK Gopher/Gemini client written in Vala
 - Cache
 - Works on Linux-based smartphones
 - Tries to be as themeable as possible using GTK themes and icon packs
-- Favicons
 
 ## How to build/install?
 
@@ -36,7 +35,6 @@ Note: to build Fossil you need the following dependencies:
 - valac - the Vala compiler
 - meson - the build system
 - cmake - used by meson
-- gdk-pixbuf-2.0 - to resize favicons
 - python 3.x
 - json-glib
 - gnutls

@@ -1,7 +1,6 @@
 public class Fossil.Store.Internal : Object, Fossil.Interface.ResourceStore {
 
 	public void request(Fossil.Request request,string? filepath = null, bool upload = false){
-	    Fossil.GtkUi.LegacyWidget.TabHead.favicon.set_from_icon_name("text-x-generic", Gtk.IconSize.LARGE_TOOLBAR);
 		if (filepath == null){
 			request.setStatus("error/internal","Filepath required!");
 			request.finish();
@@ -87,8 +86,8 @@ Praesent metus quam, accumsan eget nunc a, pellentesque sodales velit. Aliquam u
 			resource.add_metadata("text/plain","Hello World");
 			request.setResource(resource,"fossil");
 		} else if (request.uri == "fossil://about") {
-		    var helper = new Fossil.Util.ResourceFileWriteHelper(request,filepath,0);
-            helper.appendString("# About
+			var helper = new Fossil.Util.ResourceFileWriteHelper(request,filepath,0);
+			helper.appendString("# About
 Fossil version 1.0
 
 A gemini/gopher client originally written by Baschdel as Dragonstone, now forked and maintained by koyu.space under the name Fossil

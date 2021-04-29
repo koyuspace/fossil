@@ -4,7 +4,6 @@ public class Fossil.Store.GeminiUpload : Object, Fossil.Interface.ResourceStore 
 	public Fossil.Util.ConnectionHelper connection_helper = new Fossil.Util.ConnectionHelper();
 	
 	public void request(Fossil.Request request,string? filepath = null, bool upload = false){
-		Fossil.GtkUi.LegacyWidget.TabHead.favicon.set_from_icon_name("text-x-generic", Gtk.IconSize.LARGE_TOOLBAR);
 		// parse uri
 		var parsed_uri = new Fossil.Util.ParsedUri(request.uri,false);
 		if(!(parsed_uri.scheme == "gemini+upload")){

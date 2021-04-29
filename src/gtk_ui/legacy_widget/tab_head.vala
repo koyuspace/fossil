@@ -5,7 +5,6 @@ public class Fossil.GtkUi.LegacyWidget.TabHead : Gtk.Box {
 	private Fossil.GtkUi.LegacyWidget.Tab tab;
 	private Gtk.Spinner spinner = new Gtk.Spinner();
 	private Gtk.Image error_icon = new Gtk.Image.from_icon_name("dialog-error", Gtk.IconSize.LARGE_TOOLBAR);
-	public static Gtk.Image favicon = new Gtk.Image.from_icon_name("text-x-generic", Gtk.IconSize.LARGE_TOOLBAR);
 	private int title_chars = 25;
 	
 	public TabHead(Fossil.GtkUi.LegacyWidget.Tab tab) {
@@ -13,7 +12,6 @@ public class Fossil.GtkUi.LegacyWidget.TabHead : Gtk.Box {
 		close_button.relief = Gtk.ReliefStyle.NONE;
 		this.orientation = Gtk.Orientation.HORIZONTAL;
 		pack_start(spinner);
-		pack_start(favicon);
 		pack_start(error_icon);
 		pack_start(title);
 		pack_end(close_button);
@@ -32,7 +30,6 @@ public class Fossil.GtkUi.LegacyWidget.TabHead : Gtk.Box {
 		spinner.active = state == LOADING;
 		spinner.visible = state == LOADING;
 		error_icon.visible = state == ERROR;
-		favicon.visible = state != ERROR;
 		if (title.char_count() > title_chars){
 			if (title == tab.uri){
 				var startcut = title.index_of_nth_char(title_chars/2);
