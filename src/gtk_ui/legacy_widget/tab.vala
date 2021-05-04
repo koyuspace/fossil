@@ -216,7 +216,7 @@ public class Fossil.GtkUi.LegacyWidget.Tab : Gtk.Bin, Fossil.Interface.Page.Serv
 			}
 			if (has_errors){
 				print("[tab] open error dialog\n");
-				open_subview("dragonstone.error");
+				open_subview("fossil.error");
 				return;
 			}
 		}

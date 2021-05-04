@@ -55,7 +55,7 @@ public class Fossil.Window : Gtk.ApplicationWindow {
 		//"content"
 		tabs = new Gtk.Notebook();
 		tabs.scrollable = true;
-		tabs.set_group_name("dragonstone.tabs");
+		tabs.set_group_name("fossil.tabs");
 		
 		tabs.page_added.connect((widget, pagenum) => {
 			if (widget is Fossil.GtkUi.LegacyWidget.Tab){

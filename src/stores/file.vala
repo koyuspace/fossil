@@ -79,7 +79,7 @@ public class Fossil.Store.File : Object, Fossil.Interface.ResourceStore {
 			if (helper.closed) { return; }
 			helper.close();
 			var resource = new Fossil.Resource(request.uri,filepath,true);
-			resource.add_metadata("text/dragonstone-directory",basename);
+			resource.add_metadata("text/fossil-directory",basename);
 			request.setResource(resource,"file");
 			return;
 		}
