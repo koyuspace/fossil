@@ -17,7 +17,7 @@ public class Fossil.GtkUi.LegacyWidget.Tab : Gtk.Bin, Fossil.Interface.Page.Serv
 	public Fossil.GtkUi.LegacyWidget.TabHistoryEntry currently_displayed_page = new Fossil.GtkUi.LegacyWidget.TabHistoryEntry();
 	public Fossil.SuperRegistry super_registry { get; construct; }
 	public Fossil.Registry.TranslationRegistry translation;
-	public Gtk.Window parent_window; //only for use with dialog windows
+	public Gtk.Window parent_window;
 	private int locked = 0;
 	public string title = "New Tab";
 	public Fossil.Ui.TabDisplayState display_state = Fossil.Ui.TabDisplayState.BLANK;
@@ -453,6 +453,7 @@ public class Fossil.GtkUi.LegacyWidget.Tab : Gtk.Bin, Fossil.Interface.Page.Serv
 				uritogo = Fossil.Util.Uri.join(_uri,uri);
 			}
 			window.add_tab(uritogo,this.current_session_id);
+			parent_window.present();
 		}
 	}
 	
