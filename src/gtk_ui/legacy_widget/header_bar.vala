@@ -328,6 +328,7 @@ public class Fossil.HeaderBar : Gtk.HeaderBar {
 	}
 	
 	public string tryUriCorrection(string uri){
+		string uri = _uri.strip();
 		if(uri == "") { return "about:blank"; }
 		return uri_autoprefixer.try_autoprefix(uri);
 	}
