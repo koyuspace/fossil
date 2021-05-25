@@ -327,7 +327,7 @@ public class Fossil.HeaderBar : Gtk.HeaderBar {
 		loadbutton.image = goIcon;
 	}
 	
-	public string tryUriCorrection(string uri){
+	public string tryUriCorrection(string _uri){
 		string uri = _uri.strip();
 		if(uri == "") { return "about:blank"; }
 		return uri_autoprefixer.try_autoprefix(uri);
