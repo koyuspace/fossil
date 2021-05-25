@@ -46,8 +46,6 @@ One-liner for Debian-based systems:
 sudo apt install libgtk-3-dev valac meson cmake libgdk-pixbuf2.0-dev python3 libjson-glib-dev libgnutls28-dev gettext
 ```
 
-To build and install Fossil, run the `install.sh` script, which will automatically setup
-the build folder, run ninja, put the output in the projects root
-directory, copy the files for Fossil to your system and registers the protocol handler. You should then find a new entry in your application launcher.
+To build and install Fossil, run the `install.sh` script, which will automatically setup the build folder, run ninja, put the output in the projects root directory, copy the files for Fossil to your system and registers the protocol handler. You should then find a new entry in your application launcher.
 
 ![](https://cdn.discordapp.com/attachments/766326715244740618/824233938049695774/unknown.png)
