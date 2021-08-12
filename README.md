@@ -35,15 +35,16 @@ Note: to build Fossil you need the following dependencies:
 - valac - the Vala compiler
 - meson - the build system
 - cmake - used by meson
+- granite - to enable darkmode on elementary OS
 - python 3.x
 - json-glib
 - gnutls
 - gettext
 
-One-liner for Debian-based systems:
+One-liner for elementary OS:
 
 ```
-sudo apt install libgtk-3-dev valac meson cmake libgdk-pixbuf2.0-dev python3 libjson-glib-dev libgnutls28-dev gettext
+sudo apt install libgtk-3-dev valac meson cmake libgdk-pixbuf2.0-dev python3 libjson-glib-dev libgnutls28-dev gettext elementary-sdk
 ```
 
 To build and install Fossil, run the `install.sh` script, which will automatically setup the build folder, run ninja, put the output in the projects root directory, copy the files for Fossil to your system and registers the protocol handler. You should then find a new entry in your application launcher.
