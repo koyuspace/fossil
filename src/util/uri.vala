@@ -363,7 +363,7 @@ public class Fossil.Util.ParsedUri : Object {
 	
 	public ParsedUri.blank(){
 		//effective nop
-		//all values initalized to null
+		//all values initialized to null
 	}
 	
 	private void parse_uri(){

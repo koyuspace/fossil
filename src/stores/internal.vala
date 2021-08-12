@@ -88,7 +88,7 @@ Praesent metus quam, accumsan eget nunc a, pellentesque sodales velit. Aliquam u
 		} else if (request.uri == "fossil://about") {
 			var helper = new Fossil.Util.ResourceFileWriteHelper(request,filepath,0);
 			helper.appendString("# About
-Fossil version 1.2
+Fossil version 1.3
 
 A gemini/gopher client originally written by Baschdel as Dragonstone, now forked and maintained by koyu.space under the name Fossil
 

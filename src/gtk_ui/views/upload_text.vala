@@ -41,7 +41,7 @@ public class Fossil.GtkUi.View.UploadText : Gtk.Box, Fossil.GtkUi.Interface.Lega
 		textview.wrap_mode = Gtk.WrapMode.WORD;
 		textview.set_monospace(true);
 		textview.set_left_margin(4);
-		//initalize actionsbar buttons
+		//initialize actionsbar buttons
 		upload_button = new Gtk.Button.with_label(upload_button_label);
 		upload_button.get_style_context().add_class("suggested-action");
 		upload_button.sensitive = false;
@@ -52,7 +52,7 @@ public class Fossil.GtkUi.View.UploadText : Gtk.Box, Fossil.GtkUi.Interface.Lega
 		actionbar.pack_start(open_button);
 		actionbar.pack_start(save_button);
 		actionbar.pack_end(upload_button);
-		//initalize box
+		//initialize box
 		this.orientation = Gtk.Orientation.VERTICAL;
 		scrolled_window.add(textview);
 		this.pack_start(actionbar);

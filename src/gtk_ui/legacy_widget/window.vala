@@ -13,7 +13,7 @@ public class Fossil.Window : Gtk.ApplicationWindow {
 		);
 		this.app = application;
 		load_translation();
-		initalize();
+		initialize();
 	}
 	
 	public Window.from_dropped_tab(Fossil.GtkUi.Application application, int x, int y) {
@@ -24,7 +24,7 @@ public class Fossil.Window : Gtk.ApplicationWindow {
 		this.app = application;
 		move(x,y);
 		load_translation();
-		initalize();
+		initialize();
 	}
 	
 	private void load_translation() {
@@ -36,7 +36,7 @@ public class Fossil.Window : Gtk.ApplicationWindow {
 		title = translation.get_localized_string("window.title");
 	}
 	
-	private void initalize() {
+	private void initialize() {
 		window_position = Gtk.WindowPosition.CENTER;
 		set_default_size(800,600);
 		

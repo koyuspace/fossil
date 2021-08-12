@@ -175,6 +175,7 @@ executable(
 		dependency('json-glib-1.0'),
 		dependency('gnutls'),
 		dependency('gdk-pixbuf-2.0'),
+		dependency('granite')
 	],
 	install: true
 )

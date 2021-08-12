@@ -36,18 +36,12 @@ public class Fossil.GtkUi.JsonIntegration.Theming.TextTagTheme {
 				return "none";
 			case DOUBLE:
 				return "double";
-			case DOUBLE_LINE:
-				return "double_line";
 			case ERROR:
 				return "error";
-			case ERROR_LINE:
-				return "error_line";
 			case LOW:
 				return "low";
 			case SINGLE:
 				return "single";
-			case SINGLE_LINE:
-				return "single_line";
 			default:
 				return "unknown";
 		}
@@ -60,17 +54,17 @@ public class Fossil.GtkUi.JsonIntegration.Theming.TextTagTheme {
 			case "double":
 				return Pango.Underline.DOUBLE;
 			case "double_line":
-				return Pango.Underline.DOUBLE_LINE;
+				return Pango.Underline.DOUBLE;
 			case "error":
 				return Pango.Underline.ERROR;
 			case "error_line":
-				return Pango.Underline.ERROR_LINE;
+				return Pango.Underline.ERROR;
 			case "low":
 				return Pango.Underline.LOW;
 			case "single":
 				return Pango.Underline.SINGLE;
 			case "single_line":
-				return Pango.Underline.SINGLE_LINE;
+				return Pango.Underline.SINGLE;
 			default:
 				return null;
 		}
@@ -129,49 +123,49 @@ public class Fossil.GtkUi.JsonIntegration.Theming.TextTagTheme {
 	public static Fossil.GtkUi.Theming.TextTagTheme text_tag_theme_from_json(Json.Object object){
 		string member;
 		var tag_theme = new Fossil.GtkUi.Theming.TextTagTheme();
-		member = object.get_string_member_with_default("foreground","");
+		member = object.get_string_member("foreground");
 		if (member != ""){
 			tag_theme.foreground_color = gdk_rgba_from_string(member);
 		}
-		member = object.get_string_member_with_default("background","");
+		member = object.get_string_member("background");
 		if (member != ""){
 			tag_theme.background_color = gdk_rgba_from_string(member);
 		}
-		member = object.get_string_member_with_default("paragraph_background","");
+		member = object.get_string_member("paragraph_background");
 		if (member != ""){
 			tag_theme.paragraph_background_color = gdk_rgba_from_string(member);
 		}
-		member = object.get_string_member_with_default("underline_color","");
+		member = object.get_string_member("underline_color");
 		if (member != ""){
 			tag_theme.underline_color = gdk_rgba_from_string(member);
 		}
 		
-		double scale = object.get_double_member_with_default("scale",0);
+		double scale = object.get_double_member("scale");
 		if (scale > 1) {
 			tag_theme.scale = scale;
 		}
-		int int_member = (int) object.get_int_member_with_default("indent",-1000);
+		int int_member = (int) object.get_int_member("indent");
 		if (int_member > -1000) {
 			tag_theme.indent = int_member;
 		}
-		int_member = (int) object.get_int_member_with_default("left_margin",-1000);
+		int_member = (int) object.get_int_member("left_margin");
 		if (int_member > -1000) {
 			tag_theme.left_margin = int_member;
 		}
-		int_member = (int) object.get_int_member_with_default("right_margin",-1000);
+		int_member = (int) object.get_int_member("right_margin");
 		if (int_member > -1000) {
 			tag_theme.right_margin = int_member;
 		}
-		tag_theme.invisible = object.get_boolean_member_with_default("invisible", false);
-		member = object.get_string_member_with_default("font","");
+		tag_theme.invisible = object.get_boolean_member("invisible");
+		member = object.get_string_member("font");
 		if (member != ""){
 			tag_theme.font_description = Pango.FontDescription.from_string(member);
 		}
-		member = object.get_string_member_with_default("wrap_mode","");
+		member = object.get_string_member("wrap_mode");
 		if (member != ""){
 			tag_theme.wrap_mode = gtk_wrap_mode_from_string(member);
 		}
-		member = object.get_string_member_with_default("underline","");
+		member = object.get_string_member("underline");
 		if (member != ""){
 			tag_theme.underline = pango_underline_from_string(member);
 		}

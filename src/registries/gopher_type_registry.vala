@@ -11,7 +11,7 @@ public class Fossil.Registry.GopherTypeRegistry : Fossil.Asm.SimpleAsmObject, Fo
 	}
 	
 	public GopherTypeRegistry.default_configuration(){
-		initalize_asm();
+		initialize_asm();
 		//fast
 		//add(new GopherTypeRegistryEntry('i',null,".",GopherTypeRegistryContentHint.TEXT));
 		exec("ADD_ENTRY","i\t*\tTEXT");
@@ -111,7 +111,7 @@ public class Fossil.Registry.GopherTypeRegistry : Fossil.Asm.SimpleAsmObject, Fo
 		return this.add_entry(parsed_args.get_string(0),parsed_args.get_string(1),parsed_args.get_string(2,""));
 	}
 	
-	private void initalize_asm(){
+	private void initialize_asm(){
 		this.add_asm_function(new Fossil.Asm.FunctionDescriptor(
 			this.asm_add_entry,
 			"ADD_ENTRY",

@@ -27,33 +27,33 @@ public class Fossil.GtkUi.JsonIntegration.Theming.HypertextThemeRule {
 	public static Fossil.GtkUi.Theming.HypertextThemeRule? rule_from_json(Json.Object object){
 		string member;
 		Fossil.GtkUi.Theming.HypertextThemeRule rule;
-		member = object.get_string_member_with_default("theme","");
+		member = object.get_string_member("theme");
 		if (member != ""){
 			rule = new Fossil.GtkUi.Theming.HypertextThemeRule(member);
 		} else {
 			return null;
 		}
-		member = object.get_string_member_with_default("content_type","");
+		member = object.get_string_member("content_type");
 		if (member != ""){
 			rule.content_type = member;
 		}
-		member = object.get_string_member_with_default("scheme","");
+		member = object.get_string_member("scheme");
 		if (member != ""){
 			rule.scheme = member;
 		}
-		member = object.get_string_member_with_default("host","");
+		member = object.get_string_member("host");
 		if (member != ""){
 			rule.host = member;
 		}
-		member = object.get_string_member_with_default("port","");
+		member = object.get_string_member("port");
 		if (member != ""){
 			rule.port = member;
 		}
-		member = object.get_string_member_with_default("path_prefix","");
+		member = object.get_string_member("path_prefix");
 		if (member != ""){
 			rule.path_prefix = member;
 		}
-		member = object.get_string_member_with_default("path_suffix","");
+		member = object.get_string_member("path_suffix");
 		if (member != ""){
 			rule.path_suffix = member;
 		}

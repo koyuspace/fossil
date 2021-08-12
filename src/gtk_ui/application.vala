@@ -10,29 +10,29 @@ public class Fossil.GtkUi.Application : Gtk.Application {
 		);
 	}
 	
-	public void initalize() {
+	public void initialize() {
 		if (super_registry != null) { return; }
 		this.shutdown.connect(on_shutdown);
 		super_registry = new Fossil.SuperRegistry();
 		//TODO: remove this asm thingy together with the super_registry, was a bad idea
 		//      integrate with settings (json) instead
-		//Initalize ASM constructors
+		//initialize ASM constructors
 		var init_object = new Fossil.Asm.SimpleAsmObject();
-		Fossil.AsmInit.Bookmarks.Registry.register_initalizer("bookmark_registry",init_object);
-		Fossil.AsmInit.Mimeguesser.Registry.register_initalizer("mimeguesser_registry",init_object);
-		Fossil.AsmInit.Session.Registry.register_initalizer("session_registry",init_object);
-		Fossil.AsmInit.Store.Registry.register_initalizer("store_registry",init_object);
-		Fossil.AsmInit.UriAutoprefix.Registry.register_initalizer("uri_autoprefix_registry",init_object);
+		Fossil.AsmInit.Bookmarks.Registry.register_initializer("bookmark_registry",init_object);
+		Fossil.AsmInit.Mimeguesser.Registry.register_initializer("mimeguesser_registry",init_object);
+		Fossil.AsmInit.Session.Registry.register_initializer("session_registry",init_object);
+		Fossil.AsmInit.Store.Registry.register_initializer("store_registry",init_object);
+		Fossil.AsmInit.UriAutoprefix.Registry.register_initializer("uri_autoprefix_registry",init_object);
 		//make a scriptrunner
 		var scriptrunner = new Fossil.Asm.Scriptrunner(super_registry);
-		//Initalize core registries
+		//initialize core registries
 		super_registry.store("init",init_object);
 		super_registry.store("core.mimeguesser",new Fossil.Registry.MimetypeGuesser.default_configuration());
 		super_registry.store("core.stores",new Fossil.Registry.StoreRegistry.default_configuration());
 		scriptrunner.exec_line("init:uri_autoprefix_registry\tcore.uri_autoprefixer",super_registry);
 		scriptrunner.exec_line("init:session_registry\tcore.sessions",super_registry);
 		scriptrunner.exec_line("init:bookmark_registry\tcore.bookmarks",super_registry);
-		//initalize settings
+		//initialize settings
 		var default_settings_provider = new Fossil.Settings.RamProvider();
 		var persistant_settings_provider = Fossil.Startup.Settings.Backend.get_file_settings_provider("","settings.", "persistant_settings_provider");
 		var theme_settings_provider = Fossil.Startup.Settings.Backend.get_file_settings_provider("themes/","themes.","theme_settings_provider");
@@ -54,13 +54,13 @@ public class Fossil.GtkUi.Application : Gtk.Application {
 		//Initaize settings bridges
 		Fossil.Startup.Frontend.Settings.register_settings_object(super_registry, core_settings_provider);
 		Fossil.Startup.Bookmarks.Settings.register_settings_bridge(super_registry, core_settings_provider);
-		//Initalize Cache
+		//initialize Cache
 		//Fossil.Startup.Cache.Backend.setup_store(super_registry); //register before switch
 		Fossil.Startup.About.Backend.setup_store(super_registry);
 		//register gophertypes
 		Fossil.Startup.Gopher.Backend.setup_gophertypes(super_registry);
 		Fossil.Startup.GopherWrite.Backend.setup_gophertypes(super_registry);
-		//Initalize backends
+		//initialize backends
 		Fossil.Startup.Bookmarks.Backend.setup_about_page(super_registry);
 		Fossil.Startup.Cache.Backend.setup_about_page(super_registry);
 		Fossil.Startup.Gopher.Backend.setup_mimetypes(super_registry);
@@ -78,16 +78,16 @@ public class Fossil.GtkUi.Application : Gtk.Application {
 		Fossil.Startup.Finger.Backend.setup_uri_autocompletion(super_registry);
 		Fossil.Startup.StoreSwitch.setup_store(super_registry);
 		Fossil.Startup.Utilfossil.Backend.setup_about_page(super_registry);
-		//Initalize sessions
+		//initialize sessions
 		Fossil.Startup.Sessions.Backend.register_core_sessions(super_registry);
-		//Initalize localization
+		//initialize localization
 		Fossil.Startup.LocalizationRegistry.setup_translation_registry(super_registry);
 		Fossil.Startup.Localization.English.setup_language(super_registry);
 		Fossil.Startup.Localization.English.use_language(super_registry);
-		//Initalize fontend registries
+		//initialize fontend registries
 		var translation = (super_registry.retrieve("localization.translation") as Fossil.Registry.TranslationRegistry);
 		super_registry.store("gtk.views",new Fossil.GtkUi.LegacyViewRegistry.default_configuration(translation));
-		//Initalize frontends
+		//initialize frontends
 		Fossil.Startup.Bookmarks.Gtk.setup_views(super_registry);
 		Fossil.Startup.Cache.Gtk.setup_views(super_registry);
 		Fossil.Startup.Sessions.Gtk.setup_views(super_registry);
@@ -96,15 +96,26 @@ public class Fossil.GtkUi.Application : Gtk.Application {
 		Fossil.Startup.Gemini.Gtk.setup_views(super_registry);
 		Fossil.Startup.Upload.Gtk.setup_views(super_registry);
 		Fossil.Startup.Utilfossil.Gtk.setup_views(super_registry);
+		// First we get the default instances for Granite.Settings and Gtk.Settings
+		var granite_settings = Granite.Settings.get_default ();
+		var gtk_settings = Gtk.Settings.get_default ();
+	
+		// Then, we check if the user's preference is for the dark style and set it if it is
+		gtk_settings.gtk_application_prefer_dark_theme = granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
+	
+		// Finally, we listen to changes in Granite.Settings and update our app if the user changes their preference
+		granite_settings.notify["prefers-color-scheme"].connect (() => {
+			gtk_settings.gtk_application_prefer_dark_theme = granite_settings.prefers_color_scheme == Granite.Settings.ColorScheme.DARK;
+		});
 	}
 	
 	protected override void activate() {
-		initalize();
+		initialize();
 		build_window();
 	}
 	
 	protected override int command_line(ApplicationCommandLine command_line) {
-		initalize();
+		initialize();
 		Fossil.Window? window = (Fossil.Window) get_active_window();
 		bool new_window = false;
 		if (window == null) {

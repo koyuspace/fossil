@@ -18,7 +18,7 @@ public class Fossil.GtkUi.JsonIntegration.Theming.HypertextViewTheme {
 	
 	public static Fossil.GtkUi.Theming.HypertextViewTheme hyper_text_view_theme_from_json(Json.Object theme_object){
 		var theme = new Fossil.GtkUi.Theming.HypertextViewTheme();
-		theme.monospaced_by_default = theme_object.get_boolean_member_with_default("monospaced", true);
+		theme.monospaced_by_default = theme_object.get_boolean_member("monospaced");
 		var prefix_node = theme_object.get_member("prefixes");
 		if (prefix_node != null){
 			if (prefix_node.get_node_type() == OBJECT){

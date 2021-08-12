@@ -3,7 +3,7 @@ public class Fossil.Registry.MimetypeGuesser : Fossil.Asm.SimpleAsmObject, Fossi
 	public List<Fossil.Util.MimetypeGuesserEntry> mimetypes = new List<Fossil.Util.MimetypeGuesserEntry>();
 	
 	public MimetypeGuesser.default_configuration(){	
-		initalize_asm();
+		initialize_asm();
 		exec("ADD_TYPE",".txt\ttext/plain");
 		exec("ADD_TYPE",".html\ttext/html");
 		exec("ADD_TYPE",".png\timage/png");
@@ -81,7 +81,7 @@ public class Fossil.Registry.MimetypeGuesser : Fossil.Asm.SimpleAsmObject, Fossi
 		return null;
 	}
 	
-	private void initalize_asm(){
+	private void initialize_asm(){
 		this.add_asm_function(new Fossil.Asm.FunctionDescriptor(
 			this.asm_add_type,
 			"ADD_TYPE",

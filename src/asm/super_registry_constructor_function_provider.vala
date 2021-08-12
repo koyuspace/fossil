@@ -10,7 +10,7 @@ public class Fossil.Asm.SuperRegistrySimpleConstructorFunctionDescriptor : Fossi
 		this.name = name;
 		this.callback = this.construct_object;
 		this.localizable_helptext = "asm.help.cinstructor_simple";
-		this.unlocalized_helptext = @"$name <name> Initalizes an object and stores it in the context at <name>";
+		this.unlocalized_helptext = @"$name <name> initializes an object and stores it in the context at <name>";
 	}
 	
 	private Fossil.Asm.Scriptreturn? construct_object(string _arg, Object? context = null){
