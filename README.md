@@ -47,6 +47,10 @@ One-liner for elementary OS:
 sudo apt install libgtk-3-dev valac meson cmake libgdk-pixbuf2.0-dev python3 libjson-glib-dev libgnutls28-dev gettext elementary-sdk
 ```
 
-To build and install Fossil, run the `install.sh` script, which will automatically setup the build folder, run ninja, put the output in the projects root directory, copy the files for Fossil to your system and registers the protocol handler. You should then find a new entry in your application launcher.
+To build and install Fossil, run the `install.sh` script, which will automatically setup the build folder, run ninja, put the output in the projects root directory, copy the files for Fossil to your system and registers the protocol handler. You should then find a new entry in your application launcher. If you want to use the stable version checkout to the latest tag before compiling.
 
-![](https://cdn.discordapp.com/attachments/766326715244740618/824233938049695774/unknown.png)
+### Flatpaks?
+
+Flatpaks are coming soon! If you want to write a flatpak manifest file for Fossil submit a pull request.
+
+![Screenshot](screenshot.png)
