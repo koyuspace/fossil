@@ -9,5 +9,5 @@ Terminal=false
 StartupNotify=true
 Type=Application
 MimeType=text/gopher;text/gemini;x-scheme-handler/gopher;x-scheme-handler/gemini;
-Categories=Internet;
+Categories=Network;Internet
 X-GNOME-Gettext-Domain=com.github.koyupace.fossil
