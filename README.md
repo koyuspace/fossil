@@ -53,4 +53,4 @@ To build and install Fossil, run the `install.sh` script, which will automatical
 
 Flatpaks are coming soon! If you want to write a flatpak manifest file for Fossil submit a pull request.
 
-![Screenshot](screenshot.png)
+![Screenshot](https://fossil.koyu.space/screenshot.png)
