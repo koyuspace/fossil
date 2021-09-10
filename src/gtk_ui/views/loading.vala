@@ -14,6 +14,11 @@ public class Fossil.GtkUi.View.Loading : Fossil.GtkUi.LegacyWidget.DialogViewBas
 	private string headline_connecting = "- CONNECTING -";
 	private string headline_download = "- DOWNLOADING -";
 	private string headline_upload = "- UPLOADING -";
+
+	private bool status_dirty = true;
+	private string? last_status = "...";
+	private string last_substatus = "";
+	private bool still_going = true;
 	
 	construct {
 		default_icon = this.append_big_icon("content-loading-symbolic");
@@ -26,10 +31,14 @@ public class Fossil.GtkUi.View.Loading : Fossil.GtkUi.LegacyWidget.DialogViewBas
 		headline = append_big_headline(headline_default);
 		progressbar.halign = Gtk.Align.CENTER;
 		progressbar.valign = Gtk.Align.CENTER;
-		progressbar.set_pulse_step(0.001);
+		progressbar.set_pulse_step(0.01);
 		progressbar.expand = true;
 		progressbar.halign = Gtk.Align.FILL;
 		append_widget(progressbar);
+		Timeout.add(100,() => {
+			update_display();
+			return still_going;
+		});
 	}
 	
 	private void update_status(string status){
@@ -59,13 +68,13 @@ public class Fossil.GtkUi.View.Loading : Fossil.GtkUi.LegacyWidget.DialogViewBas
 	public bool display_resource(Fossil.Request request, Fossil.GtkUi.LegacyWidget.Tab tab, bool as_subview){
 		if (!(request.status == "loading" || request.status == "uploading" || request.status == "connecting" || request.status == "routing")) {return false;}
 		this.request = request;
-		this.request.notify["substatus"].connect(load_updated_timeout_hack);
+		this.request.notify["substatus"].connect(on_load_updated);
 		this.headline_default = tab.translation.localize("view.loading.headline_default");
 		this.headline_connecting = tab.translation.localize("view.loading.headline_connecting");
 		this.headline_download = tab.translation.localize("view.loading.headline_download");
 		this.headline_upload = tab.translation.localize("view.loading.headline_upload");
 		show_all();
-		load_updated();
+		update_display();
 		return true;
 	}
 	
@@ -77,20 +86,21 @@ public class Fossil.GtkUi.View.Loading : Fossil.GtkUi.LegacyWidget.DialogViewBas
 		}
 	}
 	
-	public void load_updated_timeout_hack(){
-		Timeout.add(0,() => {
-			load_updated();
-			return false;
-		},Priority.HIGH);
+	public void on_load_updated(){
+		if (request.status != last_status) {
+			last_status = request.status;
+			status_dirty = true;
+		}
+		last_substatus = request.substatus;
+		
 	}
 	
-	private string? last_status = null;
-	
-	public void load_updated(){
-		if (request.status != last_status){
-			last_status = request.status;
-			update_status(request.status);
+	public void update_display(){
+		if (status_dirty) {
+			status_dirty = false;
+			update_status(last_status);
 		}
+
 		progressbar.pulse();
 		uint64 bytes = 0;
 		Fossil.Util.Intparser.try_parse_base_16_unsigned(request.substatus,out bytes);
@@ -101,7 +111,8 @@ public class Fossil.GtkUi.View.Loading : Fossil.GtkUi.LegacyWidget.DialogViewBas
 	}
 	
 	public void cleanup(){
-		this.request.notify["substatus"].disconnect(load_updated_timeout_hack);
+		this.request.notify["substatus"].disconnect(on_load_updated);
+		still_going = false;
 	}
 	
 }

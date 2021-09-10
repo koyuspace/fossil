@@ -29,7 +29,6 @@ public class Fossil.Registry.GopherTypeRegistry : Fossil.Asm.SimpleAsmObject, Fo
 		exec("ADD_ENTRY","g\timage/gif");
 		exec("ADD_ENTRY","I\timage/*");
 		exec("ADD_ENTRY","T\t*\ttelnet://{host}:{port}");
-		/*
 		add(new GopherTypeRegistryEntry('0',"text/*"));
 		add(new GopherTypeRegistryEntry('1',"text/gopher"));
 		add(new GopherTypeRegistryEntry('2',null,"CCSO://{host}:{port}/{selector}"));
@@ -37,24 +36,21 @@ public class Fossil.Registry.GopherTypeRegistry : Fossil.Asm.SimpleAsmObject, Fo
 		add(new GopherTypeRegistryEntry('4',"text/x-hex"));
 		add(new GopherTypeRegistryEntry('5',"application/octet-stream").make_mimetype_suggestion());
 		add(new GopherTypeRegistryEntry('6',null));
-		add(new GopherTypeRegistryEntry('7',"text/gopher",null,GopherTypeRegistryContentHint.SEARCH));
+		add(new GopherTypeRegistryEntry('7',"text/gopher","gopher://{host}:{port}/{type}{selector}%09{search}",GopherTypeRegistryContentHint.SEARCH));
 		add(new GopherTypeRegistryEntry('8',null,"telnet://{host}:{port}"));
 		add(new GopherTypeRegistryEntry('9',"application/octet-stream").make_mimetype_suggestion());
 		add(new GopherTypeRegistryEntry('g',"image/gif"));
 		add(new GopherTypeRegistryEntry('I',"image/*"));
 		add(new GopherTypeRegistryEntry('T',null,"telnet://{host}:{port}"));
-		*/
 		//conventions
 		exec("ADD_ENTRY","h\ttext/html");
 		exec("ADD_ENTRY","p\timage/png");
 		exec("ADD_ENTRY","P\tapplication/pdf");
 		exec("ADD_ENTRY","s\taudio/*");
-		/*
 		add(new GopherTypeRegistryEntry('h',"text/html"));
 		add(new GopherTypeRegistryEntry('p',"image/png"));
 		add(new GopherTypeRegistryEntry('P',"application/pdf"));
 		add(new GopherTypeRegistryEntry('s',"audio/*"));
-		*/
 	}
 	
 	public Fossil.Registry.GopherTypeRegistryEntry? get_entry_by_gophertype(unichar gophertype){
