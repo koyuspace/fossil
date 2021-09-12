@@ -1,8 +1,10 @@
 public class Fossil.Util.ConnectionHelper : Object {
 		
-		public uint default_timeout = 30;
+		public uint default_timeout { get; protected set; default = 30;}
 		
-		public GLib.IOStream? connect_to_server(string host, uint16 port, Fossil.Request request, bool use_tls, SocketConnectable? _server_identity = null){
+		public GLib.IOStream? connect_to_server(string host, uint16 port, Fossil.Request request, bool use_tls, SocketConnectable? _server_identity = null, uint timeout = default_timeout){
+			//set timeout
+			default_timeout = timeout;
 			//make request
 			List<InetAddress> addresses;
 			try {
