@@ -30,6 +30,10 @@ public class Fossil.GtkUi.Theming.TextTagTheme : Object {
 		if (wrap_mode != null) { text_tag.wrap_mode = wrap_mode; }
 		if (underline != null) { text_tag.underline = underline; }
 		
+		//Manually apply default theme, because we yeeted the theme engine
+		text_tag.left_margin = 20;
+		text_tag.right_margin = 20;
+		
 	}
 	
 	public static void untheme(Gtk.TextTag text_tag){
