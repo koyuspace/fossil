@@ -4,7 +4,7 @@ A simple GTK Gopher/Gemini client written in Vala
 
 <img src="screenshot.png" style="padding:10px;float:right;height: 600px;">
 
-<a class="btn btn-success btn-lg" href="https://raw.githubusercontent.com/koyuspace/fossil/main/install-binary.sh" style="margin: 10px 0;margin-right:5px;" download><i class="fa fa-download" aria-hidden="true"></i> Download</a> <a class="btn btn-success btn-lg" href="https://github.com/koyuspace/fossil" target="_blank" style="margin: 10px 0;margin-right:5px;"><i class="fa fa-github" aria-hidden="true"></i> GitHub</a>
+<a class="btn btn-success btn-lg" href="https://raw.githubusercontent.com/koyuspace/fossil/main/install-binary.sh" style="margin: 10px 0;margin-right:5px;" download><i class="fa fa-download" aria-hidden="true"></i> Download</a> <a class="btn btn-success btn-lg" href="https://aur.archlinux.org/packages/fossil-gemini-git/" target="_blank" style="margin: 10px 0;margin-right:5px;"><i class="fa fa-github" aria-hidden="true"></i> GitHub</a>
 
 ### Supported download protocols
 
