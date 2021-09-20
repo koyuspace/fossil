@@ -174,8 +174,7 @@ executable(
 		dependency('gtk+-3.0'),
 		dependency('json-glib-1.0'),
 		dependency('gnutls'),
-		dependency('gdk-pixbuf-2.0'),
-		dependency('granite')
+		dependency('gdk-pixbuf-2.0')
 	],
 	install: true
 )
