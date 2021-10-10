@@ -18,8 +18,8 @@ public class Fossil.Store.Internal : Object, Fossil.Interface.ResourceStore {
 ## Welcome to the internet of Gopherholes and Gemini capsules!
 
 Warning:
-Gemini is supposed to be more secure than gopher but beacause of the implementation,
-it cannot vertify a servers identity yet and therefore is about as secure as gopher.
+Gemini is supposed to be more secure than gopher but because of the implementation,
+it cannot verify a servers identity yet and therefore is about as secure as gopher.
 
 To get started here are some links:
 
