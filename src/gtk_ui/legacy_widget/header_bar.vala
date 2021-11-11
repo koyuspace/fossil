@@ -159,12 +159,10 @@ public class Fossil.HeaderBar : Gtk.HeaderBar {
 				var request = current_tab.session.make_download_request(addressfield.text,false);
 				var parsed_uri = new Fossil.Util.ParsedUri(request.uri);
 				var host = parsed_uri.host;
-				try {
-					var conn = connection_helper.connect_to_server(host,1965,request,true,null,1);
-					if (conn == null) {
-						addressfield.text = "gopher://"+noproto;
-					}
-				} catch {}
+				var conn = connection_helper.connect_to_server(host,1965,request,true,null,1);
+				if (conn == null) {
+					addressfield.text = "gopher://"+noproto;
+				}
 		    }
 			addressfield.text = tryUriCorrection(addressfield.text);
 			if (current_tab != null){
